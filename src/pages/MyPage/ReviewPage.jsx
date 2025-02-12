@@ -10,7 +10,7 @@ const convertImageUrlsToFiles = async imageUrls => {
     imageUrls.map(async imageUrl => {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
-      const filename = imageUrl.split("/").pop(); // 파일명 추출
+      const filename = imageUrl.split("/").pop();
       return new File([blob], filename, { type: blob.type });
     }),
   );
@@ -32,6 +32,8 @@ function ReviewPage() {
   const [isImgPut, setIsImgPut] = useState(false);
   const reviewsPerPage = 5;
   const [imageInfo, setImageInfo] = useState([]);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
   const reviewList = async () => {
     try {
@@ -245,6 +247,16 @@ function ReviewPage() {
     setCurrentPage(page);
   };
 
+  const handleImagePreview = imageUrl => {
+    setPreviewImage(imageUrl);
+    setPreviewModalOpen(true);
+  };
+
+  const handlePreviewModalClose = () => {
+    setPreviewModalOpen(false);
+    setPreviewImage("");
+  };
+
   return (
     <MyPageLayout>
       <div className="flex flex-col justify-center items-center gap-y-[20px]">
@@ -318,7 +330,8 @@ function ReviewPage() {
                           key={picIndex}
                           src={`${picURL}${pic}`}
                           alt={`리뷰 이미지 ${picIndex + 1}`}
-                          className="w-20 h-20 object-cover rounded-md shrink-0"
+                          className="w-20 h-20 object-cover rounded-md shrink-0 cursor-pointer"
+                          onClick={() => handleImagePreview(`${picURL}${pic}`)}
                         />
                       ))}
                     {item.pics.filter((_, i) => i % 2 === 0).length === 1 && (
@@ -343,7 +356,7 @@ function ReviewPage() {
           </div>
         ))}
 
-        {/* 페이지네이션 컴포넌트 추가 */}
+        {/* 페이지네이션 */}
         <div className="my-4">
           <Pagination
             current={currentPage}
@@ -463,6 +476,30 @@ function ReviewPage() {
                 취소
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {previewModalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+          onClick={handlePreviewModalClose}
+        >
+          <div
+            className="relative max-w-[90%] max-h-[90%]"
+            onClick={e => e.stopPropagation()}
+          >
+            <img
+              src={previewImage}
+              alt="이미지 미리보기"
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+            <button
+              onClick={handlePreviewModalClose}
+              className="absolute top-[-40px] right-0 text-white text-2xl"
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}

@@ -80,6 +80,33 @@ function Wishlist() {
           </Link>
         ))}
       </div>
+      {/* 찜 모달 */}
+      {/* {deleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
+            <span className="flex justify-center items-center text-[20px] mb-4">
+              찜목록 제거
+            </span>
+            <p className="text-center mb-6">
+              찜 목록에서 지우겠습니까?
+            </p>
+            <div className="flex justify-center items-center gap-[10px]">
+              <button
+                onClick={() => deleteReview(selectedReviewId)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                삭제
+              </button>
+              <button
+                onClick={handleDeleteModalClose}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
     </MyPageLayout>
   );
 }
