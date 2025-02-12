@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { reviewListState } from "../../atoms/reviewAtom";
-import { ReviewDiv, ReviewFilterDiv, StarTotalDiv } from "./serviceDetail";
+import {
+  PreviewImgDiv,
+  ReviewDiv,
+  ReviewFilterDiv,
+  StarTotalDiv,
+} from "./serviceDetail";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { FaStar, FaStarHalf } from "react-icons/fa";
@@ -227,6 +232,15 @@ const ContReview = () => {
           ))}
         </div>
       </ReviewDiv>
+      <PreviewImgDiv>
+        <div className="layer">
+          <div className="img-box">
+            <img src="" alt="" />
+            <img src="" alt="" />
+          </div>
+          <button>닫기</button>
+        </div>
+      </PreviewImgDiv>
     </>
   );
 };

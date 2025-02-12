@@ -337,6 +337,15 @@ export const StarTotalDiv = styled.div`
     }
   }
 `;
+export const PreviewImgDiv = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+`;
 
 // 오른쪽
 export const SummaryDiv = styled.div`
