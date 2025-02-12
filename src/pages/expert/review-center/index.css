@@ -1,0 +1,52 @@
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-container {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .table-container th,
+  .table-container td {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+/* 별 */
+.star-div {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.star-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.star-container p.star {
+  /* border: 1px solid #000; */
+  align-items: center;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+.star-grade {
+  display: flex;
+  font-weight: 700;
+  font-size: 10px;
+}

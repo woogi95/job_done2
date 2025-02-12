@@ -1,0 +1,221 @@
+import { useForm } from "react-hook-form";
+import { Button, Form, Input } from "antd";
+import { useRecoilState } from "recoil";
+import { isOpenModalUpw, upwCheck } from "../../atoms/loginAtom";
+import "./Index.css";
+import axios from "axios";
+
+// 페이지 시작
+const SignUpPage = () => {
+  const [match, setMatch] = useRecoilState(upwCheck);
+  const [isUpw, setIsUpw] = useRecoilState(isOpenModalUpw);
+  // 비밀번호 비교문
+  const [upwForm] = Form.useForm();
+  const handleChangePassword = () => {
+    // 기본 비밀번호 입력값 알아내고
+    const pw = upwForm.getFieldValue("upw");
+    // 비교 비밀번호 입력값 알아내고, 비교한다.
+    const pwConfirm = upwForm.getFieldValue("upwConfirm");
+    if (pwConfirm) {
+      console.log(pw);
+      console.log(pwConfirm);
+      // 비교 비밀 번호 있으면 비교하겠다.
+      setMatch(pw === pwConfirm);
+      console.log(pw === pwConfirm);
+    }
+  };
+
+  const formData = {
+    name: "",
+    email: "",
+    upw: "",
+    upwConfirm: "",
+    phone: "010",
+    pic: "",
+  };
+  // 각 필드의 입력 중인 값 알아내기
+  const onChangeField = _field => {
+    console.log(_field[0].value);
+  };
+
+  // 확인 버튼 시 최종 입력값
+  const onSubmit = async data => {
+    if (match) {
+      try {
+        const FormData = new formData();
+
+        if (data.pic[0]) {
+          FormData.append("pic", data.pic[0]); // 파일일 경우
+        } else {
+          FormData.append("pic", null); // 파일이 없을 경우
+        }
+
+        //JSON 형태로 데이터를 만들어 formData에 추가
+        FormData.append(
+          "p",
+          new Blob(
+            [
+              JSON.stringify({
+                email: data.email,
+                upw: data.upw,
+                name: data.name,
+                phone: data.phone,
+              }),
+            ],
+            { type: "application/json" },
+          ),
+        );
+
+        const header = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+
+        const res = await axios.post("api/user/sign-up", formData, header);
+        //console.log("회원가입 결과 : ", res.data);
+        return res; //결과 리턴
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    } else {
+      setIsUpw(true);
+      console.log(match);
+    }
+  };
+  return (
+    <div>
+      <Form
+        form={upwForm}
+        style={{ width: 600, margin: "0 auto" }}
+        initialValues={formData}
+        onFieldsChange={(changeFields, allFields) =>
+          onChangeField(changeFields)
+        }
+        onFinish={valuse => onSubmit(valuse)}
+      >
+        <Form.Item name={"name"} label="이름">
+          <Input placeholder="이름을 입력하세요." />
+        </Form.Item>
+        <Form.Item
+          name={"email"}
+          label="이메일"
+          required={true}
+          rules={[
+            { required: true, message: "이메일은 필수 사항입니다." },
+            { type: "email", message: "이메일 형식에 맞지 않습니다." },
+          ]}
+        >
+          <Input placeholder="이메일을 입력하세요." />
+        </Form.Item>
+        <Form.Item
+          name={"upw"}
+          label="비밀번호"
+          required={true}
+          rules={[
+            { required: true, message: "비밀번호는 필수 항목입니다." },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+              message:
+                "비밀번호는 최소 8자 이상이며, 대소문자와 숫자를 포함해야 합니다.",
+            },
+          ]}
+        >
+          <Input.Password
+            placeholder="비밀번호를 입력해주세요."
+            onChange={() => handleChangePassword()}
+          />
+        </Form.Item>
+        <Form.Item
+          name={"upwConfirm"}
+          label="비밀번호 확인"
+          rules={[
+            { required: true, message: "비밀번호 확인은 필수 항목입니다." },
+          ]}
+        >
+          <Input.Password
+            placeholder="비밀번호를 확인해주세요."
+            onChange={() => {
+              handleChangePassword();
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name={"phone"}
+          label="휴대폰"
+          rules={[
+            { required: true, message: "번호는 필수 항목입니다." },
+            {
+              pattern: /^010-\d{4}-\d{4}$/,
+              message: "휴대폰 형식에 맞지 않습니다. (예: 010-1234-5678)",
+            },
+          ]}
+        >
+          <Input placeholder="전화번호를 입력하세요." />
+        </Form.Item>
+        <Form.Item>
+          <Button htmlType="submit">회원가입</Button>
+        </Form.Item>
+      </Form>
+
+      {isUpw && (
+        <div className="upwModal">
+          <div>
+            <h1>비밀번호를 확인해주세요.</h1>
+            <button onClick={() => setIsUpw(false)}>확인</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SignUpPage;
+
+.
+
+
+
+
+ const excludeKeys = ["upwConfirm"];
+
+    // 제외된 데이터를 새 객체로 생성
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(([key]) => !excludeKeys.includes(key)),
+    );
+    if (match) {
+      try {
+        const formData = new FormData();
+
+        // 서버에서 요구하는 데이터 구조에 맞게 추가
+        FormData.append(
+          "p",
+          new Blob(
+            [
+              JSON.stringify({
+                filteredData,
+              }),
+            ],
+            { type: "application/json" },
+          ),
+        );
+
+        if (file) {
+          FormData.append("pic", file); // 선택된 파일 추가
+        } else {
+          FormData.append("pic", ""); // 파일이 없을 경우 빈 값 추가
+        }
+        console.log(FormData);
+        const res = await axios.post(
+          "http://112.222.157.156:5224/api/user/sign-up",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
+
+        console.log("회원가입 결과:", res.data);

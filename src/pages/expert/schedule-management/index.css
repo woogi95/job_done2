@@ -1,0 +1,9 @@
+.fc-day-sun a {
+  /* 일요일 컬러 */
+  color: #f35252;
+}
+
+.fc-day-sat a {
+  /* 토요일 컬러 */
+  color: #435aed;
+}

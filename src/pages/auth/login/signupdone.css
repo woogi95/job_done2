@@ -1,0 +1,7 @@
+.doneDiv span {
+  display: flex;
+  font-size: 12;
+  justify-content: center;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}

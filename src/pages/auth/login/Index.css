@@ -1,0 +1,48 @@
+.login-box-div {
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+.login-box {
+  background-color: #f9fafb;
+  border: 1px solid rgba(80, 80, 80, 0.8);
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 0.5rem;
+  padding: 0.625rem;
+  width: 20rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.upwModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upwModal div {
+  display: flex;
+  width: 300px;
+  height: 100px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #111827;
+  align-items: center;
+  justify-content: space-between;
+}
+.upwModal button {
+  width: 40px;
+  height: 30px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #111827;
+}
