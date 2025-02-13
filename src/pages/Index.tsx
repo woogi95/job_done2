@@ -10,17 +10,32 @@ import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import { useQuery } from "@tanstack/react-query";
 
+interface Region {
+  regionId: number;
+  region: string;
+}
+
+interface BusinessItem {
+  businessId: number;
+  pic: string;
+  title: string;
+  price: number;
+  businessName: string;
+  scoreAvg: number;
+  serviceCount: number;
+}
+
 const Index = () => {
-  const [companies, setCompanies] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState(1);
-  const regionNames = {
+  const [companies, setCompanies] = useState<BusinessItem[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<number>(1);
+  const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",
     3: "경주",
     4: "포항",
     5: "부산",
   };
-  const [regions] = useState(
+  const [regions] = useState<Region[]>(
     Array.from({ length: 5 }, (_, i) => ({
       regionId: i + 1,
       region: regionNames[i + 1],
@@ -28,7 +43,10 @@ const Index = () => {
   );
   const BASE_URL = "http://112.222.157.156:5224";
 
-  const fetchBusinessData = async (regionId, sortType) => {
+  const fetchBusinessData = async (
+    regionId: number,
+    sortType: string,
+  ): Promise<BusinessItem[]> => {
     const response = await axios.get("/api/business", {
       params: {
         regionId,
@@ -38,22 +56,26 @@ const Index = () => {
     return response.data.resultData;
   };
 
-  const { data: popularData } = useQuery({
+  const { data: popularData } = useQuery<BusinessItem[]>({
     queryKey: ["business", selectedRegion, "인기순"],
     queryFn: () => fetchBusinessData(selectedRegion, "인기순"),
   });
 
-  const { data: latestData } = useQuery({
+  const { data: latestData } = useQuery<BusinessItem[]>({
     queryKey: ["business", selectedRegion, "최신순"],
     queryFn: () => fetchBusinessData(selectedRegion, "최신순"),
   });
 
-  const { data: cheapestData } = useQuery({
+  const { data: cheapestData } = useQuery<BusinessItem[]>({
     queryKey: ["business", selectedRegion, "저가순"],
     queryFn: () => fetchBusinessData(selectedRegion, "저가순"),
   });
 
-  const categories = {
+  const categories: {
+    popular: BusinessItem[];
+    latest: BusinessItem[];
+    cheapest: BusinessItem[];
+  } = {
     popular: popularData || [],
     latest: latestData || [],
     cheapest: cheapestData || [],
@@ -85,7 +107,6 @@ const Index = () => {
               dynamicBullets: true,
               clickable: true,
               dynamicMainBullets: 3,
-              dynamicBulletProperty: "scale",
             }}
             autoplay={{
               delay: 5000,
@@ -163,7 +184,6 @@ const Index = () => {
                   dynamicBullets: true,
                   clickable: true,
                   dynamicMainBullets: 3,
-                  dynamicBulletProperty: "scale",
                 }}
                 slidesPerView={4}
                 spaceBetween={15}
@@ -244,7 +264,6 @@ const Index = () => {
                   dynamicBullets: true,
                   clickable: true,
                   dynamicMainBullets: 3,
-                  dynamicBulletProperty: "scale",
                 }}
                 slidesPerView={4}
                 spaceBetween={15}
@@ -325,7 +344,6 @@ const Index = () => {
                   dynamicBullets: true,
                   clickable: true,
                   dynamicMainBullets: 3,
-                  dynamicBulletProperty: "scale",
                 }}
                 slidesPerView={4}
                 spaceBetween={15}

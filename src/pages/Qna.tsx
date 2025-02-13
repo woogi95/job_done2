@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const QnaItem = ({ question, answer }) => {
+interface QnaItemProps {
+  question: string;
+  answer: string;
+}
+
+const QnaItem = ({ question, answer }: QnaItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +23,7 @@ const QnaItem = ({ question, answer }) => {
       </button>
       {isOpen && (
         <div className="px-6 py-4 bg-gray-50">
-          <p className="text-gray-600">A. {answer}</p>
+          <p className="text-gray-700">A. {answer}</p>
         </div>
       )}
     </div>
