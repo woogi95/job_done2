@@ -6,8 +6,10 @@ import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 import UserReservation from "../../components/papers/UserReservation";
 import { statusText } from "../../components/ServiceIcon";
+import LoadingPopup from "../../components/LoadingPopup";
 
 function MyReservation() {
+  const [isLoading, setIsLoading] = useState(false);
   const [reservation, setReservation] = useState([]);
   const [resState, setResState] = useState([]);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -17,7 +19,6 @@ function MyReservation() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [reviewContent, setReviewContent] = useState("");
   const [qnaModal, setQnaModal] = useState(false);
-  const [cancelModal, setCancelModal] = useState(false);
   const [cancelStatus, setCancelStatus] = useState({
     show: false,
     success: false,
@@ -207,6 +208,43 @@ function MyReservation() {
     }
   };
 
+  const handleClickNewPage = async serviceId => {
+    if (!serviceId) {
+      console.error("serviceId가 없습니다.");
+      return;
+    }
+    setIsLoading(true);
+    // console.log("결제 누구야!", serviceId);
+    try {
+      const width = 480;
+      const height = 600;
+      const left = (window.innerWidth - width) / 2;
+      const top = (window.innerHeight - height) / 2;
+
+      const res = await loginApi.post(
+        `/api/payment/ready?serviceId=${serviceId}`,
+      );
+      if (res.data?.next_redirect_pc_url) {
+        const paymentWindow = window.open(
+          res.data.next_redirect_pc_url,
+          "_blank",
+          `width=${width},height=${height},left=${left},top=${top}`,
+        );
+
+        const checkWindowClosed = setInterval(() => {
+          if (paymentWindow.closed) {
+            setIsLoading(false);
+            clearInterval(checkWindowClosed);
+            navigate("/mypage/usage");
+          }
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("결제 준비 중 오류 발생:", error);
+      setIsLoading(false);
+    }
+  };
+
   const handleReviewCompleteModalClose = () => {
     setReviewCompleteModal({ show: false, success: false, message: "" });
   };
@@ -219,7 +257,7 @@ function MyReservation() {
         </span>
         <div className="w-full max-w-[800px]">
           {getCurrentPageData().map(item => (
-            <div key={item.id} className="mb-[15px]">
+            <div key={item.serviceId} className="mb-[15px]">
               <div className="flex flex-col gap-[10px] px-[55px]">
                 <div className="flex justify-between">
                   <span>예약일 : {item.createdAt.split(" ")[0]}</span>
@@ -250,6 +288,8 @@ function MyReservation() {
                         handleReviewModalOpen(item.serviceId);
                       } else if ([0, 1, 6].includes(item.completed)) {
                         handleInquiryModalOpen(item.serviceId);
+                      } else if (item.completed === 2) {
+                        handleClickNewPage(item.serviceId);
                       }
                     }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
@@ -468,6 +508,7 @@ function MyReservation() {
           </div>
         )}
       </div>
+      {isLoading && <LoadingPopup />}
     </MyPageLayout>
   );
 }

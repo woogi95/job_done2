@@ -27,6 +27,7 @@ function MyPage() {
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteError, setDeleteError] = useState("");
   const [isDeleteSuccessModal, setIsDeleteSuccessModal] = useState(false);
+  const [isEditSuccessModal, setIsEditSuccessModal] = useState(false);
   // 유효성 검사
   const passwordSchema = yup.object().shape({
     currentPassword: yup.string().required("현재 비밀번호를 입력해주세요."),
@@ -141,14 +142,13 @@ function MyPage() {
         });
 
         if (response.status === 200) {
-          // localStorage.setItem("userPic", profileImg);
-          alert("회원정보가 수정되었습니다.");
+          setIsEditSuccessModal(true);
           setIsEdit(false);
           getUserInfo();
         }
       } catch (error) {
         console.error("회원정보 수정 실패:", error);
-        alert("회원정보 수정에 실패했습니다.");
+        setError("회원정보 수정에 실패했습니다.");
       }
     }
   };
@@ -501,6 +501,30 @@ function MyPage() {
               <button
                 className="px-4 py-2 bg-[#3887FF] text-white rounded"
                 onClick={handleSuccessModalClose}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 회원정보 수정 성공 모달 추가 */}
+      {isEditSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
+            <div className="text-center mb-6">
+              <h2 className="text-[18px] font-normal mb-4">
+                회원정보 수정 완료
+              </h2>
+              <p className="text-gray-600">
+                회원정보가 성공적으로 수정되었습니다.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="px-4 py-2 bg-[#3887FF] text-white rounded"
+                onClick={() => setIsEditSuccessModal(false)}
               >
                 확인
               </button>

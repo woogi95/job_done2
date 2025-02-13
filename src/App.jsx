@@ -63,6 +63,7 @@ import PaymentFailed from "./components/PaymentFailed";
 import Estimate from "./components/papers/Estimate";
 import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
+import TestPage from "./TestPage";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
+          <Route path="/test" element={<TestPage />} />
           {/* 카카오페이 관련 */}
           <Route path="/paySuccess" element={<PaymentSuccess />} />
           <Route path="/payFailed" element={<PaymentFailed />} />
