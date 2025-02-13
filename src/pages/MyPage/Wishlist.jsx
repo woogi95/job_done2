@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 function Wishlist() {
   const ImgURL = "http://112.222.157.156:5224";
   const [wishlist, setWishlist] = useState([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null);
+
   const getWishlist = async () => {
     try {
       const res = await loginApi.get("/api/like");
@@ -19,10 +22,18 @@ function Wishlist() {
 
   const handleLikeToggle = async (businessId, e) => {
     e.preventDefault();
+    setSelectedBusinessId(businessId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
-      const response = await loginApi.post("/api/like", { businessId });
+      const response = await loginApi.post("/api/like", {
+        businessId: selectedBusinessId,
+      });
       if (response.data) {
         getWishlist();
+        setDeleteModalOpen(false);
       } else {
         alert(
           `찜 처리 실패: ${response.data.resultMessage || "알 수 없는 오류가 발생했습니다."}`,
@@ -36,6 +47,11 @@ function Wishlist() {
       });
       alert("찜 처리 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+    setSelectedBusinessId(null);
   };
 
   useEffect(() => {
@@ -81,18 +97,16 @@ function Wishlist() {
         ))}
       </div>
       {/* 찜 모달 */}
-      {/* {deleteModalOpen && (
+      {deleteModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
             <span className="flex justify-center items-center text-[20px] mb-4">
               찜목록 제거
             </span>
-            <p className="text-center mb-6">
-              찜 목록에서 지우겠습니까?
-            </p>
+            <p className="text-center mb-6">찜 목록에서 지우겠습니까?</p>
             <div className="flex justify-center items-center gap-[10px]">
               <button
-                onClick={() => deleteReview(selectedReviewId)}
+                onClick={handleDeleteConfirm}
                 className="px-4 py-2 bg-red-500 text-white rounded"
               >
                 삭제
@@ -106,7 +120,7 @@ function Wishlist() {
             </div>
           </div>
         </div>
-      )} */}
+      )}
     </MyPageLayout>
   );
 }

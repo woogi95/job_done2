@@ -5,7 +5,7 @@ import MyPageLayout from "../../components/MyPageLayout";
 import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
 
-const convertImageUrlsToFiles = async imageUrls => {
+const convertImgUrlFiles = async imageUrls => {
   const imageFiles = await Promise.all(
     imageUrls.map(async imageUrl => {
       const response = await fetch(imageUrl);
@@ -29,11 +29,13 @@ function ReviewPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isImgPut, setIsImgPut] = useState(false);
   const reviewsPerPage = 5;
   const [imageInfo, setImageInfo] = useState([]);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const reviewList = async () => {
     try {
@@ -95,13 +97,15 @@ function ReviewPage() {
       console.log("Response after update:", res.data);
 
       if (res.status === 200) {
-        alert("리뷰가 수정되었습니다.");
+        setModalMessage("리뷰가 수정되었습니다.");
+        setSuccessModalOpen(true);
         handleReviewModalClose();
         reviewList();
       }
     } catch (error) {
       console.error("리뷰 수정 실패:", error);
-      alert("리뷰 수정에 실패했습니다.");
+      setModalMessage("리뷰 수정에 실패했습니다.");
+      setErrorModalOpen(true);
     }
   };
 
@@ -135,13 +139,15 @@ function ReviewPage() {
         },
       });
       if (res.status === 200) {
-        alert("리뷰가 삭제되었습니다.");
+        setModalMessage("리뷰가 삭제되었습니다.");
+        setSuccessModalOpen(true);
         reviewList();
         setDeleteModalOpen(false);
       }
     } catch (error) {
       console.log(error);
-      alert("리뷰 삭제에 실패했습니다.");
+      setModalMessage("리뷰 삭제에 실패했습니다.");
+      setErrorModalOpen(true);
     }
   };
 
@@ -155,10 +161,6 @@ function ReviewPage() {
 
     const newPreviews = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
-  };
-
-  const handleRemoveClose = () => {
-    correctServiceImg();
   };
 
   const handleRemoveImage = async index => {
@@ -255,6 +257,14 @@ function ReviewPage() {
   const handlePreviewModalClose = () => {
     setPreviewModalOpen(false);
     setPreviewImage("");
+  };
+
+  const handleSuccessModalClose = () => {
+    setSuccessModalOpen(false);
+  };
+
+  const handleErrorModalClose = () => {
+    setErrorModalOpen(false);
   };
 
   return (
@@ -500,6 +510,46 @@ function ReviewPage() {
             >
               ✕
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 리뷰 수정 모달 */}
+      {successModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
+            <span className="flex justify-center items-center text-[20px] mb-4">
+              리뷰 수정 완료
+            </span>
+            <p className="text-center mb-6">{modalMessage}</p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleSuccessModalClose}
+                className="px-4 py-2 bg-[#3887FF] text-white rounded"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 에러 모달 */}
+      {errorModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
+            <span className="flex justify-center items-center text-[20px] mb-4 text-[#F53A3A]">
+              오류
+            </span>
+            <p className="text-center mb-6">{modalMessage}</p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleErrorModalClose}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                확인
+              </button>
+            </div>
           </div>
         </div>
       )}
