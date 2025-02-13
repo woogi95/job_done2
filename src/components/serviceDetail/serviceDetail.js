@@ -39,8 +39,8 @@ export const DetailTopDiv = styled.div`
       gap: 12px;
       margin-bottom: 16px;
       .logo {
-        width: 50px;
-        height: 50px;
+        width: 65px;
+        height: 65px;
         background-color: #eee;
         border-radius: 3px;
         overflow: hidden;
@@ -48,20 +48,33 @@ export const DetailTopDiv = styled.div`
       .txt {
         display: flex;
         justify-content: center;
-        gap: 5px;
+        gap: 6px;
         flex-direction: column;
         h3 {
           font-size: 18px;
           font-weight: 700;
           em {
+            margin-left: 5px;
             font-size: 13px;
             font-weight: 400;
-            color: #555;
+            color: rgba(0, 0, 0, 0.65);
           }
         }
         b {
           font-size: 15px;
           color: rgba(0, 0, 0, 0.65);
+        }
+        strong {
+          color: rgba(0, 0, 0, 0.8);
+          font-size: 13px;
+          b {
+            padding: 2px 3px 3px;
+            margin-right: 5px;
+            background-color: #12b1e1;
+            color: #fff;
+            font-size: 10px;
+            border-radius: 3px;
+          }
         }
       }
     }
@@ -345,6 +358,18 @@ export const PreviewImgDiv = styled.div`
   top: 0;
   left: 0;
   z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .layer {
+    position: relative;
+    button {
+      color: #fff;
+      position: absolute;
+      top: -30px;
+      right: 0px;
+    }
+  }
 `;
 
 // 오른쪽

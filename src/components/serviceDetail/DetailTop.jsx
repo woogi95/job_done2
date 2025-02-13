@@ -25,9 +25,13 @@ const DetailTop = () => {
             <h3>
               {businessDetail.businessName}
               <em>
-                {businessDetail.openingTime} -{businessDetail.closingTime}
+                {businessDetail.openingTime} - {businessDetail.closingTime}
               </em>
             </h3>
+            <strong>
+              {/* <b>안심번호</b>{businessDetail.safeTel} */}
+              <b>안심번호</b>053-0000-0000
+            </strong>
             <b>{businessDetail.address}</b>
           </div>
         </div>
