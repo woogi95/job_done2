@@ -502,7 +502,7 @@ function ReviewPage() {
             <img
               src={previewImage}
               alt="이미지 미리보기"
-              className="max-w-full max-h-[90vh] object-contain"
+              className="max-w-full max-h-[500px] object-contain"
             />
             <button
               onClick={handlePreviewModalClose}
