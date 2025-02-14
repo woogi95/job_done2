@@ -242,7 +242,7 @@ function Header() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
+                  className="w-8 h-8 !rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
                     src={profileImg}
