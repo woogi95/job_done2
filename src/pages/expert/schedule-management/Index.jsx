@@ -3,6 +3,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import React from "react";
 import { reserveList } from "../../../atoms/reservationAtom";
 import { useRecoilState } from "recoil";
+import "./index.css";
 
 function Index() {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
@@ -22,8 +23,10 @@ function Index() {
         height="100%"
         aspectRatio={1.8}
         eventDidMount={info => {
-          if (info.event.end) {
-            info.el.style.borderRadius = "5px";
+          if ([7, 8, 9].includes(info.event.extendedProps.completed)) {
+            info.el
+              .querySelector(".fc-event-main")
+              .style.setProperty("background-color", "green", "important");
           }
         }}
       />
