@@ -12,79 +12,7 @@ const ExpertHeader = () => {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   const navigate = useNavigate();
-  const businessPage = async () => {
-    try {
-      const busiId = localStorage.getItem("businessId");
-      const res = await loginApi.get(
-        `/api/service?business_id=${busiId}&status=4&page=1&size=100`,
-      );
-      const response = await loginApi.get(
-        `/api/business?business_id=${busiId}`,
-      );
-      // console.log("캘린더 데이터", res);
-      // console.log("업체 데이터", response); // API 응답 확인
-      const {
-        logo,
-        detailTypeId,
-        detailTypeName,
-        businessId,
-        businessName,
-        title,
-        scoreAvg,
-        price,
-        like,
-        address,
-        serviceCount,
-        openingTime,
-        closingTime,
-        years,
-        contents,
-        reviewCount,
-        tel,
-        tel2,
-        tel3,
-      } = response.data.resultData;
-      let filteredData = []; // ✅ if 블록 바깥에서 선언 (초기값 빈 배열)
 
-      if (res && res.data.resultData) {
-        // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)
-        filteredData = res.data.resultData.map(item => ({
-          title: item.userName,
-          servicId: item.serviceId,
-          start: item.startDate,
-        }));
-      }
-      // console.log(filteredData);
-      setBusinessInfo({
-        logo: logo,
-        detailTypeId: detailTypeId,
-        detailTypeName: detailTypeName,
-        businessId: businessId,
-        businessName: businessName,
-        title: title,
-        scoreAvg: scoreAvg,
-        price: price,
-        like: like,
-        address: address,
-        serviceCount: serviceCount,
-        openingTime: openingTime,
-        closingTime: closingTime,
-        years: years,
-        contents: contents,
-        reviewCount: reviewCount,
-        tel: tel,
-        tel2: tel2,
-        tel3: tel3,
-      });
-      setReserveInfo(filteredData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // console.log(businessInfo);
-  useEffect(() => {
-    businessPage();
-  }, []);
   // 로그아웃 관련
   const handleLogout = () => {
     localStorage.clear();

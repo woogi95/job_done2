@@ -8,3 +8,7 @@ export const reserveList = atom({
   key: "reserveList",
   default: {},
 });
+export const reserveAllPrice = atom({
+  key: "reserveAllPrice",
+  default: {},
+});
