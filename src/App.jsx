@@ -11,12 +11,12 @@ import PasswordEdit from "./pages/auth/login/PasswordEdit";
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
-import MyPage from "./pages/myPage/Index";
-import MyMessage from "./pages/myPage/MyMessage";
-import ReviewPage from "./pages/myPage/ReviewPage";
-import UsageDetails from "./pages/myPage/UsageDetails";
-import Wishlist from "./pages/myPage/Wishlist";
-import MyReservation from "./pages/myPage/MyReservation";
+import MyPage from "./pages/mypage/Index";
+import MyMessage from "./pages/mypage/MyMessage";
+import ReviewPage from "./pages/mypage/ReviewPage";
+import UsageDetails from "./pages/mypage/UsageDetails";
+import Wishlist from "./pages/mypage/Wishlist";
+import MyReservation from "./pages/mypage/MyReservation";
 
 import ExpertMain from "./pages/expert/ExpertMain";
 
@@ -61,7 +61,7 @@ import Qna from "./pages/Qna";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentFailed from "./components/PaymentFailed";
 import Estimate from "./components/papers/Estimate";
-import UserReservLook from "./pages/myPage/UserReservLook";
+import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
 
@@ -99,15 +99,7 @@ function App() {
             <Route index element={<Reservation />} />
             <Route path="history" element={<ReservationHistory />} />
           </Route>
-          {/* 세차 페이지 */}
-          {/* <Route path="/carwash">
-            <Route index element={<CarWashPage />} />
-          </Route> */}
-          {/* 청소 페이지 */}
-          {/* <Route path="/cleaning">
-            <Route index element={<CleaningPage />} />
-          </Route> */}
-          {/* 이사 페이지 */}
+          {/* 서비스 페이지 */}
           <Route path="/service">
             <Route index element={<Service />} />
             <Route path="contactus" element={<ContactUs />} />

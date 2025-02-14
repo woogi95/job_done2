@@ -29,8 +29,9 @@ const DetailTop = () => {
               </em>
             </h3>
             <strong>
-              {/* <b>안심번호</b>{businessDetail.safeTel} */}
-              <b>안심번호</b>053-0000-0000
+              <b>안심번호</b>
+              {businessDetail.safeTel}
+              {/* <b>안심번호</b>053-0000-0000 */}
             </strong>
             <b>{businessDetail.address}</b>
           </div>

@@ -36,7 +36,7 @@ export const businessDetailState = atom({
   default: [
     {
       logo: null,
-      detailTypeId: 2,
+      detailTypeId: 0,
       detailTypeName: null,
       businessId: 0,
       businessName: null,
@@ -54,6 +54,7 @@ export const businessDetailState = atom({
       tel: null,
       tel2: null,
       tel3: null,
+      safeTel: null,
     },
   ],
 });

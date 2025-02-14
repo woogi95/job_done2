@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 // 예약 페이지
 export const ExpertListPageDiv = styled.div`
-  padding: 2px h2.tit {
+  padding: 2px;
+  h2.tit {
     font-size: 20px;
     font-weight: 600;
     padding: 20px 0;

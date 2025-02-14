@@ -121,7 +121,7 @@ function Index() {
       if (res.data.resultData.optionList.length > 0) {
         const firstOption = res.data.resultData.optionList[0];
         setSelectedPrices({
-          [firstOption.productOptionId]:
+          [firstOption.optionId]:
             firstOption.optionDetailList[0].optionDetailPrice,
         });
       }
@@ -129,7 +129,7 @@ function Index() {
       // console.log("너란다 : ", res.data.resultData.optionList);
 
       const listTempArr = res.data.resultData.optionList.map(item => ({
-        productOptionId: item.productOptionId,
+        optionId: item.optionId,
         optionDetailId: item.optionDetailList[0].optionDetailId,
       }));
 
@@ -186,14 +186,14 @@ function Index() {
     pyeongVal * 10000;
   const displayTotalPrice = isNaN(totalPrice) ? 0 : totalPrice;
   // 옵션 변경 처리
-  const handleOptionChange = (productOptionId, optionPrice, optionDetailId) => {
-    // console.log("productOptionId : ", productOptionId);
+  const handleOptionChange = (optionId, optionPrice, optionDetailId) => {
+    // console.log("optionId : ", optionId);
     // console.log("optionPrice : ", optionPrice);
     // console.log("optionDetailId : ", optionDetailId);
     // console.log("----------");
 
     const resultArr = sendAllData.map(item => {
-      if (productOptionId === item.productOptionId) {
+      if (optionId === item.optionId) {
         item.optionDetailId = optionDetailId;
       }
       return item;
@@ -203,7 +203,7 @@ function Index() {
 
     setSelectedPrices(prev => {
       const updatedPrices = Object.keys(prev)
-        .filter(key => key !== productOptionId)
+        .filter(key => key !== optionId)
         .reduce((obj, key) => {
           obj[key] = prev[key];
           return obj;
@@ -211,12 +211,12 @@ function Index() {
 
       return {
         ...updatedPrices,
-        [productOptionId]: optionPrice,
+        [optionId]: optionPrice,
       };
     });
     setSelectedOption(prev => {
       const updatedOptionDetail = Object.keys(prev)
-        .filter(key => key !== productOptionId)
+        .filter(key => key !== optionId)
         .reduce((obj, key) => {
           obj[key] = prev[key];
           return obj;
@@ -224,7 +224,7 @@ function Index() {
 
       return {
         ...updatedOptionDetail,
-        [productOptionId]: optionDetailId,
+        [optionId]: optionDetailId,
       };
     });
   };
@@ -388,23 +388,23 @@ function Index() {
                             >
                               <input
                                 type="radio"
-                                name={`option-${option.productOptionId}`}
+                                name={`option-${option.optionId}`}
                                 id={item.optionDetailId}
                                 onChange={() =>
                                   handleOptionChange(
-                                    option.productOptionId,
+                                    option.optionId,
                                     item.optionDetailPrice,
                                     item.optionDetailId,
                                   )
                                 }
                                 checked={
-                                  selectedOption[option.productOptionId] ===
+                                  selectedOption[option.optionId] ===
                                   item.optionDetailId
                                 }
                               />
                               <em>
                                 <i>
-                                  {selectedOption[option.productOptionId] ===
+                                  {selectedOption[option.optionId] ===
                                   item.optionDetailId ? (
                                     <BsCheckCircleFill className="text-[#34A5F0]" />
                                   ) : (

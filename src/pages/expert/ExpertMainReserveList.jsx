@@ -50,10 +50,10 @@ function ExpertMainReserveList() {
       const res = await loginApi.get(
         `/api/service?business_id=${businessId}&status=1&page=1&size=10`,
       );
-      console.log("📡 API 응답 데이터:", res.data);
+      // console.log("📡 API 응답 데이터:", res.data);
       setReservationData(res.data.resultData || []); // 🚀 안전한 초기화
     } catch (error) {
-      console.error("🚨 API 호출 오류:", error);
+      // console.error("🚨 API 호출 오류:", error);
     }
   };
 
@@ -83,7 +83,7 @@ function ExpertMainReserveList() {
     }
   };
 
-  console.log("🔄 현재 reservationData:", reservationData);
+  // console.log("🔄 현재 reservationData:", reservationData);
 
   return (
     <ExpertListPageDiv>
@@ -100,7 +100,7 @@ function ExpertMainReserveList() {
 
           <div ref={containerRef} className="w-full h-72 overflow-y-scroll">
             {reservationData.map((reservation, index) => {
-              console.log(`✅ 화면에 표시될 데이터 ${index}:`, reservation);
+              // console.log(`✅ 화면에 표시될 데이터 ${index}:`, reservation);
               return (
                 <button
                   key={reservation.serviceId}
