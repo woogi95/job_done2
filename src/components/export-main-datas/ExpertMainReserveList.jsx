@@ -3,8 +3,8 @@ import {
   EListContDiv,
   ExpertListPageDiv,
   ExportListDiv,
-} from "./expertmainreservelist";
-import ExpertReservation from "../../components/papers/ExpertReservation";
+} from "./expertmainreservelistcss";
+import ExpertReservation from "../papers/ExpertReservation";
 import { useRecoilValue } from "recoil";
 import { statusAtom } from "../../atoms/statusAtom";
 import { businessDetailState } from "../../atoms/businessAtom";
