@@ -26,5 +26,8 @@ export default defineConfig({
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      "@emotion/core": "@emotion/react",
+    },
   },
 });

@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 @font-face {
   font-family: "Pretendard-Regular";
   src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
@@ -6,11 +12,7 @@
   font-style: normal;
   unicode-range: U+AC00-D7A3;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 /* reset custom css */
 html,
 body,
@@ -115,7 +117,9 @@ section {
   display: block;
 }
 body {
-  line-height: 1;
+  line-height: 1 !important;
+  font-size: var(--font-size-base) !important;
+  color: var(--primary-color) !important;
 }
 ol,
 ul {
@@ -152,12 +156,16 @@ table {
   background: #f1f1f1;
   border-radius: 10px;
 }
+button[type="button"],
 button {
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 5px !important;
+  cursor: pointer !important;
 }
-input:focus {
-  outline: none;
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input {
+  outline: none !important;
 }
 
 /*  */
@@ -172,13 +180,10 @@ li {
 html {
   font-size: 16px;
 }
-body {
-  font-size: var(--font-size-base);
-  color: var(--primary-color);
-}
 html,
-body :root {
-  font-family: "Pretendard-Regular", "Spoqa Han Sans Neo", "Roboto", sans-serif;
+body,
+:root {
+  font-family: "Pretendard-Regular", "Roboto", sans-serif !important;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
