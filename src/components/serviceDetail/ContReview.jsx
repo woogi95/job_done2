@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { reviewListState } from "../../atoms/reviewAtom";
-import { ReviewDiv, ReviewFilterDiv, StarTotalDiv } from "./serviceDetail";
+import {
+  PreviewImgDiv,
+  ReviewDiv,
+  ReviewFilterDiv,
+  StarTotalDiv,
+} from "./serviceDetail";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { FaStar, FaStarHalf } from "react-icons/fa";
@@ -22,6 +27,10 @@ const ContReview = () => {
   const page = 1;
   const size = 10;
 
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
+  const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지
+
   // 정렬 방식에 따른 API 호출
   const handleSortTypeClick = (businessId, option, state) => {
     console.log("businessId, status!!!", businessId, option, state);
@@ -33,12 +42,10 @@ const ContReview = () => {
 
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, state) => {
-    // console.log("3424businessId, status!!!", businessId, state);
     try {
       const res = await axios.get(
         `/api/review?businessId=${businessId}&state=${state}&page=${page}&size=${size}`,
       );
-      // console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -76,6 +83,18 @@ const ContReview = () => {
         ))}
       </>
     );
+  };
+
+  // 이미지 클릭 시 모달 열기
+  const handleImageClick = image => {
+    setSelectedImage(image); // 클릭한 이미지 저장
+    setIsModalOpen(true); // 모달 열기
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+    setSelectedImage(null); // 선택된 이미지 초기화
   };
 
   return (
@@ -181,7 +200,10 @@ const ContReview = () => {
                         )
                         .slice(0, 2)
                         .map((pic, index) => (
-                          <div key={index}>
+                          <div
+                            key={index}
+                            onClick={() => handleImageClick(pic)}
+                          >
                             <img src={`${BASE_URL}${pic}`} alt="review-img" />
                           </div>
                         ))}
@@ -227,6 +249,18 @@ const ContReview = () => {
           ))}
         </div>
       </ReviewDiv>
+
+      {/* 이미지 팝업 */}
+      {isModalOpen && (
+        <PreviewImgDiv onClick={closeModal}>
+          <div className="layer">
+            <div className="img-box">
+              <img src={`${BASE_URL}${selectedImage}`} alt="review-img" />
+            </div>
+            <button onClick={closeModal}>닫기</button>
+          </div>
+        </PreviewImgDiv>
+      )}
     </>
   );
 };

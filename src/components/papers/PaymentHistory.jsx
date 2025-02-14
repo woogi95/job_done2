@@ -8,7 +8,7 @@ import { Popup } from "../ui/Popup";
 import LoadingPopup from "../LoadingPopup";
 import { useNavigate } from "react-router-dom";
 
-const Estimate = () => {
+const PaymentHistory = () => {
   // 컨펌 팝업
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
@@ -252,6 +252,13 @@ const Estimate = () => {
                     </ul>
                   </li>
                 )}
+                {/* "etc": [
+      {
+        "etcId": 0,
+        "etcPrice": 0,
+        "etcComment": "string"
+      }
+    ], */}
                 <li>
                   <p>견적비용</p>
                   <span>{papersInfo.price.toLocaleString()}원</span>
@@ -287,4 +294,4 @@ const Estimate = () => {
   );
 };
 
-export default Estimate;
+export default PaymentHistory;

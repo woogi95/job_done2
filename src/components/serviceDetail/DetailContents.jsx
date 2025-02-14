@@ -132,20 +132,6 @@ const DetailContents = () => {
     setIsPfDetailPop(true);
   };
 
-  // 문의하기 3차 (지우지마)
-  // const openWindow = () => {
-  //   const width = 410;
-  //   const height = 570;
-  //   const left = (screen.width - width) / 2;
-  //   const top = (screen.height - height) / 2;
-
-  //   window.open(
-  //     "/service/contactus",
-  //     "_blank",
-  //     `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
-  //   );
-  // };
-
   const handleReservation = () => {
     const accessToken = getCookie("accessToken");
     // console.log(accessToken);
