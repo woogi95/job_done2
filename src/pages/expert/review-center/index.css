@@ -50,3 +50,7 @@
   font-weight: 700;
   font-size: 10px;
 }
+.second-td {
+  text-align: center;
+  vertical-align: none !important;
+}

@@ -64,6 +64,7 @@ import Estimate from "./components/papers/Estimate";
 import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
+import TestMessage from "./pages/mypage/TestMessage";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/test" element={<TestPage />} />
+          <Route path="/testmessage" element={<TestMessage />} />
           {/* 카카오페이 관련 */}
           <Route path="/paySuccess" element={<PaymentSuccess />} />
           <Route path="/payFailed" element={<PaymentFailed />} />
