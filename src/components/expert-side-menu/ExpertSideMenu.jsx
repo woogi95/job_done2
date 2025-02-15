@@ -4,7 +4,6 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { SideMenuDiv } from "./sideMenu";
 // icon
 import { IoIosArrowDown } from "react-icons/io";
-import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { statusAtom } from "../../atoms/statusAtom";
 

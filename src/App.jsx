@@ -101,15 +101,7 @@ function App() {
             <Route index element={<Reservation />} />
             <Route path="history" element={<ReservationHistory />} />
           </Route>
-          {/* 세차 페이지 */}
-          {/* <Route path="/carwash">
-            <Route index element={<CarWashPage />} />
-          </Route> */}
-          {/* 청소 페이지 */}
-          {/* <Route path="/cleaning">
-            <Route index element={<CleaningPage />} />
-          </Route> */}
-          {/* 이사 페이지 */}
+          {/* 서비스 페이지 */}
           <Route path="/service">
             <Route index element={<Service />} />
             <Route path="contactus" element={<ContactUs />} />
