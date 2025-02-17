@@ -182,7 +182,8 @@ html {
 }
 html,
 body,
-:root {
+:root,
+*:not(i):not(.fa):not(.fas):not(.far):not(.fab) {
   font-family: "Pretendard-Regular", "Roboto", sans-serif !important;
 }
 
@@ -199,4 +200,8 @@ input[type="number"] {
 img {
   border: none; /* 기본적인 테두리 제거 */
   outline: none; /* 브라우저 기본 아웃라인 제거 */
+}
+
+.chakra-ui-light *:not(i):not(.fa):not(.fas):not(.far):not(.fab) {
+  font-family: "Pretendard-Regular", "Roboto", sans-serif !important;
 }

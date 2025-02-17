@@ -104,7 +104,7 @@ function LoginPage() {
           ]}
         >
           <Input
-            style={{ alignItems: "center" }}
+            style={{ alignItems: "center", height: "40px" }}
             placeholder="이메일을 입력하세요."
           />
         </Form.Item>
@@ -119,16 +119,19 @@ function LoginPage() {
             // },
           ]}
         >
-          <Input.Password placeholder="비밀번호를 입력하세요" />
+          <Input.Password
+            placeholder="비밀번호를 입력하세요"
+            className="h-[40px]"
+          />
         </Form.Item>
         <Button
-          className="bg-blue-500 border border-gray-400 w-80 h-11 rounded-lg mb-2"
+          className="bg-[#4581F0] font-semibold text-[16px] border-gray-300 w-80 h-[40px] rounded-lg mb-2 flex justify-center items-center text-white"
           htmlType="submit"
         >
           로그인
         </Button>
-        <div className="justify-between flex text-gray-500 mb-10">
-          <div>
+        <div className="justify-between flex items-center text-gray-500 mb-10">
+          <div className="flex justify-center items-center gap-[3px]">
             <input type="checkbox" id="logining" name="logining" />
             <label htmlFor="iogining">로그인 상태 유지</label>
           </div>
@@ -141,14 +144,14 @@ function LoginPage() {
           <div style={{ marginBottom: 10 }}>
             <button
               type="button"
-              className="bg-amber-300 border border-gray-400 w-80 h-11 rounded-lg flex items-center justify-center mb-3"
+              className="bg-[#FEE500] gap-[5px] border border-[#E4E5ED] font-semibold text-[14px] w-80 h-[40px] rounded-lg flex items-center justify-center mb-3"
             >
               <RiKakaoTalkFill style={{ fontSize: 30 }} />
               카카오 로그인
             </button>
             <button
               type="button"
-              className="bg-white border border-gray-400 w-80 h-11 rounded-lg flex items-center justify-center"
+              className="bg-white border gap-[5px] border-[#E4E5ED] w-80 h-[40px] font-semibold text-[14px] rounded-lg flex items-center justify-center"
             >
               <FcGoogle style={{ fontSize: 30 }} />
               구글 로그인
@@ -158,7 +161,7 @@ function LoginPage() {
             <button
               type="button"
               onClick={() => signUpButton()}
-              className="bg-white-500 border border-gray-400 w-80 h-11 rounded-lg "
+              className="!pre bg-white-500 border border-[#E4E5ED] font-semibold text-[14px] w-80 h-[40px] rounded-lg "
             >
               회원가입
             </button>

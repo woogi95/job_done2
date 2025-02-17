@@ -15,13 +15,16 @@ function MyMessage() {
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
 
+
   const IMAGE_BASE_URL = "http://112.222.157.157:5224";
+
 
   // 방 리스트
   const chatRoomList = async () => {
     try {
       setLoading(true);
-      const res = await loginApi.get("/api/room/");
+
+      const res = await loginApi.get("/api/room");
       console.log("API 리스폰스:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatRooms(res.data.resultData);

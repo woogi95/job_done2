@@ -1,0 +1,57 @@
+.sidebar {
+  background-color: #2d3748; /* bg-gray-800 */
+  color: white; /* text-white */
+  width: 16rem; /* w-64 */
+  min-height: 100vh; /* min-h-screen */
+}
+
+.sidebar.hidden {
+  display: none; /* hidden */
+}
+
+.sidebar .sidebar-header {
+  padding: 1rem; /* p-4 */
+}
+
+.sidebar .sidebar-header h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600; /* font-semibold */
+}
+
+.sidebar nav {
+  margin-top: 1rem; /* mt-4 */
+}
+.sidebar nav button {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+  padding: 0.625rem 1rem; /* py-2.5 px-4 */
+  border-radius: 0.25rem; /* rounded */
+  transition: background-color 0.2s ease-in-out; /* transition duration-200 */
+  text-decoration: none;
+  color: inherit;
+}
+.sidebar nav a {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+  padding: 0.625rem 1rem; /* py-2.5 px-4 */
+  border-radius: 0.25rem; /* rounded */
+  transition: background-color 0.2s ease-in-out; /* transition duration-200 */
+  text-decoration: none;
+  color: inherit;
+}
+.sidebar nav button:hover {
+  background-color: #4a5568;
+  width: 100%;
+}
+.sidebar nav a:hover {
+  background-color: #4a5568; /* hover:bg-gray-700 */
+}
+
+@media (min-width: 768px) {
+  /* md:block */
+  .sidebar {
+    display: block;
+  }
+}
