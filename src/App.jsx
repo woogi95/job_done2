@@ -65,6 +65,7 @@ import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
 import TestMessage from "./pages/mypage/TestMessage";
+import PaymentHistory from "./components/papers/PaymentHistory";
 
 function App() {
   return (
@@ -117,6 +118,10 @@ function App() {
             <Route path="wishlist" element={<Wishlist />} />
           </Route>
           <Route path="/estimate/:serviceId" element={<Estimate />} />
+          <Route
+            path="/paymenthistory/:serviceId"
+            element={<PaymentHistory />}
+          />
           <Route
             path="/UserReservLook/:serviceId"
             element={<UserReservLook />}

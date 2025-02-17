@@ -204,6 +204,9 @@ function MyReservation() {
       } else if (currentReservation.completed === 2) {
         document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/estimate/${serviceId}`);
+      } else if (currentReservation.completed === 6) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
+        navigate(`/paymenthistory/${serviceId}`);
       }
     }
   };

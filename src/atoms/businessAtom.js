@@ -30,6 +30,7 @@ export const checkMsg = atom({
   key: "checkMsg",
   default: true,
 });
+
 // 한 업체 조회(업체 디테일 정보)
 export const businessDetailState = atom({
   key: "businessDetailState",

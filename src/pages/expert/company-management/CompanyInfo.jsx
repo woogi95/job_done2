@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // comp
 import LogoEdit from "../../../components/expert-info/LogoEdit";
@@ -17,26 +17,58 @@ import { MdModeEdit } from "react-icons/md";
 
 import ExpertInfo from "../../../components/expert-info/ExpertInfo";
 import ExpertInfoEdit from "../../../components/expert-info/ExpertInfoEdit";
+import { businessDetailState } from "../../../atoms/businessAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { loginApi } from "../../../apis/login";
 
 function CompanyInfo() {
+  const busiId = localStorage.getItem("businessId");
   const [isLogoEdit, setIsLogoEdit] = useState(false);
   const [isExpertInfoEdit, setIsExpertInfoEdit] = useState(false);
+  const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
+  const businessState = useRecoilValue(businessDetailState);
+  const BASE_URL = "http://112.222.157.157:5224";
+  const getBusinessInfo = async busiId => {
+    try {
+      const res = await loginApi.get(
+        `/api/business/%7BbusinessId%7D?businessId=${busiId}`,
+      );
+      setBusinessInfo(res.data.resultData);
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log("businessState@@", businessState);
+  useEffect(() => {
+    if (busiId) {
+      getBusinessInfo(busiId);
+    }
+  }, [busiId]);
   return (
     <ExportPageDiv>
       {/* <h2 className="tit">업체 관리</h2> */}
       <ExpertInfoDiv>
         <TitleAreaDiv>
           <h2 className="tit">업체정보</h2>
-          <button>
+          <button
+            onClick={() => {
+              setIsExpertInfoEdit(true);
+            }}
+          >
             <p>업체정보수정</p> <MdModeEdit />
           </button>
         </TitleAreaDiv>
         <ContBoxDiv>
           {/* 로고 & 로고수정 */}
           {isLogoEdit ? (
-            <LogoEdit setIsLogoEdit={setIsLogoEdit} />
+            <LogoEdit
+              businessState={businessState}
+              setIsLogoEdit={setIsLogoEdit}
+              busiId={busiId}
+            />
           ) : (
-            <Logo setIsLogoEdit={setIsLogoEdit} />
+            <Logo businessState={businessState} setIsLogoEdit={setIsLogoEdit} />
           )}
           {/* 업체정보 업체정보수정 */}
           {isExpertInfoEdit ? (
