@@ -16,7 +16,7 @@ import parse from "html-react-parser";
 import { IoIosArrowDown } from "react-icons/io";
 
 const ContReview = () => {
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
   const businessDetail = useRecoilValue(businessDetailState);
   const options = ["최신순", "높은별점순", "낮은별점순"];

@@ -21,7 +21,7 @@ function MyMessage() {
   const chatRoomList = async () => {
     try {
       setLoading(true);
-      const res = await loginApi.get("/api/room");
+      const res = await loginApi.112.222.157.157);
       console.log("API 리스폰스:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatRooms(res.data.resultData);

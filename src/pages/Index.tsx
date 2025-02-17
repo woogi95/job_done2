@@ -41,7 +41,7 @@ const Index = () => {
       region: regionNames[i + 1],
     })),
   );
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
 
   const fetchBusinessData = async (
     regionId: number,
