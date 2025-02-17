@@ -13,7 +13,7 @@ function MyMessage() {
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
-  const IMAGE_BASE_URL = "http://112.222.157.157:5224";
+  const IMAGE_BASE_URL = "http://112.222.157.157:5234";
   // 방 리스트
   const chatRoomList = async () => {
     try {

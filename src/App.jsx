@@ -65,6 +65,19 @@ import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
 import TestMessage from "./pages/mypage/TestMessage";
+import PaymentHistory from "./components/papers/PaymentHistory";
+
+import AdminMain from "./pages/admin/AdminMain";
+import UserList from "./pages/admin/user/userlist/UserList";
+import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
+import UserReport from "./pages/admin/user/report/UserReport";
+import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
+import ReservationSearch from "./pages/admin/business-search/reservation-search/ReservationSearch";
+import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueSearch";
+import RequestBusi from "./pages/admin/request/business/RequestBusi";
+import RequestProduct from "./pages/admin/request/product/RequestProduct";
+import AdminLayout from "./components/admin/AdminLayout";
+
 
 function App() {
   return (
@@ -118,6 +131,10 @@ function App() {
           </Route>
           <Route path="/estimate/:serviceId" element={<Estimate />} />
           <Route
+            path="/paymenthistory/:serviceId"
+            element={<PaymentHistory />}
+          />
+          <Route
             path="/UserReservLook/:serviceId"
             element={<UserReservLook />}
           />
@@ -170,6 +187,32 @@ function App() {
         </Route>
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
+        {/* 관리자 */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin">
+            <Route index element={<AdminMain />} />
+            <Route path="userlist">
+              <Route index element={<UserList />} />
+              <Route path="onebyone" index element={<UserOneByOne />} />
+              <Route path="userreport" index element={<UserReport />} />
+            </Route>
+            {/* 업체 조회 */}
+            <Route path="businesssearch">
+              <Route index element={<CategorySearch />} />
+              <Route
+                path="reservationsearch"
+                index
+                element={<ReservationSearch />}
+              />
+              <Route path="revenuesearch" index element={<RevenueSearch />} />
+            </Route>
+            {/* 업체,상품등록요청 */}
+            <Route path="requestresi">
+              <Route index element={<RequestBusi />} />
+              <Route path="requestproduct" index element={<RequestProduct />} />
+            </Route>
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );

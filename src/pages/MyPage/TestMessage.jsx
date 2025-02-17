@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 function TestMessage() {
   const [socket, setSocket] = useState(null);
@@ -6,9 +6,19 @@ function TestMessage() {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [inRoom, setInRoom] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [hasUsername, setHasUsername] = useState(false);
+
+  // 메시지 컨테이너에 대한 ref 추가
+  const messageContainerRef = useRef(null);
+
+  // 메시지가 업데이트될 때마다 스크롤을 아래로 이동시키는 useEffect 추가
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     let ws;
@@ -16,7 +26,11 @@ function TestMessage() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-      ws = new WebSocket("ws://112.222.157.156:5224/chat");
+
+
+      ws = new WebSocket("ws://112.222.157.157:5234/chat");
+
+
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
@@ -26,8 +40,34 @@ function TestMessage() {
       };
 
       ws.onmessage = event => {
-        const message = JSON.parse(event.data);
-        setMessages(prevMessages => [...prevMessages, message]);
+        try {
+          const rawData = event.data;
+          let messageData;
+
+          // 데이터가 "새 메세지: "로 시작하는 경우
+          if (
+            typeof rawData === "string" &&
+            rawData.startsWith("새 메세지: ")
+          ) {
+            messageData = rawData.substring(6); // "새 메세지: " 제거 (한글 문자 길이 고려)
+          } else {
+            messageData = rawData;
+          }
+
+          const message = JSON.parse(messageData);
+          setMessages(prevMessages => [...prevMessages, message]);
+        } catch (error) {
+          console.error("메시지 파싱 에러:", error);
+          console.log("원본 데이터:", event.data);
+          // 일반 텍스트 메시지로 처리
+          setMessages(prevMessages => [
+            ...prevMessages,
+            {
+              username: "시스템",
+              message: event.data,
+            },
+          ]);
+        }
       };
 
       ws.onerror = error => {
@@ -58,22 +98,9 @@ function TestMessage() {
     };
   }, []);
 
-  // 방 입장 처리
-
-  const handleJoinRoom = () => {
-    if (socket && socket.readyState === WebSocket.OPEN && username && room) {
-      try {
-        socket.send(
-          JSON.stringify({
-            type: "JOIN",
-            username: username,
-            room: room,
-          }),
-        );
-        setInRoom(true);
-      } catch (error) {
-        console.error("방 입장 실패:", error);
-      }
+  const handleSetUsername = () => {
+    if (username.trim()) {
+      setHasUsername(true);
     }
   };
 
@@ -83,18 +110,16 @@ function TestMessage() {
 
   const handleSendMessage = e => {
     e.preventDefault();
-    if (socket && socket.readyState === WebSocket.OPEN && inRoom) {
+    if (socket && socket.readyState === WebSocket.OPEN && username) {
       try {
         const messageData = {
-          roomId: room, // room을 roomId로 사용
-          flag: 1,
+          username: username,
           message: inputMessage,
           files: selectedFiles.map(file => ({
             name: file.name,
             type: file.type,
             size: file.size,
-            // 필요한 경우 파일을 Base64로 인코딩하여 전송
-            data: null, // 실제 구현 시 Base64 데이터로 변환 필요
+            data: null,
           })),
         };
 
@@ -118,7 +143,7 @@ function TestMessage() {
         )}
       </div>
 
-      {!inRoom ? (
+      {!hasUsername ? (
         <div className="space-y-4">
           <input
             type="text"
@@ -127,23 +152,19 @@ function TestMessage() {
             onChange={e => setUsername(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <input
-            type="text"
-            placeholder="방 이름"
-            value={room}
-            onChange={e => setRoom(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
           <button
-            onClick={handleJoinRoom}
+            onClick={handleSetUsername}
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
-            방 입장
+            채팅 시작하기
           </button>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="h-[400px] overflow-y-auto border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <div
+            ref={messageContainerRef}
+            className="h-[400px] overflow-y-auto border border-gray-200 rounded-lg p-4 bg-gray-50"
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}

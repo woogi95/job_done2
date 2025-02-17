@@ -6,13 +6,17 @@
 .table-container {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 5px;
+  border: 2px solid #ddd;
 }
 
 .table-container th,
 .table-container td {
-  padding: 10px;
-  border: 1px solid #ddd;
+  padding: 5px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   text-align: center;
+  line-height: normal;
 }
 
 @media (max-width: 600px) {

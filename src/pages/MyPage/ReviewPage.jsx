@@ -18,7 +18,7 @@ const convertImgUrlFiles = async imageUrls => {
 };
 
 function ReviewPage() {
-  const picURL = "http://112.222.157.157:5224";
+  const picURL = "http://112.222.157.157:5234";
   const [review, setReview] = useState([]);
   const [correctModalOpen, setCorrectModalOpen] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);

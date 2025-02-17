@@ -209,7 +209,7 @@ export default SignUpPage;
         }
         console.log(FormData);
         const res = await axios.post(
-          "http://112.222.157.157:5224/api/user/sign-up",
+          "http://112.222.157.157:5234/api/user/sign-up",
           formData,
           {
             headers: {

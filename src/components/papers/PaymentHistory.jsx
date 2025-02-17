@@ -131,15 +131,15 @@ const PaymentHistory = () => {
         <div className="logo"></div>
         <PaperContDiv>
           <h2 className="tit">
-            요청하신
-            <strong>
-              견적서가
-              <br /> 완료
+            {papersInfo.userName}님
+            <strong className="!text-[#FF3044]">
+              <br />
+              결제가 완료
             </strong>
             되었습니다.
           </h2>
           <span className="description">
-            기다려 주셔서 감사합니다. <br />
+            {/* 기다려 주셔서 감사합니다. <br /> */}
             예약 내역 및 견적 내용은 <em>마이페이지{">"}예약현황</em>에서
             확인하실 수 있습니다.
             <br /> 수정사항이나 문의 사항이 있으시면, "문의하기"를 통해 연락
@@ -151,6 +151,19 @@ const PaymentHistory = () => {
             </b>
           </span>
           <FormDiv>
+            <div className="company-info">
+              <h3>예약업체 정보</h3>
+              <ul>
+                <li>
+                  <p>결제 금액</p>
+                  <span>{papersInfo.price}</span>
+                </li>
+                <li>
+                  <p>결제 날짜</p>
+                  <span>{papersInfo.businessNum}</span>
+                </li>
+              </ul>
+            </div>
             <div className="company-info">
               <h3>예약업체 정보</h3>
               <ul>
