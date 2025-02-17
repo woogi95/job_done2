@@ -43,6 +43,11 @@ export const ContBoxDiv = styled(EListContDiv)`
 `;
 //  업체 정보
 export const ExpertInfoDiv = styled.div`
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   /* ---- 업체 정보 ---- */
   .photo-area {
     padding: 10px 0;
@@ -62,11 +67,12 @@ export const ExpertInfoDiv = styled.div`
       justify-content: center;
       align-items: center;
       position: relative;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
       img {
         width: 120px;
         height: 120px;
         object-fit: contain;
-        padding: 15px;
+        padding: 8px;
         background: #eee;
         border-radius: 100%;
       }
@@ -91,7 +97,8 @@ export const ExpertInfoDiv = styled.div`
       }
     }
     .btn-area {
-      padding: 10px 0;
+      /* border: 1px solid; */
+      padding: 24px 0 10px;
       display: flex;
       align-items: center;
       gap: 6px;

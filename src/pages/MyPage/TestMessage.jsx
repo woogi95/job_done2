@@ -27,7 +27,9 @@ function TestMessage() {
 
     const connectWebSocket = () => {
 
+
       ws = new WebSocket("ws://112.222.157.157:5234/chat");
+
 
 
       ws.onopen = () => {

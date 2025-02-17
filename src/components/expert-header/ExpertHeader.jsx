@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { loginUser } from "../../atoms/loginAtom";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
-import { Cookies } from "react-cookie";
 import { removeCookie } from "../../apis/cookie";
 
 const ExpertHeader = () => {
@@ -20,7 +19,7 @@ const ExpertHeader = () => {
         `/api/business/%7BbusinessId%7D?businessId=${busiId}`,
       );
       setBusinessInfo(res.data.resultData);
-      // console.log(res.data.resultData);
+      console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -45,9 +44,9 @@ const ExpertHeader = () => {
   useEffect(() => {
     if (busiId) {
       getBusinessInfo(busiId);
-      // console.log(businessInfo);
     }
-  }, []);
+  }, [busiId]);
+  console.log("businessInfo", businessInfo);
   return (
     <HeaderDiv>
       <Link to={"expert"} className="b-logo">

@@ -1,8 +1,12 @@
-const Logo = ({ setIsLogoEdit }) => {
+const Logo = ({ setIsLogoEdit, businessState }) => {
+  const BASE_URL = "http://112.222.157.157:5224";
   return (
     <div className="photo-area">
       <div className="logo">
-        <img src="/images/logo.svg" alt="업체로고" />
+        <img
+          src={`${BASE_URL}${businessState.logo}`}
+          alt={businessState.businessName}
+        />
       </div>
       <div className="btn-area">
         <button>상품 페이지</button>
