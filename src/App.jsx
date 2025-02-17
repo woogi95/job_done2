@@ -77,7 +77,7 @@ import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueS
 import RequestBusi from "./pages/admin/request/business/RequestBusi";
 import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import AdminLayout from "./components/admin/AdminLayout";
-
+import Forum from "./pages/community/Forum";
 
 function App() {
   return (
@@ -87,6 +87,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/test" element={<TestPage />} />
           <Route path="/testmessage" element={<TestMessage />} />
+          <Route path="/forum" element={<Forum />} />
           {/* 카카오페이 관련 */}
           <Route path="/paySuccess" element={<PaymentSuccess />} />
           <Route path="/payFailed" element={<PaymentFailed />} />

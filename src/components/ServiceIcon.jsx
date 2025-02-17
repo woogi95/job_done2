@@ -84,6 +84,12 @@ export const EventBanner = [
     image: "/images/event/event_banner_3.jpg",
     link: "/",
   },
+  {
+    id: 4,
+    title: "문의 게시판을 이용하세요!",
+    image: "/images/event/event_banner_4.jpg",
+    link: "/forum",
+  },
 ];
 
 // 찜목록 더미데이터
