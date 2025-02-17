@@ -14,7 +14,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://112.222.157.156:5224",
+        target: "http://112.222.157.157:5224",
         changeOrigin: true,
         secure: false,
       },
@@ -26,5 +26,8 @@ export default defineConfig({
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      "@emotion/core": "@emotion/react",
+    },
   },
 });

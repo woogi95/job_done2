@@ -32,7 +32,7 @@ const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
   const { id } = useParams();
   const navigate = useNavigate();
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);

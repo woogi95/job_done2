@@ -9,7 +9,7 @@ import { BsHeartFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 
 const ServiceListItem = ({ business, onClick }) => {
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
   const [likeStatus] = useRecoilState(likeStatusState);
   const currentLikeStatus = likeStatus[business.businessId] || {
     isLiked: false,

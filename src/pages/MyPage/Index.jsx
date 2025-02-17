@@ -70,7 +70,7 @@ function MyPage() {
       setUserEmail(userData.email);
       setPhoneNumber(userData.phone);
       const profileImgUrl = userData.pic
-        ? `http://112.222.157.156:5224${userData.pic}`
+        ? `http://112.222.157.157:5224${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
     } catch (error) {
@@ -231,6 +231,7 @@ function MyPage() {
               src={profileImg}
               alt="profile"
               className="w-[100px] h-[100px] rounded-full object-cover"
+              style={{ boxShadow: "none" }}
             />
             <input
               id="imgUpload"
@@ -241,7 +242,7 @@ function MyPage() {
             />
             <label
               htmlFor="imgUpload"
-              className="absolute bottom-0 right-0 bg-white rounded-full text-[#1e1e1e] cursor-pointer w-[30px] h-[30px] flex justify-center items-center text-[24px]"
+              className="absolute bottom-0 right-0 bg-white rounded-full text-[#1e1e1e] cursor-pointer w-[30px] h-[30px] flex justify-center items-center text-[24px] shadow-none"
             >
               <IoIosCamera />
             </label>
@@ -251,7 +252,7 @@ function MyPage() {
               ${
                 isEdit
                   ? "bg-black text-white hover:bg-gray-800"
-                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : " text-gray-500 cursor-not-allowed"
               }`}
             onClick={handleSubmit}
             disabled={!isEdit}

@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 
 const DetailTop = () => {
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
   const businessDetail = useRecoilValue(businessDetailState);
   // console.log(businessDetail);
   if (!businessDetail) {
@@ -29,8 +29,9 @@ const DetailTop = () => {
               </em>
             </h3>
             <strong>
-              {/* <b>안심번호</b>{businessDetail.safeTel} */}
-              <b>안심번호</b>053-0000-0000
+              <b>안심번호</b>
+              {businessDetail.safeTel}
+              {/* <b>안심번호</b>053-0000-0000 */}
             </strong>
             <b>{businessDetail.address}</b>
           </div>

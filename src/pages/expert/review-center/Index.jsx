@@ -155,53 +155,46 @@ function Index() {
           </thead>
 
           {/* 두 번째 행부터 불러온 데이터 매핑 */}
-          <tbody>
-            {reviewDatas.map(item => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.userName}</td>
-                <td>{item.contents}</td>
-                <td>{item.createdAt}</td>
-                <td>
-                  <div className="star-div">
-                    <div className="star-container">
-                      <p className="star">{renderStars(item.score)}</p>
-                      <span className="star-grade"></span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  {item.replyStatus === null ? (
-                    <button
-                      onClick={() => {
-                        openCommentModal(item.reviewId);
-                      }}
-                    >
-                      🔴
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        commentBoxs(item.reviewId);
-                      }}
-                    >
-                      🔵
-                    </button>
-                  )}
-                </td>
-                {/* {commentBox[item.reviewId] && (
-                  <tr>
-                    <td colSpan="6" style={{ backgroundColor: "#f9f9f9" }}>
-                      <div
-                        style={{ padding: "10px", border: "1px solid #ddd" }}
-                      >
-                        {item.comment}
+          <tbody className="second-td">
+            {reviewDatas.length === 0 ? (
+              <div> 등록된 리뷰가 없습니다.</div>
+            ) : (
+              reviewDatas.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.userName}</td>
+                  <td>{item.contents}</td>
+                  <td>{item.createdAt}</td>
+                  <td>
+                    <div className="star-div">
+                      <div className="star-container">
+                        <p className="star">{renderStars(item.score)}</p>
+                        <span className="star-grade"></span>
                       </div>
-                    </td>
-                  </tr>
-                )} */}
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                  <td>
+                    {item.replyStatus === null ? (
+                      <button
+                        onClick={() => {
+                          openCommentModal(item.reviewId);
+                        }}
+                      >
+                        🔴
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          commentBoxs(item.reviewId);
+                        }}
+                      >
+                        🔵
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

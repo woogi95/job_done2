@@ -39,7 +39,7 @@ function Header() {
 
       const userData = res.data.resultData;
       const profileImgUrl = userData.pic
-        ? `http://112.222.157.156:5224${userData.pic}`
+        ? `http://112.222.157.157:5224${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
     } catch (error) {
@@ -242,7 +242,7 @@ function Header() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
+                  className="w-8 h-8 !rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
                     src={profileImg}
