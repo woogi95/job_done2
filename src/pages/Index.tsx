@@ -2,8 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import "swiper/css";
-import "swiper/css/pagination";
+// import "swiper/css";
+// import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner } from "../components/ServiceIcon";
@@ -41,7 +41,7 @@ const Index = () => {
       region: regionNames[i + 1],
     })),
   );
-  const BASE_URL = "http://112.222.157.157:5224";
+  const BASE_URL = "http://112.222.157.157:5234";
 
   const fetchBusinessData = async (
     regionId: number,
