@@ -65,6 +65,7 @@ import UserReservLook from "./pages/mypage/UserReservLook";
 import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
 import TestMessage from "./pages/mypage/TestMessage";
+import PaymentHistory from "./components/papers/PaymentHistory";
 import AdminMain from "./pages/admin/AdminMain";
 import UserList from "./pages/admin/user/userlist/UserList";
 import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
@@ -75,6 +76,7 @@ import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueS
 import RequestBusi from "./pages/admin/request/business/RequestBusi";
 import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import AdminLayout from "./components/admin/AdminLayout";
+
 
 function App() {
   return (
@@ -127,6 +129,10 @@ function App() {
             <Route path="wishlist" element={<Wishlist />} />
           </Route>
           <Route path="/estimate/:serviceId" element={<Estimate />} />
+          <Route
+            path="/paymenthistory/:serviceId"
+            element={<PaymentHistory />}
+          />
           <Route
             path="/UserReservLook/:serviceId"
             element={<UserReservLook />}
