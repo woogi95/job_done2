@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 
 const DetailTop = () => {
-  const BASE_URL = "http://112.222.157.156:5224";
+  const BASE_URL = "http://112.222.157.157:5224";
   const businessDetail = useRecoilValue(businessDetailState);
   // console.log(businessDetail);
   if (!businessDetail) {
