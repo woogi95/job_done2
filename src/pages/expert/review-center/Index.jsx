@@ -130,7 +130,7 @@ function Index() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, backgroundColor: "white" }}>
       <div style={{ marginBottom: 10 }}>
         <button onClick={toggleSort}>
           {isSorted ? "오래된 순 정렬" : "최신순 정렬"}

@@ -26,7 +26,7 @@ interface BusinessItem {
 }
 
 const Index = () => {
-  const [companies, setCompanies] = useState<BusinessItem[]>([]);
+  const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const regionNames: { [key: number]: string } = {
     1: "대구",

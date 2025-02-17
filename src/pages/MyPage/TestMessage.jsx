@@ -26,7 +26,9 @@ function TestMessage() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-      ws = new WebSocket("ws://112.222.157.157:5224/chat/1");
+
+      ws = new WebSocket("ws://112.222.157.157:5234/chat");
+
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
