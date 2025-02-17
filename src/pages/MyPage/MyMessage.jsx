@@ -6,7 +6,6 @@ import MyPageLayout from "../../components/MyPageLayout";
 // import SockJS from "sockjs-client";
 // import { Stomp } from "@stomp/stompjs";
 // import { Cookies } from "react-cookie";
-
 function MyMessage() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -14,14 +13,12 @@ function MyMessage() {
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
-
-  const IMAGE_BASE_URL = "http://112.222.157.156:5224";
-
+  const IMAGE_BASE_URL = "http://112.222.157.157:5224";
   // 방 리스트
   const chatRoomList = async () => {
     try {
       setLoading(true);
-      const res = await loginApi.112.222.157.157);
+      const res = await loginApi.get("/api/room");
       console.log("API 리스폰스:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatRooms(res.data.resultData);
@@ -36,7 +33,6 @@ function MyMessage() {
       setLoading(false);
     }
   };
-
   // 채팅 조회
   const fetchChatMessages = async roomId => {
     try {
@@ -54,16 +50,13 @@ function MyMessage() {
       setChatMessages([]);
     }
   };
-
   const handleRoomSelect = roomId => {
     setSelectedRoomId(roomId);
     fetchChatMessages(roomId);
     console.log("선택된 방 번호:", roomId);
   };
-
   const sendMessage = async () => {
     if (!selectedRoomId || !message.trim()) return;
-
     const messageData = {
       p: {
         roomId: selectedRoomId,
@@ -71,21 +64,17 @@ function MyMessage() {
         flag: 1,
       },
     };
-
     if (selectedImages.length > 0) {
       messageData.pics = selectedImages.map(image => image.name);
     }
-
     const data = JSON.stringify(messageData);
     console.log("전송하려는 데이터:", data);
-
     try {
       const res = await axios.post("/api/chat", data, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
       console.log("메시지 전송 응답:", res.data);
       await fetchChatMessages(selectedRoomId);
       setMessage("");
@@ -95,19 +84,15 @@ function MyMessage() {
       console.log("전체 에러 객체:", error);
     }
   };
-
   const handleImageUpload = event => {
     const files = Array.from(event.target.files);
     setSelectedImages(files);
     console.log("선택된 이미지:", files);
   };
-
   const handleSendMessage = sendMessage;
-
   useEffect(() => {
     chatRoomList();
   }, []);
-
   const renderRoomItem = item => (
     <div key={item.roomId}>
       <div className="flex justify-center items-center p-[20px]">
@@ -142,7 +127,6 @@ function MyMessage() {
       </div>
     </div>
   );
-
   return (
     <MyPageLayout>
       <div className="flex justify-center items-center pb-[50px]">
@@ -150,7 +134,7 @@ function MyMessage() {
       </div>
       <div className="flex justify-center w-full">
         <div className="flex justify-between items-start w-[780px]">
-          <div className="flex justify-center w-[280px] h-[800px] bg-[#ffffff] overflow-hidden">
+          <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
             {/* 메시지 리스트 */}
             <div className="flex flex-col gap-[10px] w-full overflow-y-auto">
               {loading ? (
@@ -312,5 +296,4 @@ function MyMessage() {
     </MyPageLayout>
   );
 }
-
 export default MyMessage;
