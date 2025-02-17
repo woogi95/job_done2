@@ -1,0 +1,13 @@
+.layout-div {
+  background-color: #1b428b;
+
+  justify-content: center;
+  height: 100vh;
+  overflow-y: hidden;
+  max-width: 1280px;
+  width: 100%;
+}
+
+.second-div {
+  display: flex;
+}
