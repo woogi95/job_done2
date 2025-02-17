@@ -13,7 +13,7 @@ import { FaStar, FaStarHalf } from "react-icons/fa";
 import "./reviewview.css";
 import { useNavigate } from "react-router-dom";
 const ReviewView = () => {
-  const BASE_URL = "http://112.222.157.157:5224";
+  const BASE_URL = "http://112.222.157.157:5234";
   const [form] = Form.useForm();
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
   const [reviewPicsData, setReviewPicsData] = useRecoilState(reviewPicsList);
