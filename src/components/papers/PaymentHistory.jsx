@@ -152,15 +152,17 @@ const PaymentHistory = () => {
           </span>
           <FormDiv>
             <div className="company-info">
-              <h3>예약업체 정보</h3>
+              <h3>결제 내역</h3>
               <ul>
                 <li>
                   <p>결제 금액</p>
-                  <span>{papersInfo.price}</span>
+                  <span className="font-semibold">
+                    {papersInfo.price.toLocaleString()}원
+                  </span>
                 </li>
                 <li>
                   <p>결제 날짜</p>
-                  <span>{papersInfo.businessNum}</span>
+                  <span>{papersInfo.paidAt}</span>
                 </li>
               </ul>
             </div>

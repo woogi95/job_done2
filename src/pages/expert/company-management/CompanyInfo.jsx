@@ -44,7 +44,10 @@ function CompanyInfo() {
     if (busiId) {
       getBusinessInfo(busiId);
     }
-  }, [busiId]);
+    if (!isLogoEdit) {
+      getBusinessInfo(busiId);
+    }
+  }, [busiId, isLogoEdit]);
   return (
     <ExportPageDiv>
       {/* <h2 className="tit">업체 관리</h2> */}

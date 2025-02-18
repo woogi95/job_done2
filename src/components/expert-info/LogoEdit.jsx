@@ -3,10 +3,15 @@ import { useState } from "react";
 import { IoCamera } from "react-icons/io5";
 import { loginApi } from "../../apis/login";
 
-const LogoEdit = ({ setIsLogoEdit, businessState, busiId }) => {
+const LogoEdit = ({
+  setIsLogoEdit,
+  businessState,
+  busiId,
+  getBusinessInfo,
+}) => {
   const [LogoPreview, setLogoPreview] = useState(null);
   const [LogoFile, setLogoFile] = useState(null);
-  const BASE_URL = "http://112.222.157.157:5224";
+  const BASE_URL = "http://112.222.157.157:5234";
 
   const handleFileChange = e => {
     const file = e.target.files[0];

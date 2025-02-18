@@ -33,6 +33,7 @@ export const TitleAreaDiv = styled.div`
     }
   }
 `;
+
 // 나누는 박스(공통)
 export const ContBoxDiv = styled(EListContDiv)`
   padding: 25px 50px;
@@ -52,7 +53,7 @@ export const ExpertInfoDiv = styled.div`
   .photo-area {
     padding: 10px 0;
     /* border: 1px solid; */
-    width: 30%;
+    width: 206px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -166,6 +167,30 @@ export const ExpertInfoDiv = styled.div`
           padding-left: 5px;
           color: rgba(0, 0, 0, 0.6);
         }
+      }
+    }
+  }
+
+  .edit-info-area {
+    border: 1px solid;
+    position: relative;
+    button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 10px 40px;
+      display: block;
+      text-align: center !important;
+      height: 35px;
+      background-color: #11b1e1;
+      box-shadow: -1px 3px 4px rgba(9, 126, 161, 0.6);
+      transition: all 0.3s;
+      color: #fff;
+      &:hover {
+        background-color: rgb(12, 145, 185);
+      }
+      svg {
+        transform: translateY(1px);
       }
     }
   }
