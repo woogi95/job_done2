@@ -1,4 +1,5 @@
 import { FaChevronRight } from "react-icons/fa";
+
 const ExpertInfo = () => {
   return (
     <div className="info-area">
@@ -17,14 +18,10 @@ const ExpertInfo = () => {
         </p>
         <p>
           <FaChevronRight /> 대표번호 : <em>053-1111-1111</em>
-          <b>
+          {/* <b>
             추가번호 : <em>053-1111-1111</em>,<em>053-2222-2222</em>
-          </b>
+          </b> */}
         </p>
-        {/* <p>
-      <FaChevronRight /> 추가번호 : <em>053-1111-1111</em>,
-      <em>053-2222-2222</em>
-    </p> */}
       </div>
     </div>
   );

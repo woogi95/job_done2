@@ -1,5 +1,5 @@
 const Logo = ({ setIsLogoEdit, businessState }) => {
-  const BASE_URL = "http://112.222.157.157:5224";
+  const BASE_URL = "http://112.222.157.157:5234";
   return (
     <div className="photo-area">
       <div className="logo">
