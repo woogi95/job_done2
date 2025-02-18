@@ -7,29 +7,36 @@ import {
 } from "./qouteManagement";
 import { BtnAreaDiv } from "../../../components/papers/papers";
 import { loginApi } from "../../../apis/login";
+import { getCookie } from "../../../utils/Cookie";
 
 function QuotationForm() {
   const [papersInfo, setPapersInfo] = useState();
   const getBusinessId = localStorage.getItem("businessId");
+  const serviceId = getCookie("serviceId");
+
+  useEffect(() => {
+    console.log("papersInfo 현재 상태:", papersInfo);
+  }, [papersInfo]);
 
   const getPapersInfo = async () => {
     try {
       const res = await loginApi.get("/api/service/detail", {
         params: {
-          serviceId: 0,
+          serviceId: serviceId,
           businessId: getBusinessId,
         },
       });
-      console.log(res.data);
-      if (res.status === 200) {
-        setPapersInfo(res.data);
-      }
+      console.log("API 응답 데이터:", res.data);
+      setPapersInfo(res.data.resultData);
     } catch (error) {
-      console.log(error);
+      console.log("API 에러:", error);
     }
   };
 
   useEffect(() => {
+    if (!serviceId) {
+      console.warn("serviceId 쿠키를 찾을 수 없습니다");
+    }
     getPapersInfo();
   }, []);
 
@@ -43,23 +50,35 @@ function QuotationForm() {
             <div>
               <label>
                 <h4>사업자번호</h4>
-                <span>{papersInfo.businessNum}</span>
+                <span>{papersInfo?.businessNum}</span>
               </label>
               <label>
                 <h4>연락처</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.businessPhone || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>상호명</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.businessName || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>분류</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.categoryName || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>주소</h4>
-                <input type="text" />
+                <input type="text" value={papersInfo?.address || ""} readOnly />
               </label>
             </div>
           </div>
@@ -69,15 +88,27 @@ function QuotationForm() {
             <div>
               <label>
                 <h4>예약자명</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.customerName || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>연락처</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.customerPhone || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>주소</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.customerAddress || ""}
+                  readOnly
+                />
               </label>
             </div>
           </div>
@@ -87,15 +118,19 @@ function QuotationForm() {
             <div>
               <label>
                 <h4>예약일자</h4>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={papersInfo?.startDate || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>평수</h4>
-                <input type="text" />
+                <input type="text" value={papersInfo?.pyeong || ""} readOnly />
               </label>
               <label>
                 <h4>옵션</h4>
-                <input type="text" />
+                <input type="text" value={papersInfo?.options || ""} readOnly />
               </label>
             </div>
           </div>
