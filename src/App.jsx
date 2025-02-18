@@ -78,7 +78,6 @@ import RequestBusi from "./pages/admin/request/business/RequestBusi";
 import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import AdminLayout from "./components/admin/AdminLayout";
 
-
 function App() {
   return (
     <Router>
@@ -200,11 +199,11 @@ function App() {
             <Route path="businesssearch">
               <Route index element={<CategorySearch />} />
               <Route
-                path="reservationsearch"
+                path="reservesearch"
                 index
                 element={<ReservationSearch />}
               />
-              <Route path="revenuesearch" index element={<RevenueSearch />} />
+              <Route path="ruesearch" index element={<RevenueSearch />} />
             </Route>
             {/* 업체,상품등록요청 */}
             <Route path="requestresi">
