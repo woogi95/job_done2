@@ -118,7 +118,7 @@ const Index = () => {
             {EventBanner.map(item => (
               <SwiperSlide key={item.id}>
                 <Link
-                  to="/"
+                  to={item.link}
                   className="flex h-[250px] max-w-[1280px] m-auto relative group overflow-hidden"
                 >
                   <img

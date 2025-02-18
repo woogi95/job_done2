@@ -26,11 +26,7 @@ function TestMessage() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-
-
-      ws = new WebSocket("ws://112.222.157.157:5234/chat");
-
-
+      ws = new WebSocket("ws://112.222.157.157:5234/chat/1");
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
@@ -108,20 +104,39 @@ function TestMessage() {
     setSelectedFiles(Array.from(e.target.files));
   };
 
-  const handleSendMessage = e => {
+  const handleSendMessage = async e => {
     e.preventDefault();
     if (socket && socket.readyState === WebSocket.OPEN && username) {
       try {
+        // 파일들을 바이너리로 변환
+        const filePromises = selectedFiles.map(file => {
+          return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = e => {
+              resolve({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: e.target.result.split(",")[1], // base64 데이터만 추출
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+
+        const processedFiles = await Promise.all(filePromises);
+
         const messageData = {
-          username: username,
+          flag: 1,
+          roomId: 3,
           message: inputMessage,
-          files: selectedFiles.map(file => ({
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            data: null,
-          })),
+          // username: username,
+          // files: processedFiles,
         };
+
+        // 전송할 데이터를 콘솔에 출력
+        console.log("전송할 메시지 데이터:", messageData);
+        console.log("전송할 메시지 JSON:", JSON.stringify(messageData));
 
         socket.send(JSON.stringify(messageData));
         setInputMessage("");
