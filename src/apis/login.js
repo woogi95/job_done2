@@ -29,17 +29,17 @@ loginApi.interceptors.response.use(
     // 401 오류 발생
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
+      console.log("토큰 재발행");
       try {
         //새로운 AccessToken 요청
         const res = await axios.post(
-          `/api/user/access-token`,
+          "/api/user/access-token",
           {},
           { withCredentials: true }, // ✅ 쿠키 포함 요청
         );
-
-        if (res.data.accessToken) {
-          const newAccessToken = res.data.accessToken;
+        console.log(res);
+        if (res.data.resultData) {
+          const newAccessToken = res.data.resultData;
 
           // 쿠키에 새 accessToken저장
           Cookies.set("accessToken", newAccessToken, {

@@ -52,10 +52,10 @@ const Sidebar = () => {
             <Link to="/admin/businesssearch" style={linkStyle}>
               카테고리 조회
             </Link>
-            <Link to="/admin/reservationsearch" style={linkStyle}>
+            <Link to="/admin/businesssearch/reservesearch" style={linkStyle}>
               예약 별 조회
             </Link>
-            <Link to="/admin/revenuesearch" style={linkStyle}>
+            <Link to="/admin/businesssearch/ruesearch" style={linkStyle}>
               매출 별 조회
             </Link>
           </div>
