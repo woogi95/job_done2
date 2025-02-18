@@ -158,7 +158,7 @@ table {
 }
 button[type="button"],
 button {
-  border-radius: 5px !important;
+  border-radius: 5px;
   cursor: pointer !important;
 }
 input[type="text"],
