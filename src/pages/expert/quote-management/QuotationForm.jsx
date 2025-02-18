@@ -128,9 +128,17 @@ function QuotationForm() {
                 <h4>평수</h4>
                 <input type="text" value={papersInfo?.pyeong || ""} readOnly />
               </label>
-              <label>
-                <h4>옵션</h4>
-                <input type="text" value={papersInfo?.options || ""} readOnly />
+              <label className="flex">
+                <h4 className="flex flex-col">옵션</h4>
+                <div className="flex flex-col gap-[5px]">
+                  {papersInfo?.options.map((item, index) => (
+                    <div key={item.optionId}>
+                      <span>옵션: {item.optionName}</span>
+                      <span>상세 옵션: {item.optionDetailName}</span>
+                      <span>상세 가격: {item.optionDetailPrice}</span>
+                    </div>
+                  ))}
+                </div>
               </label>
             </div>
           </div>
