@@ -58,6 +58,7 @@ function CompanyInfo() {
             onClick={() => {
               setIsExpertInfoEdit(true);
             }}
+            style={{ display: isExpertInfoEdit ? "none" : "flex" }}
           >
             <p>업체정보수정</p> <MdModeEdit />
           </button>
@@ -75,7 +76,11 @@ function CompanyInfo() {
           )}
           {/* 업체정보 업체정보수정 */}
           {isExpertInfoEdit ? (
-            <ExpertInfoEdit setIsExpertInfoEdit={setIsExpertInfoEdit} />
+            <ExpertInfoEdit
+              busiId={busiId}
+              setIsExpertInfoEdit={setIsExpertInfoEdit}
+              isExpertInfoEdit={isExpertInfoEdit}
+            />
           ) : (
             <ExpertInfo setIsExpertInfoEdit={setIsExpertInfoEdit} />
           )}

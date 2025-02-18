@@ -11,7 +11,7 @@ const schema = yup.object({
   closingTime: yup.string(),
   tel: yup.string(),
 });
-const ExpertInfoEdit = () => {
+const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
   const {
     register,
     handleSubmit,
@@ -27,12 +27,16 @@ const ExpertInfoEdit = () => {
   });
 
   const onSubmit = async data => {
-    console.log(data);
+    console.log("data===", data);
+    const { openingTime, closingTime, tel } = data;
+    // const requestData = { ...data, businessId: busiId };
+    // const requestData = { ...data, businessId: busiId };
     try {
       ///api/business/detail?businessId=2&openingTime=21%3A00&closingTime=21%3A00&tel=01055555555
       const res = await loginApi.put(
-        `/api/business/detail?businessId=${businessId}&tel=${tel}&openingTime=21%3A00&closingTime=21%3A00`,
+        `/api/business/detail?businessId=${busiId}&tel=${tel}&openingTime=${openingTime}&closingTime=${closingTime}`,
       );
+      setIsExpertInfoEdit(false);
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -40,7 +44,7 @@ const ExpertInfoEdit = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="edit-info-form">
       <div className="info-area edit-info-area">
         <h2>클린지구</h2>
         <span>대구 중구 중앙대로 394 제일빌딩 5F</span>
@@ -57,7 +61,7 @@ const ExpertInfoEdit = () => {
                 id="openingTime"
                 {...register("openingTime")}
               />{" "}
-              -
+              -{" "}
               <input
                 type="time"
                 name="closingTime"
@@ -73,14 +77,28 @@ const ExpertInfoEdit = () => {
           <p>
             <FaChevronRight /> 대표번호 :{" "}
             <em>
-              <input type="text" name="tel" id="tel" {...register("tel")} />
+              <input
+                type="text"
+                name="tel"
+                id="tel"
+                {...register("tel")}
+                placeholder="(-) 빼고 작성해 주세요"
+              />
             </em>
             {/* <b>
             추가번호 : <em>053-1111-1111</em>,<em>053-2222-2222</em>
           </b> */}
           </p>
         </div>
-        <button type="submit">저장</button>
+        <button
+          type="submit"
+          // onClick={() => {
+          //   setIsExpertInfoEdit(false);
+          // }}
+          style={{ display: isExpertInfoEdit ? "flex" : "none" }}
+        >
+          저장
+        </button>
       </div>
     </form>
   );
