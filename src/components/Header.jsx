@@ -205,6 +205,9 @@ function Header() {
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
+              <Link to="/forum" className="flex items-center justify-center">
+                고객센터
+              </Link>
               {getBusinessId == 0 ? (
                 <Link
                   to="/business"
@@ -287,6 +290,9 @@ function Header() {
           ) : (
             // 로그아웃 상태
             <>
+              <Link to="/forum" className="flex items-center justify-center">
+                고객센터
+              </Link>
               <Link
                 to="/login"
                 className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"

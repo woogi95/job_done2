@@ -84,6 +84,12 @@ export const EventBanner = [
     image: "/images/event/event_banner_3.jpg",
     link: "/",
   },
+  {
+    id: 4,
+    title: "문의 게시판을 이용하세요!",
+    image: "/images/event/event_banner_4.jpg",
+    link: "/forum",
+  },
 ];
 
 // 찜목록 더미데이터
@@ -226,5 +232,24 @@ export const ReservationData = [
         startDate: "2025-1-20",
       },
     ],
+  },
+];
+
+export const Posts = [
+  {
+    id: 1,
+    title: "첫 번째 문의사항입니다",
+    author: "홍길동",
+    date: "2024-03-20",
+    comments: 5,
+    views: 120,
+  },
+  {
+    id: 2,
+    title: "서비스 이용 관련 질문이 있습니다",
+    author: "김철수",
+    date: "2024-03-19",
+    comments: 3,
+    views: 85,
   },
 ];

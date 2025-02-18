@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddOptionDiv,
   DatePriceDiv,
@@ -6,8 +6,33 @@ import {
   QuotationFormDiv,
 } from "./qouteManagement";
 import { BtnAreaDiv } from "../../../components/papers/papers";
+import { loginApi } from "../../../apis/login";
 
 function QuotationForm() {
+  const [papersInfo, setPapersInfo] = useState();
+  const getBusinessId = localStorage.getItem("businessId");
+
+  const getPapersInfo = async () => {
+    try {
+      const res = await loginApi.get("/api/service/detail", {
+        params: {
+          serviceId: 0,
+          businessId: getBusinessId,
+        },
+      });
+      console.log(res.data);
+      if (res.status === 200) {
+        setPapersInfo(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPapersInfo();
+  }, []);
+
   return (
     <QuotationDiv>
       <h2 className="tit">견적서 작성</h2>
@@ -18,7 +43,7 @@ function QuotationForm() {
             <div>
               <label>
                 <h4>사업자번호</h4>
-                <input type="text" />
+                <span>{papersInfo.businessNum}</span>
               </label>
               <label>
                 <h4>연락처</h4>
