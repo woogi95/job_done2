@@ -79,7 +79,7 @@ import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import AdminLayout from "./components/admin/AdminLayout";
 import Forum from "./pages/community/Forum";
 import Write from "./pages/community/Write";
-
+import OCRUploader from "./pages/OCRUploader";
 
 function App() {
   return (
@@ -87,6 +87,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
+          <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/testmessage" element={<TestMessage />} />
           <Route path="/forum" element={<Forum />} />

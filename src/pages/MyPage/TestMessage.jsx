@@ -6,8 +6,8 @@ function TestMessage() {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [username, setUsername] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState([]);
   const [hasUsername, setHasUsername] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // 메시지 컨테이너에 대한 ref 추가
   const messageContainerRef = useRef(null);
@@ -37,32 +37,57 @@ function TestMessage() {
 
       ws.onmessage = event => {
         try {
-          const rawData = event.data;
           let messageData;
 
-          // 데이터가 "새 메세지: "로 시작하는 경우
-          if (
-            typeof rawData === "string" &&
-            rawData.startsWith("새 메세지: ")
-          ) {
-            messageData = rawData.substring(6); // "새 메세지: " 제거 (한글 문자 길이 고려)
+          if (event.data instanceof Blob) {
+            // Blob 데이터를 텍스트로 변환
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                messageData = JSON.parse(reader.result);
+                setMessages(prevMessages => [...prevMessages, messageData]);
+              } catch (error) {
+                console.error("Blob 데이터 파싱 에러:", error);
+              }
+            };
+            reader.readAsText(event.data);
+          } else if (event.data instanceof ArrayBuffer) {
+            // ArrayBuffer를 텍스트로 디코딩
+            const decoder = new TextDecoder();
+            const jsonStr = decoder.decode(event.data);
+            messageData = JSON.parse(jsonStr);
+            setMessages(prevMessages => [...prevMessages, messageData]);
           } else {
-            messageData = rawData;
+            // 일반 텍스트 데이터 처리
+            const rawData = event.data;
+            if (
+              typeof rawData === "string" &&
+              rawData.startsWith("새 메세지: ")
+            ) {
+              messageData = JSON.parse(rawData.substring(6));
+            } else {
+              messageData = JSON.parse(rawData);
+            }
+            setMessages(prevMessages => [...prevMessages, messageData]);
           }
 
-          const message = JSON.parse(messageData);
-          setMessages(prevMessages => [...prevMessages, message]);
+          // 디버깅용 로그
+          if (messageData) {
+            console.log("수신된 메시지:", {
+              ...messageData,
+              file: messageData.file
+                ? {
+                    ...messageData.file,
+                    data: messageData.file.data
+                      ? messageData.file.data.substring(0, 50) + "..."
+                      : null,
+                  }
+                : null,
+            });
+          }
         } catch (error) {
           console.error("메시지 파싱 에러:", error);
-          console.log("원본 데이터:", event.data);
-          // 일반 텍스트 메시지로 처리
-          setMessages(prevMessages => [
-            ...prevMessages,
-            {
-              username: "시스템",
-              message: event.data,
-            },
-          ]);
+          console.log("파싱 실패한 원본 데이터:", event.data);
         }
       };
 
@@ -100,47 +125,82 @@ function TestMessage() {
     }
   };
 
-  const handleFileChange = e => {
-    setSelectedFiles(Array.from(e.target.files));
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setSelectedImage(file);
+    } else {
+      alert("이미지 파일만 선택해주세요.");
+    }
   };
 
   const handleSendMessage = async e => {
     e.preventDefault();
     if (socket && socket.readyState === WebSocket.OPEN && username) {
       try {
-        // 파일들을 바이너리로 변환
-        const filePromises = selectedFiles.map(file => {
-          return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onload = e => {
-              resolve({
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                data: e.target.result.split(",")[1], // base64 데이터만 추출
-              });
+        if (selectedImage) {
+          // 이미지가 있는 경우
+          const reader = new FileReader();
+          reader.onload = async () => {
+            // 파일 데이터를 단일 객체로 구성
+            const fileData = {
+              name: selectedImage.name,
+              type: selectedImage.type,
+              data: reader.result.split(",")[1], // base64 데이터
             };
-            reader.readAsDataURL(file);
-          });
-        });
 
-        const processedFiles = await Promise.all(filePromises);
+            // 전체 메시지 데이터를 JSON으로 구성 (file을 단일 객체로)
+            const messageData = {
+              flag: 1,
+              roomId: 3,
+              message: inputMessage,
+              file: fileData, // files 배열 대신 단일 file 객체
+            };
 
-        const messageData = {
-          flag: 1,
-          roomId: 3,
-          message: inputMessage,
-          // username: username,
-          // files: processedFiles,
-        };
+            // JSON을 문자열로 변환
+            const jsonString = JSON.stringify(messageData);
 
-        // 전송할 데이터를 콘솔에 출력
-        console.log("전송할 메시지 데이터:", messageData);
-        console.log("전송할 메시지 JSON:", JSON.stringify(messageData));
+            // 문자열을 Blob으로 변환
+            const blob = new Blob([jsonString], { type: "application/json" });
 
-        socket.send(JSON.stringify(messageData));
+            // Blob을 ArrayBuffer로 변환
+            const arrayBuffer = await blob.arrayBuffer();
+
+            // ArrayBuffer를 전송
+            socket.send(arrayBuffer);
+
+            // 디버깅용 로그
+            console.log("전송할 메시지 데이터:", {
+              ...messageData,
+              file: messageData.file
+                ? {
+                    ...messageData.file,
+                    data: messageData.file.data.substring(0, 50) + "...",
+                  }
+                : null,
+            });
+          };
+          reader.readAsDataURL(selectedImage);
+        } else {
+          // 텍스트 메시지만 있는 경우
+          const messageData = {
+            flag: 1,
+            roomId: 3,
+            message: inputMessage,
+          };
+
+          // JSON을 문자열로 변환 후 Blob으로 변환
+          const jsonString = JSON.stringify(messageData);
+          const blob = new Blob([jsonString], { type: "application/json" });
+          const arrayBuffer = await blob.arrayBuffer();
+
+          socket.send(arrayBuffer);
+        }
+
         setInputMessage("");
-        setSelectedFiles([]);
+        setSelectedImage(null);
+        const fileInput = document.getElementById("image-upload");
+        if (fileInput) fileInput.value = "";
       } catch (error) {
         console.error("메시지 전송 실패:", error);
       }
@@ -187,13 +247,13 @@ function TestMessage() {
               >
                 <strong className="text-blue-600">{msg.username}: </strong>
                 <span className="text-gray-700">{msg.message}</span>
-                {msg.files && msg.files.length > 0 && (
+                {msg.file && msg.file.data && (
                   <div className="mt-2">
-                    {msg.files.map((file, fileIndex) => (
-                      <div key={fileIndex} className="text-sm text-gray-500">
-                        📎 {file.name}
-                      </div>
-                    ))}
+                    <img
+                      src={`data:${msg.file.type};base64,${msg.file.data}`}
+                      alt={msg.file.name}
+                      className="max-w-[200px] rounded-lg"
+                    />
                   </div>
                 )}
               </div>
@@ -210,16 +270,16 @@ function TestMessage() {
               />
               <input
                 type="file"
-                multiple
-                onChange={handleFileChange}
+                id="image-upload"
+                accept="image/*"
+                onChange={handleImageChange}
                 className="hidden"
-                id="file-upload"
               />
               <label
-                htmlFor="file-upload"
+                htmlFor="image-upload"
                 className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors cursor-pointer"
               >
-                파일
+                사진
               </label>
               <button
                 type="submit"
@@ -228,16 +288,22 @@ function TestMessage() {
                 전송
               </button>
             </div>
-            {selectedFiles.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedFiles.map((file, index) => (
-                  <div
-                    key={index}
-                    className="text-sm bg-gray-100 px-2 py-1 rounded"
-                  >
-                    📎 {file.name}
-                  </div>
-                ))}
+            {selectedImage && (
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm text-gray-600">
+                  선택된 이미지: {selectedImage.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedImage(null);
+                    const fileInput = document.getElementById("image-upload");
+                    if (fileInput) fileInput.value = "";
+                  }}
+                  className="text-red-500 text-sm"
+                >
+                  ✕
+                </button>
               </div>
             )}
           </form>

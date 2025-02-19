@@ -129,7 +129,7 @@ function QuotationForm() {
                 <input type="text" value={papersInfo?.pyeong || ""} readOnly />
               </label>
               <label className="flex">
-                <h4 className="flex flex-col">옵션</h4>
+                <h4 className="flex-col block h-[100]">옵션</h4>
                 <div className="flex flex-col gap-[5px]">
                   {papersInfo?.options.map((item, index) => (
                     <div key={item.optionId}>
