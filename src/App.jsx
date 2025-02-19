@@ -80,7 +80,6 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Forum from "./pages/community/Forum";
 import Write from "./pages/community/Write";
 
-
 function App() {
   return (
     <Router>

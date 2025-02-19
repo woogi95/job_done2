@@ -53,9 +53,8 @@ export const businessDetailState = atom({
       contents: null,
       reviewCount: 0,
       tel: null,
-      tel2: null,
-      tel3: null,
       safeTel: null,
+      businessNum: "",
     },
   ],
 });

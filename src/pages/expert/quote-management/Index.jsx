@@ -10,14 +10,13 @@ import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
-
+import { useCookies } from "react-cookie";
 function Index() {
   const businessId = localStorage.getItem("businessId");
   const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
-
+  const [cookies, setCookie] = useCookies(["serviceId"]);
   const [reservationData, setReservationData] = useState([]);
-
   const getStatusList = async (businessId, status) => {
     console.log("businessId, status", businessId, status);
     try {
@@ -44,7 +43,6 @@ function Index() {
             <li>
               <button className="completed3">작성대기</button>
             </li>
-
             <li>
               <button className="completed1">견적완료</button>
             </li>
@@ -66,7 +64,6 @@ function Index() {
             <li className="th">견적현황</li>
             <li className="th">견적서</li>
           </ul>
-
           {reservationData.map(reservation => (
             <ul className="tr" key={reservation.serviceId}>
               <li className="td">{reservation.createdAt.split(" ")[0]}</li>
@@ -87,6 +84,9 @@ function Index() {
                 <button
                   className="blue"
                   onClick={() => {
+                    setCookie("serviceId", reservation.serviceId, {
+                      path: "/",
+                    });
                     navigate("/expert/quote-management/quotation-form");
                   }}
                 >
@@ -95,6 +95,9 @@ function Index() {
                 <button
                   className="green"
                   onClick={() => {
+                    setCookie("serviceId", reservation.serviceId, {
+                      path: "/",
+                    });
                     navigate("/expert/quote-management/edit-quotation");
                   }}
                 >
@@ -108,5 +111,4 @@ function Index() {
     </ExpertListPageDiv>
   );
 }
-
 export default Index;

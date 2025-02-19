@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // comp
 import LogoEdit from "../../../components/expert-info/LogoEdit";
 import Logo from "../../../components/expert-info/Logo";
@@ -27,7 +27,8 @@ function CompanyInfo() {
   const [isExpertInfoEdit, setIsExpertInfoEdit] = useState(false);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const businessState = useRecoilValue(businessDetailState);
-  const BASE_URL = "http://112.222.157.157:5224";
+  const BASE_URL = "http://112.222.157.157:5234";
+  const navigate = useNavigate();
   const getBusinessInfo = async busiId => {
     try {
       const res = await loginApi.get(
@@ -90,7 +91,11 @@ function CompanyInfo() {
       <ExpertProductDiv>
         <TitleAreaDiv>
           <h2 className="tit">상품 정보</h2>
-          <button>
+          <button
+            onClick={() => {
+              navigate("/expert/company-management/editdetail");
+            }}
+          >
             <p>상품소개 수정</p> <MdModeEdit />
           </button>
         </TitleAreaDiv>

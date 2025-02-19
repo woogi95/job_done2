@@ -380,3 +380,13 @@ export const PortfolioListItemDiv = styled.div`
     }
   }
 `;
+
+// 상세페이지 수정
+export const EditDetailDiv = styled.div`
+  width: 100% !important;
+  height: 100vh;
+  background-color: #fff !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+`;

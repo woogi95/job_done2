@@ -5,6 +5,8 @@ import { loginApi } from "../../apis/login";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { businessDetailState } from "../../atoms/businessAtom";
 
 const schema = yup.object({
   openingTime: yup.string(),
@@ -12,15 +14,18 @@ const schema = yup.object({
   tel: yup.string(),
 });
 const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
+  const businessState = useRecoilValue(businessDetailState);
+  const [businessInfo, setbusinessInfo] = useRecoilState(businessDetailState);
+  console.log("businessState", businessState);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      openingTime: "",
-      closingTime: "",
-      tel: "",
+      openingTime: businessState.openingTime,
+      closingTime: businessState.closingTime,
+      tel: businessState.tel,
     },
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -30,12 +35,12 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
     console.log("data===", data);
     const { openingTime, closingTime, tel } = data;
     // const requestData = { ...data, businessId: busiId };
-    // const requestData = { ...data, businessId: busiId };
     try {
       ///api/business/detail?businessId=2&openingTime=21%3A00&closingTime=21%3A00&tel=01055555555
       const res = await loginApi.put(
         `/api/business/detail?businessId=${busiId}&tel=${tel}&openingTime=${openingTime}&closingTime=${closingTime}`,
       );
+      setbusinessInfo({ ...businessInfo, openingTime, closingTime, tel });
       setIsExpertInfoEdit(false);
       console.log(res.data);
     } catch (error) {
@@ -43,14 +48,22 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
     }
   };
 
+  const formatBusinessNumber = number =>
+    number
+      ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
+      : "사업자 번호 없음";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="edit-info-form">
       <div className="info-area edit-info-area">
-        <h2>클린지구</h2>
-        <span>대구 중구 중앙대로 394 제일빌딩 5F</span>
+        <h2>{businessState.businessName}</h2>
+        <span>{businessState.address}</span>
         <div>
           <p>
-            <FaChevronRight /> 카테고리 : <em>청소 {"_"} 사무실 청소</em>
+            <FaChevronRight /> 카테고리 :{" "}
+            <em>
+              청소 {"_"} {businessState.detailTypeName}
+            </em>
           </p>
           <p>
             <FaChevronRight /> 영업시간 :{" "}
@@ -61,7 +74,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
                 id="openingTime"
                 {...register("openingTime")}
               />{" "}
-              -{" "}
+              ~{" "}
               <input
                 type="time"
                 name="closingTime"
@@ -72,7 +85,8 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
           </p>
           <p>
             <FaChevronRight />
-            사업자번호 : <em>504-85-25999</em>
+            사업자번호 :{" "}
+            <em>{formatBusinessNumber(businessState.businessNum)}</em>
           </p>
           <p>
             <FaChevronRight /> 대표번호 :{" "}
@@ -85,16 +99,10 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
                 placeholder="(-) 빼고 작성해 주세요"
               />
             </em>
-            {/* <b>
-            추가번호 : <em>053-1111-1111</em>,<em>053-2222-2222</em>
-          </b> */}
           </p>
         </div>
         <button
           type="submit"
-          // onClick={() => {
-          //   setIsExpertInfoEdit(false);
-          // }}
           style={{ display: isExpertInfoEdit ? "flex" : "none" }}
         >
           저장
