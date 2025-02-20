@@ -41,6 +41,7 @@ export const QuotationFormDiv = styled.div`
           border-bottom: 1px dotted #333;
           &:last-child {
             border-bottom: none;
+            width: 100%;
           }
         }
 

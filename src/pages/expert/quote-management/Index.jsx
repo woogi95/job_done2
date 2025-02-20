@@ -11,11 +11,13 @@ import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { useCookies } from "react-cookie";
+
 function Index() {
   const businessId = localStorage.getItem("businessId");
   const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
   const [cookies, setCookie] = useCookies(["serviceId"]);
+
   const [reservationData, setReservationData] = useState([]);
   const getStatusList = async (businessId, status) => {
     console.log("businessId, status", businessId, status);

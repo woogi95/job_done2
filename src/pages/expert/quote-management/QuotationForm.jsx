@@ -8,13 +8,16 @@ import {
 import { BtnAreaDiv } from "../../../components/papers/papers";
 import { loginApi } from "../../../apis/login";
 import { getCookie } from "../../../utils/Cookie";
+
 function QuotationForm() {
   const [papersInfo, setPapersInfo] = useState();
   const getBusinessId = localStorage.getItem("businessId");
   const serviceId = getCookie("serviceId");
+
   useEffect(() => {
     console.log("papersInfo 현재 상태:", papersInfo);
   }, [papersInfo]);
+
   const getPapersInfo = async () => {
     try {
       const res = await loginApi.get("/api/service/detail", {
@@ -123,9 +126,11 @@ function QuotationForm() {
                 <h4>평수</h4>
                 <input type="text" value={papersInfo?.pyeong || ""} readOnly />
               </label>
-              <label className="op-label">
-                <h4 className="op-style">옵션</h4>
-                <div>
+
+              <label className="flex">
+                <h4 className="flex-col block h-[100]">옵션</h4>
+                <div className="flex flex-col gap-[5px]">
+
                   {papersInfo?.options.map((item, index) => (
                     <div key={item.optionId}>
                       <span>옵션: {item.optionName}</span>
