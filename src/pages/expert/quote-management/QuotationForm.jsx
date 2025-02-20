@@ -32,14 +32,12 @@ function QuotationForm() {
       console.log("API 에러:", error);
     }
   };
-
   useEffect(() => {
     if (!serviceId) {
       console.warn("serviceId 쿠키를 찾을 수 없습니다");
     }
     getPapersInfo();
   }, []);
-
   return (
     <QuotationDiv>
       <h2 className="tit">견적서 작성</h2>
@@ -128,9 +126,11 @@ function QuotationForm() {
                 <h4>평수</h4>
                 <input type="text" value={papersInfo?.pyeong || ""} readOnly />
               </label>
+
               <label className="flex">
                 <h4 className="flex-col block h-[100]">옵션</h4>
                 <div className="flex flex-col gap-[5px]">
+
                   {papersInfo?.options.map((item, index) => (
                     <div key={item.optionId}>
                       <span>옵션: {item.optionName}</span>
@@ -242,5 +242,4 @@ function QuotationForm() {
     </QuotationDiv>
   );
 }
-
 export default QuotationForm;

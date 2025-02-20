@@ -56,6 +56,30 @@ export const QuotationFormDiv = styled.div`
           color: #fff;
           /* border: 1px solid #333; */
         }
+        .op-label {
+          border: 1px solid gray;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+
+          .op-label::after {
+            content: "";
+            clear: both;
+            display: block;
+          }
+
+          .op-style {
+            float: left;
+            min-height: 100px;
+
+            height: auto !important;
+          }
+          > div {
+            float: left;
+            height: 100% !important;
+          }
+        }
+
         input {
           width: calc(100% - 80px);
           padding: 5px;

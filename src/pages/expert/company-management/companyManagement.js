@@ -150,6 +150,9 @@ export const ExpertInfoDiv = styled.div`
       flex-direction: column;
       gap: 10px;
       p {
+        height: 20px;
+        align-items: center;
+
         svg {
           margin: 0 3px 0px;
           color: #2a58ad;
@@ -158,7 +161,7 @@ export const ExpertInfoDiv = styled.div`
           margin-left: 6px;
         }
         color: #333;
-        font-size: 12px;
+        font-size: 14px;
         display: flex;
         font-weight: 600;
 
@@ -171,13 +174,30 @@ export const ExpertInfoDiv = styled.div`
     }
   }
 
-  .edit-info-area {
-    border: 1px solid;
+  .edit-info-form {
+    width: 100%;
     position: relative;
+  }
+  .edit-info-area {
+    /* border: 1px solid; */
+    width: 100%;
+    input {
+      height: 26px;
+      border: 1px solid #eee;
+      padding: 0px 10px;
+      font-size: 14px;
+      background-color: #11b1e120;
+    }
+    input[type="text"] {
+      width: 256px;
+    }
+    input[type="text"]::placeholder {
+      color: #1d4c9e50;
+    }
     button {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: -90px;
+      right: -50px;
       padding: 10px 40px;
       display: block;
       text-align: center !important;
@@ -359,4 +379,14 @@ export const PortfolioListItemDiv = styled.div`
       }
     }
   }
+`;
+
+// 상세페이지 수정
+export const EditDetailDiv = styled.div`
+  width: 100% !important;
+  height: 100vh;
+  background-color: #fff !important;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;

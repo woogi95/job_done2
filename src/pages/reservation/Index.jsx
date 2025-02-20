@@ -138,7 +138,6 @@ function Index() {
       console.log(error);
     }
   };
-
   const postReservation = async data => {
     try {
       const res = await loginApi.post(`/api/service`, data);
