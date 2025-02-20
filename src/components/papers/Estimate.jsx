@@ -156,25 +156,25 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>등록번호</p>
-                  <span>{formatBusinessNumber(papersInfo.businessNum)}</span>
+                  <span>{formatBusinessNumber(papers.businessNum)}</span>
                 </li>
                 <li>
                   <p>업체번호</p>
-                  <span>{formatPhoneNumber(papersInfo.businessPhone)}</span>
+                  <span>{formatPhoneNumber(papers.businessPhone)}</span>
                 </li>
                 <li>
                   <p>상호명</p>
-                  <span>{papersInfo.businessName}</span>
+                  <span>{papers.businessName}</span>
                 </li>
                 <li>
                   <p>분류</p>
                   <span>
-                    {papersInfo.categoryName} {">"} {papersInfo.detailTypeName}
+                    {papers.categoryName} {">"} {papers.detailTypeName}
                   </span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{papersInfo.businessAddress}</span>
+                  <span>{papers.businessAddress}</span>
                 </li>
               </ul>
             </div>
@@ -183,15 +183,15 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>예약자</p>
-                  <span>{papersInfo.userName}</span>
+                  <span>{papers.userName}</span>
                 </li>
                 <li>
                   <p>연락처</p>
-                  <span>{formatPhoneNumber(papersInfo.userPhone)}</span>
+                  <span>{formatPhoneNumber(papers.userPhone)}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{papersInfo.address}</span>
+                  <span>{papers.address}</span>
                 </li>
               </ul>
             </div>
@@ -200,29 +200,29 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>견적일</p>
-                  <span>{papersInfo.updatedAt}</span>
+                  <span>{papers.updatedAt}</span>
                 </li>
                 <li>
                   <p>방문날짜</p>
                   <span>
-                    {papersInfo.startDate} ~ {papersInfo.endDate}
+                    {papers.startDate} ~ {papers.endDate}
                   </span>
                 </li>
                 <li>
                   <p>예정시간</p>
                   <span>
-                    {papersInfo.mstartTime} - {papersInfo.mendTime}
+                    {papers.mstartTime} - {papers.mendTime}
                   </span>
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>{papersInfo.pyeong} 평</span>
+                  <span>{papers.pyeong} 평</span>
                 </li>
-                {papersInfo.options?.length > 0 && (
+                {papers.options?.length > 0 && (
                   <li className="option">
                     <p>옵션</p>
                     <ul>
-                      {papersInfo.options.map((option, index) => (
+                      {papers.options.map((option, index) => (
                         <li key={index}>
                           <p>
                             {option.optionName}{" "}
@@ -236,11 +236,11 @@ const Estimate = () => {
                     </ul>
                   </li>
                 )}
-                {papersInfo.etc?.length > 0 && (
+                {papers.etc?.length > 0 && (
                   <li className="option">
                     <p>추가옵션</p>
                     <ul>
-                      {papersInfo.etc.map((option, index) => (
+                      {papers.etc.map((option, index) => (
                         <li key={index}>
                           <p>
                             {option.etcComment}
@@ -254,11 +254,11 @@ const Estimate = () => {
                 )}
                 <li>
                   <p>견적비용</p>
-                  <span>{papersInfo.price.toLocaleString()}원</span>
+                  <span>{papers.price.toLocaleString()}원</span>
                 </li>
                 <li>
                   <p>특이사항</p>
-                  <span>{papersInfo.addComment}</span>
+                  <span>{papers.addComment}</span>
                 </li>
               </ul>
             </div>

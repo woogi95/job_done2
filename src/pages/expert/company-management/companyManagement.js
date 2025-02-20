@@ -385,8 +385,73 @@ export const PortfolioListItemDiv = styled.div`
 export const EditDetailDiv = styled.div`
   width: 100% !important;
   height: 100vh;
-  background-color: #fff !important;
+  background-color: #eaeef1 !important;
   position: fixed;
   top: 0;
   left: 0;
+  .inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    background-color: #fff;
+  }
+  h1 {
+    font-size: 38px;
+    text-align: center;
+    display: block;
+    padding: 80px 0 40px;
+  }
+
+  label {
+    width: 100%;
+    display: flex;
+    border-top: 1px solid #2a58ad55;
+    border-bottom: 1px solid #2a58ad;
+    margin-bottom: 20px;
+
+    span {
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background-color: #eaeef1;
+      padding: 10px;
+      color: #333;
+    }
+    input {
+      /* border: 1px solid #eee; */
+      width: calc(100% - 120px);
+      padding: 5px 10px;
+      height: 40px;
+      color: #333;
+    }
+  }
+  .ql-container {
+    border: 1px solid #2a58ad50;
+    height: calc(100vh - 330px);
+  }
+
+  .ql-toolbar {
+    border: 1px solid #2a58ad50;
+    background-color: #eaeef1;
+  }
+  .btn-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-top: 1px solid #2a58ad;
+    button {
+      width: 75px;
+      height: 32px;
+      background-color: #fff;
+      color: #555;
+      border-radius: 5px;
+    }
+    button[type="submit"] {
+      border: 1px solid #4581f0;
+      color: #4581f0;
+    }
+  }
 `;
