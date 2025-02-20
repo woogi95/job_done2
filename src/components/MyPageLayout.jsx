@@ -60,7 +60,11 @@ function MyPageLayout({ children }) {
                 to="/mypage"
                 end
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 내 정보
@@ -70,7 +74,11 @@ function MyPageLayout({ children }) {
               <NavLink
                 to="/mypage/reservation"
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 예약현황
@@ -80,7 +88,11 @@ function MyPageLayout({ children }) {
               <NavLink
                 to="/mypage/usage"
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 이용내역
@@ -90,7 +102,11 @@ function MyPageLayout({ children }) {
               <NavLink
                 to="/mypage/wishlist"
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 찜목록
@@ -100,7 +116,11 @@ function MyPageLayout({ children }) {
               <NavLink
                 to="/mypage/message"
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 메시지함
@@ -110,7 +130,11 @@ function MyPageLayout({ children }) {
               <NavLink
                 to="/mypage/review"
                 className={({ isActive }) =>
-                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
                 }
               >
                 리뷰 관리

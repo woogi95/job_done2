@@ -72,7 +72,7 @@ function Index() {
               <li className="td black">{reservation.startDate || "미정"}</li>
               <li className="td">{reservation.detailTypeName}</li>
               <li className="td">{reservation.userName}</li>
-              <li className="td">{reservation.price}</li>
+              <li className="td">{reservation.totalPrice}</li>
               <li className="td">
                 <p
                   className={
@@ -92,9 +92,9 @@ function Index() {
                     navigate("/expert/quote-management/quotation-form");
                   }}
                 >
-                  작성하기
+                  수정하기
                 </button>
-                <button
+                {/* <button
                   className="green"
                   onClick={() => {
                     setCookie("serviceId", reservation.serviceId, {
@@ -104,7 +104,7 @@ function Index() {
                   }}
                 >
                   수정하기
-                </button>
+                </button> */}
               </li>
             </ul>
           ))}

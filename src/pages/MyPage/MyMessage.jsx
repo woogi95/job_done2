@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FiSend } from "react-icons/fi";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
@@ -14,6 +14,9 @@ function MyMessage() {
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
+  const [socket, setSocket] = useState(null);
+  const [connected, setConnected] = useState(false);
+  const messageContainerRef = useRef(null);
   // 방 리스트
   const chatRoomList = async () => {
     try {
@@ -55,35 +58,115 @@ function MyMessage() {
     fetchChatMessages(roomId);
     console.log("선택된 방 번호:", roomId);
   };
+  // 웹소켓 연결 설정
+  useEffect(() => {
+    if (!selectedRoomId) return;
+
+    let ws;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+
+    const connectWebSocket = () => {
+      ws = new WebSocket(`ws://112.222.157.157:5234/chat/${selectedRoomId}`);
+
+      ws.onopen = () => {
+        console.log("웹소켓 연결 성공!");
+        setConnected(true);
+        setSocket(ws);
+        reconnectAttempts = 0;
+      };
+
+      ws.onmessage = async event => {
+        try {
+          let messageData;
+          if (event.data instanceof Blob) {
+            const text = await event.data.text();
+            messageData = JSON.parse(text);
+          } else {
+            messageData = JSON.parse(event.data);
+          }
+
+          // 새 메시지를 채팅 목록에 추가
+          setChatMessages(prev => [...prev, messageData]);
+        } catch (error) {
+          console.error("메시지 파싱 에러:", error);
+        }
+      };
+
+      ws.onclose = () => {
+        setConnected(false);
+        setSocket(null);
+
+        if (reconnectAttempts < maxReconnectAttempts) {
+          reconnectAttempts++;
+          setTimeout(connectWebSocket, 3000);
+        }
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [selectedRoomId]);
+
+  // 메시지 자동 스크롤
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
   const sendMessage = async () => {
     if (!selectedRoomId || !message.trim()) return;
+
     const messageData = {
-      p: {
-        roomId: selectedRoomId,
-        contents: message,
-        flag: 1,
-      },
+      flag: 1,
+      roomId: selectedRoomId,
+      contents: message,
     };
+
     if (selectedImages.length > 0) {
-      messageData.pics = selectedImages.map(image => image.name);
-    }
-    const data = JSON.stringify(messageData);
-    console.log("전송하려는 데이터:", data);
-    try {
-      const res = await axios.post("/api/chat", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      // 이미지 처리 로직
+      const imagePromises = selectedImages.map(async image => {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            resolve({
+              name: image.name,
+              type: image.type,
+              data: reader.result.split(",")[1],
+            });
+          };
+          reader.readAsDataURL(image);
+        });
       });
-      console.log("메시지 전송 응답:", res.data);
-      await fetchChatMessages(selectedRoomId);
-      setMessage("");
-      setSelectedImages([]);
+
+      const processedImages = await Promise.all(imagePromises);
+      messageData.pics = processedImages;
+    }
+
+    try {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        const jsonString = JSON.stringify(messageData);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const arrayBuffer = await blob.arrayBuffer();
+        socket.send(arrayBuffer);
+
+        setMessage("");
+        setSelectedImages([]);
+      } else {
+        console.error("웹소켓이 연결되어 있지 않습니다.");
+      }
     } catch (error) {
-      console.error("메시지 전송 에러:", error.response?.data || error);
-      console.log("전체 에러 객체:", error);
+      console.error("메시지 전송 에러:", error);
     }
   };
+
   const handleImageUpload = event => {
     const files = Array.from(event.target.files);
     setSelectedImages(files);
@@ -174,7 +257,10 @@ function MyMessage() {
                   </span>
                 </div>
                 {/* 채팅내용 */}
-                <div className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto">
+                <div
+                  className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
+                  ref={messageContainerRef}
+                >
                   <div className="w-full">
                     <div className="flex justify-center items-center border rounded-full w-full h-[24px] bg-[#ECEDF0] text-[12px] text-[#A2A2A2]">
                       <span className="text-center m-3">
