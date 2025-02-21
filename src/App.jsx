@@ -82,7 +82,6 @@ import Write from "./pages/community/Write";
 
 import OCRUploader from "./pages/OCRUploader";
 
-
 function App() {
   return (
     <Router>

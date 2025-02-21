@@ -117,3 +117,9 @@ export const serviceIdState = atom({
   key: "serviceIdState",
   default: 0,
 });
+
+// OCR 정보
+export const ocrDataAtom = atom({
+  key: "ocrDataAtom",
+  default: {},
+});

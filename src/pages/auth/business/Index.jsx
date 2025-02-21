@@ -1,7 +1,11 @@
 import { Button, DatePicker, Form, Input, Select, Upload } from "antd";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { busiFile, businessInfo } from "../../../atoms/businessAtom";
+import {
+  busiFile,
+  businessInfo,
+  numDubCheck,
+} from "../../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
 import {
   categoriesStateS,
@@ -9,25 +13,31 @@ import {
 } from "../../../atoms/categoryAtom";
 import axios from "axios";
 import JobBLogo from "../../../components/JobBLogo";
+import dayjs from "dayjs";
+import { loginApi } from "../../../apis/login";
 
 function BusinessSignUp() {
+  const [numModal, setNumMOdal] = useRecoilState(numDubCheck);
   const [form] = Form.useForm();
   const [busiInfo, setBusiInfo] = useRecoilState(businessInfo);
   const [fileList, setFileList] = useRecoilState(busiFile);
   const [category, setCategory] = useRecoilState(categoriesStateS);
   const [detailTypes, setDetailTypes] = useRecoilState(detailTypesStateS);
-
+  const sucess = () => {
+    setNumMOdal(false);
+    navigate("/");
+  };
   // : DatePickerProps['onChange']
 
   const navigate = useNavigate();
   const initData = {
     userId: 0,
     businessNum: "",
-    businessName: "",
-    address: "",
+    businessName: busiInfo.businessName,
+    address: busiInfo.address,
     categoryId: "",
     detailTypeId: 0,
-    busiCreatedAt: "",
+    busiCreatedAt: busiInfo.busiCreatedAt,
     tel: "",
     logo: "",
   };
@@ -54,23 +64,6 @@ function BusinessSignUp() {
     }).open();
   };
   // 상태 등록
-  const onSubmit = data => {
-    // 문자열로 변환
-    const formattedData = {
-      ...data,
-      // busiCreatedAt: data.busiCreatedAt.format("YYYY.MM.DD"),
-    };
-    console.log(formattedData);
-    setBusiInfo(prev => ({
-      ...prev,
-      ...formattedData,
-      // busiCreatedAt: data.busiCreatedAt.format("YYYY.MM.DD"),
-    }));
-    navigate("/business/number");
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
   // 중분류 get
   const getDetailTypes = async data => {
     console.log(data);
@@ -102,6 +95,54 @@ function BusinessSignUp() {
     value: item.detailTypeId,
     label: item.detailTypeName,
   }));
+  // 최종 등록 요청
+  const onSubmit = async data => {
+    console.log(busiInfo);
+    try {
+      const formData = new FormData();
+
+      const requestData = {
+        businessNum: busiInfo.businessNum,
+        businessName: data.businessName,
+        address: data.address,
+        detailTypeId: data.detailTypeId,
+        busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
+        tel: data.tel,
+      };
+      console.log(requestData);
+      // JSON 데이터를 FormData에 추가
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(requestData)], {
+          type: "application/json",
+        }),
+      );
+      if (data.logo) {
+        formData.append("logo", busiInfo.logo);
+      }
+      if (busiInfo.paper) {
+        // 파일 추가 (data.pic이 있는 경우)
+        formData.append("paper", data.paper);
+      }
+
+      console.log(requestData);
+      // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
+      const res = await loginApi.post("/api/business/sign-up", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res);
+
+      if (res.status === 200) {
+        setNumMOdal(true);
+        localStorage.setItem("businessId", JSON.stringify(res.data.resultData));
+      }
+    } catch (error) {
+      setErrorModal(true);
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getCategori();
     getDetailTypes();
@@ -233,6 +274,25 @@ function BusinessSignUp() {
           </Button>
         </Form.Item>
       </Form>
+      {numModal && (
+        <div className="num-ModalFull items-center justify-center">
+          <div className="num-Modal">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>등록이 완료되었습니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={e => sucess(e)}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
