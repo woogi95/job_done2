@@ -47,18 +47,27 @@ function EditDetailPage() {
           const base64Image = reader.result;
           const base64Data = base64Image.split(",")[1];
 
-          const requestData = {
-            pics: [newFileName], // UUID 형식의 파일명 전송
-            p: {
-              businessId: 2,
-            },
-          };
+          const postData = new FormData();
+          postData.append("pics", base64Image);
+          postData.append(
+            "p",
+            new Blob([JSON.stringify({ businessId: 2 })], {
+              type: "application/json",
+            }),
+          );
 
-          console.log("전송할 데이터:", requestData);
+          // const requestData = {
+          //   pics: [newFileName], // UUID 형식의 파일명 전송
+          //   p: {
+          //     businessId: 2,
+          //   },
+          // };
+
+          console.log("전송할 데이터:", postData);
 
           const response = await loginApi.post(
             "/api/business/businessPic",
-            requestData,
+            postData,
             {
               headers: {
                 "Content-Type": "application/json",
