@@ -112,7 +112,7 @@ const DetailContents = () => {
       const scrollY = window.scrollY;
       if (scrollY > 243 && !isFixed) {
         setIsFixed(true);
-        console.log(window.scrollY);
+        // console.log(window.scrollY);
       } else if (scrollY <= 243 && isFixed) {
         setIsFixed(false);
       }
@@ -154,7 +154,7 @@ const DetailContents = () => {
       setPopupLink("/login");
       setIsPopupOpen(true);
     } else {
-      navigate(`/contact-us?businessId=${businessId}`);
+      navigate(`/service/contactus?businessId=${businessId}`);
     }
   };
 
