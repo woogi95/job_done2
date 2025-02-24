@@ -82,14 +82,14 @@ import Write from "./pages/community/Write";
 
 import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
-import TestEditPage from "./pages/mypage/TestEditPage";
+import TestSpinner from "./pages/TestSpinner";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/testedit" element={<TestEditPage />} />
+        <Route path="/test-spinner" element={<TestSpinner />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />

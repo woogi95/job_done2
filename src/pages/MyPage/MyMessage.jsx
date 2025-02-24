@@ -1,11 +1,8 @@
-import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
-// import SockJS from "sockjs-client";
-// import { Stomp } from "@stomp/stompjs";
-// import { Cookies } from "react-cookie";
 function MyMessage() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,6 +14,7 @@ function MyMessage() {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const messageContainerRef = useRef(null);
+
   // 방 리스트
   const chatRoomList = async () => {
     try {
@@ -25,6 +23,7 @@ function MyMessage() {
       console.log("API 리스폰스:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatRooms(res.data.resultData);
+        console.log("채팅방 목록:", res.data.resultData);
       } else {
         console.error("리스폰스 실패 : ", res.data);
         setChatRooms([]);
@@ -40,11 +39,14 @@ function MyMessage() {
   const fetchChatMessages = async roomId => {
     try {
       const res = await loginApi.get("/api/chat", {
-        params: { roomId },
+        params: {
+          room_id: roomId,
+        },
       });
       console.log("채팅 메시지:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatMessages(res.data.resultData);
+        console.log("채팅 메시지:", res.data.resultData);
       } else {
         setChatMessages([]);
       }
@@ -79,33 +81,81 @@ function MyMessage() {
       ws.onmessage = async event => {
         try {
           let messageData;
+          console.log("Raw message received:", event.data);
+
           if (event.data instanceof Blob) {
-            const text = await event.data.text();
-            messageData = JSON.parse(text);
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                messageData = JSON.parse(reader.result);
+                console.log("Parsed Blob message:", messageData);
+                setChatMessages(prevMessages => {
+                  const isDuplicate = prevMessages.some(
+                    msg => msg.chatId === messageData.chatId,
+                  );
+                  return isDuplicate
+                    ? prevMessages
+                    : [...prevMessages, messageData];
+                });
+              } catch (error) {
+                console.error("Blob 데이터 파싱 에러:", error);
+              }
+            };
+            reader.readAsText(event.data);
+          } else if (event.data instanceof ArrayBuffer) {
+            const decoder = new TextDecoder();
+            const jsonStr = decoder.decode(event.data);
+            messageData = JSON.parse(jsonStr);
+            console.log("Parsed ArrayBuffer message:", messageData);
+            setChatMessages(prevMessages => {
+              const isDuplicate = prevMessages.some(
+                msg => msg.chatId === messageData.chatId,
+              );
+              return isDuplicate
+                ? prevMessages
+                : [...prevMessages, messageData];
+            });
           } else {
             messageData = JSON.parse(event.data);
+            console.log("Parsed string message:", messageData);
+            setChatMessages(prevMessages => {
+              const isDuplicate = prevMessages.some(
+                msg => msg.chatId === messageData.chatId,
+              );
+              return isDuplicate
+                ? prevMessages
+                : [...prevMessages, messageData];
+            });
           }
-
-          // 새 메시지를 채팅 목록에 추가
-          setChatMessages(prev => [...prev, messageData]);
         } catch (error) {
           console.error("메시지 파싱 에러:", error);
+          console.log("파싱 실패한 원본 데이터:", event.data);
         }
       };
 
       ws.onclose = () => {
+        console.log("웹소켓 연결 종료");
         setConnected(false);
         setSocket(null);
 
+        // 재연결 시도 해보기
         if (reconnectAttempts < maxReconnectAttempts) {
+          console.log(
+            `재연결 시도 ${reconnectAttempts + 1}/${maxReconnectAttempts}`,
+          );
           reconnectAttempts++;
           setTimeout(connectWebSocket, 3000);
         }
+      };
+
+      ws.onerror = error => {
+        console.error("웹소켓 에러:", error);
       };
     };
 
     connectWebSocket();
 
+    // 컴포넌트 언마운트 시 웹소켓 연결 종료
     return () => {
       if (ws) {
         ws.close();
@@ -124,41 +174,54 @@ function MyMessage() {
   const sendMessage = async () => {
     if (!selectedRoomId || !message.trim()) return;
 
-    const messageData = {
-      flag: 1,
-      roomId: selectedRoomId,
-      contents: message,
-    };
-
-    if (selectedImages.length > 0) {
-      // 이미지 처리 로직
-      const imagePromises = selectedImages.map(async image => {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve({
-              name: image.name,
-              type: image.type,
-              data: reader.result.split(",")[1],
-            });
-          };
-          reader.readAsDataURL(image);
-        });
-      });
-
-      const processedImages = await Promise.all(imagePromises);
-      messageData.pics = processedImages;
-    }
-
     try {
+      const messageData = {
+        flag: 1,
+        roomId: 3,
+        message: message,
+      };
+
+      if (selectedImages.length > 0) {
+        const imagePromises = selectedImages.map(async image => {
+          return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve({
+                name: image.name,
+                type: image.type,
+                data: reader.result.split(",")[1],
+              });
+            };
+            reader.readAsDataURL(image);
+          });
+        });
+
+        const processedImages = await Promise.all(imagePromises);
+        messageData.file = processedImages[0];
+      }
+
       if (socket && socket.readyState === WebSocket.OPEN) {
         const jsonString = JSON.stringify(messageData);
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const arrayBuffer = await blob.arrayBuffer();
-        socket.send(arrayBuffer);
+        console.log("Sending message data:", jsonString);
+
+        socket.send(jsonString);
+
+        const localMessage = {
+          // chatId: Date.now(),
+          flag: 1,
+          contents: message,
+          pics:
+            selectedImages.length > 0
+              ? [URL.createObjectURL(selectedImages[0])]
+              : [],
+        };
+        setChatMessages(prev => [...prev, localMessage]);
 
         setMessage("");
         setSelectedImages([]);
+
+        const fileInput = document.getElementById("imageUpload");
+        if (fileInput) fileInput.value = "";
       } else {
         console.error("웹소켓이 연결되어 있지 않습니다.");
       }
@@ -172,20 +235,24 @@ function MyMessage() {
     setSelectedImages(files);
     console.log("선택된 이미지:", files);
   };
+
   const handleSendMessage = sendMessage;
   useEffect(() => {
     chatRoomList();
   }, []);
+
   const renderRoomItem = item => (
     <div key={item.roomId}>
-      <div className="flex justify-center items-center p-[20px]">
+      <div className="flex p-[15px]">
         <button
           className="flex gap-[10px]"
           onClick={() => handleRoomSelect(item.roomId)}
         >
           <img
             src={
-              item.pic ? `${IMAGE_BASE_URL}${item.pic}` : "/default-profile.png"
+              item.logo
+                ? `${IMAGE_BASE_URL}${item.logo}`
+                : "/default-profile.png"
             }
             alt="업체 이미지"
             className="w-[50px] h-[50px] rounded-full object-cover"
@@ -195,8 +262,8 @@ function MyMessage() {
               {item.businessName}
             </span>
             <div className="truncate font-[14px] text-left">
-              {item.title.length > 15
-                ? `${item.title.slice(0, 15)}...`
+              {item.title.length > 14
+                ? `${item.title.slice(0, 14)}...`
                 : item.title}
             </div>
             <div className="text-[12px] text-[#B8B8B8] text-left">
@@ -210,6 +277,13 @@ function MyMessage() {
       </div>
     </div>
   );
+
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center p-[20px]">
+      <AiOutlineLoading3Quarters className="animate-spin text-[#34C5F0] text-2xl" />
+    </div>
+  );
+
   return (
     <MyPageLayout>
       <div className="flex justify-center items-center pb-[50px]">
@@ -219,11 +293,9 @@ function MyMessage() {
         <div className="flex justify-between items-start w-[780px]">
           <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
             {/* 메시지 리스트 */}
-            <div className="flex flex-col gap-[10px] w-full overflow-y-auto">
+            <div className="flex flex-col w-full overflow-y-auto">
               {loading ? (
-                <div className="flex justify-center items-center p-[20px]">
-                  로딩중...
-                </div>
+                <LoadingSpinner />
               ) : !chatRooms || chatRooms.length === 0 ? (
                 <div className="flex justify-center items-center h-full text-gray-500">
                   활성화된 채팅이 없습니다
@@ -242,17 +314,17 @@ function MyMessage() {
                   <img
                     src={
                       chatRooms.find(item => item.roomId === selectedRoomId)
-                        ?.pic
-                        ? `${IMAGE_BASE_URL}${chatRooms.find(item => item.roomId === selectedRoomId)?.pic}`
+                        ?.logo
+                        ? `${IMAGE_BASE_URL}${chatRooms.find(item => item.roomId === selectedRoomId)?.logo}`
                         : "/default-profile.png"
                     }
                     alt="업체 이미지"
                     className="w-[40px] h-[40px] rounded-full object-cover"
                   />
-                  <span className="text-[24px] font-semibold pl-[10px]">
+                  <span className="text-[18px] font-semibold pl-[10px]">
                     {
                       chatRooms.find(item => item.roomId === selectedRoomId)
-                        ?.companyName
+                        ?.businessName
                     }
                   </span>
                 </div>
@@ -316,7 +388,7 @@ function MyMessage() {
                   ))}
                 </div>
                 {/* 메시지 입력 */}
-                <div className="flex justify-center items-center w-full h-[70px] bg-[#EDF0F8] mt-auto gap-[5px]">
+                <div className="flex justify-center items-center w-full min-h-[60px] bg-[#EDF0F8] mt-auto gap-[5px]">
                   <div className="relative w-[70%]">
                     <input
                       type="file"
@@ -346,7 +418,7 @@ function MyMessage() {
                     <input
                       type="text"
                       placeholder="메시지를 입력해주세요."
-                      className="flex justify-center items-center w-full h-[40px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
+                      className="flex justify-center items-center w-full h-[35px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
                       value={message}
                       onChange={e => setMessage(e.target.value)}
                       onKeyDown={e => {
@@ -359,7 +431,7 @@ function MyMessage() {
                     />
                   </div>
                   <button
-                    className="flex justify-center items-center w-[40px] h-[40px] bg-[#34C5F0] rounded-full"
+                    className="flex justify-center items-center w-[35px] h-[35px] bg-[#34C5F0] rounded-full"
                     onClick={() => {
                       if (message.trim()) {
                         handleSendMessage();
@@ -367,7 +439,7 @@ function MyMessage() {
                       }
                     }}
                   >
-                    <FiSend className="text-[24px] text-white ml-[-2px] mb-[-2px]" />
+                    <FiSend className="text-[20px] text-white ml-[-2px] mb-[-2px]" />
                   </button>
                 </div>
               </div>
