@@ -257,14 +257,19 @@ export const ExpertProductDiv = styled.div`
 `;
 // 옵션정보
 export const ExpertOptionInfoDiv = styled.div`
+  height: 100%;
+  /* border: 1px solid red; */
   .option-list {
     width: 100%;
-    /* border: 1px solid; */
+    min-height: calc(100vh - 485px);
+    /* height: 100%; */
+    border: 1px solid #eee;
     display: flex;
     flex-direction: column;
     gap: 15px;
     .option-box {
-      /* border: 1px solid red; */
+      padding-bottom: 15px;
+      border-bottom: 3px dotted #eee;
 
       h3 {
         padding: 10px;
@@ -273,6 +278,17 @@ export const ExpertOptionInfoDiv = styled.div`
         font-size: 15px;
         color: #2a58ad;
         background-color: rgba(42, 88, 173, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        /* 옵션명 삭제버튼 */
+        button {
+          background-color: #2a58ad;
+          color: #fff;
+          padding: 5px 10px;
+          border-radius: 5px;
+          font-size: 13px;
+        }
       }
 
       /* 옵션 디테일 리스트*/
@@ -299,15 +315,20 @@ export const ExpertOptionInfoDiv = styled.div`
             font-size: 14px;
             span {
               color: #111;
+              width: calc(100% - 360px);
             }
             em {
               color: #999;
               font-weight: 400;
+              display: block;
+              /* border: 1px solid #ddd; */
+              width: 200px;
+              text-align: right;
             }
           }
           button {
-            width: 20px;
-            height: 20px;
+            width: 80px;
+            height: 26px;
             background-color: #333;
             color: #fff;
           }
@@ -452,6 +473,123 @@ export const EditDetailDiv = styled.div`
     button[type="submit"] {
       border: 1px solid #4581f0;
       color: #4581f0;
+    }
+  }
+`;
+
+// 업체 옵션 수정
+export const OpContBoxDiv = styled(ContBoxDiv)`
+  padding: 25px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 30px;
+  /* border: 1px solid #000; */
+  .tit {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  .add-option {
+    /* border: 1px solid #000; */
+    display: flex;
+    align-items: end;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 15px;
+    input {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      border-radius: 5px;
+      width: calc(100% - 100px);
+      font-size: 15px;
+
+      color: #333;
+    }
+    button {
+      min-width: 100px;
+      border: 1px solid #2a58ad;
+      color: #2a58ad;
+      padding: 10px 10px;
+      border-radius: 5px;
+    }
+  }
+  .op-box {
+    /* border: 1px solid #000; */
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .add-detail-op {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    width: 100%;
+    input {
+      border: 1px solid #ddd;
+      width: calc(100% - 320px);
+      padding: 4px 10px;
+      border-radius: 5px;
+    }
+    input[type="number"] {
+      width: calc(200px);
+    }
+    /* 선택옵션 추가 버튼 */
+    button {
+      width: 110px;
+      border: 1px solid #2a58ad;
+      color: #2a58ad;
+      padding: 8px 10px;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+  }
+  .option-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    label {
+      display: flex;
+      border: 1px solid #eaeef1;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      width: 100%;
+      b {
+        width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background-color: #eaeef1;
+        padding: 10px;
+      }
+      span {
+        border-radius: 30px;
+        background-color: #333;
+        color: #fff;
+        font-size: 13px;
+        padding: 7px 16px 8px;
+      }
+      input {
+        border: 0;
+        background-color: transparent;
+        font-size: 15px;
+        font-weight: 400;
+        color: #555;
+      }
     }
   }
 `;
