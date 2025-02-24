@@ -38,27 +38,54 @@ function TestMessage() {
       ws.onmessage = event => {
         try {
           let messageData;
+          console.log("Raw message received:", event.data);
 
           if (event.data instanceof Blob) {
-            // Blob 데이터를 텍스트로 변환
             const reader = new FileReader();
             reader.onload = () => {
               try {
                 messageData = JSON.parse(reader.result);
-                setMessages(prevMessages => [...prevMessages, messageData]);
+                if (!messageData.username) {
+                  messageData.username = username;
+                }
+                console.log("Parsed Blob message:", messageData);
+                setMessages(prevMessages => {
+                  const isDuplicate = prevMessages.some(
+                    msg =>
+                      msg.message === messageData.message &&
+                      msg.username === messageData.username &&
+                      JSON.stringify(msg.file) ===
+                        JSON.stringify(messageData.file),
+                  );
+                  return isDuplicate
+                    ? prevMessages
+                    : [...prevMessages, messageData];
+                });
               } catch (error) {
                 console.error("Blob 데이터 파싱 에러:", error);
               }
             };
             reader.readAsText(event.data);
           } else if (event.data instanceof ArrayBuffer) {
-            // ArrayBuffer를 텍스트로 디코딩
             const decoder = new TextDecoder();
             const jsonStr = decoder.decode(event.data);
             messageData = JSON.parse(jsonStr);
-            setMessages(prevMessages => [...prevMessages, messageData]);
+            if (!messageData.username) {
+              messageData.username = username;
+            }
+            console.log("Parsed ArrayBuffer message:", messageData);
+            setMessages(prevMessages => {
+              const isDuplicate = prevMessages.some(
+                msg =>
+                  msg.message === messageData.message &&
+                  msg.username === messageData.username &&
+                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
+              );
+              return isDuplicate
+                ? prevMessages
+                : [...prevMessages, messageData];
+            });
           } else {
-            // 일반 텍스트 데이터 처리
             const rawData = event.data;
             if (
               typeof rawData === "string" &&
@@ -68,7 +95,21 @@ function TestMessage() {
             } else {
               messageData = JSON.parse(rawData);
             }
-            setMessages(prevMessages => [...prevMessages, messageData]);
+            if (!messageData.username) {
+              messageData.username = username;
+            }
+            console.log("Parsed string message:", messageData);
+            setMessages(prevMessages => {
+              const isDuplicate = prevMessages.some(
+                msg =>
+                  msg.message === messageData.message &&
+                  msg.username === messageData.username &&
+                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
+              );
+              return isDuplicate
+                ? prevMessages
+                : [...prevMessages, messageData];
+            });
           }
 
           // 디버깅용 로그
@@ -139,35 +180,30 @@ function TestMessage() {
     if (socket && socket.readyState === WebSocket.OPEN && username) {
       try {
         if (selectedImage) {
-          // 이미지가 있는 경우
           const reader = new FileReader();
           reader.onload = async () => {
-            // 파일 데이터를 단일 객체로 구성
             const fileData = {
               name: selectedImage.name,
               type: selectedImage.type,
-              data: reader.result.split(",")[1], // base64 데이터
+              data: reader.result.split(",")[1],
             };
 
-            // 전체 메시지 데이터를 JSON으로 구성 (file을 단일 객체로)
             const messageData = {
               flag: 1,
               roomId: 3,
               message: inputMessage,
-              file: fileData, // files 배열 대신 단일 file 객체
+              username: username,
+              file: fileData,
             };
 
             // JSON을 문자열로 변환
             const jsonString = JSON.stringify(messageData);
-
-            // 문자열을 Blob으로 변환
             const blob = new Blob([jsonString], { type: "application/json" });
-
-            // Blob을 ArrayBuffer로 변환
             const arrayBuffer = await blob.arrayBuffer();
-
-            // ArrayBuffer를 전송
             socket.send(arrayBuffer);
+
+            // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
+            setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
             console.log("전송할 메시지 데이터:", {
@@ -182,19 +218,24 @@ function TestMessage() {
           };
           reader.readAsDataURL(selectedImage);
         } else {
-          // 텍스트 메시지만 있는 경우
           const messageData = {
             flag: 1,
             roomId: 3,
             message: inputMessage,
+            username: username,
           };
 
-          // JSON을 문자열로 변환 후 Blob으로 변환
+          // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
+          console.log("Sending message:", jsonString); // 디버깅용
+
+          // 일반 텍스트 메시지도 이미지와 동일한 방식으로 전송
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
-
           socket.send(arrayBuffer);
+
+          // 로컬 메시지 목록에 추가 (즉시 화면에 표시)
+          setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
         setInputMessage("");

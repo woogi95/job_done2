@@ -43,6 +43,19 @@ export const QuotationFormDiv = styled.div`
             border-bottom: none;
             width: 100%;
           }
+          &.flex {
+            display: flex;
+            align-items: stretch;
+
+            h4 {
+              height: auto;
+              min-height: 34px;
+            }
+
+            .flex-col {
+              align-items: stretch;
+            }
+          }
         }
 
         h4 {
@@ -110,9 +123,9 @@ export const AddOptionDiv = styled.div`
   > div {
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    flex-direction: column;
+    /* flex-direction: column; */
     .tr {
       display: flex;
       justify-content: center;
@@ -131,13 +144,13 @@ export const AddOptionDiv = styled.div`
           width: 5%;
         }
         &:nth-of-type(2) {
-          width: 50%;
+          width: 70%;
         }
         &:nth-of-type(3) {
-          width: 10%;
+          width: 15%;
         }
         &:nth-of-type(4) {
-          width: 35%;
+          width: 10%;
         }
       }
     }
