@@ -7,6 +7,8 @@ import ExpertSideMenu from "./expert-side-menu/ExpertSideMenu";
 const ExpertLayout = () => {
   const ExpertDiv = styled.div`
     background-color: #1b428b;
+    /* background: linear-gradient(135deg, #1b428b 0%, #2a58ad 50%, #3468c7 100%); */
+    background-color: #eaeef1;
     display: flex;
     justify-content: center;
     height: 100vh;
@@ -32,7 +34,8 @@ const ExpertLayout = () => {
       /* outlet */
       > div:nth-child(2) {
         width: 80%;
-        background-color: #eaeef1;
+        /* background-color: #eaeef1; */
+        background-color: #f5f5f5;
       }
     }
   `;

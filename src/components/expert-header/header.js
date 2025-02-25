@@ -3,6 +3,7 @@ export const HeaderDiv = styled.div`
   height: 67px;
   width: 100%;
   background-color: #2a58ad;
+  background: linear-gradient(90deg, #2a58ad 0%, #3468c7 100%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;

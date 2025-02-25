@@ -347,6 +347,7 @@ export const PortfolioListDiv = styled(EListContDiv)`
 `;
 export const PortfolioListItemDiv = styled.div`
   width: calc((100% - 90px) / 4);
+  min-width: 213px;
   height: 213px;
   border: 1px solid #ddd;
   background-color: #fff;
@@ -358,12 +359,15 @@ export const PortfolioListItemDiv = styled.div`
     position: absolute;
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
     background-color: #fdfdfd;
+    overflow: hidden;
     img {
       position: absolute;
       width: 100%;
+      height: 100%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -376,17 +380,23 @@ export const PortfolioListItemDiv = styled.div`
     left: 0;
     width: 100%;
     padding: 10px 15px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.6) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
     h4 {
       font-size: 16px;
-      font-weight: 600;
-      color: #333;
+      font-weight: 500;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
       margin-bottom: 10px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .btn-area {
-      /* border: 1px solid; */
       display: flex;
       align-items: center;
       gap: 10px;
@@ -397,6 +407,17 @@ export const PortfolioListItemDiv = styled.div`
         border-radius: 3px;
         background-color: #eee;
         font-size: 14px;
+        transition: all 0.3s;
+        &:hover {
+          opacity: 0.88;
+        }
+      }
+      button.edit-btn {
+        background-color: #2a58ad;
+        color: #fff;
+        &:hover {
+          background-color: #11b1e1;
+        }
       }
     }
   }

@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const ModalDiv = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.75);
   position: fixed;
   display: flex;
   justify-content: center;

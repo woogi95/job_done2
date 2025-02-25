@@ -11,6 +11,7 @@ export const PortfolioDetailImgState = atom({
 export const PortfolioDetailInfoState = atom({
   key: "PortfolioDetailInfoState",
   default: {
+    businessId: 0,
     portfolioId: 0,
     title: "",
     price: 0,

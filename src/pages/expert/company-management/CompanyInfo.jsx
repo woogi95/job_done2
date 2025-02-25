@@ -27,7 +27,8 @@ function CompanyInfo() {
   const [isExpertInfoEdit, setIsExpertInfoEdit] = useState(false);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const businessState = useRecoilValue(businessDetailState);
-  const BASE_URL = "http://112.222.157.157:5234";
+  const [optionList, setOptionList] = useState([]);
+  // const BASE_URL = "http://112.222.157.157:5234";
   const navigate = useNavigate();
   const getBusinessInfo = async busiId => {
     try {
@@ -36,6 +37,17 @@ function CompanyInfo() {
       );
       setBusinessInfo(res.data.resultData);
       console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getOptionList = async busiId => {
+    try {
+      // /api/portfolio/post?businessId=2&price=50000&takingTime=5&title=ddd&contents=ddd
+      const res = await loginApi.get(`/api/product?businessId=${busiId}`);
+      console.log("여기제발", res.data.resultData);
+      setOptionList(res.data.resultData.optionList);
     } catch (error) {
       console.log(error);
     }
@@ -49,6 +61,10 @@ function CompanyInfo() {
       getBusinessInfo(busiId);
     }
   }, [busiId, isLogoEdit]);
+
+  useEffect(() => {
+    getOptionList(busiId);
+  }, [busiId]);
   return (
     <ExportPageDiv>
       {/* <h2 className="tit">업체 관리</h2> */}
@@ -122,44 +138,27 @@ function CompanyInfo() {
         </TitleAreaDiv>
         <ContBoxDiv>
           <div className="option-list">
-            <div className="option-box">
-              <h3>옵션명 1</h3>
-              <ul className="op-detail-list">
-                <li className="op-item">
-                  <p>
-                    <span>선택옵션1</span>
-                    <em>0</em>
-                  </p>
-                  {/* <button>-</button> */}
-                </li>
-                <li className="op-item">
-                  <p>
-                    <span>선택옵션2</span>
-                    <em>10,000</em>
-                  </p>
-                  {/* <button>-</button> */}
-                </li>
-              </ul>
-            </div>
-            <div className="option-box">
-              <h3>옵션명 2</h3>
-              <ul className="op-detail-list">
-                <li className="op-item">
-                  <p>
-                    <span>선택옵션2-1</span>
-                    <em>0</em>
-                  </p>
-                  {/* <button>-</button> */}
-                </li>
-                <li className="op-item">
-                  <p>
-                    <span>선택옵션2-2</span>
-                    <em>10,000</em>
-                  </p>
-                  {/* <button>-</button> */}
-                </li>
-              </ul>
-            </div>
+            {optionList.map(item => (
+              <div className="option-box" key={item.optionId}>
+                <h3>{item.optionName}</h3>
+                <ul className="op-detail-list">
+                  <li className="op-item">
+                    <p>
+                      <span>선택옵션1</span>
+                      <em>0</em>
+                    </p>
+                    {/* <button>-</button> */}
+                  </li>
+                  <li className="op-item">
+                    <p>
+                      <span>선택옵션2</span>
+                      <em>10,000</em>
+                    </p>
+                    {/* <button>-</button> */}
+                  </li>
+                </ul>
+              </div>
+            ))}
           </div>
         </ContBoxDiv>
       </ExpertOptionInfoDiv>
