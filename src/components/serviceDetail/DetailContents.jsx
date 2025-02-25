@@ -27,6 +27,7 @@ import { loginApi } from "../../apis/login";
 import ContReview from "./ContReview";
 import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
+import ContactUs from "../../pages/servicepage/ContactUs";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
@@ -111,7 +112,7 @@ const DetailContents = () => {
       const scrollY = window.scrollY;
       if (scrollY > 243 && !isFixed) {
         setIsFixed(true);
-        console.log(window.scrollY);
+        // console.log(window.scrollY);
       } else if (scrollY <= 243 && isFixed) {
         setIsFixed(false);
       }
@@ -144,14 +145,19 @@ const DetailContents = () => {
       navigate(`/reservation/?businessId=${businessId}`);
     }
   };
+
   const handleContactUs = () => {
-    setPopupTitle("안내");
-    setPopupMessage(
-      "죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일 내에 서비스를 제공해 드리도록 하겠습니다.",
-    );
-    setPopupLink("");
-    setIsPopupOpen(true);
+    const accessToken = getCookie("accessToken");
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("문의하기를 위해 로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+    } else {
+      navigate(`/service/contactus?businessId=${businessId}`);
+    }
   };
+
   return (
     <DetailLayout>
       {/* 오른쪽 */}
@@ -270,14 +276,7 @@ const DetailContents = () => {
             >
               예약하기
             </button>
-            {/* <button onClick={openWindow}>문의하기</button> */}
-            <button
-              onClick={() => {
-                handleContactUs();
-              }}
-            >
-              문의하기
-            </button>
+            <button onClick={handleContactUs}>문의하기</button>
           </div>
         </div>
       </SummaryDiv>
