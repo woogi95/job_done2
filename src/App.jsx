@@ -89,6 +89,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <Routes>
+        <Route path="/contactus" element={<ContactUs />} />
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
@@ -126,7 +127,6 @@ function App() {
           {/* 서비스 페이지 */}
           <Route path="/service">
             <Route index element={<Service />} />
-            <Route path="contactus" element={<ContactUs />} />
             <Route path=":id" element={<Detail />} />
           </Route>
           {/* 마이페이지 */}

@@ -10,6 +10,7 @@ function MyMessage() {
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
@@ -172,18 +173,24 @@ function MyMessage() {
   }, [chatMessages]);
 
   const sendMessage = async () => {
-    if (!selectedRoomId || !message.trim()) return;
+    if (!selectedRoomId || (!message.trim() && selectedImages.length === 0))
+      return;
 
     try {
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        console.error("웹소켓이 연결되어 있지 않습니다. 재연결을 시도합니다.");
+        return;
+      }
+
       const messageData = {
         flag: 1,
-        roomId: 3,
-        message: message,
+        roomId: selectedRoomId,
+        message: message.trim() || "",
       };
 
       if (selectedImages.length > 0) {
         const imagePromises = selectedImages.map(async image => {
-          return new Promise(resolve => {
+          return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
               resolve({
@@ -192,6 +199,7 @@ function MyMessage() {
                 data: reader.result.split(",")[1],
               });
             };
+            reader.onerror = () => reject(new Error("파일 읽기 실패"));
             reader.readAsDataURL(image);
           });
         });
@@ -200,31 +208,24 @@ function MyMessage() {
         messageData.file = processedImages[0];
       }
 
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        const jsonString = JSON.stringify(messageData);
-        console.log("Sending message data:", jsonString);
+      const jsonString = JSON.stringify(messageData);
+      socket.send(jsonString);
 
-        socket.send(jsonString);
+      const localMessage = {
+        flag: 1,
+        contents: message.trim() || "",
+        pics: selectedImages.map(image => URL.createObjectURL(image)),
+        tempId: Date.now(),
+      };
 
-        const localMessage = {
-          // chatId: Date.now(),
-          flag: 1,
-          contents: message,
-          pics:
-            selectedImages.length > 0
-              ? [URL.createObjectURL(selectedImages[0])]
-              : [],
-        };
-        setChatMessages(prev => [...prev, localMessage]);
+      setChatMessages(prev => [...prev, localMessage]);
 
-        setMessage("");
-        setSelectedImages([]);
+      setMessage("");
+      setSelectedImages([]);
+      setPreviewUrls([]);
 
-        const fileInput = document.getElementById("imageUpload");
-        if (fileInput) fileInput.value = "";
-      } else {
-        console.error("웹소켓이 연결되어 있지 않습니다.");
-      }
+      const fileInput = document.getElementById("imageUpload");
+      if (fileInput) fileInput.value = "";
     } catch (error) {
       console.error("메시지 전송 에러:", error);
     }
@@ -232,14 +233,50 @@ function MyMessage() {
 
   const handleImageUpload = event => {
     const files = Array.from(event.target.files);
-    setSelectedImages(files);
-    console.log("선택된 이미지:", files);
+    if (files.length === 0) return;
+
+    const validImageFiles = files.filter(file =>
+      file.type.startsWith("image/"),
+    );
+    if (validImageFiles.length === 0) {
+      alert("이미지 파일만 업로드 가능합니다.");
+      return;
+    }
+
+    setSelectedImages(validImageFiles);
+
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
+
+    const newPreviewUrls = validImageFiles.map(file =>
+      URL.createObjectURL(file),
+    );
+    setPreviewUrls(newPreviewUrls);
   };
+
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
 
   const handleSendMessage = sendMessage;
   useEffect(() => {
     chatRoomList();
   }, []);
+
+  // 웹소켓 연결 상태 모니터링 추가
+  useEffect(() => {
+    if (socket) {
+      const checkConnection = setInterval(() => {
+        if (socket.readyState !== WebSocket.OPEN) {
+          console.log("웹소켓 연결이 끊어졌습니다. 재연결을 시도합니다.");
+          setConnected(false);
+        }
+      }, 5000);
+
+      return () => clearInterval(checkConnection);
+    }
+  }, [socket]);
 
   const renderRoomItem = item => (
     <div key={item.roomId}>
@@ -345,7 +382,10 @@ function MyMessage() {
                   </div>
                   {chatMessages.map(chat => (
                     <div
-                      key={chat.chatId}
+                      key={
+                        chat.chatId ||
+                        `${chat.flag}-${Date.now()}-${Math.random()}`
+                      }
                       className={`flex ${
                         chat.flag === 1 ? "self-end" : "self-start"
                       } gap-[10px] py-[15px]`}
@@ -388,59 +428,91 @@ function MyMessage() {
                   ))}
                 </div>
                 {/* 메시지 입력 */}
-                <div className="flex justify-center items-center w-full min-h-[60px] bg-[#EDF0F8] mt-auto gap-[5px]">
-                  <div className="relative w-[70%]">
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      className="hidden"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                    />
-                    <label
-                      htmlFor="imageUpload"
-                      className="absolute left-[15px] top-1/2 transform -translate-y-1/2 cursor-pointer"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                <div className="flex flex-col w-full bg-[#EDF0F8] mt-auto">
+                  {/* Image previews */}
+                  {previewUrls.length > 0 && (
+                    <div className="flex gap-2 p-2 overflow-x-auto">
+                      {previewUrls.map((url, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={url}
+                            alt={`Preview ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded"
+                          />
+                          <button
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                            onClick={() => {
+                              const newImages = selectedImages.filter(
+                                (_, i) => i !== index,
+                              );
+                              const newUrls = previewUrls.filter(
+                                (_, i) => i !== index,
+                              );
+                              setSelectedImages(newImages);
+                              setPreviewUrls(newUrls);
+                              URL.revokeObjectURL(url);
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex justify-center items-center w-full min-h-[60px] gap-[5px]">
+                    <div className="relative w-[70%]">
+                      <input
+                        type="file"
+                        id="imageUpload"
+                        className="hidden"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageUpload}
+                      />
+                      <label
+                        htmlFor="imageUpload"
+                        className="absolute left-[15px] top-1/2 transform -translate-y-1/2 cursor-pointer"
                       >
-                        <path
-                          d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
-                          fill="#A2A2A2"
-                        />
-                      </svg>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="메시지를 입력해주세요."
-                      className="flex justify-center items-center w-full h-[35px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
-                      value={message}
-                      onChange={e => setMessage(e.target.value)}
-                      onKeyDown={e => {
-                        if (e.key === "Enter" && message.trim()) {
-                          e.preventDefault();
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
+                            fill="#A2A2A2"
+                          />
+                        </svg>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="메시지를 입력해주세요."
+                        className="flex justify-center items-center w-full h-[35px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && message.trim()) {
+                            e.preventDefault();
+                            handleSendMessage();
+                            setMessage("");
+                          }
+                        }}
+                      />
+                    </div>
+                    <button
+                      className="flex justify-center items-center w-[35px] h-[35px] bg-[#34C5F0] rounded-full"
+                      onClick={() => {
+                        if (message.trim()) {
                           handleSendMessage();
                           setMessage("");
                         }
                       }}
-                    />
+                    >
+                      <FiSend className="text-[20px] text-white ml-[-2px] mb-[-2px]" />
+                    </button>
                   </div>
-                  <button
-                    className="flex justify-center items-center w-[35px] h-[35px] bg-[#34C5F0] rounded-full"
-                    onClick={() => {
-                      if (message.trim()) {
-                        handleSendMessage();
-                        setMessage("");
-                      }
-                    }}
-                  >
-                    <FiSend className="text-[20px] text-white ml-[-2px] mb-[-2px]" />
-                  </button>
                 </div>
               </div>
             ) : (
