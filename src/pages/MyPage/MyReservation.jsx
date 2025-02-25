@@ -125,7 +125,7 @@ function MyReservation() {
         formData.append("pics", file);
       });
 
-      const res = await loginApi.post("/api/review", formData, {
+      const res = await loginApi.post("/api/business/businessPic", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -207,6 +207,9 @@ function MyReservation() {
       } else if (currentReservation.completed === 6) {
         document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/paymenthistory/${serviceId}`);
+      } else if ([7, 8, 9].includes(currentReservation.completed)) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
+        navigate(`/jobdonehistory/${serviceId}`);
       }
     }
   };
