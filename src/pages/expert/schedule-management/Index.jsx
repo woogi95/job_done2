@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function Index() {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
-  const myPrev = <button id="my-prev-button">이전</button>;
+
   return (
     <div className="calendar-container">
       <div className="calendar-header">

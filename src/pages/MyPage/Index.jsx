@@ -70,14 +70,16 @@ function MyPage() {
       setUserEmail(userData.email);
       setPhoneNumber(userData.phone);
       const profileImgUrl = userData.pic
-        ? `http://112.222.157.157:5234${userData.pic}`
+        ? userData.pic.startsWith("/pic")
+          ? `http://112.222.157.157:5234${userData.pic}`
+          : `${userData.pic}`
         : "/images/order/default_profile.jpg";
+      console.log(profileImgUrl);
       setProfileImg(profileImgUrl);
     } catch (error) {
       console.error("API 에러:", error);
     }
   };
-
   useEffect(() => {
     getUserInfo();
   }, []);

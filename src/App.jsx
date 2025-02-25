@@ -83,12 +83,14 @@ import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
 import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
 import TestSpinner from "./pages/TestSpinner";
+import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        <Route path="/fe/redirect" element={<OAuth2Handler />} />
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
@@ -106,6 +108,7 @@ function App() {
           {/* 로그인 및 회원가입 */}
           <Route path="/login">
             <Route index element={<LoginPage />} />
+
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
