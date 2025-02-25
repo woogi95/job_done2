@@ -34,6 +34,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 // icon
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
+import { Popup } from "../../components/ui/Popup";
 
 const schema = yup.object({
   productId: yup.number(),
@@ -115,41 +116,70 @@ function Index() {
   const getOptionList = async businessId => {
     try {
       const res = await axios.get(`/api/product?businessId=${businessId}`);
-      setOptionList(res.data.resultData.optionList);
-      setBasicPrice(res.data.resultData.productPrice);
-      setProductId(res.data.resultData.productId);
-      if (res.data.resultData.optionList.length > 0) {
-        const firstOption = res.data.resultData.optionList[0];
-        setSelectedPrices({
-          [firstOption.optionId]:
-            firstOption.optionDetailList[0].optionDetailPrice,
-        });
+
+      // API 응답 데이터가 있는지 먼저 확인
+      if (!res.data?.resultData) {
+        console.log("No result data");
+        return;
       }
 
-      // console.log("너란다 : ", res.data.resultData.optionList);
+      const { optionList, productPrice, productId } = res.data.resultData;
 
-      const listTempArr = res.data.resultData.optionList.map(item => ({
-        optionId: item.optionId,
-        optionDetailId: item.optionDetailList[0].optionDetailId,
-      }));
+      setOptionList(optionList || []);
+      setBasicPrice(productPrice);
+      setProductId(productId);
 
-      setSendAllData(listTempArr);
+      // optionList가 있는 경우에만 처리
+      if (optionList && optionList.length > 0) {
+        // 유효한 optionDetailList가 있는 옵션만 필터링
+        const validOptions = optionList.filter(
+          option =>
+            option?.optionDetailList && option.optionDetailList.length > 0,
+        );
+
+        if (validOptions.length > 0) {
+          const listTempArr = validOptions.map(item => ({
+            optionId: item.optionId,
+            optionDetailId: item.optionDetailList[0].optionDetailId,
+          }));
+
+          setSendAllData(listTempArr);
+
+          // 첫 번째 옵션의 가격 설정
+          const firstOption = validOptions[0];
+          if (firstOption?.optionDetailList?.[0]) {
+            setSelectedPrices({
+              [firstOption.optionId]:
+                firstOption.optionDetailList[0].optionDetailPrice,
+            });
+          }
+        }
+      } else {
+        setSendAllData([]); // optionList가 없는 경우 빈 배열로 초기화
+      }
     } catch (error) {
-      console.log(error);
+      console.log("getOptionList error:", error);
+      setSendAllData([]); // 에러 발생 시 빈 배열로 초기화
     }
   };
+  const [showPopup, setShowPopup] = useState(false);
   const postReservation = async data => {
     try {
       const res = await loginApi.post(`/api/service`, data);
       const resultData = res.data.resultData;
-      setIsTest(resultData);
-      // console.log("서비스 아이디가 맞나요?", res.data.resultData.serviceId);
-      setServiceId(res.data.resultData.serviceId);
-      setCookie("serviceId", res.data.resultData.serviceId);
 
-      // console.log(resultData);
+      if (resultData) {
+        setIsTest(resultData);
+        setServiceId(res.data.resultData.serviceId);
+        setCookie("serviceId", res.data.resultData.serviceId);
+        setReservationSubmitted(true);
+      } else {
+        setShowPopup(true);
+      }
     } catch (error) {
+      setShowPopup(true);
       console.log(error);
+      console.log("예약실패");
     }
   };
 
@@ -173,7 +203,6 @@ function Index() {
     };
     // console.log("!!!!", updatedData);
     postReservation(updatedData);
-    setReservationSubmitted(true);
   };
 
   const pyeongVal = watch("pyeong");
@@ -467,6 +496,17 @@ function Index() {
       )}
 
       {reservationSubmitted && <UserReservation />}
+
+      <Popup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        title="예약 실패"
+        message="문제가 발생하였습니다. 잠시후 다시 시도해주세요"
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelLink={`/service/${businessId}`}
+        confirmLink={`/service/${businessId}`}
+      />
     </ReservationDiv>
   );
 }

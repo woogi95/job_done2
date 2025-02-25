@@ -82,7 +82,11 @@ import Write from "./pages/community/Write";
 
 import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
+
+import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
+
 import TestSpinner from "./pages/TestSpinner";
+
 
 function App() {
   return (
@@ -164,6 +168,7 @@ function App() {
               <Route path="editdetail" element={<EditDetailPage />} />
               <Route path="portfolio" element={<Portfolio />} />
               <Route path="detail" element={<ExpertDetailPage />} />
+              <Route path="createoption" element={<CreateOptionPage />} />
             </Route>
             {/* 예약관리 */}
             <Route path="/expert/reservation-management">
