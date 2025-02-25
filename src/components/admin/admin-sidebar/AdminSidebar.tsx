@@ -19,32 +19,14 @@ const Sidebar = () => {
       </div>
       <nav>
         <Link to="/admin">메인</Link>
-        <button
-          onClick={() => reqOpen()}
-          style={{ display: "flex", justifyContent: "!end", width: "100%" }}
-        >
-          업체 • 상품 등록 요청
-          <GoChevronDown />
-        </button>
-        {requestMenu ? (
-          <div>
-            <Link to="/admin/requestresi" style={linkStyle}>
-              {" "}
-              • 업체 등록 요청
-            </Link>
-            <Link to="/admin/requestresi/requestproduct" style={linkStyle}>
-              {" "}
-              • 상품 등록 요청
-            </Link>
-          </div>
-        ) : (
-          ""
-        )}
+        <Link to="/admin/requestresi" style={linkStyle}>
+          업체 등록 요청
+        </Link>
         <button
           onClick={() => setSearchMenu(!searchMenu)}
           style={{ display: "flex", justifyContent: "!end", width: "100%" }}
         >
-          업체 조회
+          업체 관리
           <GoChevronDown />
         </button>
         {searchMenu ? (
@@ -53,10 +35,10 @@ const Sidebar = () => {
               카테고리 조회
             </Link>
             <Link to="/admin/businesssearch/reservesearch" style={linkStyle}>
-              예약 별 조회
+              예약 별 조회(후순위)
             </Link>
             <Link to="/admin/businesssearch/ruesearch" style={linkStyle}>
-              매출 별 조회
+              매출 별 조회(후순위)
             </Link>
           </div>
         ) : (

@@ -79,14 +79,10 @@ import UserReport from "./pages/admin/user/report/UserReport";
 import UserList from "./pages/admin/user/userlist/UserList";
 import Forum from "./pages/community/Forum";
 import Write from "./pages/community/Write";
-
 import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
-
 import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
-
 import TestSpinner from "./pages/TestSpinner";
-
 
 function App() {
   return (

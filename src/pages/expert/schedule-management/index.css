@@ -9,7 +9,15 @@
 }
 .fc {
   background-color: white;
+  padding: 10px;
 }
 /* .fc-h-event .fc-event-main {
   background-color:
 } */
+.fc-icon fc-icon-chevron-left {
+  all: unset !important;
+}
+.calendar-container {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}

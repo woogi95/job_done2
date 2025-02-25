@@ -25,7 +25,11 @@ function OCRUploader() {
         body: formData,
       });
       const data = await response.json();
-      setResult(data);
+      console.log(data.text);
+      const dataText = data.text;
+      const filterData = dataText.match(/\d{3}-\d{2}-\d{5}/);
+      console.log(filterData[0]);
+      setResult(filterData[0]);
     } catch (error) {
       console.error("OCR 요청 오류:", error);
     }

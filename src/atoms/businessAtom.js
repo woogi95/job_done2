@@ -19,6 +19,10 @@ export const busiFile = atom({
   key: "busiFile",
   default: null,
 });
+export const busiNumFile = atom({
+  key: "busiNumFile",
+  default: null,
+});
 
 // 사업자 중복확인 모달창
 export const numDubCheck = atom({
@@ -116,4 +120,10 @@ export const portfolioListState = atom({
 export const serviceIdState = atom({
   key: "serviceIdState",
   default: 0,
+});
+
+// OCR 정보
+export const ocrDataAtom = atom({
+  key: "ocrDataAtom",
+  default: {},
 });
