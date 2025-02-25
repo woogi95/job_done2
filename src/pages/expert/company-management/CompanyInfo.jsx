@@ -112,7 +112,11 @@ function CompanyInfo() {
       <ExpertOptionInfoDiv>
         <TitleAreaDiv>
           <h2 className="tit">서비스 옵션</h2>
-          <button>
+          <button
+            onClick={() => {
+              navigate("/expert/company-management/createoption");
+            }}
+          >
             <p>옵션 수정</p> <MdModeEdit />
           </button>
         </TitleAreaDiv>

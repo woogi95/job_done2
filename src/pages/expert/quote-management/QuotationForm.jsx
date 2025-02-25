@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { DatePicker, TimePicker } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { loginApi } from "../../../apis/login";
+import { BtnAreaDiv } from "../../../components/papers/papers";
+import { getCookie } from "../../../utils/Cookie";
 import {
   AddOptionDiv,
   DatePriceDiv,
   QuotationDiv,
   QuotationFormDiv,
 } from "./qouteManagement";
-import { BtnAreaDiv } from "../../../components/papers/papers";
-import { loginApi } from "../../../apis/login";
-import { getCookie } from "../../../utils/Cookie";
 
 function QuotationForm() {
   const [papersInfo, setPapersInfo] = useState();
   const getBusinessId = localStorage.getItem("businessId");
   const serviceId = getCookie("serviceId");
+  const [startTime, setStartTime] = useState(dayjs().hour(10).minute(0));
+  const [endTime, setEndTime] = useState(dayjs().hour(18).minute(0));
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [additionalQuotes, setAdditionalQuotes] = useState([
+    { id: 1, content: "", price: "", note: "" },
+  ]);
+  const [addPrice, setAddPrice] = useState();
+  const [addComment, setAddComment] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     console.log("papersInfo 현재 상태:", papersInfo);
@@ -38,6 +50,86 @@ function QuotationForm() {
     }
     getPapersInfo();
   }, []);
+
+  // papersInfo가 업데이트될 때 초기 totalPrice 설정
+  useEffect(() => {
+    if (papersInfo?.totalPrice) {
+      setTotalPrice(papersInfo.totalPrice);
+    }
+  }, [papersInfo]);
+
+  // 추가 견적 금액이 변경될 때마다 총액 계산
+  // useEffect(() => {
+  //   const additionalTotal = additionalQuotes.reduce((sum, quote) => {
+  //     return sum + (Number(quote.price) || 0);
+  //   }, 0);
+
+  // 기존 금액과 추가 견적 금액의 합계
+  //   const newTotal = (papersInfo?.totalPrice || 0) + additionalTotal;
+  //   setTotalPrice(newTotal);
+  // }, [additionalQuotes, papersInfo]);
+
+  const putQuotation = async () => {
+    try {
+      const requestData = {
+        serviceId: serviceId,
+        totalPrice: totalPrice, // 수정된 총액 사용
+        addComment: addComment,
+        startDate: startDate?.format("YYYY/MM/DD"),
+        endDate: endDate?.format("YYYY/MM/DD"),
+        pyeong: papersInfo?.pyeong || 0,
+        mstartTime: startTime?.format("HH:mm"),
+        mendTime: endTime?.format("HH:mm"),
+        etc: additionalQuotes.map(quote => ({
+          etcId: quote.id,
+          etcPrice: Number(quote.price) || 0,
+          etcComment: quote.content,
+        })),
+      };
+
+      console.log("보내는 데이터:", requestData);
+
+      const res = await loginApi.put("/api/service", requestData);
+      console.log("API 응답 데이터:", res.data);
+      setAddPrice();
+    } catch (error) {
+      console.log("API 에러:", error);
+    }
+  };
+
+  const handleAddQuote = () => {
+    const newQuote = {
+      id: additionalQuotes.length + 1,
+      content: "",
+      price: "",
+      note: "",
+    };
+    setAdditionalQuotes([...additionalQuotes, newQuote]);
+  };
+
+  const handleQuoteChange = (id, field, value) => {
+    setAdditionalQuotes(prev =>
+      prev.map(quote =>
+        quote.id === id ? { ...quote, [field]: value } : quote,
+      ),
+    );
+  };
+
+  const handleRemoveQuote = id => {
+    setAdditionalQuotes(prev => {
+      const filtered = prev.filter(quote => quote.id !== id);
+      // 삭제 후 번호 재정렬
+      return filtered.map((quote, index) => ({
+        ...quote,
+        id: index + 1,
+      }));
+    });
+  };
+
+  useEffect(() => {
+    console.log("보내볼까?", setAddPrice);
+  }, []);
+
   return (
     <QuotationDiv>
       <h2 className="tit">견적서 작성</h2>
@@ -128,14 +220,16 @@ function QuotationForm() {
               </label>
 
               <label className="flex">
-                <h4 className="flex-col block h-[100]">옵션</h4>
+                <h4 className="flex-col flex !justify-center !items-center">
+                  옵션
+                </h4>
                 <div className="flex flex-col gap-[5px]">
-
                   {papersInfo?.options.map((item, index) => (
                     <div key={item.optionId}>
-                      <span>옵션: {item.optionName}</span>
-                      <span>상세 옵션: {item.optionDetailName}</span>
-                      <span>상세 가격: {item.optionDetailPrice}</span>
+                      <span className="font-semibold">{item.optionName} -</span>{" "}
+                      <span>{item.optionDetailName},</span>{" "}
+                      <span className="font-semibold">가격 : </span>
+                      <span>{item.optionDetailPrice}원</span>
                     </div>
                   ))}
                 </div>
@@ -149,50 +243,57 @@ function QuotationForm() {
           </div>
           {/* 견적내용 추가 */}
           <AddOptionDiv>
-            <h3>추가견적</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold">추가견적</h3>
+              <button
+                type="button"
+                className="text-white font-[12px] bg-[#2a58ad] rounded px-4 py-2"
+                onClick={handleAddQuote}
+              >
+                추가
+              </button>
+            </div>
             <div>
               <div className="tr head">
                 <div className="th">No.</div>
                 <div className="th">내용</div>
                 <div className="th">금액</div>
-                <div className="th">비고</div>
+                <div className="th">관리</div>
               </div>
-              <div className="tr">
-                <div className="td">1</div>
-                <div className="td">
-                  <input type="text" />
+              {additionalQuotes.map(quote => (
+                <div className="tr" key={quote.id}>
+                  <div className="td">{quote.id}</div>
+                  <div className="td">
+                    <input
+                      type="text"
+                      value={quote.content}
+                      onChange={e =>
+                        handleQuoteChange(quote.id, "content", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="td price">
+                    <input
+                      type="text"
+                      value={quote.price}
+                      onChange={e =>
+                        handleQuoteChange(quote.id, "price", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="td">
+                    {additionalQuotes.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveQuote(quote.id)}
+                        className="text-white bg-red-500 rounded px-2 py-1 text-sm"
+                      >
+                        삭제
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="td price">
-                  <input type="text" />
-                </div>
-                <div className="td">
-                  <input type="text" />
-                </div>
-              </div>
-              <div className="tr">
-                <div className="td">2</div>
-                <div className="td">
-                  <input type="text" />
-                </div>
-                <div className="td price">
-                  <input type="text" />
-                </div>
-                <div className="td">
-                  <input type="text" />
-                </div>
-              </div>
-              <div className="tr">
-                <div className="td">3</div>
-                <div className="td">
-                  <input type="text" />
-                </div>
-                <div className="td price">
-                  <input type="text" />
-                </div>
-                <div className="td">
-                  <input type="text" />
-                </div>
-              </div>
+              ))}
             </div>
           </AddOptionDiv>
           {/* 견적일자 */}
@@ -202,38 +303,61 @@ function QuotationForm() {
               {/* 견적일 */}
               <div>
                 <h4>견적일</h4>
-                <div>
-                  <input type="date" name="" id="" /> -
-                  <input type="date" name="" id="" />
+                <div className="flex items-center gap-2">
+                  <DatePicker
+                    value={startDate}
+                    onChange={date => setStartDate(date)}
+                    placeholder="시작일"
+                  />
+                  <span>-</span>
+                  <DatePicker
+                    value={endDate}
+                    onChange={date => setEndDate(date)}
+                    placeholder="종료일"
+                  />
                 </div>
               </div>
               {/* 견적시간 */}
               <div>
                 <h4>견적시간</h4>
-                <div>
-                  <input type="time" name="" id="" /> -
-                  <input type="time" name="" id="" />
+                <div className="flex items-center gap-2">
+                  <TimePicker
+                    value={startTime}
+                    onChange={time => setStartTime(time)}
+                    format="HH:mm"
+                    minuteStep={10}
+                    placeholder="시작 시간"
+                  />
+                  <span>-</span>
+                  <TimePicker
+                    value={endTime}
+                    onChange={time => setEndTime(time)}
+                    format="HH:mm"
+                    minuteStep={10}
+                    placeholder="종료 시간"
+                  />
                 </div>
               </div>
             </div>
             {/* 견적금액 */}
             <div className="price">
               <h4>견적금액</h4>
-              <div>
-                <input type="text" name="" id="" />
-              </div>
+              <div className="left-[5px]">{totalPrice.toLocaleString()}원</div>
             </div>
           </DatePriceDiv>
           {/* 특이사항 */}
           <div className="text-area">
             <h3>특이사항</h3>
-            <textarea />
+            <textarea
+              value={addComment}
+              onChange={e => setAddComment(e.target.value)}
+            />
           </div>
           <BtnAreaDiv>
             <button type="button" className="cancel">
               취소
             </button>
-            <button type="button" className="okay">
+            <button type="button" className="okay" onClick={putQuotation}>
               작성완료
             </button>
           </BtnAreaDiv>

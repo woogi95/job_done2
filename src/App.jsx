@@ -1,22 +1,22 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import LoginPage from "./pages/auth/login/Index";
-import SignUpPage from "./pages/auth/login/SignUpPage";
+import BusinessNumber from "./pages/auth/business/BusinessNumber";
+import BusinessSignUp from "./pages/auth/business/Index";
 import EmailPage from "./pages/auth/login/EmailPage";
-import SignUpDone from "./pages/auth/login/SignUpDone";
+import LoginPage from "./pages/auth/login/Index";
+import PasswordEdit from "./pages/auth/login/PasswordEdit";
 import PasswordEmail from "./pages/auth/login/PasswordEmail";
 import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
-import PasswordEdit from "./pages/auth/login/PasswordEdit";
-import BusinessSignUp from "./pages/auth/business/Index";
-import BusinessNumber from "./pages/auth/business/BusinessNumber";
+import SignUpDone from "./pages/auth/login/SignUpDone";
+import SignUpPage from "./pages/auth/login/SignUpPage";
 
 import MyPage from "./pages/mypage/Index";
 import MyMessage from "./pages/mypage/MyMessage";
+import MyReservation from "./pages/mypage/MyReservation";
 import ReviewPage from "./pages/mypage/ReviewPage";
 import UsageDetails from "./pages/mypage/UsageDetails";
 import Wishlist from "./pages/mypage/Wishlist";
-import MyReservation from "./pages/mypage/MyReservation";
 
 import ExpertMain from "./pages/expert/ExpertMain";
 
@@ -25,8 +25,8 @@ import NotFound from "./pages/NotFound";
 // 서비스페이지 (업체리스트/업체디테일)
 // import CarWashPage from "./pages/servicepage/carwash/Index";
 // import CleaningPage from "./pages/servicepage/cleaning/Index";
-import Service from "./pages/servicepage/Index";
 import Detail from "./pages/servicepage/Detail";
+import Service from "./pages/servicepage/Index";
 // 예약페이지
 import Reservation from "./pages/reservation/Index";
 import ReservationHistory from "./pages/reservation/ReservationHistory";
@@ -42,9 +42,9 @@ import Portfolio from "./pages/expert/company-management/Portfolio";
 // 예약관리
 import ReservationList from "./pages/expert/reservation-management/Index";
 // 견적관리
+import EditQuotation from "./pages/expert/quote-management/EditQuotation";
 import QuoteList from "./pages/expert/quote-management/Index";
 import QuotationForm from "./pages/expert/quote-management/QuotationForm";
-import EditQuotation from "./pages/expert/quote-management/EditQuotation";
 // 결제관리
 import PaymentList from "./pages/expert/payment-management/Index";
 // 일정관리 - 3차
@@ -54,39 +54,42 @@ import MessageCenter from "./pages/expert/message-center/Index";
 // 리뷰센터
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
-import Statistics from "./pages/expert/statistics/Index";
-import ReviewView from "./pages/expert/review-center/ReviewView";
-import ContactUs from "./pages/servicepage/ContactUs";
-import Qna from "./pages/Qna";
-import PaymentSuccess from "./components/PaymentSuccess";
-import PaymentFailed from "./components/PaymentFailed";
-import Estimate from "./components/papers/Estimate";
-import UserReservLook from "./pages/mypage/UserReservLook";
-import ScrollToTop from "./components/ScrollToTop";
 import TestPage from "./TestPage";
-import TestMessage from "./pages/mypage/TestMessage";
+import PaymentFailed from "./components/PaymentFailed";
+import PaymentSuccess from "./components/PaymentSuccess";
+import ScrollToTop from "./components/ScrollToTop";
+import Estimate from "./components/papers/Estimate";
 import PaymentHistory from "./components/papers/PaymentHistory";
+import Qna from "./pages/Qna";
+import ReviewView from "./pages/expert/review-center/ReviewView";
+import Statistics from "./pages/expert/statistics/Index";
+import TestMessage from "./pages/mypage/TestMessage";
+import UserReservLook from "./pages/mypage/UserReservLook";
+import ContactUs from "./pages/servicepage/ContactUs";
 
+import AdminLayout from "./components/admin/AdminLayout";
 import AdminMain from "./pages/admin/AdminMain";
-import UserList from "./pages/admin/user/userlist/UserList";
-import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
-import UserReport from "./pages/admin/user/report/UserReport";
 import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 import ReservationSearch from "./pages/admin/business-search/reservation-search/ReservationSearch";
 import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueSearch";
 import RequestBusi from "./pages/admin/request/business/RequestBusi";
 import RequestProduct from "./pages/admin/request/product/RequestProduct";
-import AdminLayout from "./components/admin/AdminLayout";
+import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
+import UserReport from "./pages/admin/user/report/UserReport";
+import UserList from "./pages/admin/user/userlist/UserList";
 import Forum from "./pages/community/Forum";
 import Write from "./pages/community/Write";
-
+import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
+import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
+import TestSpinner from "./pages/TestSpinner";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        <Route path="/test-spinner" element={<TestSpinner />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />
@@ -141,6 +144,10 @@ function App() {
             element={<PaymentHistory />}
           />
           <Route
+            path="/jobdonehistory/:serviceId"
+            element={<JobDoneHistory />}
+          />
+          <Route
             path="/UserReservLook/:serviceId"
             element={<UserReservLook />}
           />
@@ -157,6 +164,7 @@ function App() {
               <Route path="editdetail" element={<EditDetailPage />} />
               <Route path="portfolio" element={<Portfolio />} />
               <Route path="detail" element={<ExpertDetailPage />} />
+              <Route path="createoption" element={<CreateOptionPage />} />
             </Route>
             {/* 예약관리 */}
             <Route path="/expert/reservation-management">
