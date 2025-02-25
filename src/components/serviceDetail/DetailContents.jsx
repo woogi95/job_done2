@@ -172,7 +172,7 @@ const DetailContents = () => {
         setIsPopupOpen(true);
       } else {
         const width = 500;
-        const height = 660;
+        const height = 805;
         const left = (window.screen.width - width) / 2;
         const top = (window.screen.height - height) / 2;
 

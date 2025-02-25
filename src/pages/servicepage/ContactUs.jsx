@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { FiSend } from "react-icons/fi";
 
-function TestMessage() {
+function ContactUs() {
   const [cookies] = useCookies(["roomId"]);
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
@@ -27,6 +28,11 @@ function TestMessage() {
         messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // username을 임시값으로 설정
+  useEffect(() => {
+    setUsername("User" + Math.floor(Math.random() * 1000));
+  }, []);
 
   useEffect(() => {
     let ws;
@@ -180,7 +186,8 @@ function TestMessage() {
 
   const handleSendMessage = async e => {
     e.preventDefault();
-    if (socket && socket.readyState === WebSocket.OPEN && username) {
+    // username 체크 조건 완화
+    if (socket && socket.readyState === WebSocket.OPEN) {
       try {
         if (selectedImage) {
           const reader = new FileReader();
@@ -248,49 +255,101 @@ function TestMessage() {
       } catch (error) {
         console.error("메시지 전송 실패:", error);
       }
+    } else {
+      console.log("Socket status:", socket?.readyState);
+      alert("채팅 서버에 연결되어 있지 않습니다.");
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <div className="text-center mb-4 font-semibold text-gray-700">
-        연결 상태:{" "}
-        {connected ? (
-          <span className="text-green-600">연결됨</span>
-        ) : (
-          <span className="text-red-600">연결되지 않음</span>
-        )}
+    <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
+      {/* 상태 표시 헤더 */}
+      <div className="flex p-[10px] justify-center items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
+        <span className="flex text-[24px] font-semibold pl-[10px]">
+          고객문의
+        </span>
+        {/* <span className="text-[18px] font-semibold pl-[10px]">
+          연결 상태:{" "}
+          {connected ? (
+            <span className="text-[#34C5F0]">연결됨</span>
+          ) : (
+            <span className="text-red-500">연결되지 않음</span>
+          )}
+        </span> */}
       </div>
 
-      <div className="space-y-4">
-        <div
-          ref={messageContainerRef}
-          className="h-[400px] overflow-y-auto border border-gray-200 rounded-lg p-4 bg-gray-50"
-        >
-          {messages.map((msg, index) => (
-            <div key={index} className="mb-2 p-2 rounded-lg bg-white shadow-sm">
-              <strong className="text-blue-600">{msg.username}: </strong>
-              <span className="text-gray-700">{msg.message}</span>
+      {/* 메시지 컨테이너 */}
+      <div
+        ref={messageContainerRef}
+        className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
+      >
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              msg.flag === 1 ? "self-end" : "self-start"
+            } gap-[10px] py-[15px]`}
+          >
+            <span
+              className={`flex flex-col justify-center items-start max-w-[240px] ${
+                msg.flag === 1
+                  ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
+                  : "bg-white rounded-tr-[8px]"
+              } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+            >
+              <div className="m-4 break-all whitespace-pre-wrap">
+                {msg.message}
+              </div>
               {msg.file && msg.file.data && (
-                <div className="mt-2">
+                <div className="mx-4 mb-4">
                   <img
                     src={`data:${msg.file.type};base64,${msg.file.data}`}
                     alt={msg.file.name}
-                    className="max-w-[200px] rounded-lg"
+                    className="max-w-[200px] rounded"
                   />
                 </div>
               )}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* 메시지 입력 영역 */}
+      <div className="flex flex-col w-full bg-[#EDF0F8] mt-auto">
+        {selectedImage && (
+          <div className="flex gap-2 p-2">
+            <div className="relative">
+              <img
+                src={URL.createObjectURL(selectedImage)}
+                alt="Preview"
+                className="w-16 h-16 object-cover rounded"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage(null);
+                  const fileInput = document.getElementById("image-upload");
+                  if (fileInput) fileInput.value = "";
+                }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+              >
+                ×
+              </button>
             </div>
-          ))}
-        </div>
-        <form onSubmit={handleSendMessage} className="space-y-2">
-          <div className="flex gap-2">
+          </div>
+        )}
+
+        <form
+          onSubmit={handleSendMessage}
+          className="flex justify-center items-center w-full min-h-[60px] gap-[5px] p-2"
+        >
+          <div className="relative w-[70%]">
             <input
               type="text"
               value={inputMessage}
               onChange={e => setInputMessage(e.target.value)}
               placeholder="메시지를 입력하세요"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex justify-center items-center w-full h-[35px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
             />
             <input
               type="file"
@@ -301,39 +360,32 @@ function TestMessage() {
             />
             <label
               htmlFor="image-upload"
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors cursor-pointer"
+              className="absolute left-[15px] top-1/2 transform -translate-y-1/2 cursor-pointer"
             >
-              사진
-            </label>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              전송
-            </button>
-          </div>
-          {selectedImage && (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-sm text-gray-600">
-                선택된 이미지: {selectedImage.name}
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedImage(null);
-                  const fileInput = document.getElementById("image-upload");
-                  if (fileInput) fileInput.value = "";
-                }}
-                className="text-red-500 text-sm"
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                ✕
-              </button>
-            </div>
-          )}
+                <path
+                  d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
+                  fill="#A2A2A2"
+                />
+              </svg>
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="flex justify-center items-center w-[35px] h-[35px] bg-[#34C5F0] rounded-full"
+          >
+            <FiSend className="text-[20px] text-white ml-[-2px] mb-[-2px]" />
+          </button>
         </form>
       </div>
     </div>
   );
 }
 
-export default TestMessage;
+export default ContactUs;
