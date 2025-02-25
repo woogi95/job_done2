@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { businessInfo, checkMsg } from "../../../atoms/businessAtom";
+import React, { useEffect, useState } from "react";
+import {
+  businessInfo,
+  busiNumFile,
+  checkMsg,
+} from "../../../atoms/businessAtom";
 import { useRecoilState } from "recoil";
 import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
 import { useNavigate } from "react-router-dom";
 import JobBLogo from "../../../components/JobBLogo";
+import { loginApi } from "../../../apis/login";
+import axios from "axios";
 // import axios from "axios";
 function BusinessNumber() {
   const [form] = Form.useForm();
@@ -13,18 +19,17 @@ function BusinessNumber() {
 
   const [busiInfo, setBusiInfo] = useRecoilState(businessInfo);
 
-  const [fileList, setFileList] = useState([]); // 파일 상태
+  const [fileList, setFileList] = useRecoilState(busiNumFile); // 파일 상태
   const [previewImages, setPreviewImages] = useState([]); // 이미지 미리보기 상태
   const [checkMessage, setCheckMessage] = useRecoilState(checkMsg);
-
-  const [errorModal, setErrorModal] = useState(false);
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const navigate = useNavigate();
 
-  console.log(busiInfo);
-
+  useEffect(() => {
+    form.setFieldsValue({ businessNum: busiInfo.businessNum });
+  }, [busiInfo]);
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
-
     // 이미지 미리보기 URL 생성
     const previews = fileList.map(file =>
       file.originFileObj ? URL.createObjectURL(file.originFileObj) : file.url,
@@ -32,13 +37,32 @@ function BusinessNumber() {
     setPreviewImages(previews);
   };
 
+  const nextPage = async data => {
+    const formData = new FormData();
+    if (data) {
+      formData.append("paper", data);
+    }
+    try {
+      const res = await axios.post("/api/ocr/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res);
+      const basicData = res.data;
+      console.log(basicData);
+      setBusiInfo(prev => ({
+        ...prev, // 기존 데이터 유지
+        ...basicData, // 서버 데이터 덮어쓰기
+      }));
+      console.log(busiInfo);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchBusinessStatus = async data => {
     console.log(data);
     setCheckMessage(true);
-    const formData = new FormData();
-    if (data.paper) {
-      formData.append("paper", data.paper);
-    }
 
     try {
       const response = await fetch(
@@ -50,31 +74,29 @@ function BusinessNumber() {
           body: JSON.stringify({ b_no: [data] }),
         },
       );
-      const res = await axios.post("/api/ocr/upload/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+
       const result = await response.json();
-      const basicData = res.data.resultData;
-      setBusiInfo(prev => ({
-        ...prev, // 기존 데이터 유지
-        ...basicData, // 서버 데이터 덮어쓰기
-      }));
-      if (result) {
+
+      if (result && result.data) {
         setResult(result);
+
+        if (result.match_cnt === 1) {
+          setIsNextButtonDisabled(false);
+        } else {
+          setIsNextButtonDisabled(true);
+        }
       }
-      console.log(result);
     } catch (err) {
       console.error(err.message);
       setError(err.message);
       setCheckMessage(false);
+      setIsNextButtonDisabled(true);
     }
   };
 
   // 업체 최종 등록
   const onSubmit = () => {
-    navigate("/login/business");
+    navigate("/business");
   };
   return (
     <div>
@@ -92,7 +114,10 @@ function BusinessNumber() {
         >
           <Upload
             fileList={fileList}
-            beforeUpload={() => false}
+            beforeUpload={file => {
+              nextPage(file);
+              return false;
+            }}
             onChange={handleFileChange}
             maxCount={3}
           >
@@ -151,37 +176,21 @@ function BusinessNumber() {
           />
         </Form.Item>
         {result && <pre>{result.data && result.data[0]?.tax_type}</pre>}
-        {error && <p style={{ color: "red" }}>{error.data.tax_type}</p>}
+        {error && <p style={{ color: "red" }}>{error.data}</p>}
 
         <Form.Item className="clickbuttons">
           <button type="button" className="cancle" onClick={() => goCancle()}>
             취소
           </button>
-          <Button htmlType="submit" className="nextButton">
+          <Button
+            htmlType="submit"
+            className="nextButton"
+            disabled={isNextButtonDisabled} // 🚀 match_cnt 값에 따라 버튼 활성화/비활성화
+          >
             다음
           </Button>
         </Form.Item>
       </Form>
-
-      {errorModal && (
-        <div className="num-ModalFull items-center justify-center">
-          <div className="num-Modal">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: 30,
-                marginTop: 20,
-              }}
-            >
-              <h1>이미 등록된 사업자 번호 입니다.</h1>
-            </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={() => setErrorModal(false)}>확인</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

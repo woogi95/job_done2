@@ -1,9 +1,10 @@
 import { Button, DatePicker, Form, Input, Select, Upload } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import {
   busiFile,
   businessInfo,
+  busiNumFile,
   numDubCheck,
 } from "../../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
@@ -21,27 +22,31 @@ function BusinessSignUp() {
   const [form] = Form.useForm();
   const [busiInfo, setBusiInfo] = useRecoilState(businessInfo);
   const [fileList, setFileList] = useRecoilState(busiFile);
+  const [numFileList, setnumFileList] = useRecoilState(busiNumFile);
   const [category, setCategory] = useRecoilState(categoriesStateS);
   const [detailTypes, setDetailTypes] = useRecoilState(detailTypesStateS);
+  const [errorModal, setErrorModal] = useState(false);
   const sucess = () => {
     setNumMOdal(false);
     navigate("/");
   };
   // : DatePickerProps['onChange']
-
-  const navigate = useNavigate();
-  const initData = {
-    userId: 0,
-    businessNum: "",
-    businessName: busiInfo.businessName,
-    address: busiInfo.address,
-    categoryId: "",
-    detailTypeId: 0,
-    busiCreatedAt: busiInfo.busiCreatedAt,
-    tel: "",
-    logo: "",
+  const goCancle = () => {
+    navigate("/");
   };
-
+  console.log(busiInfo);
+  const navigate = useNavigate();
+  // const initData = {
+  //   businessNum: busiInfo.businessNum,
+  //   businessName: busiInfo.businessName,
+  //   address: busiInfo.address,
+  //   categoryId: "",
+  //   detailTypeId: 0,
+  //   busiCreatedAt: busiInfo.busiCreatedAt,
+  //   tel: "",
+  //   logo: "",
+  // };
+  // console.log(initData);
   const handleChange = value => {
     console.log(`selected ${value}`);
   };
@@ -109,7 +114,7 @@ function BusinessSignUp() {
         busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
         tel: data.tel,
       };
-      console.log(requestData);
+      console.log(data.logo.file);
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",
@@ -118,14 +123,14 @@ function BusinessSignUp() {
         }),
       );
       if (data.logo) {
-        formData.append("logo", busiInfo.logo);
+        formData.append("logo", data.logo.file);
       }
-      if (busiInfo.paper) {
+      if (numFileList) {
         // 파일 추가 (data.pic이 있는 경우)
-        formData.append("paper", data.paper);
+        formData.append("paper", numFileList[0].originFileObj.file);
       }
 
-      console.log(requestData);
+      console.log(numFileList[0].originFileObj);
       // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
       const res = await loginApi.post("/api/business/sign-up", formData, {
         headers: {
@@ -158,14 +163,23 @@ function BusinessSignUp() {
       document.body.removeChild(script);
     };
   }, [detailTypes]);
-
+  useEffect(() => {
+    form.setFieldsValue({
+      businessName: busiInfo.businessName,
+      address: busiInfo.address,
+      tel: busiInfo.tel,
+      busiCreatedAt: busiInfo.busiCreatedAt
+        ? dayjs(busiInfo.busiCreatedAt)
+        : null,
+    });
+  }, [busiInfo]);
   return (
     <div className="signUpDiv">
       <JobBLogo />
       <Form
         form={form}
         initialValues={{
-          initData,
+          busiInfo,
         }}
         style={{ width: 320, margin: "0 auto" }}
         onFinish={onSubmit}
@@ -289,6 +303,25 @@ function BusinessSignUp() {
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={e => sucess(e)}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {errorModal && (
+        <div className="num-ModalFull items-center justify-center">
+          <div className="num-Modal">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>이미 등록된 사업자 번호 입니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => setErrorModal(false)}>확인</button>
             </div>
           </div>
         </div>

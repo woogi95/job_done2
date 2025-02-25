@@ -20,32 +20,7 @@ const BigBox = styled.div`
 function ExpertMain() {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
-  // const businessPage = async () => {
-  //   try {
-  //     const busiId = localStorage.getItem("businessId");
-  //     const res = await loginApi.get(
-  //       `/api/service?business_id=${busiId}&status=4&page=1&size=100`,
-  //     );
-  //     console.log("캘린더", res);
-  //     if (res && res.data.resultData) {
-  //       // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)
-  //       filteredData = res.data.resultData.map(item => ({
-  //         title: item.userName,
-  //         servicId: item.serviceId,
-  //         start: item.startDate,
-  //         completed: item.completed,
-  //       }));
-  //     }
-  //     console.log(filteredData);
-  //     setReserveInfo(filteredData);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // // console.log(businessInfo);
-  // useEffect(() => {
-  //   businessPage();
-  // }, []);
+  
   return (
     <div style={{ backgroundColor: "white", padding: 15 }}>
       {/* 상단 예약 건수 등 3 칸 */}

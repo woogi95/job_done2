@@ -43,7 +43,7 @@ function Index() {
           if ([7, 8, 9].includes(info.event.extendedProps.completed)) {
             info.el
               .querySelector(".fc-event-main")
-              .style.setProperty("background-color", "green", "important");
+              .style.setProperty("background-color", "black", "important");
           }
         }}
       />

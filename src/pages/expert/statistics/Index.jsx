@@ -43,7 +43,7 @@ function Index() {
       </div>
     );
   }
-
+  console.log(priceData);
   const formattedData =
     priceData.length > 0
       ? [
@@ -71,6 +71,7 @@ function Index() {
       <div>월 매출</div>
       <ResponsiveLine
         data={formattedData}
+        style={{ fontSzie: "20" }}
         margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
         xScale={{ type: "point" }}
         yScale={{
@@ -88,15 +89,15 @@ function Index() {
           legendOffset: 36,
           legendPosition: "middle",
         }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "Total Price",
-          legendOffset: -40,
-          legendPosition: "middle",
-          tickValues: 4,
-        }}
+        // axisLeft={{
+        //   tickSize: 5,
+        //   tickPadding: 5,
+        //   tickRotation: 0,
+        //   legend: "Total Price",
+        //   legendOffset: -55,
+        //   legendPosition: "middle",
+        //   tickValues: 4,
+        // }}
         colors={{ scheme: "category10" }}
         lineWidth={3}
         pointSize={8}
@@ -107,12 +108,12 @@ function Index() {
         useMesh={true}
         legends={[
           {
-            anchor: "bottom-right",
+            anchor: "top-right",
             direction: "column",
             translateX: 100,
-            itemWidth: 80,
+            itemWidth: 120,
             itemHeight: 20,
-            symbolSize: 12,
+            symbolSize: 16,
             symbolShape: "circle",
           },
         ]}
