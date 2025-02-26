@@ -576,40 +576,52 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
   .option-info {
     display: flex;
     align-items: center;
-    flex-direction: column;
-    gap: 8px;
     width: 100%;
-    label {
-      display: flex;
-      border: 1px solid #eaeef1;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #333;
+    form {
       width: 100%;
-      b {
-        width: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      label {
         display: flex;
+        border: 1px solid #eaeef1;
         align-items: center;
-        justify-content: center;
-        text-align: center;
-        background-color: #eaeef1;
-        padding: 10px;
-      }
-      span {
-        border-radius: 30px;
-        background-color: #333;
-        color: #fff;
-        font-size: 13px;
-        padding: 7px 16px 8px;
-      }
-      input {
-        border: 0;
-        background-color: transparent;
+        gap: 10px;
         font-size: 15px;
-        font-weight: 400;
-        color: #555;
+        font-weight: 600;
+        color: #333;
+        width: 100%;
+        b {
+          width: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          background-color: #eaeef1;
+          padding: 10px;
+        }
+        em {
+          font-size: 13px;
+          font-weight: 400;
+          color: #555;
+        }
+        span {
+          border-radius: 30px;
+          background-color: #333;
+          color: #fff;
+          font-size: 13px;
+          padding: 7px 16px 8px;
+        }
+        input {
+          border: 0;
+          background-color: transparent;
+          font-size: 15px;
+          font-weight: 400;
+          color: #555;
+        }
+        .basic-price {
+          width: auto;
+        }
       }
     }
   }

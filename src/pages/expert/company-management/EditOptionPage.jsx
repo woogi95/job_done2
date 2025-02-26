@@ -17,7 +17,7 @@ const priceSchema = yup.object({
   productPrice: yup.number(),
 });
 
-function CreateOptionPage() {
+function EditOptionPage() {
   const [options, setOptions] = useState([]);
   const [newOptionName, setNewOptionName] = useState("");
   const [detailOptions, setDetailOptions] = useState({});
@@ -280,4 +280,4 @@ function CreateOptionPage() {
   );
 }
 
-export default CreateOptionPage;
+export default EditOptionPage;
