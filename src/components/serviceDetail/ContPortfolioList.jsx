@@ -21,7 +21,7 @@ const ContPortfolioList = ({ handleImageClick }) => {
 
   const [portfolioListState, setPortfolioListState] =
     useRecoilState(PortfolioListState);
-  const portfolioList = useRecoilState(PortfolioListState);
+  // const portfolioList = useRecoilState(PortfolioListState);
   const getPortFolioList = async businessId => {
     // console.log("이거", businessId);
     try {

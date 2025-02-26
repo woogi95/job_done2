@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const ModalDiv = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.75);
   position: fixed;
   display: flex;
   justify-content: center;
@@ -41,7 +41,7 @@ export const LayerDiv = styled.div`
     border: 1px solid #c6deff;
     background-color: #fff;
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
     border-radius: 3px;
     overflow: hidden;
 
@@ -69,7 +69,7 @@ export const LayerDiv = styled.div`
   //간단설명
   .text-area {
     h2 {
-      margin: 20px 0 8px;
+      margin: 4px 0 8px;
       font-size: 14px;
       color: #1b428b;
     }

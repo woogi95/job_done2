@@ -49,6 +49,14 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
             <input type="number" min="0" step="1" />
           </label>
         </div>
+
+        <div className="text-area">
+          <h2>간단설명</h2>
+          <textarea
+            placeholder="100자 이내로 입력하세요."
+            maxLength={100}
+          ></textarea>
+        </div>
         <PicDiv>
           <h2>작업물</h2>
           <ul
@@ -97,15 +105,6 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
             ))}
           </ul>
         </PicDiv>
-        <div className="text-area">
-          <h2>간단설명</h2>
-          <textarea
-            name=""
-            id=""
-            placeholder="100자 이내로 입력하세요."
-            maxLength={100}
-          ></textarea>
-        </div>
         <div className="btn-area">
           <button
             className="cancel"
