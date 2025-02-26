@@ -6,7 +6,7 @@ import { loginUser } from "../../atoms/loginAtom";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 import { removeCookie } from "../../apis/cookie";
-import { reserveList } from "../../atoms/reservationAtom";
+import { reserveCountAtom, reserveList } from "../../atoms/reservationAtom";
 
 const ExpertHeader = () => {
   const busiId = localStorage.getItem("businessId");
@@ -14,7 +14,9 @@ const ExpertHeader = () => {
   const businessState = useRecoilValue(businessDetailState);
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
+  const [reserveCount, setReserveCount] = useRecoilState(reserveCountAtom);
   const navigate = useNavigate();
+  // 캘린더
   const getBusinessInfo = async busiId => {
     try {
       const res = await loginApi.get(
@@ -23,7 +25,16 @@ const ExpertHeader = () => {
       const response = await loginApi.get(
         `/api/service?business_id=${busiId}&status=4&page=1&size=100`,
       );
+      const countRes = await loginApi.get(
+        `/api/service?business_id=${busiId}&status=3&page=1&size=99999`,
+      );
       console.log("캘린더", response);
+      // 예약건수 셋팅
+      const countData = countRes.data.resultData.map(item => ({
+        title: item.userName,
+        completed: item.completed,
+      }));
+      setReserveCount(countData);
       if (response && response.data.resultData) {
         console.log("캘린더", response.data.resultData);
         // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)

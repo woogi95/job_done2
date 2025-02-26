@@ -50,7 +50,7 @@ function Index() {
           {
             id: priceData[0]?.businessName ?? "Unknown Business",
             data: priceData.map(({ year, month, totalPrice }) => ({
-              x: `${year}-${String(month).padStart(2, "0")}`,
+              x: `${String(year).slice(2)}-${String(month).padStart(2, "0")}`,
               y: totalPrice ?? 0,
             })),
           },
@@ -61,7 +61,7 @@ function Index() {
     <div
       style={{
         width: "100%",
-        height: "500px",
+        height: "80%",
         padding: "20px",
         background: "#fff",
         borderRadius: "10px",
@@ -85,7 +85,7 @@ function Index() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "Month",
+          legend: "Year-Month",
           legendOffset: 36,
           legendPosition: "middle",
         }}
