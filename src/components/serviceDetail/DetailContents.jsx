@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 // scroll
 import { Link } from "react-scroll";
 // parser
@@ -21,13 +21,14 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 // recoil
 import { useRecoilState, useRecoilValue } from "recoil";
-import { businessDetailState } from "../../atoms/businessAtom";
-import { likeStatusState } from "../../atoms/like";
 import { loginApi } from "../../apis/login";
-import ContReview from "./ContReview";
+import { businessDetailState } from "../../atoms/businessAtom";
+import { checkRoom } from "../../atoms/chechroom";
+import { likeStatusState } from "../../atoms/like";
 import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
-import ContactUs from "../../pages/servicepage/ContactUs";
+import ContReview from "./ContReview";
+import { useCookies } from "react-cookie";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
@@ -48,6 +49,7 @@ const DetailContents = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupTitle, setPopupTitle] = useState("");
   const [popupLink, setPopupLink] = useState("");
+  const [isCheckRoom, setIsCheckRoom] = useRecoilState(checkRoom);
   const currentLikeStatus = likeStatus[businessId] || {
     isLiked: false,
   };
@@ -146,15 +148,42 @@ const DetailContents = () => {
     }
   };
 
-  const handleContactUs = () => {
-    const accessToken = getCookie("accessToken");
-    if (!accessToken) {
-      setPopupTitle("로그인 필요");
-      setPopupMessage("문의하기를 위해 로그인 후 이용해 주세요.");
-      setPopupLink("/login");
-      setIsPopupOpen(true);
-    } else {
-      navigate(`/service/contactus?businessId=${businessId}`);
+  const [cookies, setCookie, removeCookie] = useCookies(["roomId"]);
+
+  const handleContactUs = async () => {
+    try {
+      const res = await loginApi.post("/api/room", {
+        businessId: businessId,
+      });
+      const roomId = res.data.resultData;
+      setIsCheckRoom(roomId);
+
+      // setCookie 함수 사용
+      setCookie("roomId", roomId, {
+        path: "/",
+        expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
+      });
+
+      const accessToken = getCookie("accessToken");
+      if (!accessToken) {
+        setPopupTitle("로그인 필요");
+        setPopupMessage("문의하기를 위해 로그인 후 이용해 주세요.");
+        setPopupLink("/login");
+        setIsPopupOpen(true);
+      } else {
+        const width = 500;
+        const height = 805;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+
+        window.open(
+          `/contactus?businessId=${businessId}&roomId=${roomId}`, // URL에 roomId 추가
+          "ContactUs",
+          `width=${width},height=${height},left=${left},top=${top}`,
+        );
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
