@@ -52,6 +52,8 @@ function ExpertMainReserveList() {
       );
       // console.log("📡 API 응답 데이터:", res.data);
       setReservationData(res.data.resultData || []); // 🚀 안전한 초기화
+
+      console.log(reservationData);
     } catch (error) {
       console.error("🚨 API 호출 오류:", error);
     }
