@@ -12,3 +12,8 @@ export const reserveAllPrice = atom({
   key: "reserveAllPrice",
   default: [],
 });
+
+export const reserveCountAtom = atom({
+  key: "reserveCountAtom",
+  default: [],
+});

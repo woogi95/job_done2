@@ -125,7 +125,7 @@ function MyReservation() {
         formData.append("pics", file);
       });
 
-      const res = await loginApi.post("/api/business/businessPic", formData, {
+      const res = await loginApi.post("/api/review", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

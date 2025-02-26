@@ -1,8 +1,9 @@
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import React from "react";
-import { reserveList } from "../../../atoms/reservationAtom";
+import FullCalendar from "@fullcalendar/react";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
+import { loginApi } from "../../../apis/login";
+import { reserveList } from "../../../atoms/reservationAtom";
 import "./index.css";
 document.addEventListener("DOMContentLoaded", function () {
   const calendarEl = document.getElementById("calendar");
@@ -20,7 +21,40 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function Index() {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
-  const myPrev = <button id="my-prev-button">이전</button>;
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [isModal, setIsModal] = useState(false);
+  const [comId, setComId] = useState();
+  const clickModal = info => {
+    setComId(info.event._def.extendedProps.serviceId);
+    if (info.event._def.extendedProps.completed === 6) {
+      setIsModal(true);
+      setModalPosition({
+        top: info.jsEvent.clientY, // 마우스 아래 10px
+        left: info.jsEvent.clientX - 150, // 마우스 오른쪽 10px
+      });
+    }
+  };
+  const changeComId = async () => {
+    const businessId = Number(localStorage.getItem("businessId"));
+    const formData = {
+      businessId: businessId,
+      completed: 7,
+      serviceId: comId,
+    };
+    try {
+      const res = await loginApi.patch("/api/service", formData);
+      if (res) {
+        setReserveInfo(prev =>
+          prev.map(event =>
+            event.serviceId === comId ? { ...event, completed: 7 } : event,
+          ),
+        );
+        setIsModal(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="calendar-container">
       <div className="calendar-header">
@@ -46,7 +80,23 @@ function Index() {
               .style.setProperty("background-color", "black", "important");
           }
         }}
+        eventClick={item => clickModal(item)}
       />
+      {isModal && (
+        <div
+          className="modal"
+          style={{
+            top: `${modalPosition.top}px`,
+            left: `${modalPosition.left}px`,
+          }}
+        >
+          <div className="modal-content">
+            <span></span>
+            <button onClick={() => changeComId()}>완료</button>
+            <button onClick={() => setIsModal(false)}>닫기</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

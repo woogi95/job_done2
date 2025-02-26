@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 // scroll
 import { Link } from "react-scroll";
 // parser
@@ -21,12 +21,14 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 // recoil
 import { useRecoilState, useRecoilValue } from "recoil";
-import { businessDetailState } from "../../atoms/businessAtom";
-import { likeStatusState } from "../../atoms/like";
 import { loginApi } from "../../apis/login";
-import ContReview from "./ContReview";
+import { businessDetailState } from "../../atoms/businessAtom";
+import { checkRoom } from "../../atoms/chechroom";
+import { likeStatusState } from "../../atoms/like";
 import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
+import ContReview from "./ContReview";
+import { useCookies } from "react-cookie";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
@@ -47,6 +49,7 @@ const DetailContents = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupTitle, setPopupTitle] = useState("");
   const [popupLink, setPopupLink] = useState("");
+  const [isCheckRoom, setIsCheckRoom] = useRecoilState(checkRoom);
   const currentLikeStatus = likeStatus[businessId] || {
     isLiked: false,
   };
@@ -111,7 +114,7 @@ const DetailContents = () => {
       const scrollY = window.scrollY;
       if (scrollY > 243 && !isFixed) {
         setIsFixed(true);
-        console.log(window.scrollY);
+        // console.log(window.scrollY);
       } else if (scrollY <= 243 && isFixed) {
         setIsFixed(false);
       }
@@ -144,14 +147,46 @@ const DetailContents = () => {
       navigate(`/reservation/?businessId=${businessId}`);
     }
   };
-  const handleContactUs = () => {
-    setPopupTitle("안내");
-    setPopupMessage(
-      "죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일 내에 서비스를 제공해 드리도록 하겠습니다.",
-    );
-    setPopupLink("");
-    setIsPopupOpen(true);
+
+  const [cookies, setCookie, removeCookie] = useCookies(["roomId"]);
+
+  const handleContactUs = async () => {
+    try {
+      const res = await loginApi.post("/api/room", {
+        businessId: businessId,
+      });
+      const roomId = res.data.resultData;
+      setIsCheckRoom(roomId);
+
+      // setCookie 함수 사용
+      setCookie("roomId", roomId, {
+        path: "/",
+        expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
+      });
+
+      const accessToken = getCookie("accessToken");
+      if (!accessToken) {
+        setPopupTitle("로그인 필요");
+        setPopupMessage("문의하기를 위해 로그인 후 이용해 주세요.");
+        setPopupLink("/login");
+        setIsPopupOpen(true);
+      } else {
+        const width = 500;
+        const height = 805;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+
+        window.open(
+          `/contactus?businessId=${businessId}&roomId=${roomId}`, // URL에 roomId 추가
+          "ContactUs",
+          `width=${width},height=${height},left=${left},top=${top}`,
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   return (
     <DetailLayout>
       {/* 오른쪽 */}
@@ -270,14 +305,7 @@ const DetailContents = () => {
             >
               예약하기
             </button>
-            {/* <button onClick={openWindow}>문의하기</button> */}
-            <button
-              onClick={() => {
-                handleContactUs();
-              }}
-            >
-              문의하기
-            </button>
+            <button onClick={handleContactUs}>문의하기</button>
           </div>
         </div>
       </SummaryDiv>

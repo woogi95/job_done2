@@ -113,6 +113,8 @@ function BusinessSignUp() {
         detailTypeId: data.detailTypeId,
         busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
         tel: data.tel,
+        int: null,
+        lat: null,
       };
       console.log(data.logo.file);
       // JSON 데이터를 FormData에 추가
@@ -127,10 +129,9 @@ function BusinessSignUp() {
       }
       if (numFileList) {
         // 파일 추가 (data.pic이 있는 경우)
-        formData.append("paper", numFileList[0].originFileObj.file);
+        formData.append("paper", numFileList[0].originFileObj);
       }
 
-      console.log(numFileList[0].originFileObj);
       // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
       const res = await loginApi.post("/api/business/sign-up", formData, {
         headers: {

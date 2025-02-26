@@ -18,7 +18,6 @@ export const loginUser = atom({
     email: "",
     phone: "",
     pic: "",
-    accessToken: "",
     isLogind: false,
   },
 });
