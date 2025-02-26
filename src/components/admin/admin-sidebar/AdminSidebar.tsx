@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   const linkStyle = { display: "flex", justifyContent: "!end", width: "100%" };
 
-  const [requestMenu, setRequestMenu] = useState<boolean>(false);
+  // const [requestMenu, setRequestMenu] = useState<boolean>(false);
   const [searchMenu, setSearchMenu] = useState<boolean>(false);
-  const reqOpen = () => {
-    setRequestMenu(!requestMenu);
-  };
+  // const reqOpen = () => {
+  //   setRequestMenu(!requestMenu);
+  // };
 
   return (
     <div className="sidebar">

@@ -15,7 +15,8 @@ function LoginPage() {
   const [epwFail, setEpwFail] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
-
+  const host = window.location.origin;
+  const redirectUrl = `${host}/fe/redirect`;
   const initData = {
     email: "",
     upw: "",
@@ -142,20 +143,26 @@ function LoginPage() {
         </div>
         <div>
           <div style={{ marginBottom: 10 }}>
-            <button
-              type="button"
-              className="bg-[#FEE500] gap-[5px] border border-[#E4E5ED] font-semibold text-[14px] w-80 h-[40px] rounded-lg flex items-center justify-center mb-3"
+            <a href={`/oauth2/authorization/kakao?redirect_uri=${redirectUrl}`}>
+              <button
+                type="button"
+                className="bg-[#FEE500] gap-[5px] border border-[#E4E5ED] font-semibold text-[14px] w-80 h-[40px] rounded-lg flex items-center justify-center mb-3"
+              >
+                <RiKakaoTalkFill style={{ fontSize: 30 }} />
+                카카오 로그인
+              </button>
+            </a>
+            <a
+              href={`/oauth2/authorization/google?redirect_uri=${redirectUrl}`}
             >
-              <RiKakaoTalkFill style={{ fontSize: 30 }} />
-              카카오 로그인
-            </button>
-            <button
-              type="button"
-              className="bg-white border gap-[5px] border-[#E4E5ED] w-80 h-[40px] font-semibold text-[14px] rounded-lg flex items-center justify-center"
-            >
-              <FcGoogle style={{ fontSize: 30 }} />
-              구글 로그인
-            </button>
+              <button
+                type="button"
+                className="bg-white border gap-[5px] border-[#E4E5ED] w-80 h-[40px] font-semibold text-[14px] rounded-lg flex items-center justify-center"
+              >
+                <FcGoogle style={{ fontSize: 30 }} />
+                구글 로그인
+              </button>
+            </a>
           </div>
           <div style={{ marginBottom: 10 }}>
             <button
