@@ -69,9 +69,9 @@ function ContactUs() {
             reader.onload = () => {
               try {
                 messageData = JSON.parse(reader.result);
-                if (!messageData.username) {
-                  messageData.username = username;
-                }
+                // if (!messageData.username) {
+                //   messageData.username = username;
+                // }
                 console.log("Parsed Blob message:", messageData);
                 setMessages(prevMessages => {
                   const isDuplicate = prevMessages.some(
@@ -195,6 +195,7 @@ function ContactUs() {
 
   const handleSendMessage = async e => {
     e.preventDefault();
+
     // username 체크 조건 완화
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
@@ -274,10 +275,6 @@ function ContactUs() {
     try {
       setLoading(true);
       const res = await loginApi.get("/api/room");
-      setCookie("roomId", roomId, {
-        path: "/",
-        expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
-      });
       console.log("뭐 들어옴", res.data);
       if (Array.isArray(res.data.resultData)) {
         setRoomList(res.data.resultData);
@@ -314,6 +311,10 @@ function ContactUs() {
 
   const handleRoomSelect = roomId => {
     setSelectedRoomId(roomId);
+    setCookie("roomId", roomId, {
+      path: "/",
+      expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
+    });
     fetchChatMessages(roomId);
     console.log("선택된 방번호", roomId);
   };
