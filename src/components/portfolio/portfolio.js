@@ -116,6 +116,12 @@ export const LayerDiv = styled.div`
       background-color: #2a58ad;
     }
   }
+
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
 `;
 //  작업물
 export const PicDiv = styled.div`

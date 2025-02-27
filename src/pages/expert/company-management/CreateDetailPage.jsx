@@ -5,7 +5,7 @@ import DOMPurify from "dompurify";
 import { loginApi } from "../../../apis/login";
 import { EditDetailDiv } from "./companyManagement";
 
-function EditDetailPage() {
+function CreateDetailPage() {
   const [content, setContent] = useState("");
   const quillRef = useRef(null);
 
@@ -112,7 +112,7 @@ function EditDetailPage() {
   return (
     <EditDetailDiv>
       <div className="inner">
-        <h1>상세페이지 수정</h1>
+        <h1>상세페이지 등록</h1>
         <div style={{ width: "80%", margin: "0 auto" }}>
           <form>
             <div className="btn-area">
@@ -145,4 +145,4 @@ function EditDetailPage() {
   );
 }
 
-export default EditDetailPage;
+export default CreateDetailPage;

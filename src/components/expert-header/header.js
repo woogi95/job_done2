@@ -9,6 +9,18 @@ export const HeaderDiv = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   .b-logo {
     width: 20%;
     height: 40px;
@@ -46,7 +58,7 @@ export const HeaderDiv = styled.div`
         &:nth-child(2) {
           color: rgba(255, 255, 255, 0.65);
         }
-        &:nth-child(1)::after {
+        &::after {
           content: "";
           position: absolute;
           right: -15px;
@@ -58,6 +70,20 @@ export const HeaderDiv = styled.div`
         }
         b {
           color: #cf8000;
+        }
+        em {
+          font-size: 12px;
+          padding: 5px 10px 5px 10px;
+          background-color: #70be3b;
+          border-radius: 12px;
+          color: #fff;
+          font-weight: 500;
+          font-style: normal;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+          box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.2),
+            inset 0 1px 1px rgba(0, 0, 0, 0.1);
+          animation: blink 1.2s ease-in-out infinite;
         }
       }
     }

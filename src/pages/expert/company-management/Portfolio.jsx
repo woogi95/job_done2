@@ -34,6 +34,29 @@ function Portfolio() {
     }
   };
 
+  const deletePortfolio = async (businessId, portfolioId) => {
+    console.log("businessId", businessId, "portfolioId", portfolioId);
+    ///api/portfolio/%7BportfolioId%7D?businessId=2&portfolioId=44
+    try {
+      const res = await loginApi.delete("/api/portfolio/%7BportfolioId%7D", {
+        params: {
+          businessId: Number(businessId),
+          portfolioId: Number(portfolioId),
+        },
+      });
+
+      const updatedList = portfolioList.filter(
+        portfolio => portfolio.portfolioId !== portfolioId,
+      );
+
+      // 상태 업데이트
+      setPortfolioList(updatedList);
+      console.log("포트폴리오가 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("삭제 중 에러 발생:", error);
+    }
+  };
+
   useEffect(() => {
     getPortfolioList();
   }, []);
@@ -76,7 +99,14 @@ function Portfolio() {
                 >
                   수정하기
                 </button>
-                <button>삭제하기</button>
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    deletePortfolio(item.businessId, item.portfolioId);
+                  }}
+                >
+                  삭제하기
+                </button>
               </div>
             </div>
           </PortfolioListItemDiv>
@@ -91,7 +121,14 @@ function Portfolio() {
       ) : (
         <></>
       )}
-      {isPopPfAdd ? <AddPortfolio setIsPopPfAdd={setIsPopPfAdd} /> : <></>}
+      {isPopPfAdd ? (
+        <AddPortfolio
+          setIsPopPfAdd={setIsPopPfAdd}
+          deletePortfolio={deletePortfolio}
+        />
+      ) : (
+        <></>
+      )}
       {isPopPfEdit ? (
         <EditPortfolio
           setIsPopPfEdit={setIsPopPfEdit}

@@ -53,6 +53,7 @@ function CompanyInfo() {
       console.log(error);
     }
   };
+
   // console.log("businessState@@", businessState);
   useEffect(() => {
     if (busiId) {
