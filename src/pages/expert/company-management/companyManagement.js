@@ -3,6 +3,7 @@ import {
   EListContDiv,
   ExpertListPageDiv,
 } from "../reservation-management/reservationMangement";
+import { DContsDiv } from "../../../components/serviceDetail/serviceDetail";
 
 // 스크롤
 export const ExportPageDiv = styled(ExpertListPageDiv)`
@@ -495,6 +496,24 @@ export const EditDetailDiv = styled.div`
       border: 1px solid #4581f0;
       color: #4581f0;
     }
+  }
+`;
+export const PreviewAreaDiv = styled(EditDetailDiv)`
+  height: auto;
+`;
+// 상세페이지 미리보기
+export const PreviewDetailDiv = styled(DContsDiv)`
+  width: 80%;
+  margin: 0 auto;
+  height: 100%;
+  background-color: #fff;
+
+  .box {
+    padding: 0 !important;
+    height: calc(100vh - 303px);
+    margin-bottom: 33px;
+    border: 1px solid #3987fc;
+    overflow-y: auto;
   }
 `;
 

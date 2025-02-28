@@ -84,6 +84,11 @@ const ExpertHeader = () => {
       <div className="user-info">
         <ul>
           <li>
+            <Link to={"expert/company-management/createdetail"}>
+              <em>신규등록</em>
+            </Link>
+          </li>
+          <li>
             <b>{businessState.businessName}</b>님 환영합니다:)
           </li>
           <li>

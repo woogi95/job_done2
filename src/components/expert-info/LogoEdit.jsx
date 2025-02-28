@@ -3,12 +3,7 @@ import { useState } from "react";
 import { IoCamera } from "react-icons/io5";
 import { loginApi } from "../../apis/login";
 
-const LogoEdit = ({
-  setIsLogoEdit,
-  businessState,
-  busiId,
-  getBusinessInfo,
-}) => {
+const LogoEdit = ({ setIsLogoEdit, businessState, busiId }) => {
   const [LogoPreview, setLogoPreview] = useState(null);
   const [LogoFile, setLogoFile] = useState(null);
   const BASE_URL = "http://112.222.157.157:5234";
@@ -26,7 +21,7 @@ const LogoEdit = ({
   };
 
   const handleSubmit = async e => {
-    e.preventDefault(); // 폼 제출 시 페이지 리로딩을 막기 위한 코드
+    e.preventDefault();
     if (LogoFile) {
       try {
         const requestData = {
@@ -47,7 +42,7 @@ const LogoEdit = ({
 
         // 파일이 존재하면 FormData에 추가
         formData.append("logo", LogoFile);
-
+        console.log("formData!!!!!:", formData);
         // 요청 보내기
         const response = await loginApi.patch("/api/business/logo", formData, {
           headers: {
