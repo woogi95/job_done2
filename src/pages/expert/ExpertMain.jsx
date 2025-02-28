@@ -9,6 +9,7 @@ import { reserveCountAtom, reserveList } from "../../atoms/reservationAtom";
 import ExpertMainReserveList from "../../components/export-main-datas/ExpertMainReserveList";
 import { loginApi } from "../../apis/login";
 import Index from "./statistics/Index";
+import ReserveUserCount from "../../components/export-statistics/ReserveUserCount";
 const BigBox = styled.div`
   height: 100%;
   width: 489px;
@@ -209,7 +210,9 @@ function ExpertMain() {
         <BigBox>
           <Index />
         </BigBox>
-        <BigBox></BigBox>
+        <BigBox>
+          <ReserveUserCount />
+        </BigBox>
       </div>
     </div>
   );

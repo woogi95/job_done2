@@ -38,16 +38,17 @@ function Index() {
           reviewId: item.reviewId,
           id: index + 1, // 행 번호 추가 (1부터 시작)
           userName: item.name,
-          contents: item.detailTypeName, //  중분류 타입
+          detailTypeName: item.detailTypeName, //  중분류 타입
           createdAt: item.createdAt,
           score: item.score,
           replyStatus: item.comment,
-          comment: item.comment === null ? "" : item.comment.contents,
+          contents: item.contents === null ? "" : item.contents,
         }));
         const reviewPics = res.data.resultData.map((item, index) => ({
           reviewId: item.reviewId,
           pic: [item.pics.filter((_, index) => index % 2 === 0)],
         }));
+        console.log(formattedData);
         console.log(reviewPics);
         setReviewPicsData(reviewPics);
         setReviewDatas(formattedData);
@@ -163,7 +164,7 @@ function Index() {
                 <tr key={item.id}>
                   <td>{item.id}</td>
                   <td>{item.userName}</td>
-                  <td>{item.contents}</td>
+                  <td>{item.detailTypeName}</td>
                   <td>{item.createdAt}</td>
                   <td>
                     <div className="star-div">
