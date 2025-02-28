@@ -1,7 +1,7 @@
 import React from "react";
 
-const Index = () => {
-  return <div>메세지함 / 채팅</div>;
-};
+function Index() {
+  return <div>Index</div>;
+}
 
 export default Index;

@@ -112,6 +112,10 @@ const PaymentHistory = () => {
     }
   };
 
+  const handleConfirm = () => {
+    navigate("/mypage/reservation");
+  };
+
   useEffect(() => {
     const storedServiceId = getCookie("serviceId");
     if (storedServiceId) {
@@ -289,8 +293,8 @@ const PaymentHistory = () => {
             <button className="cancel" onClick={handleOpenPopup}>
               예약취소
             </button>
-            <button className="confirm" onClick={handleClickNewPage}>
-              결제하기
+            <button className="confirm !bg-[#3887FF]" onClick={handleConfirm}>
+              확인
             </button>
           </BtnAreaDiv>
         </PaperContDiv>

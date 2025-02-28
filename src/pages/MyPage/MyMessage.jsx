@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
-import { FiSend } from "react-icons/fi";
-import MyPageLayout from "../../components/MyPageLayout";
-import { loginApi } from "../../apis/login";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FiSend } from "react-icons/fi";
+import { loginApi } from "../../apis/login";
 import { setCookie } from "../../utils/Cookie";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function ContactUs() {
   const [cookies] = useCookies(["roomId"]);
@@ -49,14 +49,13 @@ function ContactUs() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-      // console.log("Attempting to connect with roomId:", roomId); // 웹소켓 연결 시 roomId 확인
       ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
-        reconnectAttempts = 0; // 연결 성공시 재시도 횟수 초기화
+        reconnectAttempts = 0;
       };
 
       ws.onmessage = event => {
@@ -69,9 +68,9 @@ function ContactUs() {
             reader.onload = () => {
               try {
                 messageData = JSON.parse(reader.result);
-                if (!messageData.username) {
-                  messageData.username = username;
-                }
+                // if (!messageData.username) {
+                //   messageData.username = username;
+                // }
                 console.log("Parsed Blob message:", messageData);
                 setMessages(prevMessages => {
                   const isDuplicate = prevMessages.some(
@@ -195,9 +194,10 @@ function ContactUs() {
 
   const handleSendMessage = async e => {
     e.preventDefault();
-    // username 체크 조건 완화
+
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
+        let messageData;
         if (selectedImage) {
           const reader = new FileReader();
           reader.onload = async () => {
@@ -206,13 +206,12 @@ function ContactUs() {
               type: selectedImage.type,
               data: reader.result.split(",")[1],
             };
-            console.log("방번호 몇번?", roomId);
-            const messageData = {
+            messageData = {
               flag: 1,
               roomId: roomId,
-              contents: inputMessage,
-              // username: username,
+              message: inputMessage,
               file: fileData,
+              contents: inputMessage,
             };
 
             // JSON을 문자열로 변환
@@ -223,32 +222,18 @@ function ContactUs() {
 
             // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
             setMessages(prevMessages => [...prevMessages, messageData]);
-
-            // 디버깅용 로그
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
           };
           reader.readAsDataURL(selectedImage);
         } else {
-          const messageData = {
+          messageData = {
             flag: 1,
             roomId: roomId,
+            message: inputMessage,
             contents: inputMessage,
-            // username: username,
           };
 
           // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
-          console.log("Sending message:", jsonString); // 디버깅용
-
-          // 일반 텍스트 메시지도 이미지와 동일한 방식으로 전송
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
@@ -274,10 +259,6 @@ function ContactUs() {
     try {
       setLoading(true);
       const res = await loginApi.get("/api/room");
-      setCookie("roomId", roomId, {
-        path: "/",
-        expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
-      });
       console.log("뭐 들어옴", res.data);
       if (Array.isArray(res.data.resultData)) {
         setRoomList(res.data.resultData);
@@ -314,8 +295,26 @@ function ContactUs() {
 
   const handleRoomSelect = roomId => {
     setSelectedRoomId(roomId);
+    setCookie("roomId", roomId, {
+      path: "/",
+      expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
+    });
     fetchChatMessages(roomId);
     console.log("선택된 방번호", roomId);
+  };
+
+  const handleChatDelete = async () => {
+    try {
+      const res = await loginApi.delete("/api/room", {
+        data: {
+          roomId: roomId,
+        },
+      });
+      console.log("삭제 결과", res.data);
+      window.location.reload(); // 삭제 완료 후 페이지 새로고침
+    } catch (error) {
+      console.error("채팅 삭제 실패:", error);
+    }
   };
 
   useEffect(() => {
@@ -387,10 +386,23 @@ function ContactUs() {
         {/* Message container */}
         <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
           {/* 상태 표시 헤더 */}
-          <div className="flex p-[10px] justify-center items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
-            <span className="flex text-[24px] font-semibold pl-[10px]">
-              고객문의
-            </span>
+          <div className="flex p-[10px] justify-between items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
+            <div className="flex gap-[5px]">
+              <img
+                src={`${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId)?.logo}`}
+                alt="Profile"
+                className="w-[45px] h-[45px] rounded-full"
+              />
+              <span className="flex justify-center items-center text-[24px] font-semibold pl-[10px]">
+                {roomList.find(room => room.roomId === roomId)?.businessName}
+              </span>
+            </div>
+            <button
+              onClick={handleChatDelete}
+              className="text-[16px] text-[#FF3044] font-semibold"
+            >
+              삭제하기
+            </button>
           </div>
 
           {/* 메시지 컨테이너 */}
@@ -405,6 +417,13 @@ function ContactUs() {
                   msg.flag === 1 ? "self-end" : "self-start"
                 } gap-[10px] py-[15px]`}
               >
+                {msg.flag === 0 && (
+                  <img
+                    src={`${IMAGE_BASE_URL}${msg.logo}`}
+                    alt="Profile"
+                    className="w-[45px] h-[45px] rounded-full"
+                  />
+                )}
                 <span
                   className={`flex flex-col justify-center items-start max-w-[240px] ${
                     msg.flag === 1
@@ -415,11 +434,11 @@ function ContactUs() {
                   <div className="m-4 break-all whitespace-pre-wrap">
                     {msg.contents}
                   </div>
-                  {msg.file && msg.file.data && (
+                  {msg.pics && msg.pics.length > 0 && (
                     <div className="mx-4 mb-4">
                       <img
-                        src={`data:${msg.file.type};base64,${msg.file.data}`}
-                        alt={msg.file.name}
+                        src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
+                        alt={msg.pics[0].name}
                         className="max-w-[200px] rounded"
                       />
                     </div>

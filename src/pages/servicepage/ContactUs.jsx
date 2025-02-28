@@ -186,6 +186,13 @@ function ContactUs() {
 
   const handleSendMessage = async e => {
     e.preventDefault();
+
+    // 메시지와 파일이 모두 비어 있는지 확인
+    if (!inputMessage.trim() && !selectedImage) {
+      alert("메시지나 이미지를 입력하세요.");
+      return;
+    }
+
     // username 체크 조건 완화
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
