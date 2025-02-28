@@ -4,6 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
 import { loginApi } from "../../apis/login";
 import { setCookie } from "../../utils/Cookie";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function ContactUs() {
   const [cookies] = useCookies(["roomId"]);
@@ -364,7 +365,7 @@ function ContactUs() {
   );
 
   return (
-    <div className="flex">
+    <MyPageLayout>
       <div className="flex">
         {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
@@ -413,10 +414,10 @@ function ContactUs() {
               <div
                 key={index}
                 className={`flex ${
-                  msg.flag === 0 ? "self-end" : "self-start"
+                  msg.flag === 1 ? "self-end" : "self-start"
                 } gap-[10px] py-[15px]`}
               >
-                {msg.flag === 1 && (
+                {msg.flag === 0 && (
                   <img
                     src={`${IMAGE_BASE_URL}${msg.logo}`}
                     alt="Profile"
@@ -425,7 +426,7 @@ function ContactUs() {
                 )}
                 <span
                   className={`flex flex-col justify-center items-start max-w-[240px] ${
-                    msg.flag === 0
+                    msg.flag === 1
                       ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
                       : "bg-white rounded-tr-[8px]"
                   } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
@@ -519,7 +520,7 @@ function ContactUs() {
           </div>
         </div>
       </div>
-    </div>
+    </MyPageLayout>
   );
 }
 
