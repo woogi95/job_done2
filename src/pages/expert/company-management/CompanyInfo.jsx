@@ -122,7 +122,7 @@ function CompanyInfo() {
             <div>
               <p>타이틀</p> <h2>3년 연속 1위! 사무실청소 전문업체입니다.</h2>
             </div>
-            <Link to={"/"}>내용보기</Link>
+            <Link to={"/expert/company-management/detail"}>내용보기</Link>
           </div>
         </ContBoxDiv>
       </ExpertProductDiv>

@@ -127,3 +127,12 @@ export const ocrDataAtom = atom({
   key: "ocrDataAtom",
   default: {},
 });
+
+// 상품 상세
+export const productDetailState = atom({
+  key: "productDetailState",
+  default: {
+    title: "",
+    contents: "",
+  },
+});
