@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { Button, Form, Input } from "antd";
+import { useEffect, useState } from "react";
+import { FaStar, FaStarHalf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { loginApi } from "../../../apis/login";
 import {
   commentsBox,
   reviewIdState,
   reviewListState,
   reviewPicsList,
 } from "../../../atoms/reviewAtom";
-import { Button, Form, Input } from "antd";
-import axios from "axios";
-import { loginApi } from "../../../apis/login";
-import { FaStar, FaStarHalf } from "react-icons/fa";
 import "./reviewview.css";
-import { useNavigate } from "react-router-dom";
 const ReviewView = () => {
   const BASE_URL = "http://112.222.157.157:5234";
   const [form] = Form.useForm();
@@ -20,7 +19,10 @@ const ReviewView = () => {
   const [commentBox, setCommentBox] = useRecoilState(commentsBox);
   const [reviewComment, setReviewComment] = useState(true);
   const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
-  const oneData = reviewDatas.find(item => item.reviewId === reviewIds);
+  const oneData = reviewDatas.find(item => {
+    console.log(item.contents);
+    return item.reviewId === reviewIds;
+  });
   // const [oneData, setOneData] = useState();
   const [isComments, setIsComments] = useState(
     oneData.replyStatus === null ? false : true,
@@ -38,45 +40,46 @@ const ReviewView = () => {
         `/api/review/comment?reviewId=${reviewIds}`,
       );
       console.log(res);
-      reviewData();
+      // reviewData();
       setIsComments(false);
       navigate("/expert/review-center");
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(oneData);
   // 리뷰데이터 다시 불러오기
-  const reviewData = async () => {
-    const busiId = localStorage.getItem("businessId");
-    try {
-      const res = await loginApi.get(
-        `/api/review?businessId=${busiId}&state=0&page=1&size=30`,
-        // `/api/review?businessId=2&page=1&size=30`,
-      );
-      console.log(res);
-      if (res) {
-        const formattedData = res.data.resultData.map((item, index) => ({
-          reviewId: item.reviewId,
-          id: index + 1, // 행 번호 추가 (1부터 시작)
-          userName: item.name,
-          contents: item.contents, // 예시 내용
-          createdAt: item.createdAt,
-          score: item.score,
-          replyStatus: item.comment,
-          comment: item.comment === null ? "" : item.comment.contents,
-        }));
-        const reviewPics = res.data.resultData.map((item, index) => ({
-          reviewId: item.reviewId,
-          pic: [item.pics.filter((_, index) => index % 2 === 0)],
-        }));
-        console.log(reviewPics);
-        setReviewPicsData(reviewPics);
-        setReviewDatas(formattedData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const reviewData = async () => {
+  //   const busiId = localStorage.getItem("businessId");
+  //   try {
+  //     const res = await loginApi.get(
+  //       `/api/review?businessId=${busiId}&state=0&page=1&size=30`,
+  //       // `/api/review?businessId=2&page=1&size=30`,
+  //     );
+  //     console.log(res);
+  //     if (res) {
+  //       const formattedData = res.data.resultData.map((item, index) => ({
+  //         reviewId: item.reviewId,
+  //         id: index + 1, // 행 번호 추가 (1부터 시작)
+  //         userName: item.name,
+  //         contents: item.contents, // 예시 내용
+  //         createdAt: item.createdAt,
+  //         score: item.score,
+  //         replyStatus: item.comment,
+  //         comment: item.comment === null ? "" : item.comment.contents,
+  //       }));
+  //       const reviewPics = res.data.resultData.map((item, index) => ({
+  //         reviewId: item.reviewId,
+  //         pic: [item.pics.filter((_, index) => index % 2 === 0)],
+  //       }));
+  //       console.log(reviewPics);
+  //       setReviewPicsData(reviewPics);
+  //       setReviewDatas(formattedData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   // 별점
   const renderStars = score => {
     const fullStars = Math.floor(score); // 채워진 별 개수

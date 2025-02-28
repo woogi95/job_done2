@@ -1,5 +1,5 @@
 const CategorySearch = () => {
-  return <div>CategorySearch</div>;
+  return <div></div>;
 };
 
 export default CategorySearch;

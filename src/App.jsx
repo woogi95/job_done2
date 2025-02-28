@@ -86,12 +86,14 @@ import TestSpinner from "./pages/TestSpinner";
 import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
+import Maptest from "./Maptest";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        <Route path="/map" element={<Maptest />} />
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/fe/redirect" element={<OAuth2Handler />} />
         <Route path="/test-spinner" element={<TestSpinner />} />

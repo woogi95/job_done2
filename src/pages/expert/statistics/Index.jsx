@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { loginApi } from "../../../apis/login";
 import { ResponsiveLine } from "@nivo/line";
+import { useNavigate } from "react-router-dom";
+import ReserveUserCount from "../../../components/export-statistics/ReserveUserCount";
 
 function Index() {
   const busiId = localStorage.getItem("businessId");
   const [priceData, setPriceData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [pageMove, setPageMove] = useState(true);
   useEffect(() => {
     const getAllPrice = async () => {
       if (!busiId) return;
@@ -43,6 +45,9 @@ function Index() {
       </div>
     );
   }
+  const userCount = () => {
+    navigate("");
+  };
   console.log(priceData);
   const formattedData =
     priceData.length > 0
@@ -68,56 +73,75 @@ function Index() {
         boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
       }}
     >
-      <div>월 매출</div>
-      <ResponsiveLine
-        data={formattedData}
-        style={{ fontSzie: "20" }}
-        margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
-        xScale={{ type: "point" }}
-        yScale={{
-          type: "linear",
-          min: 0,
-          max: "auto",
-          stacked: false,
-          reverse: false,
-        }}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "Year-Month",
-          legendOffset: 36,
-          legendPosition: "middle",
-        }}
-        // axisLeft={{
-        //   tickSize: 5,
-        //   tickPadding: 5,
-        //   tickRotation: 0,
-        //   legend: "Total Price",
-        //   legendOffset: -55,
-        //   legendPosition: "middle",
-        //   tickValues: 4,
-        // }}
-        colors={{ scheme: "category10" }}
-        lineWidth={3}
-        pointSize={8}
-        pointColor={{ from: "color", modifiers: [] }}
-        pointBorderWidth={2}
-        pointBorderColor={{ from: "serieColor" }}
-        enableSlices="x"
-        useMesh={true}
-        legends={[
-          {
-            anchor: "top-right",
-            direction: "column",
-            translateX: 100,
-            itemWidth: 120,
-            itemHeight: 20,
-            symbolSize: 16,
-            symbolShape: "circle",
-          },
-        ]}
-      />
+      <div style={{ display: "flex", gap: "20px" }}>
+        <button
+          onClick={() => {
+            setPageMove(true);
+          }}
+        >
+          월 매출
+        </button>
+        <button
+          onClick={() => {
+            setPageMove(false);
+          }}
+        >
+          이용자 수
+        </button>
+      </div>
+      {pageMove ? (
+        <ResponsiveLine
+          data={formattedData}
+          style={{ fontSzie: "20" }}
+          margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+          xScale={{ type: "point" }}
+          yScale={{
+            type: "linear",
+            min: 0,
+            max: "auto",
+            stacked: false,
+            reverse: false,
+          }}
+          axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "Year-Month",
+            legendOffset: 36,
+            legendPosition: "middle",
+          }}
+          // axisLeft={{
+          //   tickSize: 5,
+          //   tickPadding: 5,
+          //   tickRotation: 0,
+          //   legend: "Total Price",
+          //   legendOffset: -55,
+          //   legendPosition: "middle",
+          //   tickValues: 4,
+          // }}
+          colors={{ scheme: "category10" }}
+          lineWidth={3}
+          pointSize={8}
+          pointColor={{ from: "color", modifiers: [] }}
+          pointBorderWidth={2}
+          pointBorderColor={{ from: "serieColor" }}
+          enableSlices="x"
+          useMesh={true}
+          legends={[
+            {
+              anchor: "top-right",
+              direction: "column",
+              translateX: 100,
+              itemWidth: 120,
+              itemHeight: 20,
+              symbolSize: 16,
+              symbolShape: "circle",
+            },
+          ]}
+        />
+      ) : (
+        <ReserveUserCount />
+      )}
     </div>
   );
 }
