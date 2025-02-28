@@ -2,28 +2,33 @@ import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
-import { loginApi } from "../../apis/login";
-import { setCookie } from "../../utils/Cookie";
-import MyPageLayout from "../../components/MyPageLayout";
+import { loginApi } from "../../../apis/login";
+import { setCookie } from "../../../utils/Cookie";
+import {
+  ApiError,
+  MessageType,
+  RoomType,
+} from "../../../types/MessageCenterType";
 
-function ContactUs() {
+function MessageCenter() {
+  //   const [cookies] = useCookies<string>([""]);
   const [cookies] = useCookies(["roomId"]);
   const roomId = cookies.roomId;
-  const [socket, setSocket] = useState(null);
-  const [connected, setConnected] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [username, setUsername] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [roomList, setRoomList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [connected, setConnected] = useState<boolean>(false);
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [inputMessage, setInputMessage] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [roomList, setRoomList] = useState<[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   // const roomId = useRecoilValue(checkRoom);
 
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
 
   // 메시지 컨테이너에 대한 ref 추가
-  const messageContainerRef = useRef(null);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
   // roomId 변화 감지를 위한 useEffect 추가
   useEffect(() => {
@@ -44,7 +49,7 @@ function ContactUs() {
   }, []);
 
   useEffect(() => {
-    let ws;
+    let ws: WebSocket | null = null;
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 5;
 
@@ -63,30 +68,32 @@ function ContactUs() {
         console.log("웹소켓에서 수신한 데이터:", event);
 
         try {
-          let messageData;
+          let messageData: MessageType = {} as MessageType;
           console.log("Raw message received:", event.data);
 
           if (event.data instanceof Blob) {
             const reader = new FileReader();
             reader.onload = () => {
               try {
-                messageData = JSON.parse(reader.result);
-                // if (!messageData.username) {
-                //   messageData.username = username;
-                // }
-                console.log("Parsed Blob message:", messageData);
-                setMessages(prevMessages => {
-                  const isDuplicate = prevMessages.some(
-                    msg =>
-                      msg.message === messageData.message &&
-                      msg.username === messageData.username &&
-                      JSON.stringify(msg.file) ===
-                        JSON.stringify(messageData.file),
-                  );
-                  return isDuplicate
-                    ? prevMessages
-                    : [...prevMessages, messageData];
-                });
+                if (typeof reader.result === "string") {
+                  messageData = JSON.parse(reader.result);
+                  // if (!messageData.username) {
+                  //   messageData.username = username;
+                  // }
+                  console.log("Parsed Blob message:", messageData);
+                  setMessages(prevMessages => {
+                    const isDuplicate = prevMessages.some(
+                      msg =>
+                        msg.message === messageData.message &&
+                        msg.username === messageData.username &&
+                        JSON.stringify(msg.file) ===
+                          JSON.stringify(messageData.file),
+                    );
+                    return isDuplicate
+                      ? prevMessages
+                      : [...prevMessages, messageData];
+                  });
+                }
               } catch (error) {
                 console.error("Blob 데이터 파싱 에러:", error);
               }
@@ -186,8 +193,8 @@ function ContactUs() {
     };
   }, [roomId]);
 
-  const handleImageChange = e => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
       setSelectedImage(file);
     } else {
@@ -195,15 +202,17 @@ function ContactUs() {
     }
   };
 
-  const handleSendMessage = async e => {
+  const handleSendMessage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
-        let messageData;
+        let messageData: MessageType;
         if (selectedImage) {
           const reader = new FileReader();
           reader.onload = async () => {
+            if (!reader.result) return;
+            if (typeof reader.result !== "string") return;
             const fileData = {
               name: selectedImage.name,
               type: selectedImage.type,
@@ -258,7 +267,9 @@ function ContactUs() {
 
         setInputMessage("");
         setSelectedImage(null);
-        const fileInput = document.getElementById("image-upload");
+        const fileInput = document.getElementById(
+          "image-upload",
+        ) as HTMLInputElement;
         if (fileInput) fileInput.value = "";
       } catch (error) {
         console.error("메시지 전송 실패:", error);
@@ -279,15 +290,16 @@ function ContactUs() {
       } else {
         setRoomList([]);
       }
-    } catch (error) {
-      console.error("채팅방 목록 조회 실패:", error.response || error);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      console.error("채팅방 목록 조회 실패:", apiError.response || apiError);
       setRoomList([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchChatMessages = async roomId => {
+  const fetchChatMessages = async (roomId: number) => {
     try {
       const res = await loginApi.get("/api/chat", {
         params: {
@@ -307,7 +319,7 @@ function ContactUs() {
     }
   };
 
-  const handleRoomSelect = roomId => {
+  const handleRoomSelect = (roomId: number) => {
     setSelectedRoomId(roomId);
     setCookie("roomId", roomId, {
       path: "/",
@@ -335,7 +347,7 @@ function ContactUs() {
     getRoomList();
   }, []);
 
-  const renderRoomItem = item => (
+  const renderRoomItem = (item: RoomType) => (
     <div key={item.roomId}>
       <div className="flex p-[15px]">
         <button
@@ -379,8 +391,8 @@ function ContactUs() {
   );
 
   return (
-    <MyPageLayout>
-      <div className="flex">
+    <div className="flex justify-center items-center max-w-[1000px] mx-auto pt-[100px]">
+      <div className="flex ">
         {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
           {/* 메시지 리스트 */}
@@ -485,7 +497,9 @@ function ContactUs() {
                     type="button"
                     onClick={() => {
                       setSelectedImage(null);
-                      const fileInput = document.getElementById("image-upload");
+                      const fileInput = document.getElementById(
+                        "image-upload",
+                      ) as HTMLInputElement;
                       if (fileInput) fileInput.value = "";
                     }}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
@@ -543,8 +557,8 @@ function ContactUs() {
           </div>
         </div>
       </div>
-    </MyPageLayout>
+    </div>
   );
 }
 
-export default ContactUs;
+export default MessageCenter;

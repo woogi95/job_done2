@@ -50,7 +50,7 @@ import PaymentList from "./pages/expert/payment-management/Index";
 // 일정관리 - 3차
 import ScheduleList from "./pages/expert/schedule-management/Index";
 // 고객문의
-import MessageCenter from "./pages/expert/message-center/Index";
+
 // 리뷰센터
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
@@ -86,6 +86,7 @@ import TestSpinner from "./pages/TestSpinner";
 import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
+import MessageCenter from "./pages/expert/message-center/MessageCenter";
 
 function App() {
   return (
