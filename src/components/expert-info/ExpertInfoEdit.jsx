@@ -32,15 +32,18 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
   });
 
   const onSubmit = async data => {
-    console.log("data===", data);
-    const { openingTime, closingTime, tel } = data;
-    // const requestData = { ...data, businessId: busiId };
+    console.log("제출된 데이터:", data);
+    const requestData = { ...data, businessId: busiId };
+    console.log("API 요청 데이터:", requestData);
+
     try {
-      ///api/business/detail?businessId=2&openingTime=21%3A00&closingTime=21%3A00&tel=01055555555
-      const res = await loginApi.put(
-        `/api/business/detail?businessId=${busiId}&tel=${tel}&openingTime=${openingTime}&closingTime=${closingTime}`,
-      );
-      setbusinessInfo({ ...businessInfo, openingTime, closingTime, tel });
+      const res = await loginApi.put(`/api/business/detail`, requestData);
+      setbusinessInfo({
+        ...businessInfo,
+        openingTime: data.openingTime,
+        closingTime: data.closingTime,
+        tel: data.tel,
+      });
       setIsExpertInfoEdit(false);
       console.log(res.data);
     } catch (error) {

@@ -120,7 +120,7 @@ function CompanyInfo() {
         <ContBoxDiv>
           <div className="product-info">
             <div>
-              <p>타이틀</p> <h2>3년 연속 1위! 사무실청소 전문업체입니다.</h2>
+              <p>타이틀</p> <h2>{businessState.title}</h2>
             </div>
             <Link to={"/expert/company-management/detail"}>내용보기</Link>
           </div>
@@ -135,7 +135,7 @@ function CompanyInfo() {
               navigate("/expert/company-management/editoption");
             }}
           >
-            <p>옵션 수정</p> <MdModeEdit />
+            <p>옵션 설정</p> <MdModeEdit />
           </button>
         </TitleAreaDiv>
         <ContBoxDiv>
