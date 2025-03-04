@@ -9,6 +9,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 
+const BASE_URL = "112.222.157.157:5234";
+
 const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
@@ -122,7 +124,27 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
   };
   console.log("portfolioId", portfolioId);
 
-  // 파일 선택 후 미리보기 처리
+  const getPortfolioPics = async () => {
+    try {
+      const res = await loginApi.get(
+        `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
+      );
+      if (res.status === 200) {
+        console.log("포트폴리오 이미지 리스트", res.data.resultData);
+        // API에서 받은 이미지 URL을 filePreviews에 추가 (BASE_URL 포함)
+        const initialFiles = res.data.resultData.map(pic => ({
+          file: null, // 파일 객체는 없으므로 null로 설정
+          preview: `http://${BASE_URL}${pic.pic}`, // BASE_URL과 pic 경로를 결합
+          portfolioPicId: pic.portfolioPicId, // portfolioPicId 추가
+          isInitial: true, // 초기 이미지임을 표시
+        }));
+        setFilePreviews(initialFiles); // 초기값으로 설정
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleFileChange = e => {
     const selectedFiles = Array.from(e.target.files);
     // 최대 5개까지 파일만 추가
@@ -131,38 +153,49 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
       return;
     }
 
-    // 파일 객체와 미리보기 URL을 함께 저장
+    // 파일 객체와 미리보기 URL을 함께 저장 (BASE_URL 없음)
     const newFilesWithPreviews = selectedFiles.map(file => ({
       file, // 파일 객체
-      preview: URL.createObjectURL(file), // 미리보기 URL
+      preview: URL.createObjectURL(file), // 미리보기 URL (BASE_URL 없음)
     }));
 
     setFilePreviews(prev => [...prev, ...newFilesWithPreviews]);
   };
 
-  // 파일 삭제
-  const handleRemoveFile = index => {
-    // 미리보기 URL 해제
-    URL.revokeObjectURL(filePreviews[index].preview);
-    setFilePreviews(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const getPortfolioPics = async () => {
-    ///api/portfolio/pic/%7BportfolioId%7D?portfolioId=420
-    try {
-      const res = await loginApi.get(
-        `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
-      );
-      if (res.status === 200) {
-        console.log("포트폴리오 이미지 리스트", res.data.resultData);
+  const handleRemoveFile = async index => {
+    const fileToRemove = filePreviews[index];
+    if (fileToRemove) {
+      // 초기 이미지인 경우 (API에서 받은 이미지)
+      if (fileToRemove.isInitial) {
+        try {
+          // DELETE 요청 보내기
+          const res = await loginApi.delete(
+            `/api/portfolio/portfolioPic?businessId=${businessState.businessId}&portfolioId=${portfolioId}&portfolioPicId=${fileToRemove.portfolioPicId}`,
+          );
+          if (res.status === 200) {
+            console.log("이미지 삭제 성공:", res.data);
+            // 미리보기 URL 해제
+            URL.revokeObjectURL(fileToRemove.preview);
+            // filePreviews에서 해당 이미지 제거
+            setFilePreviews(prev => prev.filter((_, i) => i !== index));
+          }
+        } catch (error) {
+          console.log("이미지 삭제 실패:", error);
+          alert("이미지 삭제 중 오류가 발생했습니다.");
+        }
+      } else {
+        // 사용자가 추가한 이미지인 경우
+        // 미리보기 URL 해제
+        URL.revokeObjectURL(fileToRemove.preview);
+        // filePreviews에서 해당 이미지 제거
+        setFilePreviews(prev => prev.filter((_, i) => i !== index));
       }
-    } catch (error) {
-      console.log(error);
     }
   };
+
   useEffect(() => {
     getPortfolioPics();
-  }, []);
+  }, [portfolioId]);
 
   return (
     <ModalDiv>
