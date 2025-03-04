@@ -7,12 +7,17 @@ import { EditDetailDiv } from "./companyManagement";
 import { loginApi } from "../../../apis/login";
 import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../../atoms/businessAtom";
+import { useNavigate } from "react-router-dom";
+import { Popup } from "../../../components/ui/Popup";
 
 function EditDetailPage() {
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
+  const businessDetail = useRecoilValue(businessDetailState);
+  const [content, setContent] = useState(businessDetail.contents || "");
+  const [title, setTitle] = useState(businessDetail.title || "");
   const quillRef = useRef(null);
-  const { businessId } = useRecoilValue(businessDetailState);
+  const { businessId } = businessDetail;
+  const navigate = useNavigate();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // businessId 상태 확인을 위한 useEffect 추가
   useEffect(() => {
@@ -31,8 +36,11 @@ function EditDetailPage() {
         contents: content,
       });
       console.log("저장 성공:", response.data);
+
+      // 저장 성공 후 팝업 표시
+      setIsPopupOpen(true);
     } catch (error) {
-      console.error("저장 실패:", error);
+      console.error("저장 중 오류 발생:", error);
     }
   };
 
@@ -81,9 +89,9 @@ function EditDetailPage() {
           },
         );
 
-        // 서버에서 받아온 이미지 URL
-        const tempUrl = res.data.resultData.pics[0];
-        console.log(tempUrl);
+        // 서버에서 받아온 이미지 URL에 프로토콜과 도메인 추가
+        const tempUrl = `http://${res.data.resultData.pics[0]}`;
+        console.log("Modified image URL:", tempUrl);
 
         const range = editor.getSelection();
         editor.insertEmbed(range.index, "image", tempUrl);
@@ -94,11 +102,15 @@ function EditDetailPage() {
     });
   };
 
+  const handleCancel = () => {
+    navigate("/expert/company-management");
+  };
+
   const modules = useMemo(
     () => ({
       toolbar: {
         container: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ header: [1, 3, 5, 6, false] }],
           [{ font: [] }],
           [{ align: [] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
@@ -165,16 +177,27 @@ function EditDetailPage() {
           <form onSubmit={handleSubmit}>
             <div className="btn-area">
               <button type="submit">저장</button>
-              <button type="button">미리보기</button>
-              <button type="button">취소</button>
+              <button
+                type="button"
+                onClick={() => navigate("/expert/company-management/detail")}
+              >
+                미리보기
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/expert/company-management")}
+              >
+                취소
+              </button>
             </div>
             <label>
               <span>타이틀</span>
               <input
                 type="text"
-                maxLength={30}
-                onBlur={e => setTitle(e.target.value)}
-                placeholder="30자 이내로 입력해주세요."
+                maxLength={70}
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="타이틀을 70자 이내로 입력해주세요."
               />
             </label>
             <ReactQuill
@@ -186,14 +209,20 @@ function EditDetailPage() {
             />
           </form>
         </div>
-        <div>
+        {/* <div>
           <h2>입력중인 데이터(서버에 보내줄 글자)</h2>
           <p>{content}</p>
-          {/* <p
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
-          /> */}
-        </div>
+        </div> */}
       </div>
+
+      <Popup
+        isOpen={isPopupOpen}
+        title="알림"
+        message="저장되었습니다."
+        showConfirmButton={true}
+        confirmLink="/expert/company-management"
+        onClose={() => setIsPopupOpen(false)}
+      />
     </EditDetailDiv>
   );
 }

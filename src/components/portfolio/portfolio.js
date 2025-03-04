@@ -69,7 +69,7 @@ export const LayerDiv = styled.div`
   //간단설명
   .text-area {
     h2 {
-      margin: 4px 0 8px;
+      margin: 12px 0 8px;
       font-size: 14px;
       color: #1b428b;
     }
@@ -127,7 +127,7 @@ export const LayerDiv = styled.div`
 export const PicDiv = styled.div`
   h2 {
     display: block;
-    margin: 10px 0 8px;
+    margin: 0px 0 8px;
     font-size: 14px;
     color: #1b428b;
   }

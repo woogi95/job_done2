@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LayerDiv, ModalDiv, PicDiv } from "./portfolio";
 import { FaPlus } from "react-icons/fa";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -10,7 +10,7 @@ import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 
 const AddPortfolio = ({ setIsPopPfAdd }) => {
-  // 파일 미리보기 URL을 저장할 배열 상태
+  // 파일 객체와 미리보기 URL을 함께 저장
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const [portfolioId, setPortfolioId] = useState(0);
@@ -57,7 +57,6 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
         ...prev,
         [fieldName]: value,
       };
-      console.log("=== onChange 이벤트 발생 ===");
       console.log("전체 formData:", newData);
       return newData;
     });
@@ -65,22 +64,41 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
 
   const onSubmit = async data => {
     try {
-      console.log("data:", data);
+      const formData = new FormData();
 
-      const res = await loginApi.post("/api/portfolio/post", null, {
-        params: {
-          businessId: Number(data.businessId),
-          price: Number(data.price),
-          takingTime: data.takingTime,
-          title: data.title,
-          contents: data.contents,
+      // JSON 데이터 생성
+      const requestData = {
+        businessId: Number(businessState.businessId),
+        price: Number(data.price),
+        takingTime: data.takingTime,
+        title: data.title,
+        contents: data.contents,
+      };
+
+      // JSON 데이터를 Blob으로 변환하여 FormData에 추가
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(requestData)], {
+          type: "application/json",
+        }),
+      );
+
+      // 파일 데이터 추가
+      filePreviews.forEach(file => {
+        formData.append("pics", file.file);
+      });
+
+      // API 요청
+      const res = await loginApi.post("/api/portfolio", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
       });
 
       if (res.data) {
         console.log("Success:", res.data);
-        // setIsPopPfAdd(false);
         setPortfolioId(res.data.resultData);
+        setIsPopPfAdd(false);
       }
     } catch (error) {
       console.log("API 에러:", error);
@@ -88,27 +106,10 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
     }
   };
   console.log("portfolioId", portfolioId);
-  useEffect(() => {
-    if (
-      formData.price !== 0 &&
-      formData.takingTime !== "" &&
-      formData.title !== "" &&
-      formData.contents !== ""
-    ) {
-      const portfolioData = {
-        ...formData,
-        businessId: Number(businessState.businessId),
-        price: Number(formData.price),
-      };
-
-      console.log("portfolioData with numbers:", portfolioData);
-      onSubmit(portfolioData);
-    }
-  }, [formData]);
 
   // 파일 선택 후 미리보기 처리
   const handleFileChange = e => {
-    const selectedFiles = Array.from(e.target.files); // 선택된 파일들을 배열로 변환
+    const selectedFiles = Array.from(e.target.files);
 
     // 최대 5개까지 파일만 추가
     if (selectedFiles.length + filePreviews.length > 5) {
@@ -116,17 +117,19 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
       return;
     }
 
-    // 새로운 미리보기 URL 생성
-    const newFilePreviews = selectedFiles.map(file =>
-      URL.createObjectURL(file),
-    );
+    // 파일 객체와 미리보기 URL을 함께 저장
+    const newFilesWithPreviews = selectedFiles.map(file => ({
+      file, // 파일 객체
+      preview: URL.createObjectURL(file), // 미리보기 URL
+    }));
 
-    // 기존 파일과 합쳐서 새로운 상태로 업데이트
-    setFilePreviews(prev => [...prev, ...newFilePreviews]);
+    setFilePreviews(prev => [...prev, ...newFilesWithPreviews]);
   };
 
   // 파일 삭제
   const handleRemoveFile = index => {
+    // 미리보기 URL 해제
+    URL.revokeObjectURL(filePreviews[index].preview);
     setFilePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -171,22 +174,7 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
             </label>
           </div>
 
-          <div className="text-area">
-            <h2>간단설명</h2>
-            <textarea
-              placeholder="100자 이내로 입력하세요."
-              maxLength={100}
-              {...register("contents")}
-              onChange={e => handleChange("contents", e.target.value)}
-            ></textarea>
-            {errors.contents && (
-              <p className="error">{errors.contents.message}</p>
-            )}
-          </div>
-        </form>
-
-        {/* 사진 업로드  */}
-        <form>
+          {/* 사진 업로드  */}
           <PicDiv>
             <h2>작업물</h2>
             <ul
@@ -220,7 +208,7 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
                     className="slot"
                     style={{
                       backgroundImage: filePreviews[index]
-                        ? `url(${filePreviews[index]})`
+                        ? `url(${filePreviews[index].preview})`
                         : "none",
                     }}
                   >
@@ -237,6 +225,19 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
               ))}
             </ul>
           </PicDiv>
+
+          <div className="text-area">
+            <h2>간단설명</h2>
+            <textarea
+              placeholder="100자 이내로 입력하세요."
+              maxLength={100}
+              {...register("contents")}
+              onChange={e => handleChange("contents", e.target.value)}
+            ></textarea>
+            {errors.contents && (
+              <p className="error">{errors.contents.message}</p>
+            )}
+          </div>
           <div className="btn-area">
             <button className="cancel" onClick={() => setIsPopPfAdd(false)}>
               취소
