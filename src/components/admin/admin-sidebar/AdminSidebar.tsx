@@ -22,6 +22,9 @@ const Sidebar = () => {
         <Link to="/admin/requestresi" style={linkStyle}>
           업체 등록 요청
         </Link>
+        <Link to="/admin/requestresi/categorylist" style={linkStyle}>
+          카테고리 조회, 등록
+        </Link>
         <button
           onClick={() => setSearchMenu(!searchMenu)}
           style={{ display: "flex", justifyContent: "!end", width: "100%" }}

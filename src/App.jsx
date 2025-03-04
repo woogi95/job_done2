@@ -69,11 +69,9 @@ import ContactUs from "./pages/servicepage/ContactUs";
 
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminMain from "./pages/admin/AdminMain";
-import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 import ReservationSearch from "./pages/admin/business-search/reservation-search/ReservationSearch";
 import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueSearch";
 import RequestBusi from "./pages/admin/request/business/RequestBusi";
-import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
 import UserReport from "./pages/admin/user/report/UserReport";
 import UserList from "./pages/admin/user/userlist/UserList";
@@ -88,8 +86,8 @@ import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
 import Maptest from "./Maptest";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
-
-
+import CategoryList from "./pages/admin/request/product/CategoryList";
+import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 function App() {
   return (
     <Router>
@@ -234,7 +232,7 @@ function App() {
             {/* 업체,상품등록요청 */}
             <Route path="requestresi">
               <Route index element={<RequestBusi />} />
-              <Route path="requestproduct" index element={<RequestProduct />} />
+              <Route path="categorylist" index element={<CategoryList />} />
             </Route>
           </Route>
         </Route>
