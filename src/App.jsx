@@ -77,7 +77,6 @@ import RequestProduct from "./pages/admin/request/product/RequestProduct";
 import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
 import UserReport from "./pages/admin/user/report/UserReport";
 import UserList from "./pages/admin/user/userlist/UserList";
-import Forum from "./pages/community/Forum";
 import Write from "./pages/community/Write";
 import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
@@ -88,7 +87,7 @@ import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
 import Maptest from "./Maptest";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
-
+import Forum from "./pages/community/Forum";
 
 function App() {
   return (
@@ -104,7 +103,7 @@ function App() {
           <Route path="/test" element={<TestPage />} />
           <Route path="/testmessage" element={<TestMessage />} />
           <Route path="/forum" element={<Forum />} />
-          <Route path="/community/write" element={<Write />} />
+          <Route path="/forum/write" element={<Write />} />
           {/* 카카오페이 관련 */}
           <Route path="/paySuccess" element={<PaymentSuccess />} />
           <Route path="/payFailed" element={<PaymentFailed />} />

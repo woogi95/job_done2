@@ -54,6 +54,10 @@ function MessageCenter() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
+      if (!roomId) {
+        console.log("roomId가 없습니다.");
+        return;
+      }
       ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
 
       ws.onopen = () => {
@@ -219,7 +223,7 @@ function MessageCenter() {
               data: reader.result.split(",")[1],
             };
             messageData = {
-              flag: 0,
+              flag: 1,
               roomId: roomId,
               // message: inputMessage,
               file: fileData,
@@ -249,7 +253,7 @@ function MessageCenter() {
           reader.readAsDataURL(selectedImage);
         } else {
           messageData = {
-            flag: 0,
+            flag: 1,
             roomId: roomId,
             // message: inputMessage,
             contents: inputMessage,
@@ -396,8 +400,8 @@ function MessageCenter() {
   );
 
   return (
-    <div className="flex justify-center items-center max-w-[1000px] mx-auto pt-[100px]">
-      <div className="flex ">
+    <div className="flex justify-center items-center">
+      <div className="flex">
         {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
           {/* 메시지 리스트 */}
@@ -439,64 +443,61 @@ function MessageCenter() {
           {/* 메시지 컨테이너 */}
           <div
             ref={messageContainerRef}
-            className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
+            className="flex flex-col w-full p-[20px] flex-grow overflow-y-auto bg-white"
           >
             {messages.map((msg, index) => (
               <div
                 key={index}
                 className={`flex ${
-                  msg.flag === 1 ? "self-end" : "self-start"
-                } gap-[10px] py-[15px]`}
+                  msg.flag === 1 ? "justify-end" : "justify-start"
+                } mb-4`}
               >
-                {msg.flag === 0 && (
-                  <img
-                    src={`${IMAGE_BASE_URL}${msg.logo}`}
-                    alt="Profile"
-                    className="w-[45px] h-[45px] rounded-full"
-                  />
-                )}
-                <span
-                  className={`flex flex-col justify-center items-start max-w-[240px] ${
-                    msg.flag === 0
-                      ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
-                      : "bg-white rounded-tr-[8px]"
-                  } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+                <div
+                  className={`flex ${
+                    msg.flag === 1 ? "flex-row-reverse" : "flex-row"
+                  } gap-3 max-w-[80%]`}
                 >
-                  <div className="m-4 break-all whitespace-pre-wrap">
-                    {msg.contents !== "" ? msg.contents : null}
+                  {msg.flag === 0 && (
+                    <img
+                      src={`${IMAGE_BASE_URL}${msg.logo}`}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  )}
+                  <div
+                    className={`flex flex-col ${
+                      msg.flag === 1 ? "items-end" : "items-start"
+                    }`}
+                  >
+                    <div
+                      className={`p-3 rounded-lg ${
+                        msg.flag === 0
+                          ? "bg-[#F0F4FF] text-gray-800 rounded-bl-none"
+                          : "bg-[#34C5F0] text-white rounded-br-none"
+                      } shadow-sm`}
+                    >
+                      <div className="text-sm break-words whitespace-pre-wrap">
+                        {msg.contents !== "" ? msg.contents : null}
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {new Date(msg.createdAt).toLocaleTimeString()}
+                    </div>
                   </div>
-                  {msg.file && msg.file.data && (
-                    <div className="mt-2">
-                      <img
-                        src={`data:${msg.file.type};base64,${msg.file.data}`}
-                        alt={msg.file.name}
-                        className="max-w-[200px] rounded-lg p-[5px]"
-                      />
-                    </div>
-                  )}
-                  {msg.pics && msg.pics.length > 0 && (
-                    <div className="mx-4 mb-4">
-                      <img
-                        src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
-                        alt={msg.pics[0].name}
-                        className="max-w-[200px] rounded p-[px]"
-                      />
-                    </div>
-                  )}
-                </span>
+                </div>
               </div>
             ))}
           </div>
 
           {/* 메시지 입력 영역 */}
-          <div className="flex flex-col w-full bg-[#EDF0F8] mt-auto">
+          <div className="flex flex-col w-full bg-white border-t border-gray-200">
             {selectedImage && (
-              <div className="flex gap-2 p-2">
+              <div className="flex gap-2 p-4 bg-gray-50">
                 <div className="relative">
                   <img
                     src={URL.createObjectURL(selectedImage)}
                     alt="Preview"
-                    className="w-16 h-16 object-cover rounded"
+                    className="w-16 h-16 object-cover rounded-lg"
                   />
                   <button
                     type="button"
@@ -507,7 +508,7 @@ function MessageCenter() {
                       ) as HTMLInputElement;
                       if (fileInput) fileInput.value = "";
                     }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 transition-colors"
                   >
                     ×
                   </button>
@@ -517,15 +518,15 @@ function MessageCenter() {
 
             <form
               onSubmit={handleSendMessage}
-              className="flex justify-center items-center w-full min-h-[60px] gap-[5px] p-2"
+              className="flex items-center w-full p-4 gap-3"
             >
-              <div className="relative w-[70%]">
+              <div className="relative flex-1">
                 <input
                   type="text"
                   value={inputMessage}
                   onChange={e => setInputMessage(e.target.value)}
                   placeholder="메시지를 입력하세요"
-                  className="flex justify-center items-center w-full h-[35px] border rounded-full shadow-[0_3px_3px_-3px_rgba(0,0,0,0.2)] pl-[50px]"
+                  className="w-full px-4 py-2 pl-12 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#34C5F0] focus:border-transparent"
                 />
                 <input
                   type="file"
@@ -536,7 +537,7 @@ function MessageCenter() {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="absolute left-[15px] top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <svg
                     width="24"
@@ -554,9 +555,9 @@ function MessageCenter() {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center w-[35px] h-[35px] bg-[#34C5F0] rounded-full"
+                className="flex items-center justify-center w-10 h-10 bg-[#34C5F0] rounded-full hover:bg-[#2BAED8] transition-colors"
               >
-                <FiSend className="text-[20px] text-white ml-[-2px] mb-[-2px]" />
+                <FiSend className="text-lg text-white" />
               </button>
             </form>
           </div>

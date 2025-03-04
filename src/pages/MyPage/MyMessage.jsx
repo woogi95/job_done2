@@ -49,6 +49,10 @@ function ContactUs() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
+      if (!roomId) {
+        console.log("roomId가 없습니다.");
+        return;
+      }
       ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
 
       ws.onopen = () => {
@@ -212,9 +216,9 @@ function ContactUs() {
             messageData = {
               flag: 1,
               roomId: roomId,
-              // message: inputMessage,
+              message: inputMessage,
               file: fileData,
-              contents: inputMessage,
+              // contents: inputMessage,
             };
 
             // JSON을 문자열로 변환
@@ -242,8 +246,8 @@ function ContactUs() {
           messageData = {
             flag: 1,
             roomId: roomId,
-            // message: inputMessage,
-            contents: inputMessage,
+            message: inputMessage,
+            // contents: inputMessage,
           };
 
           // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
@@ -446,7 +450,7 @@ function ContactUs() {
                   } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
                 >
                   <div className="m-4 break-all whitespace-pre-wrap">
-                    {msg.contents !== "" ? msg.contents : null}
+                    {msg.message !== "" ? msg.message : null}
                   </div>
                   {msg.file && msg.file.data && (
                     <div className="mt-2">

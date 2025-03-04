@@ -1,5 +1,7 @@
+import { m } from "framer-motion";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../apis/login";
 
 function Write() {
   const navigate = useNavigate();
@@ -9,7 +11,23 @@ function Write() {
   const handleSubmit = e => {
     e.preventDefault();
     // TODO: 게시글 저장 로직 구현
-    navigate("/community");
+    navigate("/forum");
+  };
+
+  const writeQa = async () => {
+    try {
+      const res = await loginApi.post("/api/qa", {
+        p: {
+          qaTypeDetailId: 0,
+          contents: "",
+          qaReportReason: "",
+          qaTargetId: 0,
+        },
+        pics: [""],
+      });
+    } catch (error) {
+      console.error("게시글 작성 실패:", error);
+    }
   };
 
   return (
