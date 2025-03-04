@@ -25,13 +25,12 @@ function Index() {
   const getStatusList = async (businessId, status) => {
     console.log("businessId, status", businessId, status);
     try {
-      // console.log("이것무엇", businessId, status);
       const res = await loginApi.get(
-        // `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
       );
-      console.log(res.data);
+      console.log("예약 데이터:", reservationData); // 기존 데이터
       setReservationData(res.data.resultData);
+      console.log("새로운 예약 데이터:", res.data.resultData); // 새로운 데이터
     } catch (error) {
       console.log(error);
     }

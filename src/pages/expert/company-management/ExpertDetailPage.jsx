@@ -5,33 +5,34 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 import { useRecoilValue } from "recoil";
 // parser
 import parse from "html-react-parser";
-import { useEffect, useState } from "react";
-import axios from "axios";
+// import {  useState } from "react";
+// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function ExpertDetailPage() {
   const navigate = useNavigate();
+  // const BASE_URL = "http://112.222.157.157:5234";
   // const [productDetail, setProductDetail] = useRecoilState(businessDetailState);
   const businessDetail = useRecoilValue(businessDetailState);
   console.log("businessDetail", businessDetail.contents);
-  const businessId = businessDetail.businessId;
-  const [detailPicList, setDetailPicList] = useState([]);
-  const getDetailPagePic = async businessId => {
-    try {
-      // `/api/business/${businessId}?businessId=${businessId}`,
-      const res = await axios.get(
-        `/api/business/pic/${businessId}?businessId=${businessId}`,
-      );
-      setDetailPicList(res.data.resultData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const businessId = businessDetail.businessId;
+  // const [detailPicList, setDetailPicList] = useState([]);
+  // const getDetailPagePic = async businessId => {
+  //   try {
+  //     // `/api/business/${businessId}?businessId=${businessId}`,
+  //     const res = await axios.get(
+  //       `/api/business/pic/${businessId}?businessId=${businessId}`,
+  //     );
+  //     setDetailPicList(res.data.resultData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // console.log(detailPicList);
-  useEffect(() => {
-    getDetailPagePic(businessId);
-  }, [businessId]);
+  // useEffect(() => {
+  //   getDetailPagePic(businessId);
+  // }, [businessId]);
   return (
     <PreviewAreaDiv>
       <div className="inner">
@@ -62,14 +63,13 @@ function ExpertDetailPage() {
             <p className="title-b">
               {businessDetail.contents ? parse(businessDetail.contents) : ""}
             </p>
-            <img src="" alt="" />
-            {detailPicList.map((item, index) => (
+            {/* {detailPicList.map((item, index) => (
               <img
                 key={businessDetail.businessId}
                 src={`${BASE_URL}${detailPicList[index].pic}`}
                 alt="상품디테일사진"
               />
-            ))}
+            ))} */}
           </div>
         </PreviewDetailDiv>
       </div>

@@ -103,84 +103,82 @@ const EditPortfolio = ({ setIsPopPfEdit, portfolioId }) => {
               />
             </label>
           </div>
-          <PicDiv>
-            <h2>작업물</h2>
-            <ul
-              className="pic-list"
-              style={{ display: "flex", flexWrap: "wrap" }}
-            >
-              {/* 파일 선택 버튼 */}
-              <li>
-                <label htmlFor="files">
-                  <input
-                    type="file"
-                    id="files"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileChange}
-                    style={{ display: "none" }}
-                  />
-                  <FaPlus />
-                </label>
-                <button
-                  onClick={() => document.getElementById("files").click()}
-                >
-                  파일 선택
-                </button>
-              </li>
-
-              {/* 5개의 이미지 슬롯 */}
-              {[...Array(5)].map((_, index) => (
-                <li key={index}>
-                  <div
-                    className="slot"
-                    style={{
-                      backgroundImage: filePreviews[index]
-                        ? `url(${filePreviews[index]})`
-                        : "none",
-                    }}
-                  >
-                    {filePreviews[index] && (
-                      <button
-                        className="del-preview"
-                        onClick={() => handleRemoveFile(index)}
-                      >
-                        <IoCloseCircleOutline />
-                      </button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </PicDiv>
-          <div className="text-area">
-            <h2>간단설명</h2>
-            <textarea
-              name=""
-              id=""
-              placeholder="100자 이내로 입력하세요."
-              maxLength={100}
-            ></textarea>
-          </div>
-          <div className="btn-area">
-            <button
-              className="cancel"
-              onClick={() => {
-                setIsPopPfEdit(false);
-              }}
-            >
-              취소
-            </button>
-            <button
-              className="okay"
-              onClick={() => {
-                setIsPopPfEdit(false);
-              }}
-            >
-              등록
-            </button>
-          </div>
         </form>
+        <PicDiv>
+          <h2>작업물</h2>
+          <ul
+            className="pic-list"
+            style={{ display: "flex", flexWrap: "wrap" }}
+          >
+            {/* 파일 선택 버튼 */}
+            <li>
+              <label htmlFor="files">
+                <input
+                  type="file"
+                  id="files"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                <FaPlus />
+              </label>
+              <button onClick={() => document.getElementById("files").click()}>
+                파일 선택
+              </button>
+            </li>
+
+            {/* 5개의 이미지 슬롯 */}
+            {[...Array(5)].map((_, index) => (
+              <li key={index}>
+                <div
+                  className="slot"
+                  style={{
+                    backgroundImage: filePreviews[index]
+                      ? `url(${filePreviews[index]})`
+                      : "none",
+                  }}
+                >
+                  {filePreviews[index] && (
+                    <button
+                      className="del-preview"
+                      onClick={() => handleRemoveFile(index)}
+                    >
+                      <IoCloseCircleOutline />
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </PicDiv>
+        <div className="text-area">
+          <h2>간단설명</h2>
+          <textarea
+            name=""
+            id=""
+            placeholder="100자 이내로 입력하세요."
+            maxLength={100}
+          ></textarea>
+        </div>
+        <div className="btn-area">
+          <button
+            className="cancel"
+            onClick={() => {
+              setIsPopPfEdit(false);
+            }}
+          >
+            취소
+          </button>
+          <button
+            className="okay"
+            onClick={() => {
+              setIsPopPfEdit(false);
+            }}
+          >
+            등록
+          </button>
+        </div>
       </LayerDiv>
     </ModalDiv>
   );

@@ -186,7 +186,7 @@ function EditOptionPage() {
                   value={Number(productPrice).toLocaleString()}
                   onChange={handleProductPriceChange}
                   onBlur={handleProductPriceComplete}
-                  onKeyPress={e => {
+                  onKeyDown={e => {
                     if (e.key === "Enter") {
                       e.preventDefault();
                       handleProductPriceComplete();
@@ -205,7 +205,7 @@ function EditOptionPage() {
                 placeholder="옵션명"
                 value={newOptionName}
                 onChange={e => setNewOptionName(e.target.value)}
-                onKeyPress={e => handleKeyPress(e, "option")}
+                onKeyDown={e => handleKeyPress(e, "option")}
               />
               <button onClick={handleAddOption}>옵션 추가</button>
             </label>
@@ -249,7 +249,7 @@ function EditOptionPage() {
                           e.target.value,
                         )
                       }
-                      onKeyPress={e => handleKeyPress(e, "detail", optionIndex)}
+                      onKeyDown={e => handleKeyPress(e, "detail", optionIndex)}
                     />
                     <input
                       type="number"
@@ -264,7 +264,7 @@ function EditOptionPage() {
                           e.target.value,
                         )
                       }
-                      onKeyPress={e => handleKeyPress(e, "detail", optionIndex)}
+                      onKeyDown={e => handleKeyPress(e, "detail", optionIndex)}
                     />
                     <button onClick={() => handleAddDetailOption(optionIndex)}>
                       선택 옵션 추가
