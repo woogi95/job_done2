@@ -20,7 +20,7 @@ function MessageCenter() {
   const [inputMessage, setInputMessage] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [roomList, setRoomList] = useState<[]>([]);
+  const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   // const roomId = useRecoilValue(checkRoom);
@@ -202,7 +202,7 @@ function MessageCenter() {
     }
   };
 
-  const handleSendMessage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -219,7 +219,7 @@ function MessageCenter() {
               data: reader.result.split(",")[1],
             };
             messageData = {
-              flag: 1,
+              flag: 0,
               roomId: roomId,
               // message: inputMessage,
               file: fileData,
@@ -249,7 +249,7 @@ function MessageCenter() {
           reader.readAsDataURL(selectedImage);
         } else {
           messageData = {
-            flag: 1,
+            flag: 0,
             roomId: roomId,
             // message: inputMessage,
             contents: inputMessage,
@@ -283,7 +283,12 @@ function MessageCenter() {
   const getRoomList = async () => {
     try {
       setLoading(true);
-      const res = await loginApi.get("/api/room");
+      const businessId = localStorage.getItem("businessId");
+      const res = await loginApi.get("/api/room", {
+        params: {
+          business_id: businessId,
+        },
+      });
       console.log("뭐 들어옴", res.data);
       if (Array.isArray(res.data.resultData)) {
         setRoomList(res.data.resultData);
@@ -452,7 +457,7 @@ function MessageCenter() {
                 )}
                 <span
                   className={`flex flex-col justify-center items-start max-w-[240px] ${
-                    msg.flag === 1
+                    msg.flag === 0
                       ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
                       : "bg-white rounded-tr-[8px]"
                   } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
