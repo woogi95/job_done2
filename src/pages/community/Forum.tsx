@@ -20,7 +20,7 @@ function Forum() {
           className="px-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
-          onClick={() => navigate("/community/write")}
+          onClick={() => navigate("/forum/write")}
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
         >
           글쓰기
