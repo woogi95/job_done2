@@ -4,13 +4,19 @@ import AdminSidebar from "./admin-sidebar/AdminSidebar";
 import "./adminlayout.css";
 const AdminLayout = () => {
   return (
-    <div className="layout-div">
-      <div>
-        <AdminHeader />
-      </div>
-      <div className="second-div">
-        <AdminSidebar />
-        <Outlet />
+    <div style={{ backgroundColor: "#eaeef1" }}>
+      <div
+        className="layout-div"
+        style={{ margin: "0 auto", backgroundColor: "#b6b6b6" }}
+      >
+        <div>
+          <AdminHeader />
+        </div>
+        <div className="second-div">
+          <AdminSidebar />
+
+          <Outlet />
+        </div>
       </div>
     </div>
   );

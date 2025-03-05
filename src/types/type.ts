@@ -17,6 +17,10 @@ export interface CategoryBusiType {
   businessName: string;
   tel: string;
 }
+// 카테고리 등록
+export interface CategoryResiType {
+  categoryName: string;
+}
 // 업체 신청 리스트
 export interface BusinessApplyType {
   applicationCreatedAt: string;

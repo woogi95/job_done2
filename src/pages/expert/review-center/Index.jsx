@@ -1,6 +1,8 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { FaStar, FaStarHalf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { loginApi } from "../../../apis/login";
 import {
   commentModals,
   commentsBox,
@@ -9,17 +11,12 @@ import {
   reviewPicsList,
 } from "../../../atoms/reviewAtom";
 import "./index.css";
-import { useNavigate } from "react-router-dom";
-import { loginApi } from "../../../apis/login";
-import { FaStar, FaStarHalf } from "react-icons/fa";
 
 function Index() {
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
   const [reviewPicsData, setReviewPicsData] = useRecoilState(reviewPicsList);
   const [commentModal, setCommentModal] = useRecoilState(commentModals);
-  const [commentBox, setCommentBox] = useRecoilState(commentsBox);
   const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
-  const [commentData, setCommentData] = useState();
   const [isSorted, setIsSorted] = useState(false);
   const [isScored, setIsScored] = useState(false);
   const navigate = useNavigate();

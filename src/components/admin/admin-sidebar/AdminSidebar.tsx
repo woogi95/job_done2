@@ -22,6 +22,7 @@ const Sidebar = () => {
         <Link to="/admin/requestresi" style={linkStyle}>
           업체 등록 요청
         </Link>
+
         <button
           onClick={() => setSearchMenu(!searchMenu)}
           style={{ display: "flex", justifyContent: "!end", width: "100%" }}
@@ -32,13 +33,13 @@ const Sidebar = () => {
         {searchMenu ? (
           <div>
             <Link to="/admin/businesssearch" style={linkStyle}>
-              카테고리 조회
+              카테고리 조회 | 등록
             </Link>
             <Link to="/admin/businesssearch/reservesearch" style={linkStyle}>
-              예약 별 조회(후순위)
+              예약 별 조회
             </Link>
             <Link to="/admin/businesssearch/ruesearch" style={linkStyle}>
-              매출 별 조회(후순위)
+              매출 별 조회
             </Link>
           </div>
         ) : (

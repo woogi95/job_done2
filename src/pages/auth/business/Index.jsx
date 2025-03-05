@@ -215,19 +215,7 @@ function BusinessSignUp() {
             주소 검색
           </button>
         </Form.Item>
-        {/* 상세주소 킾 */}
-        {/* <Form.Item
-          name="aca_addr2"
-          className="ml-[130px]"
-          rules={[{ required: true, message: "기업 주소를 입력해 주세요." }]}
-        >
-          <Input
-            className="input"
-            id="acaAddr2"
-            maxLength={20}
-            placeholder="학원 상세주소"
-          />
-        </Form.Item> */}
+
         {/* 전화번호 */}
         <Form.Item
           name={"tel"}
