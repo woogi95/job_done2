@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   BtnAreaDiv,
@@ -11,31 +10,99 @@ import {
 import { CgClose } from "react-icons/cg";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
+import { useNavigate } from "react-router-dom";
+import { Popup } from "../ui/Popup";
+import { loginApi } from "../../apis/login";
 
-const ExpertReservation = ({ setIsReservationPop }) => {
+const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = papers.serviceId;
-  const getEstimate = async serviceId => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  const [isSuccess, setIsSuccess] = useState(true);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  // 컨펌팝업
+  const handleOpenPopup = () => {
+    patchServiceState(3, serviceId);
+    setIsPopupOpen(true);
+  };
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const patchServiceState = async (completed, serviceId) => {
     try {
-      ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
+      // console.log(completed, serviceId);
+      const res = await loginApi.patch(`/api/service`, {
+        completed,
+        serviceId,
+      });
       // console.log(res.data.resultData);
-      setPapers(res.data.resultData);
+
+      if (res.data) {
+        setIsSuccess(true);
+        setPopupMessage("예약취소 요청하였습니다.");
+        setIsPopupOpen(false);
+      } else {
+        setIsSuccess(false);
+        setPopupMessage(
+          "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+        );
+      }
     } catch (error) {
       console.log(error);
+      setIsSuccess(false);
+      setPopupMessage(
+        "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+      );
     }
   };
-  // console.log(papers);
+
+  const getEstimate = async serviceId => {
+    try {
+      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
+      console.log("API 응답 데이터:", res.data); // API 응답 데이터 로그
+      if (res.data && res.data.resultData) {
+        setPapers(res.data.resultData);
+        console.log("papers 상태 업데이트:", res.data.resultData); // papers 상태 로그
+      } else {
+        console.error("API 응답 데이터가 올바르지 않습니다:", res.data);
+      }
+      setLoading(false); // 데이터 로딩 완료
+    } catch (error) {
+      console.error("API 호출 중 오류 발생:", error);
+      setLoading(false); // 에러 발생 시 로딩 종료
+    }
+  };
+
   const formatPhoneNumber = phone => {
     if (!phone) return "-";
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   };
 
   useEffect(() => {
-    getEstimate(serviceId);
+    if (serviceId) {
+      setLoading(true); // 데이터 로딩 시작
+      getEstimate(serviceId);
+    }
   }, [serviceId]);
-  // console.log(estimateInfo);
+
+  // papersInfo 상태 로그
+  console.log("papersInfo 상태:", papersInfo);
+
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 중일 때 표시
+  }
+
+  if (!papersInfo) {
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>; // 데이터가 없을 때 표시
+  }
+
   return (
     <PapersDiv>
       <div className="inner">
@@ -127,18 +194,27 @@ const ExpertReservation = ({ setIsReservationPop }) => {
                   <span>{papersInfo.price.toLocaleString()}</span>
                 </li>
                 <li>
-                  <p>문의사항</p>
+                  <p>문이사항</p>
                   <span>{papersInfo.comment}</span>
                 </li>
               </ul>
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button className="cancel">예약취소</button>
+            <button
+              className="cancel"
+              onClick={() => {
+                handleOpenPopup();
+              }}
+            >
+              예약취소
+            </button>
             <button
               className="okay"
               onClick={() => {
-                navigate("/expert/quote-management/quotation-form");
+                navigate(
+                  `/expert/quote-management/quotation-form?serviceId=${serviceId}`,
+                );
               }}
             >
               견적서작성
@@ -152,6 +228,15 @@ const ExpertReservation = ({ setIsReservationPop }) => {
           </button>
         </ReservationPaperContDiv>
       </div>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
+        title="예약 취소"
+        message={popupMessage}
+        showConfirmButton={true}
+        onConfirm={handleClosePopup}
+      />
     </PapersDiv>
   );
 };
