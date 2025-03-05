@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { useCookies } from "react-cookie";
+import { Pagination } from "antd";
 
 function Index() {
   const businessId = localStorage.getItem("businessId");
@@ -19,42 +20,126 @@ function Index() {
   const [cookies, setCookie] = useCookies(["serviceId"]);
 
   const [reservationData, setReservationData] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
+
   const getStatusList = async (businessId, status) => {
-    console.log("businessId, status", businessId, status);
     try {
       const res = await loginApi.get(
-        `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
+        `/api/service?business_id=${businessId}&status=${status}&page=${currentPage}&size=${itemsPerPage}`,
       );
-      console.log("!@#!#!#!$!$@#$!%!", res.data);
       setReservationData(res.data.resultData);
+      setTotalItems(res.data.totalCount);
+      console.log("API 응답 데이터 (reservationData):", res.data.resultData);
     } catch (error) {
-      console.log(error);
+      console.log("API 호출 에러:", error);
     }
   };
+
   useEffect(() => {
     if (businessId) {
       getStatusList(businessId, status);
     }
   }, []);
+
+  const handleSearch = e => {
+    e.preventDefault();
+    setAppliedSearchTerm(searchTerm);
+    setCurrentPage(1);
+    console.log("검색어 적용:", searchTerm);
+  };
+
+  const handleStatusFilter = filter => {
+    setStatusFilter(filter);
+    setCurrentPage(1);
+  };
+
+  const filteredData = reservationData.filter(item => {
+    const statusMatch =
+      statusFilter === "all" ||
+      (statusFilter === "0" && item.completed === 0) || // 작성대기 (completed: 2)
+      (statusFilter === "2" && item.completed === 2); // 견적완료 (completed: 6)
+
+    const searchMatch =
+      appliedSearchTerm === "" ||
+      item.userName.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+      item.detailTypeName
+        .toLowerCase()
+        .includes(appliedSearchTerm.toLowerCase()) ||
+      item.createdAt.includes(appliedSearchTerm) ||
+      item.startDate.includes(appliedSearchTerm);
+
+    return statusMatch && searchMatch;
+  });
+
+  console.log("필터링된 데이터 (filteredData):", filteredData);
+  console.log("현재 필터 상태 (statusFilter):", statusFilter);
+  console.log("적용된 검색어 (appliedSearchTerm):", appliedSearchTerm);
+
+  const currentItems = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
+  const getStatusText = completed => {
+    switch (completed) {
+      case 0:
+        return "작성대기";
+      case 2:
+        return "견적완료";
+      default:
+        return "미정";
+    }
+  };
+
   return (
     <ExpertListPageDiv>
       <h2 className="tit">견적관리</h2>
       <EListContDiv>
         <EFilterDiv>
+          <div className="search-bar">
+            <form onSubmit={handleSearch}>
+              <label htmlFor="search">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  placeholder="이름, 서비스명, 접수일, 예약날짜로 검색"
+                />
+              </label>
+              <button type="submit">검색</button>
+            </form>
+          </div>
           <ul className="btn-area">
             <li>
-              <button className="completed3">작성대기</button>
+              <button
+                className={`completed3 ${statusFilter === "0" ? "active" : ""}`}
+                onClick={() => handleStatusFilter("0")}
+              >
+                작성대기
+              </button>
             </li>
             <li>
-              <button className="completed1">견적완료</button>
+              <button
+                className={`completed1 ${statusFilter === "2" ? "active" : ""}`}
+                onClick={() => handleStatusFilter("2")}
+              >
+                견적완료
+              </button>
+            </li>
+            <li>
+              <button
+                className={`all ${statusFilter === "all" ? "active" : ""}`}
+                onClick={() => handleStatusFilter("all")}
+              >
+                전체보기
+              </button>
             </li>
           </ul>
-          <div className="search-bar">
-            <label htmlFor="">
-              <input type="text" />
-            </label>
-            <button>검색</button>
-          </div>
         </EFilterDiv>
         <ExportListDiv>
           <ul className="tr">
@@ -66,7 +151,7 @@ function Index() {
             <li className="th">견적현황</li>
             <li className="th">견적서</li>
           </ul>
-          {reservationData.map(reservation => (
+          {currentItems.map(reservation => (
             <ul className="tr" key={reservation.serviceId}>
               <li className="td">{reservation.createdAt.split(" ")[0]}</li>
               <li className="td black">{reservation.startDate || "미정"}</li>
@@ -76,10 +161,10 @@ function Index() {
               <li className="td">
                 <p
                   className={
-                    reservation.completed === 1 ? "completed1" : "completed3"
+                    reservation.completed === 0 ? "completed3" : "completed1"
                   }
                 >
-                  {reservation.completed === 1 ? "견적완료" : "작성대기"}
+                  {getStatusText(reservation.completed)}
                 </p>
               </li>
               <li className="td btn-area">
@@ -109,6 +194,12 @@ function Index() {
             </ul>
           ))}
         </ExportListDiv>
+        <Pagination
+          total={totalItems}
+          pageSize={itemsPerPage}
+          current={currentPage}
+          onChange={setCurrentPage}
+        />
       </EListContDiv>
     </ExpertListPageDiv>
   );

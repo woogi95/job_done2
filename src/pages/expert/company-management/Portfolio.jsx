@@ -11,9 +11,15 @@ import AddPortfolio from "../../../components/portfolio/AddPortfolio";
 import EditPortfolio from "../../../components/portfolio/EditPortfolio";
 import { loginApi } from "../../../apis/login";
 import PfPopup from "../../../components/serviceDetail/PfPopup";
+import { useRecoilState } from "recoil";
+import { PortfolioDetailInfoState } from "../../../atoms/portfolioAtom";
+import axios from "axios";
 
 function Portfolio() {
   const BASE_URL = "http://112.222.157.157:5234";
+  const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
+    PortfolioDetailInfoState,
+  );
   const [isPopPfAdd, setIsPopPfAdd] = useState(false);
   const [isPopPfEdit, setIsPopPfEdit] = useState(false);
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
@@ -31,6 +37,17 @@ function Portfolio() {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+  const getDetailPortfolio = async portfolioId => {
+    try {
+      const res = await loginApi.get(`/api/portfolio/${portfolioId}`);
+      if (res.status === 200) {
+        console.log("포트폴리오 상세 정보:", res.data.resultData);
+        setPortfolioDetailInfoState(res.data.resultData);
+      }
+    } catch (error) {
+      console.error("포트폴리오 상세 정보 가져오기 실패:", error);
     }
   };
 
@@ -55,6 +72,12 @@ function Portfolio() {
     } catch (error) {
       console.error("삭제 중 에러 발생:", error);
     }
+  };
+
+  const handleEditClick = async portfolioId => {
+    setSelectedPortfolioId(portfolioId);
+    setIsPopPfEdit(true);
+    await getDetailPortfolio(portfolioId);
   };
 
   useEffect(() => {
@@ -93,8 +116,7 @@ function Portfolio() {
                   className="edit-btn"
                   onClick={e => {
                     e.stopPropagation();
-                    setSelectedPortfolioId(item.portfolioId);
-                    setIsPopPfEdit(true);
+                    handleEditClick(item.portfolioId);
                   }}
                 >
                   수정하기
@@ -131,6 +153,7 @@ function Portfolio() {
       )}
       {isPopPfEdit ? (
         <EditPortfolio
+          portfolioDetailInfo={portfolioDetailInfo}
           setIsPopPfEdit={setIsPopPfEdit}
           portfolioId={selectedPortfolioId}
         />
