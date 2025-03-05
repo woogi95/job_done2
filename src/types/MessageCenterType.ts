@@ -18,6 +18,7 @@ export type MessageType = {
   roomId?: number;
   contents?: string;
   logo?: string;
+  createdAt?: string;
 };
 
 export type RoomType = {

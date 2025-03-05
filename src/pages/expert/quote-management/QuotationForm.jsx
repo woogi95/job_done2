@@ -40,6 +40,16 @@ function QuotationForm() {
       });
       console.log("API 응답 데이터:", res.data);
       setPapersInfo(res.data.resultData);
+
+      // etc 데이터가 있으면 additionalQuotes에 추가
+      if (res.data.resultData?.etc?.length > 0) {
+        const initialQuotes = res.data.resultData.etc.map((item, index) => ({
+          id: index + 1,
+          content: item.etcComment,
+          price: item.etcPrice,
+        }));
+        setAdditionalQuotes(initialQuotes);
+      }
     } catch (error) {
       console.log("API 에러:", error);
     }
@@ -73,18 +83,18 @@ function QuotationForm() {
     try {
       const requestData = {
         serviceId: serviceId,
-        totalPrice: totalPrice, // 수정된 총액 사용
+        totalPrice: totalPrice,
         addComment: addComment,
         startDate: startDate?.format("YYYY/MM/DD"),
         endDate: endDate?.format("YYYY/MM/DD"),
         pyeong: papersInfo?.pyeong || 0,
-        mstartTime: startTime?.format("HH:mm"),
-        mendTime: endTime?.format("HH:mm"),
         etc: additionalQuotes.map(quote => ({
-          etcId: quote.id,
+          etcId: quote.id ? quote.id : null,
           etcPrice: Number(quote.price) || 0,
           etcComment: quote.content,
         })),
+        mendTime: endTime?.format("HH:mm"),
+        mstartTime: startTime?.format("HH:mm"),
       };
 
       console.log("보내는 데이터:", requestData);

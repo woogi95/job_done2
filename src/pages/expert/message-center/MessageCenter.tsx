@@ -223,11 +223,11 @@ function MessageCenter() {
               data: reader.result.split(",")[1],
             };
             messageData = {
-              flag: 1,
+              flag: 0,
               roomId: roomId,
-              // message: inputMessage,
+              message: inputMessage,
               file: fileData,
-              contents: inputMessage,
+              // contents: inputMessage,
             };
 
             // JSON을 문자열로 변환
@@ -253,10 +253,10 @@ function MessageCenter() {
           reader.readAsDataURL(selectedImage);
         } else {
           messageData = {
-            flag: 1,
+            flag: 0,
             roomId: roomId,
-            // message: inputMessage,
-            contents: inputMessage,
+            message: inputMessage,
+            // contents: inputMessage,
           };
 
           // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
@@ -448,25 +448,25 @@ function MessageCenter() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex ${
+                className={`flex gap-[10px] ${
                   msg.flag === 1 ? "justify-end" : "justify-start"
                 } mb-4`}
               >
+                {msg.flag === 1 && (
+                  <img
+                    src={`${IMAGE_BASE_URL}${msg.logo}`}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover order-2"
+                  />
+                )}
                 <div
                   className={`flex ${
                     msg.flag === 1 ? "flex-row-reverse" : "flex-row"
                   } gap-3 max-w-[80%]`}
                 >
-                  {msg.flag === 0 && (
-                    <img
-                      src={`${IMAGE_BASE_URL}${msg.logo}`}
-                      alt="Profile"
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  )}
                   <div
                     className={`flex flex-col ${
-                      msg.flag === 1 ? "items-end" : "items-start"
+                      msg.flag === 0 ? "items-start" : "items-end"
                     }`}
                   >
                     <div
@@ -477,11 +477,33 @@ function MessageCenter() {
                       } shadow-sm`}
                     >
                       <div className="text-sm break-words whitespace-pre-wrap">
-                        {msg.contents !== "" ? msg.contents : null}
+                        {msg.message !== "" ? msg.message : null}
                       </div>
+                      {msg.file && msg.file.data && (
+                        <div className="mt-2">
+                          <img
+                            src={`data:${msg.file.type};base64,${msg.file.data}`}
+                            alt={msg.file.name}
+                            className="max-w-[200px] rounded-lg p-[5px]"
+                          />
+                        </div>
+                      )}
+                      {msg.pics && msg.pics.length > 0 && (
+                        <div className="mx-4 mb-4">
+                          <img
+                            src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
+                            alt={msg.pics[0].name}
+                            className="max-w-[200px] rounded p-[px]"
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {new Date(msg.createdAt).toLocaleTimeString()}
+                      {msg.createdAt &&
+                        new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                     </div>
                   </div>
                 </div>
