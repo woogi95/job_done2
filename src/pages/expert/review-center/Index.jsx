@@ -138,7 +138,7 @@ function Index() {
           {isScored ? "평점 낮은 순" : "평점 높은 순"}
         </button>
       </div>
-      <div>
+      <div className="request-busi-container">
         <table className="table-container">
           {/* 첫 번째 행 (테이블 헤더) */}
           <thead>

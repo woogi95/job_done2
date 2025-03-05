@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { loginApi } from "../../../apis/login";
 import { ResponsiveLine } from "@nivo/line";
-import { useNavigate } from "react-router-dom";
 import ReserveUserCount from "../../../components/export-statistics/ReserveUserCount";
 
 function Index() {
@@ -13,7 +12,9 @@ function Index() {
     const getAllPrice = async () => {
       if (!busiId) return;
       try {
-        const res = await loginApi.get(`/api/business/monthly/${busiId}`);
+        const res = await loginApi.get(
+          `/api/business/revenue?businessId=${busiId}`,
+        );
         const sortedData = Array.isArray(res.data.resultData)
           ? res.data.resultData.sort((a, b) =>
               a.year === b.year ? a.month - b.month : a.year - b.year,
@@ -45,9 +46,7 @@ function Index() {
       </div>
     );
   }
-  const userCount = () => {
-    navigate("");
-  };
+
   console.log(priceData);
   const formattedData =
     priceData.length > 0

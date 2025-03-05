@@ -1,8 +1,29 @@
+/* 전체 컨테이너 */
+.request-busi-container {
+  padding: 30px 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  max-width: 100%;
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* 테이블 감싸는 박스 */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  padding: 25px 20px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
+/* 테이블 스타일 */
 .table-container {
   width: 100%;
   border-collapse: collapse;
@@ -12,13 +33,28 @@
 
 .table-container th,
 .table-container td {
-  padding: 5px;
+  padding: 10px;
   border: 2px solid #ddd;
   border-radius: 10px;
   text-align: center;
   line-height: normal;
 }
 
+.table-container th {
+  background: #f8f9fa;
+  color: #a0a3ab;
+  font-weight: bold;
+}
+
+.table-container tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+
+.table-container tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+/* 반응형 테이블 */
 @media (max-width: 600px) {
   .table-container th,
   .table-container td {
@@ -27,7 +63,7 @@
   }
 }
 
-/* 별 */
+/* 별점 스타일 */
 .star-div {
   padding: 5px;
   display: flex;
@@ -41,20 +77,148 @@
   align-items: center;
   gap: 5px;
 }
+
 .star-container p.star {
-  /* border: 1px solid #000; */
   align-items: center;
   padding: 0;
   display: flex;
   justify-content: center;
   gap: 3px;
 }
+
 .star-grade {
   display: flex;
   font-weight: 700;
   font-size: 10px;
 }
-.second-td {
+
+/* 상태 표시 */
+.status-done {
+  font-weight: bold;
+  color: #41b662;
+}
+
+.cancel-done {
+  font-weight: bold;
+  color: #db3319;
+}
+
+/* 빈 데이터 메시지 */
+.empty-message {
   text-align: center;
-  vertical-align: none !important;
+  padding: 15px;
+  font-size: 16px;
+  color: #999;
+}
+
+/* 페이지네이션 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.page-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  background: #ddd;
+  color: black;
+  transition: 0.3s;
+}
+
+.page-button.active {
+  background: #007bff;
+  color: white;
+}
+
+.page-button:hover {
+  background: #bbb;
+}
+
+.page-button.active:hover {
+  background: #0056b3;
+}
+
+/* 모달 스타일 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 400px;
+  height: 200px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* 적용 및 취소 버튼 */
+.apply-button {
+  padding: 12px 24px;
+  font-size: 18px;
+  width: 170px;
+  height: 60px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #0049a5;
+  color: white;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.apply-button:hover {
+  background: #218838;
+}
+
+.cancels-button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #bbbbbb;
+  color: white;
+  transition: 0.3s;
+}
+
+.cancels-button:hover {
+  background: #ff3044;
+}
+
+/* 상태 목록 버튼 */
+.state-list-button {
+  padding: 6px 14px;
+  border: 2px solid black;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: white;
+  color: black;
+  transition: 0.3s;
+}
+
+.state-list-button:hover {
+  background: #0049a5;
 }
