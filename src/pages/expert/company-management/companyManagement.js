@@ -167,7 +167,9 @@ export const ExpertInfoDiv = styled.div`
         font-weight: 600;
 
         em {
+          font-style: normal;
           font-weight: 400;
+          font-size: 13px;
           padding-left: 5px;
           color: rgba(0, 0, 0, 0.6);
         }

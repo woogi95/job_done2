@@ -310,6 +310,7 @@ function EditOptionPage() {
                   }}
                 />
               </label>
+
             </div>
             {/* 옵션 등록 */}
             <div className="op-box">
@@ -403,6 +404,7 @@ function EditOptionPage() {
                         선택 옵션 추가
                       </button>
                     </div>
+
                   </div>
                 ))}
               </div>

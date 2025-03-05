@@ -33,11 +33,13 @@ function Index() {
     console.log("businessId, status", businessId, status);
     try {
       const res = await loginApi.get(
+
         `/api/service?business_id=${businessId}&status=${status}&page=${currentPage}&size=${itemsPerPage}`,
       );
       console.log("API Response:", res.data); // 응답 구조 확인
       setReservationData(res.data.resultData); // 데이터는 그대로 설정
       setTotalItems(res.data.resultData.length); // resultData의 길이를 총 데이터 개수로 설정
+
     } catch (error) {
       console.log(error);
     }
