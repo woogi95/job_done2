@@ -39,34 +39,59 @@ function EditOptionPage() {
   });
 
   const handleSubmitForm = async data => {
-    const productId = ProductInfo.productId;
-    console.log("!!!1", data, "productId", productId);
-    const formData = {
-      productId: productId,
-      productPrice: data.productPrice,
+    // productId 필수값 확인
+    if (!ProductInfo.productId) {
+      console.error("productId가 없습니다.");
+      return;
+    }
+
+    // options 데이터 변환
+    const transformedOptions = options.map(option => ({
+      optionId: option.optionId || 0, // 기존 optionId가 있으면 사용, 없으면 0 (insert)
+      optionName: option.name,
+      optionDetails:
+        option.details.map(detail => ({
+          optionDetailId: detail.optionDetailId || 0, // 기존 optionDetailId가 있으면 사용, 없으면 0 (insert)
+          optionDetailName: detail.name,
+          optionDetailPrice: detail.price,
+        })) || [], // details가 없어도 빈 배열 유지
+    }));
+
+    const requestData = {
+      price: Number(data.productPrice),
+      productId: ProductInfo.productId, // 필수값
+      options: transformedOptions,
     };
+
     try {
-      const res = await loginApi.patch(`/api/product`, formData);
-      console.log("아아아아", res.data);
+      const res = await loginApi.post("/api/product/postAll", requestData);
+      console.log("API 응답:", res.data);
       setProductInfo(prev => ({
         ...prev,
         productPrice: data.productPrice,
       }));
     } catch (error) {
-      console.error("오류:", error);
+      console.error("API 오류:", error);
     }
   };
 
   const handleAddOption = () => {
-    if (!newOptionName.trim()) return;
-    setOptions([
-      ...options,
-      {
-        name: newOptionName,
-        details: [],
-      },
-    ]);
-    setNewOptionName("");
+    if (!newOptionName.trim()) {
+      console.error("옵션명을 입력해주세요.");
+      return;
+    }
+
+    const newOption = {
+      optionId: 0, // 새로운 옵션일 경우 0
+      optionName: newOptionName,
+      optionDetailList: [], // 빈 배열로 초기화
+    };
+
+    setProductInfo(prev => ({
+      ...prev,
+      optionList: [...prev.optionList, newOption],
+    }));
+    setNewOptionName(""); // 입력 필드 초기화
   };
   // 옵션명
   const handleAddDetailOption = optionIndex => {
@@ -74,23 +99,71 @@ function EditOptionPage() {
       name: "",
       price: "",
     };
-    if (!currentDetailOption.name.trim() || !currentDetailOption.price) return;
 
-    const updatedOptions = [...options];
-    updatedOptions[optionIndex].details.push({
-      name: currentDetailOption.name,
-      price: Number(currentDetailOption.price),
+    if (!currentDetailOption.name.trim() || !currentDetailOption.price) {
+      console.error("선택옵션명과 금액을 입력해주세요.");
+      return;
+    }
+
+    const newDetailOption = {
+      optionDetailId: 0, // 새로운 상세 옵션일 경우 0
+      optionDetailName: currentDetailOption.name,
+      optionDetailPrice: Number(currentDetailOption.price),
+    };
+
+    setProductInfo(prev => {
+      const updatedOptionList = prev.optionList.map((option, index) => {
+        if (index === optionIndex) {
+          return {
+            ...option,
+            optionDetailList: [...option.optionDetailList, newDetailOption],
+          };
+        }
+        return option;
+      });
+      return {
+        ...prev,
+        optionList: updatedOptionList,
+      };
     });
-    setOptions(updatedOptions);
 
+    // 입력 필드 초기화
     setDetailOptions({
       ...detailOptions,
       [optionIndex]: { name: "", price: "" },
     });
   };
   // 옵션명
-  const handleDeleteOption = optionIndex => {
-    setOptions(options.filter((_, index) => index !== optionIndex));
+  const handleDeleteOption = async optionId => {
+    const businessId = localStorage.getItem("businessId"); // 로컬 스토리지에서 businessId 가져오기
+
+    // 옵션 아이디 확인
+    console.log("삭제할 옵션 ID:", optionId);
+
+    if (!optionId || !businessId) {
+      console.error("optionId 또는 businessId가 없습니다.");
+      return;
+    }
+
+    try {
+      const res = await loginApi.delete("/api/product/option", {
+        data: {
+          businessId: Number(businessId), // 숫자로 변환
+          optionId: optionId,
+        },
+      });
+      console.log("옵션 삭제 성공:", res.data);
+
+      // 삭제된 옵션을 UI에서 제거
+      setProductInfo(prev => ({
+        ...prev,
+        optionList: prev.optionList.filter(
+          option => option.optionId !== optionId,
+        ),
+      }));
+    } catch (error) {
+      console.error("옵션 삭제 실패:", error);
+    }
   };
 
   // 선택옵션
@@ -104,12 +177,50 @@ function EditOptionPage() {
     });
   };
   // 선택옵션
-  const handleDeleteDetailOption = (optionIndex, detailIndex) => {
-    const updatedOptions = [...options];
-    updatedOptions[optionIndex].details = updatedOptions[
-      optionIndex
-    ].details.filter((_, index) => index !== detailIndex);
-    setOptions(updatedOptions);
+  const handleDeleteDetailOption = async (optionIndex, detailIndex) => {
+    const optionDetailId =
+      ProductInfo.optionList[optionIndex].optionDetailList[detailIndex]
+        .optionDetailId; // 삭제할 상세 옵션의 ID
+    const businessId = localStorage.getItem("businessId"); // 로컬 스토리지에서 businessId 가져오기
+
+    // 상세 옵션 아이디 확인
+    console.log("삭제할 상세 옵션 ID:", optionDetailId);
+
+    if (!optionDetailId || !businessId) {
+      console.error("optionDetailId 또는 businessId가 없습니다.");
+      return;
+    }
+
+    try {
+      const res = await loginApi.delete("/api/product/option/detail", {
+        data: {
+          businessId: Number(businessId), // 숫자로 변환
+          optionDetailId: optionDetailId,
+        },
+      });
+      console.log("상세 옵션 삭제 성공:", res.data);
+
+      // 삭제된 상세 옵션을 UI에서 제거
+      setProductInfo(prev => {
+        const updatedOptionList = prev.optionList.map((option, index) => {
+          if (index === optionIndex) {
+            return {
+              ...option,
+              optionDetailList: option.optionDetailList.filter(
+                (_, idx) => idx !== detailIndex,
+              ),
+            };
+          }
+          return option;
+        });
+        return {
+          ...prev,
+          optionList: updatedOptionList,
+        };
+      });
+    } catch (error) {
+      console.error("상세 옵션 삭제 실패:", error);
+    }
   };
 
   const handleKeyPress = (e, type, optionIndex) => {
@@ -157,19 +268,24 @@ function EditOptionPage() {
     }
   }, [ProductInfo]);
 
+  useEffect(() => {
+    console.log("ProductInfo 업데이트:", ProductInfo);
+  }, [ProductInfo]);
+
   return (
     <ExportPageDiv>
       <ExpertOptionInfoDiv>
-        <TitleAreaDiv>
-          <h2 className="tit">상품 옵션 수정</h2>
-          <button>
-            <p>상품옵션 저장</p> <MdModeEdit />
-          </button>
-        </TitleAreaDiv>
-        <OpContBoxDiv>
-          {/* 옵션정보 */}
-          <div className="option-info">
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <TitleAreaDiv>
+            <h2 className="tit">상품 옵션 수정</h2>
+            <button type="submit">
+              <p>상품옵션 저장</p> <MdModeEdit />
+            </button>
+          </TitleAreaDiv>
+          <OpContBoxDiv>
+            {/* 옵션정보 */}
+
+            <div className="option-info">
               <h4 className="tit">상품기본 정보</h4>
               <label>
                 <b>카테고리 </b>
@@ -194,87 +310,105 @@ function EditOptionPage() {
                   }}
                 />
               </label>
-            </form>
-          </div>
-          {/* 옵션 등록 */}
-          <div className="op-box">
-            <h4 className="tit">상품옵션 정보</h4>
-            <label className="add-option">
-              <input
-                type="text"
-                placeholder="옵션명"
-                value={newOptionName}
-                onChange={e => setNewOptionName(e.target.value)}
-                onKeyDown={e => handleKeyPress(e, "option")}
-              />
-              <button onClick={handleAddOption}>옵션 추가</button>
-            </label>
-            <div className="option-list">
-              {options.map((option, optionIndex) => (
-                <div className="option-box" key={optionIndex}>
-                  <h3>
-                    <span>
-                      옵션 {optionIndex + 1} : {option.name}
-                    </span>
-                    <button onClick={() => handleDeleteOption(optionIndex)}>
-                      삭제
-                    </button>
-                  </h3>
-                  <ul className="op-detail-list">
-                    {option.details.map((detail, detailIndex) => (
-                      <li className="op-item" key={detailIndex}>
-                        <p>
-                          <span>{detail.name}</span>
-                          <em>{detail.price.toLocaleString()}</em>
-                          <button
-                            onClick={() =>
-                              handleDeleteDetailOption(optionIndex, detailIndex)
-                            }
-                          >
-                            삭제
-                          </button>
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="add-detail-op">
-                    <input
-                      type="text"
-                      placeholder="선택옵션"
-                      value={(detailOptions[optionIndex] || { name: "" }).name}
-                      onChange={e =>
-                        handleDetailOptionChange(
-                          optionIndex,
-                          "name",
-                          e.target.value,
-                        )
-                      }
-                      onKeyDown={e => handleKeyPress(e, "detail", optionIndex)}
-                    />
-                    <input
-                      type="number"
-                      placeholder="금액"
-                      value={
-                        (detailOptions[optionIndex] || { price: "" }).price
-                      }
-                      onChange={e =>
-                        handleDetailOptionChange(
-                          optionIndex,
-                          "price",
-                          e.target.value,
-                        )
-                      }
-                      onKeyDown={e => handleKeyPress(e, "detail", optionIndex)}
-                    />
-                    <button onClick={() => handleAddDetailOption(optionIndex)}>
-                      선택 옵션 추가
-                    </button>
-                  </div>
-                </div>
-              ))}
             </div>
-          </div>
-        </OpContBoxDiv>
+            {/* 옵션 등록 */}
+            <div className="op-box">
+              <h4 className="tit">상품옵션 정보</h4>
+              <label className="add-option">
+                <input
+                  type="text"
+                  placeholder="옵션명"
+                  value={newOptionName}
+                  onChange={e => setNewOptionName(e.target.value)}
+                  onKeyDown={e => handleKeyPress(e, "option")}
+                />
+                <button type="button" onClick={handleAddOption}>
+                  옵션 추가
+                </button>
+              </label>
+              <div className="option-list">
+                {ProductInfo.optionList?.map((option, optionIndex) => (
+                  <div className="option-box" key={optionIndex}>
+                    <h3>
+                      <span>
+                        옵션 {optionIndex + 1} : {option.optionName}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteOption(option.optionId)}
+                      >
+                        삭제
+                      </button>
+                    </h3>
+                    <ul className="op-detail-list">
+                      {option.optionDetailList.map((detail, detailIndex) => (
+                        <li className="op-item" key={detailIndex}>
+                          <p>
+                            <span>{detail.optionDetailName}</span>
+                            <em>{detail.optionDetailPrice.toLocaleString()}</em>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleDeleteDetailOption(
+                                  optionIndex,
+                                  detailIndex,
+                                )
+                              }
+                            >
+                              삭제
+                            </button>
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="add-detail-op">
+                      <input
+                        type="text"
+                        placeholder="선택옵션"
+                        value={
+                          (detailOptions[optionIndex] || { name: "" }).name
+                        }
+                        onChange={e =>
+                          handleDetailOptionChange(
+                            optionIndex,
+                            "name",
+                            e.target.value,
+                          )
+                        }
+                        onKeyDown={e =>
+                          handleKeyPress(e, "detail", optionIndex)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="금액"
+                        value={
+                          (detailOptions[optionIndex] || { price: "" }).price
+                        }
+                        onChange={e =>
+                          handleDetailOptionChange(
+                            optionIndex,
+                            "price",
+                            e.target.value,
+                          )
+                        }
+                        onKeyDown={e =>
+                          handleKeyPress(e, "detail", optionIndex)
+                        }
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleAddDetailOption(optionIndex)}
+                      >
+                        선택 옵션 추가
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </OpContBoxDiv>
+        </form>
       </ExpertOptionInfoDiv>
     </ExportPageDiv>
   );
