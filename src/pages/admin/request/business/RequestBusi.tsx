@@ -27,6 +27,8 @@ import {
   CancelButton,
   CancelsButton,
   CancelDone,
+  PicmodalStyle,
+  StateListButton,
 } from "./requestbusis";
 
 const RequestBusi = () => {
@@ -172,26 +174,43 @@ const RequestBusi = () => {
 
   return (
     <RequestBusiContainer>
-      <h3>등록 요청 업체 목록</h3>
       <div
         style={{
           display: "flex",
-          gap: "10px",
-          justifyContent: "flex-end",
-          width: "100%",
+          fontSize: "36px",
+          padding: "5px",
+          justifyContent: "center",
+          marginBottom: "20px",
         }}
       >
-        <button
+        등록 요청 업체 목록
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "15px",
+          justifyContent: "flex-end",
+          width: "100%",
+          marginBottom: "20px",
+        }}
+      >
+        <StateListButton
           onClick={() => {
             getAllData();
             setStateList(null);
           }}
         >
           전체 보기
-        </button>
-        <button onClick={() => setStateList(100)}>수락 대기</button>
-        <button onClick={() => setStateList(101)}>수락 완료</button>
-        <button onClick={() => setStateList(120)}>취소</button>
+        </StateListButton>
+        <StateListButton onClick={() => setStateList(100)}>
+          수락 대기
+        </StateListButton>
+        <StateListButton onClick={() => setStateList(101)}>
+          수락 완료
+        </StateListButton>
+        <StateListButton onClick={() => setStateList(120)}>
+          취소
+        </StateListButton>
       </div>
       <TableWrapper>
         <TableContainer>
@@ -334,18 +353,25 @@ const RequestBusi = () => {
       {picModal && (
         <div style={overlayStyle} onClick={closePicModal}>
           <div
-            style={{ ...modalStyle, padding: "20px", textAlign: "center" }}
+            style={{ ...PicmodalStyle, padding: "20px", textAlign: "center" }}
             onClick={e => e.stopPropagation()}
           >
             <h3>사업자 등록증</h3>
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+                margin: "0 auto",
+              }}
+            >
               {Array.isArray(picList) && picList.length > 0 ? (
                 picList.map((paper, index) => (
                   <img
                     key={index}
                     src={`${picURL}${paper}`}
                     alt={`사업자 등록증 ${index + 1}`}
-                    className="w-20 h-20 object-cover rounded-md shrink-0 cursor-pointer"
+                    className="object-cover rounded-md shrink-0 cursor-pointer"
                   />
                 ))
               ) : (

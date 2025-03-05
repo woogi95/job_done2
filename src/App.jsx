@@ -86,7 +86,6 @@ import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
 import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
 import Maptest from "./Maptest";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
-import CategoryList from "./pages/admin/request/product/CategoryList";
 import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 function App() {
   return (
@@ -232,7 +231,6 @@ function App() {
             {/* 업체,상품등록요청 */}
             <Route path="requestresi">
               <Route index element={<RequestBusi />} />
-              <Route path="categorylist" index element={<CategoryList />} />
             </Route>
           </Route>
         </Route>

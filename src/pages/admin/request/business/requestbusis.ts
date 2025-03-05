@@ -3,19 +3,15 @@ import { CSSProperties } from "react";
 
 // 전체 컨테이너
 export const RequestBusiContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px auto;
-  width: 90%;
-  max-width: 1000px;
-  padding: 20px;
-  gap: 20px;
+  padding: 30px 20px;
   background: #f9f9f9;
   border-radius: 10px;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  max-width: 100%;
+  width: 100%;
+  margin: 20px auto;
 `;
 
 // 테이블 감싸는 박스
@@ -23,7 +19,10 @@ export const TableWrapper = styled.div`
   width: 100%;
   background: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: 25px 20px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 `;
 
 // 테이블 스타일
@@ -32,24 +31,27 @@ export const TableContainer = styled.table`
   border-collapse: collapse;
 
   th {
-    background: #007bff;
-    color: white;
+    background: #f8f9fa;
+    color: #a0a3ab;
     font-weight: bold;
-    padding: 12px;
+    padding: 10px;
     text-align: center;
+    border-bottom: 1px solid #ececec;
   }
 
   td {
     padding: 14px;
     text-align: center;
+    color: #777;
+    border-bottom: 1px dotted #ececec;
   }
 
   tbody tr:nth-child(odd) {
-    background: #f8f9fa;
+    background: #ffffff;
   }
 
   tbody tr:nth-child(even) {
-    background: #ffffff;
+    background: #f8f9fa;
   }
 `;
 
@@ -69,12 +71,31 @@ export const PhotoButton = styled.button`
   }
 `;
 
-export const AcceptButton = styled.button`
-  padding: 6px 14px;
+export const CancelButton = styled.button`
+  padding: 10px 24px; /* 내부 여백 증가 */
+  font-size: 18px; /* 글자 크기 증가 */
+  width: 170px; /* 버튼 크기 조절 */
+  height: 60px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px; /* 둥근 모서리 */
   cursor: pointer;
   font-weight: bold;
+  background: #bbbbbb;
+  color: white;
+  transition: 0.3s;
+  box-sizing: border-box;
+
+  &:hover {
+    background: #ff3044;
+  }
+`;
+export const AcceptButton = styled.button`
+  padding: 6px 14px;
+  border: 1px solid rgb(226, 226, 226);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
   background: #ff9800;
   color: white;
   transition: 0.3s;
@@ -86,11 +107,11 @@ export const AcceptButton = styled.button`
 
 export const StatusDone = styled.span`
   font-weight: bold;
-  color: #28a745;
+  color: #41b662;
 `;
 export const CancelDone = styled.span`
   font-weight: bold;
-  color: #ff3044;
+  color: #db3319;
 `;
 
 export const EmptyMessage = styled.td`
@@ -99,24 +120,28 @@ export const EmptyMessage = styled.td`
   font-size: 16px;
   color: #999;
 `;
+
 // 페이지네이션 컨테이너
 export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   margin-top: 20px;
 `;
+
 interface PageButtonProps {
   active: boolean;
 }
+
 // 페이지네이션 버튼
 export const PageButton = styled.button<PageButtonProps>`
   padding: 8px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 12px;
   background: ${props => (props.active ? "#007bff" : "#ddd")};
   color: ${props => (props.active ? "white" : "black")};
   transition: 0.3s;
@@ -125,6 +150,7 @@ export const PageButton = styled.button<PageButtonProps>`
     background: ${props => (props.active ? "#0056b3" : "#bbb")};
   }
 `;
+
 // 모달 스타일
 export const overlayStyle = {
   position: "fixed" as const,
@@ -132,7 +158,7 @@ export const overlayStyle = {
   left: 0,
   width: "100vw",
   height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.5)", // 반투명 배경
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -142,6 +168,19 @@ export const overlayStyle = {
 export const modalStyle: CSSProperties = {
   width: "400px",
   height: "200px",
+  padding: "20px",
+  borderRadius: "10px",
+  backgroundColor: "#fff",
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  position: "relative" as const,
+};
+
+export const PicmodalStyle: CSSProperties = {
+  width: "%",
+  height: "80%",
   padding: "20px",
   borderRadius: "10px",
   backgroundColor: "#fff",
@@ -190,24 +229,6 @@ export const ApplyButton = styled.button`
     background: #218838;
   }
 `;
-export const CancelButton = styled.button`
-  padding: 12px 24px; /* 내부 여백 증가 */
-  font-size: 18px; /* 글자 크기 증가 */
-  width: 170px; /* 버튼 크기 조절 */
-  height: 60px;
-  border: none;
-  border-radius: 8px; /* 둥근 모서리 */
-  cursor: pointer;
-  font-weight: bold;
-  background: #bbbbbb;
-  color: white;
-  transition: 0.3s;
-  box-sizing: border-box;
-
-  &:hover {
-    background: #ff3044;
-  }
-`;
 
 export const CancelsButton = styled.button`
   padding: 6px 14px;
@@ -221,5 +242,20 @@ export const CancelsButton = styled.button`
 
   &:hover {
     background: #ff3044;
+  }
+`;
+
+export const StateListButton = styled.button`
+  padding: 6px 14px;
+  border: 2px solid black;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #white;
+  color: black;
+  transition: 0.3s;
+
+  &:hover {
+    background: #0049a5;
   }
 `;
