@@ -263,7 +263,6 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
                 </label>
                 <button
                   onClick={() => document.getElementById("files").click()}
-
                 >
                   {filePreviews[index] && (
                     <button
@@ -273,7 +272,7 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
                       <IoCloseCircleOutline />
                     </button>
                   )}
-                </div>
+                </button>
               </li>
 
               {/* 5개의 이미지 슬롯 */}
@@ -327,7 +326,6 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
             </button>
           </div>
         </form>
-
       </LayerDiv>
     </ModalDiv>
   );

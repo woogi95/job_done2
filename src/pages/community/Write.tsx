@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../apis/login";
 import { RxCross2 } from "react-icons/rx";
+import { Select } from "@chakra-ui/react";
 
 function Write() {
   const navigate = useNavigate();
@@ -89,7 +90,14 @@ function Write() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">게시글 작성</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">게시글 작성</h1>
+          <Select className="w-[130px] text-[18px] font-thin">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </Select>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -111,7 +119,7 @@ function Write() {
             />
           </div>
           <div className="flex justify-center items-center">
-            <label className="flex w-[110px] items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
+            <label className="flex w-[130px] text-[18px] font-thin items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
               이미지 추가
               <input
                 type="file"
@@ -145,17 +153,17 @@ function Write() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-center gap-2">
             <button
               type="button"
               onClick={() => navigate("/forum")}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+              className="px-10 py-2 border rounded-lg hover:bg-gray-100 text-[18px] font-thin"
             >
               취소
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-10 py-2 bg-blue-500 text-white border rounded-lg hover:bg-blue-600 text-[18px] font-thin"
             >
               등록
             </button>
