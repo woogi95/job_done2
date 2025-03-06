@@ -134,36 +134,11 @@ function EditOptionPage() {
     });
   };
   // 옵션명
-  const handleDeleteOption = async optionId => {
-    const businessId = localStorage.getItem("businessId"); // 로컬 스토리지에서 businessId 가져오기
-
-    // 옵션 아이디 확인
-    console.log("삭제할 옵션 ID:", optionId);
-
-    if (!optionId || !businessId) {
-      console.error("optionId 또는 businessId가 없습니다.");
-      return;
-    }
-
-    try {
-      const res = await loginApi.delete("/api/product/option", {
-        data: {
-          businessId: Number(businessId), // 숫자로 변환
-          optionId: optionId,
-        },
-      });
-      console.log("옵션 삭제 성공:", res.data);
-
-      // 삭제된 옵션을 UI에서 제거
-      setProductInfo(prev => ({
-        ...prev,
-        optionList: prev.optionList.filter(
-          option => option.optionId !== optionId,
-        ),
-      }));
-    } catch (error) {
-      console.error("옵션 삭제 실패:", error);
-    }
+  const handleDeleteOption = async optionIndex => {
+    setProductInfo(prev => ({
+      ...prev,
+      optionList: prev.optionList.filter((_, idx) => idx !== optionIndex), // 옵션 인덱스로 삭제
+    }));
   };
 
   // 선택옵션
@@ -180,14 +155,34 @@ function EditOptionPage() {
   const handleDeleteDetailOption = async (optionIndex, detailIndex) => {
     const optionDetailId =
       ProductInfo.optionList[optionIndex].optionDetailList[detailIndex]
-        .optionDetailId; // 삭제할 상세 옵션의 ID
-    const businessId = localStorage.getItem("businessId"); // 로컬 스토리지에서 businessId 가져오기
+        .optionDetailId; // 상세 옵션 ID
 
-    // 상세 옵션 아이디 확인
-    console.log("삭제할 상세 옵션 ID:", optionDetailId);
+    // 상세 옵션 아이디가 0이면 (새로운 옵션) UI에서만 제거
+    if (optionDetailId === 0) {
+      setProductInfo(prev => {
+        const updatedOptionList = prev.optionList.map((option, idx) => {
+          if (idx === optionIndex) {
+            return {
+              ...option,
+              optionDetailList: option.optionDetailList.filter(
+                (_, idx) => idx !== detailIndex,
+              ),
+            };
+          }
+          return option;
+        });
+        return {
+          ...prev,
+          optionList: updatedOptionList,
+        };
+      });
+      return; // 서버 요청 없이 함수 종료
+    }
 
-    if (!optionDetailId || !businessId) {
-      console.error("optionDetailId 또는 businessId가 없습니다.");
+    // businessId가 없으면 오류 처리
+    const businessId = localStorage.getItem("businessId");
+    if (!businessId) {
+      console.error("businessId가 없습니다.");
       return;
     }
 
@@ -202,8 +197,8 @@ function EditOptionPage() {
 
       // 삭제된 상세 옵션을 UI에서 제거
       setProductInfo(prev => {
-        const updatedOptionList = prev.optionList.map((option, index) => {
-          if (index === optionIndex) {
+        const updatedOptionList = prev.optionList.map((option, idx) => {
+          if (idx === optionIndex) {
             return {
               ...option,
               optionDetailList: option.optionDetailList.filter(
@@ -335,7 +330,7 @@ function EditOptionPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => handleDeleteOption(option.optionId)}
+                        onClick={() => handleDeleteOption(optionIndex)}
                       >
                         삭제
                       </button>
