@@ -15,14 +15,14 @@ function MessageCenter() {
   const [cookies] = useCookies(["roomId"]);
   const roomId = cookies.roomId;
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [connected, setConnected] = useState<boolean>(false);
+  // const [connected, setConnected] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  // const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   // const roomId = useRecoilValue(checkRoom);
 
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
@@ -62,7 +62,7 @@ function MessageCenter() {
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
-        setConnected(true);
+        // setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
       };
@@ -175,7 +175,7 @@ function MessageCenter() {
 
       ws.onclose = () => {
         console.log("웹소켓 연결 종료");
-        setConnected(false);
+        // setConnected(false);
         setSocket(null);
 
         // 재연결 시도
@@ -329,7 +329,7 @@ function MessageCenter() {
   };
 
   const handleRoomSelect = (roomId: number) => {
-    setSelectedRoomId(roomId);
+    // setSelectedRoomId(roomId);
     setCookie("roomId", roomId, {
       path: "/",
       expires: new Date(Date.now() + 6 * 60 * 60 * 1000),

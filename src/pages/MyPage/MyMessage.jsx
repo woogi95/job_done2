@@ -64,101 +64,39 @@ function ContactUs() {
 
       ws.onmessage = event => {
         console.log("웹소켓에서 수신한 데이터:", event.data);
-        console.log("웹소켓에서 수신한 데이터:", event);
+
+        // 메시지 처리 로직 간소화
+        const handleMessage = messageData => {
+          setMessages(prevMessages => {
+            // 중복 메시지 체크
+            const isDuplicate = prevMessages.some(
+              msg =>
+                (msg.message === messageData.message ||
+                  msg.pic === messageData.pic) &&
+                msg.username === messageData.username,
+            );
+            return isDuplicate ? prevMessages : [...prevMessages, messageData];
+          });
+        };
 
         try {
-          let messageData;
-          console.log("Raw message received:", event.data);
-
           if (event.data instanceof Blob) {
             const reader = new FileReader();
             reader.onload = () => {
               try {
-                messageData = JSON.parse(reader.result);
-                // if (!messageData.username) {
-                //   messageData.username = username;
-                // }
-                console.log("Parsed Blob message:", messageData);
-                setMessages(prevMessages => {
-                  const isDuplicate = prevMessages.some(
-                    msg =>
-                      msg.message === messageData.message &&
-                      msg.username === messageData.username &&
-                      JSON.stringify(msg.file) ===
-                        JSON.stringify(messageData.file),
-                  );
-                  return isDuplicate
-                    ? prevMessages
-                    : [...prevMessages, messageData];
-                });
+                const messageData = JSON.parse(reader.result);
+                handleMessage(messageData);
               } catch (error) {
                 console.error("Blob 데이터 파싱 에러:", error);
               }
             };
             reader.readAsText(event.data);
-          } else if (event.data instanceof ArrayBuffer) {
-            const decoder = new TextDecoder();
-            const jsonStr = decoder.decode(event.data);
-            messageData = JSON.parse(jsonStr);
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed ArrayBuffer message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
           } else {
-            const rawData = event.data;
-            if (
-              typeof rawData === "string" &&
-              rawData.startsWith("새 메세지: ")
-            ) {
-              messageData = JSON.parse(rawData.substring(6));
-            } else {
-              messageData = JSON.parse(rawData);
-            }
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed string message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
-          }
-
-          // 디버깅용 로그
-          if (messageData) {
-            console.log("수신된 메시지:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data
-                      ? messageData.file.data.substring(0, 50) + "..."
-                      : null,
-                  }
-                : null,
-            });
+            const messageData = JSON.parse(event.data);
+            handleMessage(messageData);
           }
         } catch (error) {
           console.error("메시지 파싱 에러:", error);
-          console.log("파싱 실패한 원본 데이터:", event.data);
         }
       };
 
@@ -171,18 +109,16 @@ function ContactUs() {
         setConnected(false);
         setSocket(null);
 
-        // 재연결 시도
         if (reconnectAttempts < maxReconnectAttempts) {
           console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
+          setTimeout(connectWebSocket, 3000);
         }
       };
     };
 
     connectWebSocket();
 
-    // 컴포넌트 언마운트 시 연결 종료
     return () => {
       if (ws) {
         ws.close();
@@ -428,51 +364,45 @@ function ContactUs() {
             ref={messageContainerRef}
             className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
           >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.flag === 1 ? "self-end" : "self-start"
-                } gap-[10px] py-[15px]`}
-              >
-                {msg.flag === 0 && (
-                  <img
-                    src={`${IMAGE_BASE_URL}${msg.logo}`}
-                    alt="Profile"
-                    className="w-[45px] h-[45px] rounded-full"
-                  />
-                )}
-                <span
-                  className={`flex flex-col justify-center items-start max-w-[240px] ${
-                    msg.flag === 1
-                      ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
-                      : "bg-white rounded-tr-[8px]"
-                  } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+            {messages.map((msg, index) => {
+              console.log(`Message ${index}:`, msg.pic); // 메시지 데이터 로깅 추가
+              return (
+                <div
+                  key={index}
+                  className={`flex ${
+                    msg.flag === 1 ? "self-end" : "self-start"
+                  } gap-[10px] py-[15px]`}
                 >
-                  <div className="m-4 break-all whitespace-pre-wrap">
-                    {msg.message !== "" ? msg.message : null}
-                  </div>
-                  {msg.file && msg.file.data && (
-                    <div className="mt-2">
-                      <img
-                        src={`data:${msg.file.type};base64,${msg.file.data}`}
-                        alt={msg.file.name}
-                        className="max-w-[200px] rounded-lg p-[5px]"
-                      />
-                    </div>
+                  {msg.flag === 0 && (
+                    <img
+                      src={`${IMAGE_BASE_URL}${msg.logo}`}
+                      alt="Profile"
+                      className="w-[45px] h-[45px] rounded-full"
+                    />
                   )}
-                  {msg.pics && msg.pics.length > 0 && (
-                    <div className="mx-4 mb-4">
-                      <img
-                        src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
-                        alt={msg.pics[0].name}
-                        className="max-w-[200px] rounded p-[px]"
-                      />
+                  <span
+                    className={`flex flex-col justify-center items-start max-w-[240px] ${
+                      msg.flag === 1
+                        ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
+                        : "bg-white rounded-tr-[8px]"
+                    } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+                  >
+                    <div className="m-4 break-all whitespace-pre-wrap">
+                      {msg.message}
                     </div>
-                  )}
-                </span>
-              </div>
-            ))}
+                    {msg.pic && (
+                      <div className="mt-2">
+                        <img
+                          src={`${IMAGE_BASE_URL}${msg.pic}`}
+                          alt="Uploaded content"
+                          className="max-w-[200px] rounded-lg p-[5px]"
+                        />
+                      </div>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           {/* 메시지 입력 영역 */}

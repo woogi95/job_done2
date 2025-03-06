@@ -36,31 +36,55 @@ function TestMessage() {
       };
 
       ws.onmessage = event => {
+        console.log("WebSocket message received:", event);
+        console.log("Event data type:", typeof event.data);
+        console.log("Event data:", event.data);
+
         try {
           let messageData;
           console.log("Raw message received:", event.data);
+
+          const processMessage = parsedData => {
+            console.log("Parsed message data:", parsedData);
+            if (!parsedData.username) {
+              parsedData.username = username;
+            }
+
+            // 중복 메시지 검사 로직 개선
+            setMessages(prevMessages => {
+              const isDuplicate = prevMessages.some(
+                msg =>
+                  msg.message === parsedData.message &&
+                  msg.username === parsedData.username &&
+                  ((!msg.file && !parsedData.file) ||
+                    JSON.stringify(msg.file) ===
+                      JSON.stringify(parsedData.file)),
+              );
+
+              if (!isDuplicate) {
+                // 새로운 메시지 추가
+                const newMessages = [...prevMessages, parsedData];
+
+                // 스크롤 처리
+                setTimeout(() => {
+                  if (messageContainerRef.current) {
+                    messageContainerRef.current.scrollTop =
+                      messageContainerRef.current.scrollHeight;
+                  }
+                }, 0);
+
+                return newMessages;
+              }
+              return prevMessages;
+            });
+          };
 
           if (event.data instanceof Blob) {
             const reader = new FileReader();
             reader.onload = () => {
               try {
                 messageData = JSON.parse(reader.result);
-                if (!messageData.username) {
-                  messageData.username = username;
-                }
-                console.log("Parsed Blob message:", messageData);
-                setMessages(prevMessages => {
-                  const isDuplicate = prevMessages.some(
-                    msg =>
-                      msg.message === messageData.message &&
-                      msg.username === messageData.username &&
-                      JSON.stringify(msg.file) ===
-                        JSON.stringify(messageData.file),
-                  );
-                  return isDuplicate
-                    ? prevMessages
-                    : [...prevMessages, messageData];
-                });
+                processMessage(messageData);
               } catch (error) {
                 console.error("Blob 데이터 파싱 에러:", error);
               }
@@ -70,21 +94,7 @@ function TestMessage() {
             const decoder = new TextDecoder();
             const jsonStr = decoder.decode(event.data);
             messageData = JSON.parse(jsonStr);
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed ArrayBuffer message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
+            processMessage(messageData);
           } else {
             const rawData = event.data;
             if (
@@ -95,21 +105,7 @@ function TestMessage() {
             } else {
               messageData = JSON.parse(rawData);
             }
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed string message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
+            processMessage(messageData);
           }
 
           // 디버깅용 로그
@@ -127,8 +123,9 @@ function TestMessage() {
             });
           }
         } catch (error) {
-          console.error("메시지 파싱 에러:", error);
-          console.log("파싱 실패한 원본 데이터:", event.data);
+          console.error("메시지 처리 중 에러 발생:", error);
+          console.error("에러 스택:", error.stack);
+          console.log("원본 데이터:", event.data);
         }
       };
 

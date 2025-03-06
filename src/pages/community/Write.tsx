@@ -94,7 +94,7 @@ function Write() {
   const qaTypeList = async () => {
     try {
       const res = await loginApi.get("/api/qa/qaTypeId", {
-        params: { qaTypeId: 4 },
+        params: { qaTypeId: 5 },
       });
       setQaTypes(res.data.resultData);
     } catch (error) {
@@ -102,7 +102,7 @@ function Write() {
     }
   };
 
-  const forumWrite = async () => {};
+  // const forumWrite = async () => {};
 
   useEffect(() => {
     qaTypeList();
