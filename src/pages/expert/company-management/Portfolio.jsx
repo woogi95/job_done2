@@ -147,6 +147,7 @@ function Portfolio() {
         <AddPortfolio
           setIsPopPfAdd={setIsPopPfAdd}
           deletePortfolio={deletePortfolio}
+          getPortfolioList={getPortfolioList}
         />
       ) : (
         <></>
@@ -156,6 +157,7 @@ function Portfolio() {
           portfolioDetailInfo={portfolioDetailInfo}
           setIsPopPfEdit={setIsPopPfEdit}
           portfolioId={selectedPortfolioId}
+          getPortfolioList={getPortfolioList}
         />
       ) : (
         <></>

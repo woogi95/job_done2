@@ -2,29 +2,45 @@ import styled from "@emotion/styled";
 // 예약 페이지
 export const ExpertListPageDiv = styled.div`
   padding: 30px 20px;
+  position: relative;
   h2.tit {
     font-size: 28px;
     font-weight: 600;
     padding: 20px 0;
+  }
+  .pagination {
+    /* position: absolute; */
+    display: flex;
+    /* bottom: 75px;
+    left: 50%;
+    transform: translateX(-50%); */
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* 버튼 사이 간격 */
+    margin: 35px 0 0;
   }
 `;
 // 예약 컨텐츠
 export const EListContDiv = styled.div`
   padding: 25px 20px;
   background-color: #fff;
+  min-height: calc(100% - 100px);
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 `;
 // 예약리스트
 export const ExportListDiv = styled.div`
-  padding: 10px 0;
+  padding: 10px 0 0;
+  /* border: 1px solid; */
+  min-height: calc(100vh - 390px);
+  border-bottom: 1px solid #eee;
   .tr {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 10px;
+    padding: 12px 10px;
     border-bottom: 1px dotted #ececec;
     /* 항목이름 */
     &:nth-of-type(1) {

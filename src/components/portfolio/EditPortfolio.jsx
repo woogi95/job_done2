@@ -11,7 +11,12 @@ import { loginApi } from "../../apis/login";
 
 const BASE_URL = "112.222.157.157:5234";
 
-const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
+const AddPortfolio = ({
+  setIsPopPfEdit,
+  portfolioDetailInfo,
+  portfolioId,
+  getPortfolioList,
+}) => {
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const businessState = useRecoilValue(businessDetailState);
@@ -114,7 +119,7 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
 
       if (res.data) {
         console.log("Success:", res.data);
-
+        getPortfolioList();
         setIsPopPfEdit(false);
       }
     } catch (error) {

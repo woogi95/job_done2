@@ -6,7 +6,7 @@ import {
 } from "../reservation-management/reservationMangement";
 import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../../atoms/businessAtom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 // import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../../apis/login";
@@ -14,40 +14,47 @@ import { Pagination } from "antd";
 import PaymentHistory from "../../../components/papers/PaymentHistory";
 
 function Index() {
+  const [isPaymentHistoryOpen, setIsPaymentHistoryOpen] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
+  const itemsPerPage = 10;
+
   const businessId = localStorage.getItem("businessId");
-  // const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
-  const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
-  const [isPaymentHistoryOpen, setIsPaymentHistoryOpen] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
-
-  const getStatusList = async (businessId, status) => {
-    console.log("businessId, status", businessId, status);
-    try {
-      const res = await loginApi.get(
-        `/api/service?business_id=${businessId}&status=${status}&page=${currentPage}&size=${itemsPerPage}`,
-      );
-
-      console.log("0000", res.data);
-      setReservationData(res.data.resultData);
-      setTotalItems(res.data.totalCount);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [pagination, setPagination] = useState({
+    all: { currentPage: 1, totalItems: 0 },
+    2: { currentPage: 1, totalItems: 0 },
+    6: { currentPage: 1, totalItems: 0 },
+  });
 
   useEffect(() => {
-    if (businessDetail) {
-      getStatusList(businessId, status);
+    if (businessId) {
+      fetchReservationData(businessId, status, currentPage);
     }
-  }, [currentPage, itemsPerPage]);
+  }, [businessId, status, currentPage]);
+
+  const fetchReservationData = async (businessId, statusFilter, page) => {
+    try {
+      const url = `/api/service?business_id=${businessId}&status=${2}&page=${page}&size=${itemsPerPage}`;
+      const res = await loginApi.get(url);
+      setReservationData(res.data.resultData);
+      setPagination(prev => ({
+        ...prev,
+        [statusFilter]: {
+          currentPage: page,
+          totalItems: res.data.totalCount || 0,
+        },
+      }));
+      console.log("API 호출 URL:", url);
+    } catch (error) {
+      console.error("API 호출 에러:", error);
+    }
+  };
 
   useEffect(() => {
     console.log("businessDetail", businessDetail);
@@ -56,14 +63,64 @@ function Index() {
 
   const handleSearch = e => {
     e.preventDefault();
-    setAppliedSearchTerm(searchTerm);
+    setAppliedSearchQuery(searchQuery);
     setCurrentPage(1);
   };
 
-  const handleStatusFilter = filter => {
-    setStatusFilter(filter);
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch(e);
+    }
+  };
+
+  const filteredData = useMemo(() => {
+    let filtered = reservationData;
+
+    if (statusFilter === "2") {
+      filtered = filtered.filter(item => item.completed === 2);
+    } else if (statusFilter === "6") {
+      filtered = filtered.filter(item => item.completed === 6);
+    }
+
+    if (appliedSearchQuery) {
+      filtered = filtered.filter(
+        item =>
+          item.userName.includes(appliedSearchQuery) ||
+          item.address.includes(appliedSearchQuery) ||
+          item.startDate.includes(appliedSearchQuery),
+      );
+    }
+
+    console.log("필터링된 데이터 (filteredData):", filtered);
+    return filtered;
+  }, [reservationData, statusFilter, appliedSearchQuery]);
+
+  const currentPagination = {
+    currentPage: pagination[statusFilter]?.currentPage || 1,
+    totalItems: filteredData.length,
+  };
+
+  const startIndex = (currentPagination.currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredData.slice(startIndex, endIndex);
+
+  console.log("현재 페이지 데이터 (currentItems):", currentItems);
+
+  const handleStatusFilter = status => {
+    setStatusFilter(status);
     setCurrentPage(1);
   };
+
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    if (businessId) {
+      fetchReservationData(businessId, statusFilter, currentPage);
+    }
+  }, [currentPage]);
 
   const handlePaymentHistoryClick = serviceId => {
     setSelectedServiceId(serviceId);
@@ -74,25 +131,16 @@ function Index() {
     setIsPaymentHistoryOpen(false);
   };
 
-  const filteredData = reservationData.filter(item => {
-    const statusMatch =
-      statusFilter === "all" ||
-      (statusFilter === "2" && item.completed === 2) || // 결제대기
-      (statusFilter === "6" && item.completed === 6); // 결제완료
-
-    const searchMatch =
-      appliedSearchTerm === "" ||
-      item.userName.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
-      item.address.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
-      item.startDate.includes(appliedSearchTerm);
-
-    return statusMatch && searchMatch;
-  });
-
-  const currentItems = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  const getStatusText = completed => {
+    switch (completed) {
+      case 2:
+        return "결제대기"; // Payment Pending
+      case 6:
+        return "결제완료"; // Payment Completed
+      default:
+        return "미정"; // Undefined
+    }
+  };
 
   return (
     <ExpertListPageDiv>
@@ -104,8 +152,9 @@ function Index() {
               <label htmlFor="search">
                 <input
                   type="text"
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   placeholder="이름, 주소, 예약날짜로 검색"
                 />
               </label>
@@ -115,7 +164,7 @@ function Index() {
           <ul className="btn-area">
             <li>
               <button
-                className={`completed3 ${statusFilter === "2" ? "active" : ""}`}
+                className={`completed0 ${statusFilter === "2" ? "active" : ""}`}
                 onClick={() => handleStatusFilter("2")}
               >
                 결제대기
@@ -148,8 +197,11 @@ function Index() {
             <li className="th">결제상황</li>
             <li className="th">결제내역</li>
           </ul>
-          {currentItems.map(reservation => (
-            <ul className="tr" key={reservation.serviceId}>
+          {currentItems.map((reservation, index) => (
+            <ul
+              key={`${reservation.serviceId}-${reservation.createdAt}-${index}`}
+              className="tr"
+            >
               <li className="td">{reservation.startDate || "N/A"}</li>
               <li className="td">{reservation.address || "N/A"}</li>
               <li className="td black">{reservation.price}</li>
@@ -160,7 +212,7 @@ function Index() {
                     reservation.completed === 6 ? "completed5" : "completed3"
                   }
                 >
-                  {reservation.completed === 6 ? "결제완료" : "결제대기"}
+                  {getStatusText(reservation.completed)}
                 </p>
               </li>
               <li className="td btn-area">
@@ -179,10 +231,13 @@ function Index() {
           ))}
         </ExportPaymentListDiv>
         <Pagination
-          total={filteredData.length}
-          pageSize={itemsPerPage}
-          current={currentPage}
-          onChange={setCurrentPage}
+          className="pagination"
+          currentPage={currentPagination.currentPage}
+          totalItems={filteredData.length}
+          current={currentPagination.currentPage} // currentPage 사용
+          total={currentPagination.totalItems} // totalItems 사용
+          pageSize={itemsPerPage} // 한 페이지에 보여줄 아이템 수
+          onChange={handlePageChange} // 페이지 변경 시 호출
         />
       </EListContDiv>
       {isPaymentHistoryOpen && (
