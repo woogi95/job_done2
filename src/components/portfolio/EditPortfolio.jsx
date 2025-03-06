@@ -269,15 +269,17 @@ const AddPortfolio = ({ setIsPopPfEdit, portfolioDetailInfo, portfolioId }) => {
               </li>
 
               {/* 5개의 이미지 슬롯 */}
-              {filePreviews.map((file, index) => (
+              {[...Array(5)].map((_, index) => (
                 <li key={index}>
                   <div
                     className="slot"
                     style={{
-                      backgroundImage: file ? `url(${file.preview})` : "none",
+                      backgroundImage: filePreviews[index]
+                        ? `url(${filePreviews[index].preview})`
+                        : "none",
                     }}
                   >
-                    {file && (
+                    {filePreviews[index] && (
                       <button
                         className="del-preview"
                         onClick={() => handleRemoveFile(index)}
