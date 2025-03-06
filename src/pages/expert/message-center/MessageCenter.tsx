@@ -182,7 +182,7 @@ function MessageCenter() {
         if (reconnectAttempts < maxReconnectAttempts) {
           console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
+          setTimeout(connectWebSocket, 5000);
         }
       };
     };
@@ -343,6 +343,7 @@ function MessageCenter() {
       const res = await loginApi.delete("/api/room", {
         data: {
           roomId: roomId,
+          businessId: localStorage.getItem("businessId"),
         },
       });
       console.log("삭제 결과", res.data);
@@ -449,31 +450,31 @@ function MessageCenter() {
               <div
                 key={index}
                 className={`flex gap-[10px] ${
-                  msg.flag === 1 ? "justify-end" : "justify-start"
+                  msg.flag === 1 ? "justify-start" : "justify-end"
                 } mb-4`}
               >
                 {msg.flag === 1 && (
                   <img
                     src={`${IMAGE_BASE_URL}${msg.logo}`}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover order-2"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                 )}
                 <div
                   className={`flex ${
-                    msg.flag === 1 ? "flex-row-reverse" : "flex-row"
+                    msg.flag === 1 ? "flex-row" : "flex-row-reverse"
                   } gap-3 max-w-[80%]`}
                 >
                   <div
                     className={`flex flex-col ${
-                      msg.flag === 0 ? "items-start" : "items-end"
+                      msg.flag === 1 ? "items-start" : "items-end"
                     }`}
                   >
                     <div
                       className={`p-3 rounded-lg ${
-                        msg.flag === 0
-                          ? "bg-[#F0F4FF] text-gray-800 rounded-bl-none"
-                          : "bg-[#34C5F0] text-white rounded-br-none"
+                        msg.flag === 1
+                          ? "bg-[#F0F4FF] text-gray-800 rounded-br-none"
+                          : "bg-[#34C5F0] text-white rounded-bl-none"
                       } shadow-sm`}
                     >
                       <div className="text-sm break-words whitespace-pre-wrap">
