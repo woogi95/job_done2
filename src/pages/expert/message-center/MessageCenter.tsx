@@ -15,14 +15,14 @@ function MessageCenter() {
   const [cookies] = useCookies(["roomId"]);
   const roomId = cookies.roomId;
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [connected, setConnected] = useState<boolean>(false);
+  // const [connected, setConnected] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  // const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   // const roomId = useRecoilValue(checkRoom);
 
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
@@ -62,7 +62,7 @@ function MessageCenter() {
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
-        setConnected(true);
+        // setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
       };
@@ -175,14 +175,14 @@ function MessageCenter() {
 
       ws.onclose = () => {
         console.log("웹소켓 연결 종료");
-        setConnected(false);
+        // setConnected(false);
         setSocket(null);
 
         // 재연결 시도
         if (reconnectAttempts < maxReconnectAttempts) {
           console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
+          setTimeout(connectWebSocket, 5000);
         }
       };
     };
@@ -329,7 +329,7 @@ function MessageCenter() {
   };
 
   const handleRoomSelect = (roomId: number) => {
-    setSelectedRoomId(roomId);
+    // setSelectedRoomId(roomId);
     setCookie("roomId", roomId, {
       path: "/",
       expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
@@ -343,6 +343,7 @@ function MessageCenter() {
       const res = await loginApi.delete("/api/room", {
         data: {
           roomId: roomId,
+          businessId: localStorage.getItem("businessId"),
         },
       });
       console.log("삭제 결과", res.data);
@@ -449,31 +450,31 @@ function MessageCenter() {
               <div
                 key={index}
                 className={`flex gap-[10px] ${
-                  msg.flag === 1 ? "justify-end" : "justify-start"
+                  msg.flag === 1 ? "justify-start" : "justify-end"
                 } mb-4`}
               >
                 {msg.flag === 1 && (
                   <img
                     src={`${IMAGE_BASE_URL}${msg.logo}`}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover order-2"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                 )}
                 <div
                   className={`flex ${
-                    msg.flag === 1 ? "flex-row-reverse" : "flex-row"
+                    msg.flag === 1 ? "flex-row" : "flex-row-reverse"
                   } gap-3 max-w-[80%]`}
                 >
                   <div
                     className={`flex flex-col ${
-                      msg.flag === 0 ? "items-start" : "items-end"
+                      msg.flag === 1 ? "items-start" : "items-end"
                     }`}
                   >
                     <div
                       className={`p-3 rounded-lg ${
-                        msg.flag === 0
-                          ? "bg-[#F0F4FF] text-gray-800 rounded-bl-none"
-                          : "bg-[#34C5F0] text-white rounded-br-none"
+                        msg.flag === 1
+                          ? "bg-[#F0F4FF] text-gray-800 rounded-br-none"
+                          : "bg-[#34C5F0] text-white rounded-bl-none"
                       } shadow-sm`}
                     >
                       <div className="text-sm break-words whitespace-pre-wrap">

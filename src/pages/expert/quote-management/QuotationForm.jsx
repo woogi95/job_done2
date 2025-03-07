@@ -89,7 +89,7 @@ function QuotationForm() {
         endDate: endDate?.format("YYYY/MM/DD"),
         pyeong: papersInfo?.pyeong || 0,
         etc: additionalQuotes.map(quote => ({
-          etcId: quote.id ? quote.id : null,
+          // etcId: quote.id,
           etcPrice: Number(quote.price) || 0,
           etcComment: quote.content,
         })),

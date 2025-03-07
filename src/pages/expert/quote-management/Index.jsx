@@ -9,26 +9,21 @@ import { useEffect, useState, useMemo } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { Pagination } from "antd";
-import ExpertReservation from "../../../components/papers/ExpertReservation";
 
 function Index() {
-  const [isReservationPop, setIsReservationPop] = useState(false);
-  const [seletedServiceId, setSeletedServiceId] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState("all"); // 상태 필터
-  const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
-  const [appliedSearchQuery, setAppliedSearchQuery] = useState(""); // 적용된 검색어 상태
-  const itemsPerPage = 10;
-
   const businessId = localStorage.getItem("businessId");
+  const navigate = useNavigate();
+  const status = useRecoilValue(statusAtom);
+  const [cookies, setCookie] = useCookies(["serviceId"]);
   const [reservationData, setReservationData] = useState([]);
-  const [pagination, setPagination] = useState({
-    all: { currentPage: 1, totalItems: 0 },
-    0: { currentPage: 1, totalItems: 0 },
-    2: { currentPage: 1, totalItems: 0 },
-  });
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
+  const getStatusList = async (businessId, status) => {
 
-  const getStatusList = async (businessId, page) => {
     try {
       const url = `/api/service?business_id=${businessId}&status=1&page=${page}&size=${itemsPerPage}`;
       const res = await loginApi.get(url);
@@ -44,7 +39,6 @@ function Index() {
       console.log("API 호출 에러:", error);
     }
   };
-
   useEffect(() => {
     if (businessId) {
       getStatusList(businessId, currentPage);
@@ -60,7 +54,8 @@ function Index() {
       default:
         return "전체보기";
     }
-  };
+
+  }, []);
 
   const handleSearch = e => {
     e.preventDefault();
@@ -68,42 +63,55 @@ function Index() {
     setCurrentPage(1); // 검색 시 페이지를 1로 초기화
   };
 
-  const handleKeyPress = e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSearch(e); // 엔터키로 검색 실행
+  const handleStatusFilter = filter => {
+    setStatusFilter(filter);
+    setCurrentPage(1);
+  };
+  const filteredData = reservationData.filter(item => {
+    const statusMatch =
+      statusFilter === "all" ||
+      (statusFilter === "0" && item.completed === 0) || // 작성대기 (completed: 2)
+      (statusFilter === "2" && item.completed === 2); // 견적완료 (completed: 6)
+    const searchMatch =
+      appliedSearchTerm === "" ||
+      item.userName.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+      item.detailTypeName
+        .toLowerCase()
+        .includes(appliedSearchTerm.toLowerCase()) ||
+      item.createdAt.includes(appliedSearchTerm) ||
+      item.startDate.includes(appliedSearchTerm);
+    return statusMatch && searchMatch;
+  });
+  console.log("필터링된 데이터 (filteredData):", filteredData);
+  console.log("현재 필터 상태 (statusFilter):", statusFilter);
+  console.log("적용된 검색어 (appliedSearchTerm):", appliedSearchTerm);
+  const currentItems = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
+  const stateChange = async serviceId => {
+    try {
+      const res = await loginApi.patch("/api/service", {
+        completed: 1,
+        serviceId: serviceId,
+        businessId: businessId,
+      });
+      console.log("상태 변경 성공:", res.data);
+    } catch (error) {
+      console.log("API 에러:", error);
     }
   };
 
-  const filteredData = useMemo(() => {
-    let filtered = reservationData;
+  const getStatusText = completed => {
+    switch (completed) {
+      case 0:
+        return "작성대기";
+      case 2:
+        return "견적완료";
+      default:
+        return "미정";
 
-    // 상태 필터링
-    if (statusFilter === "2") {
-      filtered = filtered.filter(item => item.completed === 2);
-    } else if (statusFilter === "0") {
-      filtered = filtered.filter(item => item.completed === 0);
-    } else if (statusFilter === "all") {
-      // 전체보기
-      filtered = reservationData;
-    }
-
-    // 검색어 필터링
-    if (appliedSearchQuery) {
-      filtered = filtered.filter(
-        item =>
-          item.userName
-            .toLowerCase()
-            .includes(appliedSearchQuery.toLowerCase()) ||
-          item.businessName
-            .toLowerCase()
-            .includes(appliedSearchQuery.toLowerCase()) ||
-          item.detailTypeName
-            .toLowerCase()
-            .includes(appliedSearchQuery.toLowerCase()) ||
-          item.createdAt.includes(appliedSearchQuery) ||
-          item.startDate.includes(appliedSearchQuery),
-      );
     }
 
     return filtered;
@@ -127,7 +135,6 @@ function Index() {
     setCurrentPage(page); // 페이지 변경 시 currentPage 업데이트
     getStatusList(businessId, page); // 해당 페이지의 데이터를 가져옴
   };
-
   return (
     <ExpertListPageDiv>
       <h2 className="tit">견적관리</h2>
@@ -206,8 +213,15 @@ function Index() {
               <li className="td blue btn-area">
                 <button
                   onClick={() => {
-                    setSeletedServiceId(reservation.serviceId);
-                    setIsReservationPop(true);
+
+                    setCookie("serviceId", reservation.serviceId, {
+                      path: "/",
+                    });
+                    if (reservation.completed === 2) {
+                      stateChange(reservation.serviceId);
+                    }
+                    navigate("/expert/quote-management/quotation-form");
+
                   }}
                 >
                   신청서

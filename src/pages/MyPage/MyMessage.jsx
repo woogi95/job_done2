@@ -60,105 +60,26 @@ function ContactUs() {
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
+
+        // 연결 성공 시 기존 메시지 요청
+        fetchChatMessages(roomId);
       };
 
-      ws.onmessage = event => {
+      ws.onmessage = async event => {
         console.log("웹소켓에서 수신한 데이터:", event.data);
-        console.log("웹소켓에서 수신한 데이터:", event);
 
         try {
-          let messageData;
-          console.log("Raw message received:", event.data);
+          // Blob 데이터인 경우 바로 텍스트로 변환
+          const messageText =
+            event.data instanceof Blob ? await event.data.text() : event.data;
 
-          if (event.data instanceof Blob) {
-            const reader = new FileReader();
-            reader.onload = () => {
-              try {
-                messageData = JSON.parse(reader.result);
-                // if (!messageData.username) {
-                //   messageData.username = username;
-                // }
-                console.log("Parsed Blob message:", messageData);
-                setMessages(prevMessages => {
-                  const isDuplicate = prevMessages.some(
-                    msg =>
-                      msg.message === messageData.message &&
-                      msg.username === messageData.username &&
-                      JSON.stringify(msg.file) ===
-                        JSON.stringify(messageData.file),
-                  );
-                  return isDuplicate
-                    ? prevMessages
-                    : [...prevMessages, messageData];
-                });
-              } catch (error) {
-                console.error("Blob 데이터 파싱 에러:", error);
-              }
-            };
-            reader.readAsText(event.data);
-          } else if (event.data instanceof ArrayBuffer) {
-            const decoder = new TextDecoder();
-            const jsonStr = decoder.decode(event.data);
-            messageData = JSON.parse(jsonStr);
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed ArrayBuffer message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
-          } else {
-            const rawData = event.data;
-            if (
-              typeof rawData === "string" &&
-              rawData.startsWith("새 메세지: ")
-            ) {
-              messageData = JSON.parse(rawData.substring(6));
-            } else {
-              messageData = JSON.parse(rawData);
-            }
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed string message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
-          }
+          // JSON 파싱
+          const messageData = JSON.parse(messageText);
 
-          // 디버깅용 로그
-          if (messageData) {
-            console.log("수신된 메시지:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data
-                      ? messageData.file.data.substring(0, 50) + "..."
-                      : null,
-                  }
-                : null,
-            });
-          }
+          // 메시지 즉시 추가 (중복 체크 없이 바로 추가)
+          setMessages(prevMessages => [...prevMessages, messageData]);
         } catch (error) {
-          console.error("메시지 파싱 에러:", error);
-          console.log("파싱 실패한 원본 데이터:", event.data);
+          console.error("메시지 처리 에러:", error);
         }
       };
 
@@ -171,18 +92,16 @@ function ContactUs() {
         setConnected(false);
         setSocket(null);
 
-        // 재연결 시도
         if (reconnectAttempts < maxReconnectAttempts) {
           console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
+          setTimeout(connectWebSocket, 3000);
         }
       };
     };
 
     connectWebSocket();
 
-    // 컴포넌트 언마운트 시 연결 종료
     return () => {
       if (ws) {
         ws.close();
@@ -218,10 +137,8 @@ function ContactUs() {
               roomId: roomId,
               message: inputMessage,
               file: fileData,
-              // contents: inputMessage,
             };
 
-            // JSON을 문자열로 변환
             const jsonString = JSON.stringify(messageData);
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
@@ -247,17 +164,12 @@ function ContactUs() {
             flag: 1,
             roomId: roomId,
             message: inputMessage,
-            // contents: inputMessage,
           };
 
-          // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
-
-          // 로컬 메시지 목록에 추가 (즉시 화면에 표시)
-          setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
         setInputMessage("");
@@ -428,51 +340,45 @@ function ContactUs() {
             ref={messageContainerRef}
             className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
           >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.flag === 1 ? "self-end" : "self-start"
-                } gap-[10px] py-[15px]`}
-              >
-                {msg.flag === 0 && (
-                  <img
-                    src={`${IMAGE_BASE_URL}${msg.logo}`}
-                    alt="Profile"
-                    className="w-[45px] h-[45px] rounded-full"
-                  />
-                )}
-                <span
-                  className={`flex flex-col justify-center items-start max-w-[240px] ${
-                    msg.flag === 1
-                      ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
-                      : "bg-white rounded-tr-[8px]"
-                  } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+            {messages.map((msg, index) => {
+              // console.log(`Message ${index}:`, msg.pic); // 메시지 데이터 로깅 추가
+              return (
+                <div
+                  key={index}
+                  className={`flex ${
+                    msg.flag === 1 ? "self-end" : "self-start"
+                  } gap-[10px] py-[15px]`}
                 >
-                  <div className="m-4 break-all whitespace-pre-wrap">
-                    {msg.message !== "" ? msg.message : null}
-                  </div>
-                  {msg.file && msg.file.data && (
-                    <div className="mt-2">
-                      <img
-                        src={`data:${msg.file.type};base64,${msg.file.data}`}
-                        alt={msg.file.name}
-                        className="max-w-[200px] rounded-lg p-[5px]"
-                      />
-                    </div>
+                  {msg.flag === 0 && (
+                    <img
+                      src={`${IMAGE_BASE_URL}${msg.logo}`}
+                      alt="Profile"
+                      className="w-[45px] h-[45px] rounded-full"
+                    />
                   )}
-                  {msg.pics && msg.pics.length > 0 && (
-                    <div className="mx-4 mb-4">
-                      <img
-                        src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
-                        alt={msg.pics[0].name}
-                        className="max-w-[200px] rounded p-[px]"
-                      />
+                  <span
+                    className={`flex flex-col justify-center items-start max-w-[240px] ${
+                      msg.flag === 1
+                        ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
+                        : "bg-white rounded-tr-[8px]"
+                    } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+                  >
+                    <div className="m-4 break-all whitespace-pre-wrap">
+                      {msg.message}
                     </div>
-                  )}
-                </span>
-              </div>
-            ))}
+                    {msg.pic && (
+                      <div className="mt-2">
+                        <img
+                          src={`${IMAGE_BASE_URL}${msg.pic}`}
+                          alt="Uploaded content"
+                          className="max-w-[200px] rounded-lg p-[5px]"
+                        />
+                      </div>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           {/* 메시지 입력 영역 */}
