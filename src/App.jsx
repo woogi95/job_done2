@@ -39,6 +39,7 @@ import EditCompanyInfo from "./pages/expert/company-management/EditCompanyInfo";
 import EditDetailPage from "./pages/expert/company-management/EditDetailPage";
 import ExpertDetailPage from "./pages/expert/company-management/ExpertDetailPage";
 import Portfolio from "./pages/expert/company-management/Portfolio";
+import ExpertPaymentHistory from "./pages/expert/company-management/ExpertPaymentHistory";
 // 예약관리
 import ReservationList from "./pages/expert/reservation-management/Index";
 // 견적관리
@@ -174,6 +175,10 @@ function App() {
               <Route path="createoption" element={<CreateOptionPage />} />
               <Route path="editoption" element={<EditOptionPage />} />
               <Route path="createdetail" element={<CreateDetailPage />} />
+              <Route
+                path="paymenthistory/:serviceId"
+                element={<ExpertPaymentHistory />}
+              />
             </Route>
             {/* 예약관리 */}
             <Route path="/expert/reservation-management">
