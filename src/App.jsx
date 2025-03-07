@@ -10,7 +10,6 @@ import PasswordEmail from "./pages/auth/login/PasswordEmail";
 import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
 import SignUpDone from "./pages/auth/login/SignUpDone";
 import SignUpPage from "./pages/auth/login/SignUpPage";
-
 import MyPage from "./pages/mypage/Index";
 import MyMessage from "./pages/mypage/MyMessage";
 import MyReservation from "./pages/mypage/MyReservation";
@@ -88,6 +87,7 @@ import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage
 import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
 import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
+import AlertTestPage from "./pages/AlertTestPage";
 
 function App() {
   return (
@@ -98,6 +98,7 @@ function App() {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/fe/redirect" element={<OAuth2Handler />} />
         <Route path="/test-spinner" element={<TestSpinner />} />
+        <Route path="/alerttest" element={<AlertTestPage />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />

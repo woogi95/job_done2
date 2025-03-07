@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import { useQuery } from "@tanstack/react-query";
+import { Alert } from "@chakra-ui/react";
 
 interface Region {
   regionId: number;
@@ -84,6 +85,7 @@ const Index = () => {
   useEffect(() => {
     // console.log("추천 글 상태 업데이트:", companies);
   }, [companies]);
+
   return (
     <div className="pt-[80px] min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
       {/* 이벤트 배너 배경 */}
