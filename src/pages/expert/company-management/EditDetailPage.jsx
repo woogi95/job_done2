@@ -102,10 +102,6 @@ function EditDetailPage() {
     });
   };
 
-  const handleCancel = () => {
-    navigate("/expert/company-management");
-  };
-
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -171,9 +167,11 @@ function EditDetailPage() {
   );
   return (
     <EditDetailDiv>
-      <div className="inner">
+      <div className="inner inner-bg">
         <h1>상세페이지 수정</h1>
-        <div style={{ width: "80%", margin: "0 auto" }}>
+        <div
+          style={{ width: "80%", margin: "0 auto", backgroundColor: "#fff" }}
+        >
           <form onSubmit={handleSubmit}>
             <div className="btn-area">
               <button type="submit">저장</button>

@@ -327,6 +327,7 @@ export const ExpertOptionInfoDiv = styled.div`
               /* border: 1px solid #ddd; */
               width: 200px;
               text-align: right;
+              font-style: normal;
             }
           }
           button {
@@ -348,7 +349,7 @@ export const PortfolioListDiv = styled(EListContDiv)`
   flex-wrap: wrap;
   max-height: calc(100% - 100px);
   min-height: calc(100% - 100px);
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: flex-start;
   overflow-y: auto;
   & > div {
@@ -446,6 +447,10 @@ export const EditDetailDiv = styled.div`
     max-width: 1280px;
     margin: 0 auto;
     border: 1px solid #eee;
+    background-color: #fff;
+    height: 100%;
+  }
+  .inner-bg {
     background-color: #fff;
   }
   h1 {
@@ -651,6 +656,13 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
       .basic-price {
         width: auto;
       }
+    }
+  }
+  .op-item p {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 `;

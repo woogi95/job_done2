@@ -36,8 +36,8 @@ function Index() {
       setPagination(prev => ({
         ...prev,
         all: {
-          currentPage: page, // 현재 페이지 업데이트
-          totalItems: res.data.totalCount || 0, // 전체 아이템 수 업데이트
+          currentPage: page,
+          totalItems: res.data.totalCount || 0,
         },
       }));
     } catch (error) {
@@ -47,7 +47,7 @@ function Index() {
 
   useEffect(() => {
     if (businessId) {
-      getStatusList(businessId, currentPage); // 현재 페이지를 파라미터로 전달
+      getStatusList(businessId, currentPage);
     }
   }, [businessId, currentPage]);
 
@@ -64,7 +64,7 @@ function Index() {
 
   const handleSearch = e => {
     e.preventDefault();
-    setAppliedSearchQuery(searchQuery); // 검색어 적용
+    setAppliedSearchQuery(searchQuery);
     setCurrentPage(1); // 검색 시 페이지를 1로 초기화
   };
 
@@ -80,13 +80,11 @@ function Index() {
 
     // 상태 필터링
     if (statusFilter === "2") {
-      // 견적완료: completed가 2인 경우만 필터링
       filtered = filtered.filter(item => item.completed === 2);
     } else if (statusFilter === "0") {
-      // 작성대기: completed가 0인 경우만 필터링
       filtered = filtered.filter(item => item.completed === 0);
     } else if (statusFilter === "all") {
-      // 전체보기: 모든 데이터를 보여줌
+      // 전체보기
       filtered = reservationData;
     }
 
@@ -199,7 +197,7 @@ function Index() {
               <li className="td">
                 <p
                   className={
-                    reservation.completed === 0 ? "completed3" : "completed1"
+                    reservation.completed === 0 ? "completed0" : "completed1"
                   }
                 >
                   {getStatusText(reservation.completed)}

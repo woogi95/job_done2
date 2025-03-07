@@ -12,6 +12,7 @@ import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { Pagination } from "antd";
 import PaymentHistory from "../../../components/papers/PaymentHistory";
+import { useNavigate } from "react-router-dom";
 
 function Index() {
   const [isPaymentHistoryOpen, setIsPaymentHistoryOpen] = useState(false);
@@ -21,7 +22,7 @@ function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
   const itemsPerPage = 10;
-
+  const navigate = useNavigate();
   const businessId = localStorage.getItem("businessId");
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
@@ -125,6 +126,7 @@ function Index() {
   const handlePaymentHistoryClick = serviceId => {
     setSelectedServiceId(serviceId);
     setIsPaymentHistoryOpen(true);
+    navigate(`/expert/company-management/paymenthistory/${serviceId}`);
   };
 
   const closePaymentHistory = () => {
@@ -134,11 +136,11 @@ function Index() {
   const getStatusText = completed => {
     switch (completed) {
       case 2:
-        return "결제대기"; // Payment Pending
+        return "결제대기";
       case 6:
-        return "결제완료"; // Payment Completed
+        return "결제완료";
       default:
-        return "미정"; // Undefined
+        return "미정";
     }
   };
 

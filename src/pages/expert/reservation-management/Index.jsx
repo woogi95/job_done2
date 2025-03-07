@@ -117,8 +117,8 @@ function Index() {
       filtered = filtered.filter(
         item =>
           item.userName.includes(appliedSearchQuery) ||
-          item.businessName.includes(appliedSearchQuery) ||
-          item.detailTypeName.includes(appliedSearchQuery),
+          item.createdAt.includes(appliedSearchQuery) ||
+          item.startDate.includes(appliedSearchQuery),
       );
     }
 

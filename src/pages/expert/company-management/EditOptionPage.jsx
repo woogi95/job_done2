@@ -13,17 +13,21 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { businessDetailState } from "../../../atoms/businessAtom";
 import { loginApi } from "../../../apis/login";
 import { ProductState } from "../../../atoms/productAtom";
+import { useNavigate } from "react-router-dom";
 const priceSchema = yup.object({
   productPrice: yup.number(),
 });
 
 function EditOptionPage() {
+  const navigate = useNavigate();
   const [options, setOptions] = useState([]);
   const [newOptionName, setNewOptionName] = useState("");
   const [detailOptions, setDetailOptions] = useState({});
   const productbasicPrice = useRecoilValue(businessDetailState);
   const ProductInfo = useRecoilValue(ProductState);
-  const [productPrice, setProductPrice] = useState(productbasicPrice.price);
+  const [productPrice, setProductPrice] = useState(
+    productbasicPrice?.price || 0, // 기본값으로 0 설정
+  );
   const setProductInfo = useSetRecoilState(ProductState);
   //   console.log(productbasicPrice.price);
   const {
@@ -46,21 +50,24 @@ function EditOptionPage() {
     }
 
     // options 데이터 변환
-    const transformedOptions = options.map(option => ({
-      optionId: option.optionId || 0, // 기존 optionId가 있으면 사용, 없으면 0 (insert)
-      optionName: option.name,
-      optionDetails:
-        option.details.map(detail => ({
-          optionDetailId: detail.optionDetailId || 0, // 기존 optionDetailId가 있으면 사용, 없으면 0 (insert)
-          optionDetailName: detail.name,
-          optionDetailPrice: detail.price,
-        })) || [], // details가 없어도 빈 배열 유지
+    const transformedOptions = ProductInfo.optionList.map(option => ({
+      optionId: option.optionId || 0, // 옵션 ID 포함
+      optionName: option.optionName,
+      optionDetails: option.optionDetailList.map(detail => ({
+        optionDetailId: detail.optionDetailId || 0, // 상세 옵션 ID 포함
+        optionDetailName: detail.optionDetailName,
+        optionDetailPrice: detail.optionDetailPrice,
+      })),
     }));
 
     const requestData = {
       price: Number(data.productPrice),
-      productId: ProductInfo.productId, // 필수값
+      productId: ProductInfo.productId,
       options: transformedOptions,
+      productName: ProductInfo.productName,
+      productDescription: ProductInfo.productDescription,
+      categoryId: ProductInfo.categoryId,
+      businessId: ProductInfo.businessId,
     };
 
     try {
@@ -70,6 +77,7 @@ function EditOptionPage() {
         ...prev,
         productPrice: data.productPrice,
       }));
+      navigate("/expert/company-management");
     } catch (error) {
       console.error("API 오류:", error);
     }
@@ -135,10 +143,41 @@ function EditOptionPage() {
   };
   // 옵션명
   const handleDeleteOption = async optionIndex => {
-    setProductInfo(prev => ({
-      ...prev,
-      optionList: prev.optionList.filter((_, idx) => idx !== optionIndex), // 옵션 인덱스로 삭제
-    }));
+    const optionId = ProductInfo.optionList[optionIndex].optionId; // 옵션 ID 가져오기
+
+    // 새로운 옵션일 경우 (optionId가 0) UI에서만 제거
+    if (optionId === 0) {
+      setProductInfo(prev => ({
+        ...prev,
+        optionList: prev.optionList.filter((_, idx) => idx !== optionIndex),
+      }));
+      return;
+    }
+
+    // businessId가 없으면 오류 처리
+    const businessId = localStorage.getItem("businessId");
+    if (!businessId) {
+      console.error("businessId가 없습니다.");
+      return;
+    }
+
+    try {
+      const res = await loginApi.delete("/api/product/option", {
+        data: {
+          businessId: Number(businessId),
+          optionId: optionId,
+        },
+      });
+      console.log("옵션 삭제 성공:", res.data);
+
+      // 삭제된 옵션을 UI에서 제거
+      setProductInfo(prev => ({
+        ...prev,
+        optionList: prev.optionList.filter((_, idx) => idx !== optionIndex),
+      }));
+    } catch (error) {
+      console.error("옵션 삭제 실패:", error);
+    }
   };
 
   // 선택옵션
@@ -247,7 +286,7 @@ function EditOptionPage() {
     if (productbasicPrice?.price) {
       setProductPrice(productbasicPrice.price);
     }
-  }, [productbasicPrice.price]);
+  }, [productbasicPrice]);
 
   // ProductState의 옵션 데이터를 컴포넌트의 options 상태로 변환하여 로드
   useEffect(() => {
@@ -340,7 +379,9 @@ function EditOptionPage() {
                         <li className="op-item" key={detailIndex}>
                           <p>
                             <span>{detail.optionDetailName}</span>
-                            <em>{detail.optionDetailPrice.toLocaleString()}</em>
+                            <em>
+                              {detail.optionDetailPrice.toLocaleString()} 원
+                            </em>
                             <button
                               type="button"
                               onClick={() =>
