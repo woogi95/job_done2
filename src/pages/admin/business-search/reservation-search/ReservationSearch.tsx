@@ -10,6 +10,7 @@ import {
 } from "../category-search/categorysearchs";
 
 interface BusiServiceCountType {
+  id: number;
   businessName: string;
   detailTypeName: string;
   totalServiceCount: number;
@@ -24,7 +25,17 @@ const ReservationSearch = () => {
     try {
       const res = await axios.get("/api/business/serviceCount/byAdmin");
       if (res.data.resultData) {
-        setCountList(res.data.resultData);
+        const data = res.data.resultData.map(
+          (item: BusiServiceCountType, index: number) => ({
+            id: index + 1,
+            businessName: item.businessName,
+            detailTypeName: item.detailTypeName,
+            totalServiceCount: item.totalServiceCount,
+            thisMonthServiceCount: item.thisMonthServiceCount,
+          }),
+        );
+
+        setCountList(data);
       }
     } catch (error) {
       console.log(error);
@@ -43,6 +54,7 @@ const ReservationSearch = () => {
         <TableContainer>
           <thead>
             <tr>
+              <th>번호</th>
               <th>업체 이름</th>
               <th>세부 유형</th>
               <th>총 예약 수</th>
@@ -57,6 +69,7 @@ const ReservationSearch = () => {
             ) : (
               currentData.map(business => (
                 <tr key={business.businessName}>
+                  <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.detailTypeName}</td>
                   <td>{business.totalServiceCount}</td>

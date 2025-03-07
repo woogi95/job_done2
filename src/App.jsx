@@ -53,7 +53,7 @@ import ScheduleList from "./pages/expert/schedule-management/Index";
 // 고객문의
 
 // 리뷰센터
-import ReviewCenter from "./pages/expert/review-center/Index";
+import ReviewCenter from "./pages/expert/review-center/ReviewCenter";
 // 통계
 import TestPage from "./TestPage";
 import PaymentFailed from "./components/PaymentFailed";

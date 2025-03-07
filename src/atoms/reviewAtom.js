@@ -51,3 +51,17 @@ export const reviewPicsList = atom({
   key: " reviewPicsList",
   default: [],
 });
+
+export const selectReviewAtom = atom({
+  key: "selectReviewAtom ",
+  default: {
+    reviewId: 0,
+    id: 0,
+    userName: 0,
+    detailTypeName: "",
+    createdAt: "",
+    score: 0,
+    replyStatus: {},
+    contents: "",
+  },
+});

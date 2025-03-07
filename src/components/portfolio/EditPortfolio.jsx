@@ -270,9 +270,10 @@ const AddPortfolio = ({
                   onClick={() => document.getElementById("files").click()}
                 >
 
+
                   파일 선택
 
-                </button>
+               </button>
               </li>
 
               {/* 5개의 이미지 슬롯 */}

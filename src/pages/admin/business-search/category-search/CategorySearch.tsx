@@ -14,8 +14,10 @@ import {
   modalStyle,
   overlayStyle,
 } from "./categorysearchs";
+import { loginApi } from "../../../../apis/login";
 
 type BusinessType = {
+  id: number;
   businessId: number;
   businessName: string;
   categoryName: string;
@@ -42,7 +44,8 @@ const CategorySearch = () => {
       const resData = res.data.resultData;
 
       // ✅ 올바르게 객체 리스트를 저장
-      const filterData = resData.map((item: BusinessType) => ({
+      const filterData = resData.map((item: BusinessType, index: number) => ({
+        id: index + 1,
         businessId: item.businessId,
         businessName: item.businessName,
         categoryName: item.categoryName,
@@ -73,7 +76,7 @@ const CategorySearch = () => {
   // category 등록
   const postCategory = async (data: string) => {
     try {
-      const res = await axios.post("/api/category", {
+      const res = await loginApi.post("/api/category", {
         categoryName: data,
       });
       if (res.data.resultData === 1) {
@@ -96,52 +99,27 @@ const CategorySearch = () => {
 
   return (
     <RequestBusiContainer>
-      <div
-        style={{
-          display: "flex",
-          fontSize: "36px",
-          padding: "5px",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      >
-        등록 요청 업체 목록
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          marginBottom: "20px",
-        }}
-      >
-        <button
-          style={{ border: "2px solid black", width: "10%", padding: "3px" }}
-          onClick={() => setCateModal(true)}
-        >
-          카테고리 등록
-        </button>
-        <select
-          value={cateState}
-          onChange={e => setCateState(e.target.value)}
-          style={{ border: "2px solid black", borderRadius: "6px" }}
-        >
-          <option value="">전체</option>
-          {categoryList.map(item => (
-            <option key={item.categoryId} value={item.categoryName}>
-              {item.categoryName}
-            </option>
-          ))}
-        </select>
-      </div>
-
       <TableWrapper>
         <TableContainer>
           <thead>
             <tr>
-              <th>업체 ID</th>
+              <th>번호</th>
               <th>업체 이름</th>
-              <th>카테고리</th>
+              <th>
+                카테고리{" "}
+                <select
+                  value={cateState}
+                  onChange={e => setCateState(e.target.value)}
+                  style={{ border: "1px solid black", borderRadius: "6px" }}
+                >
+                  <option value="">전체</option>
+                  {categoryList.map(item => (
+                    <option key={item.categoryId} value={item.categoryName}>
+                      {item.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </th>
               <th>세부 유형</th>
             </tr>
           </thead>
@@ -153,7 +131,7 @@ const CategorySearch = () => {
             ) : (
               currentData.map(business => (
                 <tr key={business.businessId}>
-                  <td>{business.businessId}</td>
+                  <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.categoryName}</td>
                   <td>{business.detailTypeName}</td>
@@ -165,19 +143,40 @@ const CategorySearch = () => {
       </TableWrapper>
 
       {/* ✅ 페이지네이션 UI 추가 */}
-      {maxPage > 1 && (
-        <PaginationContainer>
-          {[...Array(maxPage)].map((_, index) => (
-            <PageButton
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
-              active={currentPage === index + 1}
-            >
-              {index + 1}
-            </PageButton>
-          ))}
-        </PaginationContainer>
-      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          marginTop: "20px",
+          alignItems: "center",
+        }}
+      >
+        <button
+          style={{
+            border: "2px solid black",
+            width: "10%",
+            padding: "3px",
+            height: "30px",
+          }}
+          onClick={() => setCateModal(true)}
+        >
+          카테고리 등록
+        </button>
+        {maxPage > 1 && (
+          <PaginationContainer style={{ alignItems: "center" }}>
+            {[...Array(maxPage)].map((_, index) => (
+              <PageButton
+                key={index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+                active={currentPage === index + 1}
+              >
+                {index + 1}
+              </PageButton>
+            ))}
+          </PaginationContainer>
+        )}
+      </div>
 
       {cateModal && (
         <div style={overlayStyle}>

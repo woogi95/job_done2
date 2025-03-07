@@ -177,41 +177,12 @@ const RequestBusi = () => {
       <div
         style={{
           display: "flex",
-          fontSize: "36px",
-          padding: "5px",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      >
-        등록 요청 업체 목록
-      </div>
-      <div
-        style={{
-          display: "flex",
           gap: "15px",
           justifyContent: "flex-end",
           width: "100%",
           marginBottom: "20px",
         }}
-      >
-        <StateListButton
-          onClick={() => {
-            getAllData();
-            setStateList(null);
-          }}
-        >
-          전체 보기
-        </StateListButton>
-        <StateListButton onClick={() => setStateList(100)}>
-          수락 대기
-        </StateListButton>
-        <StateListButton onClick={() => setStateList(101)}>
-          수락 완료
-        </StateListButton>
-        <StateListButton onClick={() => setStateList(120)}>
-          취소
-        </StateListButton>
-      </div>
+      ></div>
       <TableWrapper>
         <TableContainer>
           <thead>
@@ -221,7 +192,25 @@ const RequestBusi = () => {
               <th>서비스 종류</th>
               <th>신청자</th>
               <th>업체 이름</th>
-              <th>진행 상태</th>
+              <th>
+                <select
+                  value={stateList ?? ""} // stateList가 null일 경우 빈 값으로 설정
+                  onChange={e =>
+                    setStateList(e.target.value ? Number(e.target.value) : null)
+                  }
+                  style={{
+                    border: "1px solid black",
+                    borderRadius: "6px",
+                    padding: "2px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="">전체 보기</option>
+                  <option value="100">수락 대기</option>
+                  <option value="101">수락 완료</option>
+                  <option value="120">요청 취소</option>
+                </select>
+              </th>
             </tr>
           </thead>
           <tbody>
