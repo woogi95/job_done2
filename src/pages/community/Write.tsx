@@ -1,42 +1,45 @@
-import { m } from "framer-motion";
-import React, { useState } from "react";
+import { Select } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../apis/login";
-import { RxCross2 } from "react-icons/rx";
+import { ImageInfoType, QaType } from "../../types/WriteQa";
 
 function Write() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [previewImages, setPreviewImages] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [imageInfo, setImageInfo] = useState([]);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
+  const [qaTypes, setQaTypes] = useState<QaType[]>([]);
+  const [qaSelectTypeId, setQaSelectTypeId] = useState<number>(0);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: 게시글 저장 로직 구현
     navigate("/forum");
   };
 
-  const handleImageUpload = event => {
-    const files = Array.from(event.target.files);
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
     setSelectedImages(prevImages => [...prevImages, ...files]);
 
     const newPreviews = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
   };
 
-  const correctReviewImg = async picId => {
+  const correctReviewImg = async (picId: number) => {
     try {
       const res = await loginApi.put("/api/review/state", {
         reviewPicId: picId,
       });
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleRemoveImage = async index => {
+  const handleRemoveImage = async (index: number) => {
     if (index < imageInfo.length) {
       const newImageInfo = [...imageInfo];
       const removedImage = newImageInfo[index];
@@ -74,22 +77,59 @@ function Write() {
     try {
       const res = await loginApi.post("/api/qa", {
         p: {
-          qaTypeDetailId: 0,
-          contents: "",
-          qaReportReason: "",
-          qaTargetId: 0,
+          qaTypeDetailId: qaSelectTypeId,
+          title: title,
+          contents: content,
+          qaReportReason: "USERREPORT",
+          // qaTargetId: 0,
         },
-        pics: [""],
+        pics: selectedImages.length > 0 ? previewImages : [""],
       });
+      console.log(res.data);
+      navigate("/forum");
     } catch (error) {
       console.error("게시글 작성 실패:", error);
     }
   };
 
+  const qaTypeList = async () => {
+    try {
+      const res = await loginApi.get("/api/qa/qaTypeId", {
+        params: { qaTypeId: 5 },
+      });
+      setQaTypes(res.data.resultData);
+    } catch (error) {
+      console.error("게시글 작성 실패:", error);
+    }
+  };
+
+  // const forumWrite = async () => {};
+
+  useEffect(() => {
+    qaTypeList();
+  }, []);
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container max-w-[600px] mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">게시글 작성</h1>
+        <h1 className="flex justify-center items-center min-w-[150px] mb-10 text-2xl font-bold text-gray-800">
+          게시글 작성
+        </h1>
+        <div className="flex justify-center items-center mb-6">
+          <span className="flex justify-end items-center min-w-[100px] font-thin w-full">
+            사유 선택
+          </span>
+          <Select
+            className="flex !w-[275px] !h-[30px] text-[16px] font-thin ml-auto"
+            onChange={e => setQaSelectTypeId(Number(e.target.value))}
+          >
+            {qaTypes.map(item => (
+              <option key={item.qaTypeDetailId} value={item.qaTypeDetailId}>
+                {item.qaDetailReason}
+              </option>
+            ))}
+          </Select>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -98,7 +138,7 @@ function Write() {
               placeholder="제목을 입력하세요"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3887FF]"
             />
           </div>
 
@@ -107,11 +147,11 @@ function Write() {
               placeholder="내용을 입력하세요"
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg h-64 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-lg h-64 resize-none focus:outline-none focus:ring-2 focus:ring-[#3887FF]"
             />
           </div>
           <div className="flex justify-center items-center">
-            <label className="flex w-[110px] items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
+            <label className="flex w-[120px] text-[16px] font-thin items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
               이미지 추가
               <input
                 type="file"
@@ -145,17 +185,18 @@ function Write() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-center gap-2">
             <button
               type="button"
               onClick={() => navigate("/forum")}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+              className="flex justify-center items-center px-10 py-2 border rounded-lg hover:bg-gray-100 text-[18px] font-thin"
             >
               취소
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="flex justify-center items-center px-10 py-2 bg-[#3887FF] text-white border rounded-lg hover:bg-[#3887FF] text-[18px] font-thin"
+              onClick={writeQa}
             >
               등록
             </button>

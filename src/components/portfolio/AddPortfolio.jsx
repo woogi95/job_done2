@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 
-const AddPortfolio = ({ setIsPopPfAdd }) => {
+const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
   // 파일 객체와 미리보기 URL을 함께 저장
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
@@ -98,6 +98,9 @@ const AddPortfolio = ({ setIsPopPfAdd }) => {
       if (res.data) {
         console.log("Success:", res.data);
         setPortfolioId(res.data.resultData);
+        // 포트폴리오 목록 갱신
+        await getPortfolioList();
+        // 모달 닫기
         setIsPopPfAdd(false);
       }
     } catch (error) {

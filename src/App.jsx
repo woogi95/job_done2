@@ -39,6 +39,7 @@ import EditCompanyInfo from "./pages/expert/company-management/EditCompanyInfo";
 import EditDetailPage from "./pages/expert/company-management/EditDetailPage";
 import ExpertDetailPage from "./pages/expert/company-management/ExpertDetailPage";
 import Portfolio from "./pages/expert/company-management/Portfolio";
+import ExpertPaymentHistory from "./pages/expert/company-management/ExpertPaymentHistory";
 // 예약관리
 import ReservationList from "./pages/expert/reservation-management/Index";
 // 견적관리
@@ -67,26 +68,26 @@ import TestMessage from "./pages/mypage/TestMessage";
 import UserReservLook from "./pages/mypage/UserReservLook";
 import ContactUs from "./pages/servicepage/ContactUs";
 
+import Maptest from "./Maptest";
 import AdminLayout from "./components/admin/AdminLayout";
+import JobDoneHistory from "./components/papers/JobDoneHistory";
+import OCRUploader from "./pages/OCRUploader";
+import TestSpinner from "./pages/TestSpinner";
 import AdminMain from "./pages/admin/AdminMain";
+import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 import ReservationSearch from "./pages/admin/business-search/reservation-search/ReservationSearch";
 import RevenueSearch from "./pages/admin/business-search/revenue-search/RevenueSearch";
 import RequestBusi from "./pages/admin/request/business/RequestBusi";
 import UserOneByOne from "./pages/admin/user/onebyone/UserOneByOne";
 import UserReport from "./pages/admin/user/report/UserReport";
 import UserList from "./pages/admin/user/userlist/UserList";
-import Write from "./pages/community/Write";
-import JobDoneHistory from "./components/papers/JobDoneHistory";
-import OCRUploader from "./pages/OCRUploader";
-import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
-import TestSpinner from "./pages/TestSpinner";
-import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import OAuth2Handler from "./pages/auth/login/OAuth2Handler";
-import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
-import Maptest from "./Maptest";
-import MessageCenter from "./pages/expert/message-center/MessageCenter";
-import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 import Forum from "./pages/community/Forum";
+import Write from "./pages/community/Write";
+import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage";
+import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
+import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
+import MessageCenter from "./pages/expert/message-center/MessageCenter";
 
 function App() {
   return (
@@ -174,6 +175,10 @@ function App() {
               <Route path="createoption" element={<CreateOptionPage />} />
               <Route path="editoption" element={<EditOptionPage />} />
               <Route path="createdetail" element={<CreateDetailPage />} />
+              <Route
+                path="paymenthistory/:serviceId"
+                element={<ExpertPaymentHistory />}
+              />
             </Route>
             {/* 예약관리 */}
             <Route path="/expert/reservation-management">

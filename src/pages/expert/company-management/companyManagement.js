@@ -327,6 +327,7 @@ export const ExpertOptionInfoDiv = styled.div`
               /* border: 1px solid #ddd; */
               width: 200px;
               text-align: right;
+              font-style: normal;
             }
           }
           button {
@@ -344,9 +345,17 @@ export const ExpertOptionInfoDiv = styled.div`
 export const PortfolioListDiv = styled(EListContDiv)`
   border: 1px solid #eee;
   display: flex;
-  gap: 30px;
+  gap: 27px;
+  flex-wrap: wrap;
   max-height: calc(100% - 100px);
-  overflow: auto;
+  min-height: calc(100% - 100px);
+  justify-content: flex-start;
+  align-content: flex-start;
+  overflow-y: auto;
+  & > div {
+    margin-bottom: 10px; // 줄 간의 간격 조절
+  }
+  /* border: 1px solid #000; */
 `;
 export const PortfolioListItemDiv = styled.div`
   width: calc((100% - 90px) / 4);
@@ -438,6 +447,10 @@ export const EditDetailDiv = styled.div`
     max-width: 1280px;
     margin: 0 auto;
     border: 1px solid #eee;
+    background-color: #fff;
+    height: 100%;
+  }
+  .inner-bg {
     background-color: #fff;
   }
   h1 {
@@ -598,52 +611,58 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
     display: flex;
     align-items: center;
     width: 100%;
-    form {
-      width: 100%;
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    label {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      label {
+      border: 1px solid #eaeef1;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      width: 100%;
+      b {
+        width: 120px;
         display: flex;
-        border: 1px solid #eaeef1;
         align-items: center;
-        gap: 10px;
-        font-size: 15px;
-        font-weight: 600;
-        color: #333;
-        width: 100%;
-        b {
-          width: 120px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          background-color: #eaeef1;
-          padding: 10px;
-        }
-        em {
-          font-size: 13px;
-          font-weight: 400;
-          color: #555;
-        }
-        span {
-          border-radius: 30px;
-          background-color: #333;
-          color: #fff;
-          font-size: 13px;
-          padding: 7px 16px 8px;
-        }
-        input {
-          border: 0;
-          background-color: transparent;
-          font-size: 15px;
-          font-weight: 400;
-          color: #555;
-        }
-        .basic-price {
-          width: auto;
-        }
+        justify-content: center;
+        text-align: center;
+        background-color: #eaeef1;
+        padding: 10px;
       }
+      em {
+        font-size: 13px;
+        font-weight: 400;
+        color: #555;
+      }
+      span {
+        border-radius: 30px;
+        background-color: #333;
+        color: #fff;
+        font-size: 13px;
+        padding: 7px 16px 8px;
+      }
+      input {
+        border: 0;
+        background-color: transparent;
+        font-size: 15px;
+        font-weight: 400;
+        color: #555;
+      }
+      .basic-price {
+        width: auto;
+      }
+    }
+  }
+  .op-item p {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 `;
