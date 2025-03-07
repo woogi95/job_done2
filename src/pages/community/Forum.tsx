@@ -11,7 +11,7 @@ function Forum() {
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-bold mb-2">광고 배너</h3>
           <p className="text-sm text-gray-600">
-            여기에 광고 내용이 들어갑니다.
+            <img src={`./images/fastblack2.jpg`} alt="광고 배너" />
           </p>
         </div>
       </div>
@@ -96,7 +96,7 @@ function Forum() {
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-bold mb-2">광고 배너</h3>
           <p className="text-sm text-gray-600">
-            여기에 광고 내용이 들어갑니다.
+            <img src={`./images/fastblack2.jpg`} alt="광고 배너" />
           </p>
         </div>
       </div>

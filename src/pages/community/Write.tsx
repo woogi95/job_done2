@@ -80,12 +80,13 @@ function Write() {
           qaTypeDetailId: qaSelectTypeId,
           title: title,
           contents: content,
-          // qaReportReason: "SERVICE",
+          qaReportReason: "USERREPORT",
           // qaTargetId: 0,
         },
-        // pics: [""],
+        pics: selectedImages.length > 0 ? previewImages : [""],
       });
       console.log(res.data);
+      navigate("/forum");
     } catch (error) {
       console.error("게시글 작성 실패:", error);
     }

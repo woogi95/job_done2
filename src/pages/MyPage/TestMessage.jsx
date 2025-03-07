@@ -50,32 +50,19 @@ function TestMessage() {
               parsedData.username = username;
             }
 
-            // 중복 메시지 검사 로직 개선
+            // 메시지 추가를 즉시 처리하고, 스크롤도 즉시 업데이트
             setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === parsedData.message &&
-                  msg.username === parsedData.username &&
-                  ((!msg.file && !parsedData.file) ||
-                    JSON.stringify(msg.file) ===
-                      JSON.stringify(parsedData.file)),
-              );
+              const newMessages = [...prevMessages, parsedData];
 
-              if (!isDuplicate) {
-                // 새로운 메시지 추가
-                const newMessages = [...prevMessages, parsedData];
+              // 스크롤 처리
+              setTimeout(() => {
+                if (messageContainerRef.current) {
+                  messageContainerRef.current.scrollTop =
+                    messageContainerRef.current.scrollHeight;
+                }
+              }, 0);
 
-                // 스크롤 처리
-                setTimeout(() => {
-                  if (messageContainerRef.current) {
-                    messageContainerRef.current.scrollTop =
-                      messageContainerRef.current.scrollHeight;
-                  }
-                }, 0);
-
-                return newMessages;
-              }
-              return prevMessages;
+              return newMessages;
             });
           };
 

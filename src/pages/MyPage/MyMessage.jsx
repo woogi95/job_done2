@@ -60,43 +60,26 @@ function ContactUs() {
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
+
+        // 연결 성공 시 기존 메시지 요청
+        fetchChatMessages(roomId);
       };
 
-      ws.onmessage = event => {
+      ws.onmessage = async event => {
         console.log("웹소켓에서 수신한 데이터:", event.data);
 
-        // 메시지 처리 로직 간소화
-        const handleMessage = messageData => {
-          setMessages(prevMessages => {
-            // 중복 메시지 체크
-            const isDuplicate = prevMessages.some(
-              msg =>
-                (msg.message === messageData.message ||
-                  msg.pic === messageData.pic) &&
-                msg.username === messageData.username,
-            );
-            return isDuplicate ? prevMessages : [...prevMessages, messageData];
-          });
-        };
-
         try {
-          if (event.data instanceof Blob) {
-            const reader = new FileReader();
-            reader.onload = () => {
-              try {
-                const messageData = JSON.parse(reader.result);
-                handleMessage(messageData);
-              } catch (error) {
-                console.error("Blob 데이터 파싱 에러:", error);
-              }
-            };
-            reader.readAsText(event.data);
-          } else {
-            const messageData = JSON.parse(event.data);
-            handleMessage(messageData);
-          }
+          // Blob 데이터인 경우 바로 텍스트로 변환
+          const messageText =
+            event.data instanceof Blob ? await event.data.text() : event.data;
+
+          // JSON 파싱
+          const messageData = JSON.parse(messageText);
+
+          // 메시지 즉시 추가 (중복 체크 없이 바로 추가)
+          setMessages(prevMessages => [...prevMessages, messageData]);
         } catch (error) {
-          console.error("메시지 파싱 에러:", error);
+          console.error("메시지 처리 에러:", error);
         }
       };
 
@@ -154,10 +137,8 @@ function ContactUs() {
               roomId: roomId,
               message: inputMessage,
               file: fileData,
-              // contents: inputMessage,
             };
 
-            // JSON을 문자열로 변환
             const jsonString = JSON.stringify(messageData);
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
@@ -183,17 +164,12 @@ function ContactUs() {
             flag: 1,
             roomId: roomId,
             message: inputMessage,
-            // contents: inputMessage,
           };
 
-          // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
-
-          // 로컬 메시지 목록에 추가 (즉시 화면에 표시)
-          setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
         setInputMessage("");
@@ -365,7 +341,7 @@ function ContactUs() {
             className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
           >
             {messages.map((msg, index) => {
-              console.log(`Message ${index}:`, msg.pic); // 메시지 데이터 로깅 추가
+              // console.log(`Message ${index}:`, msg.pic); // 메시지 데이터 로깅 추가
               return (
                 <div
                   key={index}

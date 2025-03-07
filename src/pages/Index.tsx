@@ -86,26 +86,6 @@ const Index = () => {
   }, [companies]);
   return (
     <div className="pt-[80px] min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
-      {/* 양쪽 광고 배너 */}
-      <div className="fixed top-0 left-0 h-full w-[200px] z-10">
-        <Link to="/ad1" className="block h-full">
-          <img
-            src="./images/ad/left_banner.jpg"
-            alt="왼쪽 광고"
-            className="w-full h-full object-cover"
-          />
-        </Link>
-      </div>
-      <div className="fixed top-0 right-0 h-full w-[200px] z-10">
-        <Link to="/ad2" className="block h-full">
-          <img
-            src="./images/ad/right_banner.jpg"
-            alt="오른쪽 광고"
-            className="w-full h-full object-cover"
-          />
-        </Link>
-      </div>
-
       {/* 이벤트 배너 배경 */}
       <div
         className="absolute inset-0 opacity-5 pointer-events-none"
