@@ -451,13 +451,17 @@ export const EditDetailDiv = styled.div`
     height: 100%;
   }
   .inner-bg {
-    background-color: #fff;
+    box-shadow:
+      rgba(0, 0, 0, 0.08) 0px 10px 15px -3px,
+      rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   }
   h1 {
     font-size: 38px;
     text-align: center;
     display: block;
     padding: 80px 0 40px;
+    color: #143c99;
+    font-weight: 600;
   }
 
   label {
@@ -476,6 +480,8 @@ export const EditDetailDiv = styled.div`
       background-color: #eaeef1;
       padding: 10px;
       color: #333;
+      background-color: #1f3d9b;
+      color: #fff;
     }
     input {
       /* border: 1px solid #eee; */
@@ -493,6 +499,7 @@ export const EditDetailDiv = styled.div`
   .ql-toolbar {
     border: 1px solid #2a58ad50;
     background-color: #eaeef1;
+    background-color: #f2f5ff;
   }
   .btn-area {
     display: flex;

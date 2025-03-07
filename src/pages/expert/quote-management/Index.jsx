@@ -10,6 +10,7 @@ import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { Pagination } from "antd";
 import ExpertReservation from "../../../components/papers/ExpertReservation";
+
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
   const [seletedServiceId, setSeletedServiceId] = useState(null);
@@ -18,6 +19,7 @@ function Index() {
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
   const [appliedSearchQuery, setAppliedSearchQuery] = useState(""); // 적용된 검색어 상태
   const itemsPerPage = 10;
+
   const businessId = localStorage.getItem("businessId");
   const [reservationData, setReservationData] = useState([]);
   const [pagination, setPagination] = useState({
@@ -25,6 +27,7 @@ function Index() {
     0: { currentPage: 1, totalItems: 0 },
     2: { currentPage: 1, totalItems: 0 },
   });
+
   const getStatusList = async (businessId, page) => {
     try {
       const url = `/api/service?business_id=${businessId}&status=1&page=${page}&size=${itemsPerPage}`;
@@ -41,11 +44,13 @@ function Index() {
       console.log("API 호출 에러:", error);
     }
   };
+
   useEffect(() => {
     if (businessId) {
       getStatusList(businessId, currentPage);
     }
   }, [businessId, currentPage]);
+
   const getStatusText = completed => {
     switch (completed) {
       case 0:
@@ -56,19 +61,23 @@ function Index() {
         return "전체보기";
     }
   };
+
   const handleSearch = e => {
     e.preventDefault();
     setAppliedSearchQuery(searchQuery);
     setCurrentPage(1); // 검색 시 페이지를 1로 초기화
   };
+
   const handleKeyPress = e => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleSearch(e); // 엔터키로 검색 실행
     }
   };
+
   const filteredData = useMemo(() => {
     let filtered = reservationData;
+
     // 상태 필터링
     if (statusFilter === "2") {
       filtered = filtered.filter(item => item.completed === 2);
@@ -78,6 +87,7 @@ function Index() {
       // 전체보기
       filtered = reservationData;
     }
+
     // 검색어 필터링
     if (appliedSearchQuery) {
       filtered = filtered.filter(
@@ -95,23 +105,29 @@ function Index() {
           item.startDate.includes(appliedSearchQuery),
       );
     }
+
     return filtered;
   }, [reservationData, statusFilter, appliedSearchQuery]);
+
   const currentPagination = {
     currentPage: pagination[statusFilter]?.currentPage || 1,
     totalItems: filteredData.length,
   };
+
   const startIndex = (currentPagination.currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
+
   const handleStatusFilter = status => {
     setStatusFilter(status);
     setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
   };
+
   const handlePageChange = page => {
     setCurrentPage(page); // 페이지 변경 시 currentPage 업데이트
     getStatusList(businessId, page); // 해당 페이지의 데이터를 가져옴
   };
+
   return (
     <ExpertListPageDiv>
       <h2 className="tit">견적관리</h2>
@@ -168,6 +184,7 @@ function Index() {
             <li className="th">견적현황</li>
             <li className="th">견적서</li>
           </ul>
+
           {currentItems.map((reservation, index) => (
             <ul key={`${reservation.serviceId}-${index}`} className="tr">
               <li className="td">{reservation.startDate || "미정"}</li>
@@ -199,6 +216,7 @@ function Index() {
             </ul>
           ))}
         </ExportListDiv>
+
         <Pagination
           className="pagination"
           currentPage={currentPagination.currentPage}
@@ -219,4 +237,5 @@ function Index() {
     </ExpertListPageDiv>
   );
 }
+
 export default Index;
