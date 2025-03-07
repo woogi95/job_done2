@@ -57,31 +57,64 @@ function Index() {
   };
   return (
     <div className="calendar-container">
-      <div className="calendar-header">
-        <h2>예약 일정</h2>
+      <div
+        className="calendar-header"
+        style={{ width: "100%", justifyContent: "center" }}
+      >
+        <div
+          style={{
+            width: "100%",
+            padding: "10px",
+            display: "flex",
+            justifyContent: "right",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                backgroundColor: "#b6b6b6",
+                border: "2px solid none",
+              }}
+            ></div>
+            <div>작업 완료</div>
+          </div>
+          <div></div>
+        </div>
       </div>
-      <FullCalendar
-        plugins={[dayGridPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{
-          left: `prev next today`,
-          center: "title",
-          right: "dayGridMonth,dayGridWeek,dayGridDay",
+      <div
+        style={{
+          padding: "10px",
+          height: "80%",
         }}
-        nowIndicator={true}
-        events={reserveInfo}
-        locale="ko"
-        height="100%"
-        aspectRatio={1.8}
-        eventDidMount={info => {
-          if ([7, 8, 9].includes(info.event.extendedProps.completed)) {
-            info.el
-              .querySelector(".fc-event-main")
-              .style.setProperty("background-color", "black", "important");
-          }
-        }}
-        eventClick={item => clickModal(item)}
-      />
+        className="calendar-div"
+      >
+        <FullCalendar
+          plugins={[dayGridPlugin]}
+          initialView="dayGridMonth"
+          headerToolbar={{
+            left: `prev next today`,
+            center: "title",
+            right: "dayGridMonth,dayGridWeek,dayGridDay",
+          }}
+          nowIndicator={true}
+          events={reserveInfo}
+          locale="ko"
+          height="100%"
+          aspectRatio={1.8}
+          eventDidMount={info => {
+            if ([7, 8, 9].includes(info.event.extendedProps.completed)) {
+              // ✅ 스타일 변경 (배경색)
+              info.el
+                .querySelector(".fc-event-main")
+                .style.setProperty("background-color", "#b6b6b6", "important");
+            }
+          }}
+          eventClick={item => clickModal(item)}
+        />
+      </div>
+
       {isModal && (
         <div
           className="modal"

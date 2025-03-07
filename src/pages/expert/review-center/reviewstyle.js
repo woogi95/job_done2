@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { CSSProperties } from "react";
 
 // 전체 컨테이너
 export const RequestBusiContainer = styled.div`
@@ -28,9 +27,8 @@ export const TableWrapper = styled.div`
 // 테이블 스타일
 export const TableContainer = styled.table`
   width: 100%;
-  max-width: 970px;
   border-collapse: collapse;
-  min-height: 100%;
+
   th {
     background: #f8f9fa;
     color: #a0a3ab;
@@ -54,13 +52,17 @@ export const TableContainer = styled.table`
   tbody tr:nth-child(even) {
     background: #f8f9fa;
   }
+  /* 항목 가로길이 th, td 공통 */
   .th,
   .td {
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
     &:nth-of-type(1) {
-      width: 20%;
+      width: 15%;
     }
     &:nth-of-type(2) {
-      width: 30%;
+      width: 15%;
     }
     &:nth-of-type(3) {
       width: 20%;
@@ -68,17 +70,22 @@ export const TableContainer = styled.table`
     &:nth-of-type(4) {
       width: 20%;
     }
+    &:nth-of-type(5) {
+      width: 20%;
+    }
+    &:nth-of-type(6) {
+      width: 10%;
+    }
   }
 `;
 
 // 버튼 스타일
 export const PhotoButton = styled.button`
   padding: 6px 14px;
-  border: 1px solid rgb(226, 226, 226);
-  border-radius: 3px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
+  font-weight: bold;
   background: #0049a5;
   color: white;
   transition: 0.3s;
@@ -88,6 +95,24 @@ export const PhotoButton = styled.button`
   }
 `;
 
+export const CancelButton = styled.button`
+  padding: 10px 24px; /* 내부 여백 증가 */
+  font-size: 18px; /* 글자 크기 증가 */
+  width: 170px; /* 버튼 크기 조절 */
+  height: 60px;
+  border: none;
+  border-radius: 8px; /* 둥근 모서리 */
+  cursor: pointer;
+  font-weight: bold;
+  background: #bbbbbb;
+  color: white;
+  transition: 0.3s;
+  box-sizing: border-box;
+
+  &:hover {
+    background: #ff3044;
+  }
+`;
 export const AcceptButton = styled.button`
   padding: 6px 14px;
   border: 1px solid rgb(226, 226, 226);
@@ -126,14 +151,11 @@ export const PaginationContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 6px;
+  margin-top: 20px;
 `;
 
-interface PageButtonProps {
-  active: boolean;
-}
-
 // 페이지네이션 버튼
-export const PageButton = styled.button<PageButtonProps>`
+export const PageButton = styled.button`
   padding: 8px 12px;
   border: none;
   border-radius: 4px;
@@ -148,78 +170,3 @@ export const PageButton = styled.button<PageButtonProps>`
     background: ${props => (props.active ? "#0056b3" : "#bbb")};
   }
 `;
-
-export const CancelButton = styled.button`
-  padding: 10px 24px; /* 내부 여백 증가 */
-  font-size: 18px; /* 글자 크기 증가 */
-  width: 170px; /* 버튼 크기 조절 */
-  height: 60px;
-  border: none;
-  border-radius: 8px; /* 둥근 모서리 */
-  cursor: pointer;
-  font-weight: bold;
-  background: #bbbbbb;
-  color: white;
-  transition: 0.3s;
-  box-sizing: border-box;
-
-  &:hover {
-    background: #ff3044;
-  }
-`;
-export const textareaStyle = {
-  width: "100%",
-  height: "80px",
-  padding: "8px",
-  borderRadius: "4px",
-  border: "1px solid #ccc",
-  resize: "none" as const,
-};
-export const ApplyButton = styled.button`
-  padding: 12px 24px; /* 내부 여백 증가 */
-  font-size: 18px; /* 글자 크기 증가 */
-  width: 170px; /* 버튼 크기 조절 */
-  height: 60px;
-  border: none;
-  border-radius: 8px; /* 둥근 모서리 */
-  cursor: pointer;
-  font-weight: bold;
-  background: #0049a5;
-  color: white;
-  transition: 0.3s;
-  box-sizing: border-box;
-
-  &:hover {
-    background: #218838;
-  }
-`;
-export const modalButtonContainerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginTop: "10px",
-};
-
-export const modalStyle: CSSProperties = {
-  width: "400px",
-  height: "200px",
-  padding: "20px",
-  borderRadius: "10px",
-  backgroundColor: "#fff",
-  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  position: "relative" as const,
-};
-export const overlayStyle = {
-  position: "fixed" as const,
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 1000,
-};

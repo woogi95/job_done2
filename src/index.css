@@ -184,7 +184,7 @@ html,
 body,
 :root,
 *:not(i):not(.fa):not(.fas):not(.far):not(.fab) {
-  font-family: "Pretendard-Regular", "Roboto", sans-serif !important;
+  font-family: "Pretendard-Regular", "Roboto", sans-serif;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -203,5 +203,5 @@ img {
 }
 
 .chakra-ui-light *:not(i):not(.fa):not(.fas):not(.far):not(.fab) {
-  font-family: "Pretendard-Regular", "Roboto", sans-serif !important;
+  font-family: "Pretendard-Regular", "Roboto", sans-serif;
 }

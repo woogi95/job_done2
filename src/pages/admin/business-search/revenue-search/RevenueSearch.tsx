@@ -10,6 +10,7 @@ import {
 } from "../category-search/categorysearchs";
 
 interface BusirevenueType {
+  id: number;
   businessName: string;
   detailTypeName: string;
   totalRevenue: number;
@@ -24,7 +25,16 @@ const RevenueSearch = () => {
     try {
       const res = await axios.get("/api/business/revenue/byAdmin");
       if (res.data.resultData) {
-        setRevenueList(res.data.resultData);
+        const data = res.data.resultData.map(
+          (item: BusirevenueType, index: number) => ({
+            id: index + 1,
+            businessName: item.businessName,
+            detailTypeName: item.detailTypeName,
+            totalRevenue: item.totalRevenue,
+            thisMonthRevenue: item.thisMonthRevenue,
+          }),
+        );
+        setRevenueList(data);
       }
     } catch (error) {
       console.log(error);
@@ -43,6 +53,7 @@ const RevenueSearch = () => {
         <TableContainer>
           <thead>
             <tr>
+              <th>번호</th>
               <th>업체 이름</th>
               <th>세부 유형</th>
               <th>총 매출</th>
@@ -57,6 +68,7 @@ const RevenueSearch = () => {
             ) : (
               currentData.map(business => (
                 <tr key={business.businessName}>
+                  <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.detailTypeName}</td>
                   <td>{business.totalRevenue}</td>
@@ -70,7 +82,9 @@ const RevenueSearch = () => {
 
       {/* ✅ 페이지네이션 UI 추가 */}
       {maxPage > 1 && (
-        <PaginationContainer>
+        <PaginationContainer
+          style={{ marginTop: "20px", justifyContent: "right" }}
+        >
           {[...Array(maxPage)].map((_, index) => (
             <PageButton
               key={index + 1}

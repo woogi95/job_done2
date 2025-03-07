@@ -79,7 +79,7 @@ function ReserveUserCount() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "Year-Month",
+          legend: "년-월",
           legendPosition: "middle",
           legendOffset: 32,
         }}
@@ -87,7 +87,7 @@ function ReserveUserCount() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "User Count",
+          legend: "이용자 수",
           legendPosition: "middle",
           legendOffset: -40,
         }}

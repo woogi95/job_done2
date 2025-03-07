@@ -105,7 +105,7 @@ function Index() {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: "Year-Month",
+            legend: "년-월",
             legendOffset: 36,
             legendPosition: "middle",
           }}

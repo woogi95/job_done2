@@ -1,55 +1,113 @@
-import { useState } from "react";
-import "./adminsidebar.css";
-import { GoChevronDown } from "react-icons/go";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+// styled-components 적용
 
-const Sidebar = () => {
-  const linkStyle = { display: "flex", justifyContent: "!end", width: "100%" };
+// icon
+import { IoIosArrowDown } from "react-icons/io";
+import { SideMenuDiv } from "./adminsidebarD";
 
-  // const [requestMenu, setRequestMenu] = useState<boolean>(false);
-  const [searchMenu, setSearchMenu] = useState<boolean>(false);
-  // const reqOpen = () => {
-  //   setRequestMenu(!requestMenu);
-  // };
+const AdminSidebar = () => {
+  const [isSubMenuOpen, setSubMenuOpen] = useState(false);
+  const [isActiveMenu, setIsActiveMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  // 서브 메뉴 토글
+  const toggleSubMenu = () => {
+    setSubMenuOpen(prev => !prev);
+  };
+
+  // 현재 경로에 따라 활성화 메뉴 설정
+  useEffect(() => {
+    if (location.pathname === "/admin/businesssearch") {
+      setIsActiveMenu(true);
+    } else {
+      setIsActiveMenu(false);
+    }
+  }, [location.pathname]);
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <h2>관리자 패널</h2>
-      </div>
-      <nav>
-        <Link to="/admin">메인</Link>
-        <Link to="/admin/requestresi" style={linkStyle}>
-          업체 등록 요청
-        </Link>
-
-        <button
-          onClick={() => setSearchMenu(!searchMenu)}
-          style={{ display: "flex", justifyContent: "!end", width: "100%" }}
-        >
-          업체 관리
-          <GoChevronDown />
-        </button>
-        {searchMenu ? (
-          <div>
-            <Link to="/admin/businesssearch" style={linkStyle}>
-              카테고리 조회 | 등록
-            </Link>
-            <Link to="/admin/businesssearch/reservesearch" style={linkStyle}>
-              예약 별 조회
-            </Link>
-            <Link to="/admin/businesssearch/ruesearch" style={linkStyle}>
-              매출 별 조회
-            </Link>
-          </div>
-        ) : (
-          ""
-        )}
-
-        <Link to="/admin/userlist">유저</Link>
-      </nav>
-    </div>
+    <SideMenuDiv>
+      <ul>
+        <li>
+          <NavLink
+            to="/admin"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            메인
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/admin/requestresi"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            업체 등록 요청
+          </NavLink>
+        </li>
+        <li className="menu1">
+          <NavLink
+            to="/admin/businesssearch"
+            onClick={toggleSubMenu}
+            className={({ isActive }) =>
+              isActive || isActiveMenu ? "active" : ""
+            }
+          >
+            업체 관리
+            <IoIosArrowDown
+              style={{
+                transform: isSubMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+            />
+          </NavLink>
+          <ul className={`sub-menu ${isSubMenuOpen ? "open" : ""}`}>
+            <li>
+              <NavLink
+                to="/admin/businesssearch"
+                className={({ isActive }) =>
+                  isActive && location.pathname !== "/admin/businesssearch"
+                    ? "active"
+                    : ""
+                }
+              >
+                카테고리 별 조회 | 등록
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/businesssearch/reservesearch"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                예약 별 조회
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/businesssearch/ruesearch"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                매출 별 조회
+              </NavLink>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <NavLink
+            to="/admin/userlist"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            유저 관리
+          </NavLink>
+        </li>
+      </ul>
+      {/* 사용자 홈으로 이동 */}
+      <NavLink to="/" className="userhome">
+        <div className="logo"></div>
+        <p>사용자 홈 바로가기</p>
+      </NavLink>
+    </SideMenuDiv>
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;
