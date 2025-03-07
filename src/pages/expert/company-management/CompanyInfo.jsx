@@ -10,6 +10,7 @@ import {
   ExpertOptionInfoDiv,
   ExpertProductDiv,
   ExportPageDiv,
+  OpContBoxDiv,
   TitleAreaDiv,
 } from "./companyManagement";
 // icon
@@ -29,7 +30,7 @@ function CompanyInfo() {
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const businessState = useRecoilValue(businessDetailState);
   const [optionList, setOptionList] = useRecoilState(ProductState);
-  // const BASE_URL = "http://112.222.157.157:5234";
+
   const navigate = useNavigate();
   const getBusinessInfo = async busiId => {
     try {
@@ -138,17 +139,37 @@ function CompanyInfo() {
             <p>옵션 설정</p> <MdModeEdit />
           </button>
         </TitleAreaDiv>
-        <ContBoxDiv>
+        <OpContBoxDiv>
+          {/* 옵션정보 */}
+
+          <div className="option-info">
+            <h4 className="tit">상품기본 정보</h4>
+            <label>
+              <b>카테고리 </b>
+              <span>
+                <p>음식점청소</p>
+              </span>
+            </label>
+            <label>
+              <b>기본금액 </b>
+              <div className="basic-price">
+                {businessInfo.price.toLocaleString()} 원
+              </div>
+            </label>
+          </div>
+          {/* 옵션등록 */}
           <div className="option-list">
-            {optionList.optionList.map(option => (
+            {optionList.optionList.map((option, optionIndex) => (
               <div className="option-box" key={option.optionId}>
-                <h3>{option.optionName}</h3>
+                <h3>
+                  옵션 {optionIndex + 1} : {option.optionName}
+                </h3>
                 <ul className="op-detail-list">
                   {option.optionDetailList.map(item => (
                     <li className="op-item" key={item.optionDetailId}>
                       <p>
                         <span>{item.optionDetailName}</span>
-                        <em>{item.optionDetailPrice.toLocaleString()}</em>
+                        <em>{item.optionDetailPrice.toLocaleString()} 원</em>
                       </p>
                     </li>
                   ))}
@@ -156,7 +177,7 @@ function CompanyInfo() {
               </div>
             ))}
           </div>
-        </ContBoxDiv>
+        </OpContBoxDiv>
       </ExpertOptionInfoDiv>
     </ExportPageDiv>
   );

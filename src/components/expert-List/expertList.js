@@ -7,8 +7,44 @@ export const EFilterDiv = styled.div`
   gap: 10px;
   /* padding: 0 10px; */
 
+  .search-bar {
+    order: 2;
+    form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      input {
+        border: 1px solid #ccc;
+        height: 33px;
+        border-radius: 4px;
+        width: 240px;
+        padding: 5px;
+        color: #555;
+        font-size: 14px;
+        background-color: #f8f9fa;
+        &::placeholder {
+          font-size: 12px;
+          color: #bbb;
+          transform: translateY(-2px);
+        }
+      }
+      button {
+        width: 60px;
+        height: 35px;
+        background-color: #2a58ad;
+        border: 1px solid #eee;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+      }
+    }
+  }
+
   ul.btn-area {
-    /* background-color: #f8f9fa; */
+    order: 1;
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 5px 8px;
@@ -43,32 +79,45 @@ export const EFilterDiv = styled.div`
       }
     }
   }
-  .search-bar {
-    /* border: 1px solid; */
+  .pagination {
+    border: 1px solid;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 8px; /* 버튼 사이 간격 */
+    margin: 20px 0;
+  }
 
-    input {
-      border: 1px solid #ccc;
-      height: 33px;
-      border-radius: 4px;
-      width: 180px;
-      padding: 5px;
-      color: #555;
-      font-size: 14px;
-      background-color: #f8f9fa;
-    }
-    button {
-      width: 60px;
-      height: 35px;
-      background-color: #2a58ad;
-      border: 1px solid #eee;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 15px;
-    }
+  .pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .pagination button:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+
+  .pagination button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    font-weight: bold;
+  }
+
+  .pagination button:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+    border-color: #dee2e6;
   }
 `;

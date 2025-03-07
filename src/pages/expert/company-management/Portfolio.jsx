@@ -13,7 +13,6 @@ import { loginApi } from "../../../apis/login";
 import PfPopup from "../../../components/serviceDetail/PfPopup";
 import { useRecoilState } from "recoil";
 import { PortfolioDetailInfoState } from "../../../atoms/portfolioAtom";
-import axios from "axios";
 
 function Portfolio() {
   const BASE_URL = "http://112.222.157.157:5234";
@@ -147,6 +146,7 @@ function Portfolio() {
         <AddPortfolio
           setIsPopPfAdd={setIsPopPfAdd}
           deletePortfolio={deletePortfolio}
+          getPortfolioList={getPortfolioList}
         />
       ) : (
         <></>
@@ -156,6 +156,7 @@ function Portfolio() {
           portfolioDetailInfo={portfolioDetailInfo}
           setIsPopPfEdit={setIsPopPfEdit}
           portfolioId={selectedPortfolioId}
+          getPortfolioList={getPortfolioList}
         />
       ) : (
         <></>

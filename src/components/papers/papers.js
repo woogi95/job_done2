@@ -4,7 +4,9 @@ export const PapersDiv = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  width: 100%;
+  right: 0;
+  bottom: 0;
+  width: 100% !important;
   height: 100vh;
   background-color: #eee;
   z-index: 99;
