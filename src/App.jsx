@@ -88,6 +88,7 @@ import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage
 import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
 import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
+import AdminBusinessInfo from "./components/admin/admin-business-info/AdminBusinessInfo";
 
 function App() {
   return (
@@ -227,6 +228,12 @@ function App() {
             {/* 업체 조회 */}
             <Route path="businesssearch">
               <Route index element={<CategorySearch />} />
+              <Route
+                path="infomationbusi"
+                index
+                element={<AdminBusinessInfo />}
+              />
+
               <Route
                 path="reservesearch"
                 index
