@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   AcceptButton,
   CancelButton,
+  EFilterDiv,
   EmptyMessage,
   PageButton,
   PaginationContainer,
@@ -115,6 +116,50 @@ function ReviewCenter() {
   const maxPage = Math.ceil(reviewDatas.length / itemsPerPage);
   return (
     <RequestBusiContainer>
+      {/* <EFilterDiv>
+        <ul className="btn-area">
+          <li>
+            <button
+              className={`completed3 ${statusFilter === "3" ? "active" : ""}`}
+              onClick={() => handleStatusFilter("3")}
+            >
+              취소
+            </button>
+          </li>
+          <li>
+            <button
+              className={`completed0 ${statusFilter === "0" ? "active" : ""}`}
+              onClick={() => handleStatusFilter("0")}
+            >
+              대기
+            </button>
+          </li>
+          <li>
+            <button
+              className={`completed1 ${statusFilter === "1" ? "active" : ""}`}
+              onClick={() => handleStatusFilter("1")}
+            >
+              완료
+            </button>
+          </li>
+          <li>
+            <button
+              className={`completed5 ${statusFilter === "5" ? "active" : ""}`}
+              onClick={() => handleStatusFilter("5")}
+            >
+              거절
+            </button>
+          </li>
+          <li>
+            <button
+              className={`all ${statusFilter === "all" ? "active" : ""}`}
+              onClick={() => handleStatusFilter("all")}
+            >
+              전체보기
+            </button>
+          </li>
+        </ul>
+      </EFilterDiv> */}
       <div
         style={{ marginBottom: 10, display: "flex", justifyContent: "right" }}
       >
@@ -159,7 +204,7 @@ function ReviewCenter() {
                           navigate("/expert/review-center/reviewview");
                         }}
                       >
-                        🔴 작성 대기
+                        작성 대기
                       </CancelButton>
                     ) : (
                       <AcceptButton
@@ -168,7 +213,7 @@ function ReviewCenter() {
                           navigate("/expert/review-center/reviewview");
                         }}
                       >
-                        🔵 작성 완료
+                        작성 완료
                       </AcceptButton>
                     )}
                   </td>

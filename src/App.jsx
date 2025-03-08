@@ -219,6 +219,7 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/admin">
             <Route index element={<AdminMain />} />
+            {/* 유저 관리 */}
             <Route path="userlist">
               <Route index element={<UserList />} />
               <Route path="onebyone" index element={<UserOneByOne />} />
