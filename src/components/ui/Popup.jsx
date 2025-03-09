@@ -11,27 +11,26 @@ export const Popup = ({
   showConfirmButton,
   cancelLink,
   confirmLink,
+  onConfirm,
 }) => {
   const navigate = useNavigate();
   const handleConfirmClick = () => {
-    // console.log("Confirm clicked");
-    // console.log(confirmLink);
-    if (confirmLink) {
-      // console.log("Navigating to: ", confirmLink);
+    if (onConfirm) {
+      onConfirm();
+    } else if (confirmLink) {
       navigate(confirmLink);
     } else if (onClose) {
       onClose();
     }
   };
 
-  //
   const handleCancelClick = () => {
-    // console.log("Cancel clicked");
-    if (cancelLink) {
-      // console.log("Navigating to: ", cancelLink);
-      navigate(cancelLink);
-    } else if (onCancel) {
+    if (onCancel) {
       onCancel();
+    } else if (cancelLink) {
+      navigate(cancelLink);
+    } else if (onClose) {
+      onClose();
     }
   };
 

@@ -210,7 +210,7 @@ function Index() {
                     setIsReservationPop(true);
                   }}
                 >
-                  신청서
+                  견적서
                 </button>
               </li>
             </ul>

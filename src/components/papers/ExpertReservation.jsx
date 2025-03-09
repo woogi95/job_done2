@@ -15,8 +15,8 @@ import { Popup } from "../ui/Popup";
 import { loginApi } from "../../apis/login";
 
 const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
-  const [papers, setPapers] = useRecoilState(papersState);
-  const papersInfo = useRecoilValue(papersState);
+  const [papersInfo, setPapersInfo] = useRecoilState(papersState);
+  // const papersInfo = useRecoilValue(papersState);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   const [isSuccess, setIsSuccess] = useState(true);
@@ -25,7 +25,7 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
 
   // 컨펌팝업
   const handleOpenPopup = () => {
-    patchServiceState(3, serviceId);
+    patchServiceState(4, serviceId);
     setIsPopupOpen(true);
   };
   const handleClosePopup = () => {
@@ -68,8 +68,8 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
       const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
       console.log("API 응답 데이터:", res.data); // API 응답 데이터 로그
       if (res.data && res.data.resultData) {
-        setPapers(res.data.resultData);
-        console.log("papers 상태 업데이트:", res.data.resultData); // papers 상태 로그
+        setPapersInfo(res.data.resultData); // papersInfo 상태 업데이트
+        console.log("papersInfo 상태 업데이트:", res.data.resultData); // papersInfo 상태 로그
       } else {
         console.error("API 응답 데이터가 올바르지 않습니다:", res.data);
       }
@@ -212,6 +212,7 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
             <button
               className="okay"
               onClick={() => {
+                patchServiceState(1, serviceId);
                 navigate(
                   `/expert/quote-management/quotation-form?serviceId=${serviceId}`,
                 );
@@ -222,7 +223,9 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
           </BtnAreaDiv>
           <button
             className="pop-close-btn"
-            onClick={() => setIsReservationPop(false)}
+            onClick={() => {
+              setIsReservationPop(false);
+            }}
           >
             <CgClose />
           </button>

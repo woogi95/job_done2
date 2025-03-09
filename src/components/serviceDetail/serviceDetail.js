@@ -648,6 +648,33 @@ export const PfLayerDiv = styled(LayerDiv)`
     right: 15px;
     font-size: 24px;
   }
+  .btn-area {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 30px);
+    .edit-btn,
+    .delete-btn {
+      width: 50%;
+      height: 40px;
+      line-height: 40px;
+      position: static;
+      transform: none;
+    }
+    .edit-btn {
+      background-color: #3887ff;
+      color: #fff;
+    }
+    .delete-btn {
+      background-color: #aaa;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+  }
 
   .txt-area {
     border-left: 1px solid #ccc;

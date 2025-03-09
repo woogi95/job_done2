@@ -14,9 +14,9 @@ import axios from "axios";
 // parser
 import parse from "html-react-parser";
 import { IoIosArrowDown } from "react-icons/io";
+import { BASE_URL } from "../../constants/constants";
 
 const ContReview = () => {
-  const BASE_URL = "http://112.222.157.157:5234";
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
   const businessDetail = useRecoilValue(businessDetailState);
   const options = ["최신순", "높은별점순", "낮은별점순"];
