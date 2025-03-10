@@ -14,6 +14,7 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 import { loginApi } from "../../../apis/login";
 import { ProductState } from "../../../atoms/productAtom";
 import { useNavigate } from "react-router-dom";
+import { Popup } from "../../../components/ui/Popup";
 const priceSchema = yup.object({
   productPrice: yup.number(),
 });
@@ -29,6 +30,10 @@ function EditOptionPage() {
     productbasicPrice?.price || 0, // 기본값으로 0 설정
   );
   const setProductInfo = useSetRecoilState(ProductState);
+  const [popupState, setPopupState] = useState({
+    isOpen: false,
+    message: "",
+  });
   //   console.log(productbasicPrice.price);
   const {
     register,
@@ -77,7 +82,11 @@ function EditOptionPage() {
         ...prev,
         productPrice: data.productPrice,
       }));
-      navigate("/expert/company-management");
+
+      // 팝업 표시
+      setPopupState({
+        isOpen: true,
+      });
     } catch (error) {
       console.error("API 오류:", error);
     }
@@ -446,6 +455,14 @@ function EditOptionPage() {
           </OpContBoxDiv>
         </form>
       </ExpertOptionInfoDiv>
+      <Popup
+        isOpen={popupState.isOpen}
+        message={"상품옵션 수정이 완료되었습니다."}
+        showConfirmButton={true}
+        onConfirm={() => {
+          navigate("/expert/company-management");
+        }}
+      />
     </ExportPageDiv>
   );
 }

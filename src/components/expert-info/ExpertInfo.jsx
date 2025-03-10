@@ -4,8 +4,17 @@ import { useRecoilValue } from "recoil";
 
 const ExpertInfo = () => {
   const businessState = useRecoilValue(businessDetailState);
-  const formatPhoneNumber = phone =>
-    phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
+  const formatPhoneNumber = phone => {
+    if (!phone) return "-"; // null 또는 undefined 처리
+    const cleaned = String(phone).replace(/\D/g, ""); // 숫자만 남기기
+    if (cleaned.length === 11) {
+      return cleaned.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 11자리: 3-4-4
+    }
+    if (cleaned.length === 10) {
+      return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"); // 10자리: 3-3-4
+    }
+    return phone; // 형식이 맞지 않으면 원본 값 반환
+  };
   const formatBusinessNumber = number =>
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")

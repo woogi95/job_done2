@@ -1,9 +1,9 @@
 import React from "react";
-import { Checkbox, Stack, Text, Textarea, VStack } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { getCookie } from "../../../apis/cookie";
 import { loginApi } from "../../../apis/login";
 import { papersState } from "../../../atoms/businessAtom";
@@ -15,18 +15,9 @@ import {
 } from "../../../components/papers/papers";
 
 const ExpertPaymentHistory = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("환불요청을 하였습니다.");
-  const [isSuccess, setIsSuccess] = useState(false);
   const [serviceId, setServiceId] = useState(null);
-  const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
-  const [refundModal, setRefundModal] = useState(false);
-
-  const [text, setText] = useState("");
-  const [isQaTypeList, setIsQaTypeList] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([]);
 
   const getEstimate = async serviceId => {
     if (!serviceId) return;
@@ -65,58 +56,6 @@ const ExpertPaymentHistory = () => {
   useEffect(() => {
     qaTypeList();
   }, []);
-
-  const postRefund = async serviceId => {
-    try {
-      const formData = new FormData();
-
-      const qaPostData = {
-        qaTypeDetailId: 0,
-        contents: text,
-        qaReportReason: "SERVICE",
-        qaTargetId: serviceId,
-      };
-
-      formData.append(
-        "p",
-        new Blob([JSON.stringify(qaPostData)], {
-          type: "application/json",
-        }),
-      );
-      console.log("환불 내용 : ", qaPostData);
-
-      selectedImages.forEach(file => {
-        formData.append("pics", file);
-      });
-
-      for (const pair of formData.entries()) {
-        console.log("FormData 엔트리:", pair[0], pair[1]);
-      }
-
-      const res = await loginApi.post(`/api/qa`, qaPostData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log("환불 내용 : ", text);
-      console.log("뭐 오는데? : ", res.data.resultData);
-
-      if (res.data) {
-        setIsSuccess(true);
-        setPopupMessage("환불요청을 하였습니다.");
-        setIsPopupOpen(true);
-      } else {
-        setIsSuccess(false);
-        setPopupMessage("환불요청에 실패하셨습니다. 잠시후 다시 시도해주세요.");
-        setIsPopupOpen(true);
-      }
-    } catch (error) {
-      console.log(error);
-      setIsSuccess(false);
-      setPopupMessage("환불요청에 실패하셨습니다. 잠시후 다시 시도해주세요.");
-      setIsPopupOpen(true);
-    }
-  };
 
   const formatPhoneNumber = phone =>
     phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";

@@ -6,16 +6,16 @@ import {
   PortfolioListItemDiv,
   TitleAreaDiv,
 } from "./companyManagement";
-// import EditPortfolio from "../../../components/portfolio/EditPortfolio";
 import AddPortfolio from "../../../components/portfolio/AddPortfolio";
 import EditPortfolio from "../../../components/portfolio/EditPortfolio";
 import { loginApi } from "../../../apis/login";
 import PfPopup from "../../../components/serviceDetail/PfPopup";
 import { useRecoilState } from "recoil";
 import { PortfolioDetailInfoState } from "../../../atoms/portfolioAtom";
+import { BASE_URL } from "../../../constants/constants";
+import { Popup } from "../../../components/ui/Popup";
 
 function Portfolio() {
-  const BASE_URL = "http://112.222.157.157:5234";
   const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
     PortfolioDetailInfoState,
   );
@@ -24,6 +24,9 @@ function Portfolio() {
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [portfolioList, setPortfolioList] = useState([]);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
+  const [isDeleteComplete, setIsDeleteComplete] = useState(false);
+  const [isEditComplete, setIsEditComplete] = useState(false);
+
   const getPortfolioList = async () => {
     try {
       // /api/portfolio?categoryId=1&detailTypeId=2&businessId=2
@@ -110,38 +113,32 @@ function Portfolio() {
             </div>
             <div className="txt-area">
               <h4 className="tit">{item.title}</h4>
-              <div className="btn-area">
-                <button
-                  className="edit-btn"
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleEditClick(item.portfolioId);
-                  }}
-                >
-                  수정하기
-                </button>
-                <button
-                  onClick={e => {
-                    e.stopPropagation();
-                    deletePortfolio(item.businessId, item.portfolioId);
-                  }}
-                >
-                  삭제하기
-                </button>
-              </div>
             </div>
           </PortfolioListItemDiv>
         ))}
       </PortfolioListDiv>
-      {isPfDetailPop ? (
-        <PfPopup
-          portfolioId={selectedPortfolioId}
-          setIsPfDetailPop={setIsPfDetailPop}
-          isPfDetailPop={isPfDetailPop}
-        />
-      ) : (
-        <></>
-      )}
+      <PfPopup
+        isPfDetailPop={isPfDetailPop}
+        setIsPfDetailPop={setIsPfDetailPop}
+        portfolioId={selectedPortfolioId}
+        isExpertMode={true}
+        onEditClick={() => handleEditClick(selectedPortfolioId)}
+        onDeleteClick={() => {
+          const selectedPortfolio = portfolioList.find(
+            item => item.portfolioId === selectedPortfolioId,
+          );
+          if (selectedPortfolio) {
+            deletePortfolio(selectedPortfolio.businessId, selectedPortfolioId);
+          }
+        }}
+        onDeleteComplete={() => setIsDeleteComplete(true)}
+      />
+      <Popup
+        isOpen={isDeleteComplete}
+        onClose={() => setIsDeleteComplete(false)}
+        message="포트폴리오 삭제가 완료되었습니다"
+        showConfirmButton={true}
+      />
       {isPopPfAdd ? (
         <AddPortfolio
           setIsPopPfAdd={setIsPopPfAdd}
@@ -153,14 +150,20 @@ function Portfolio() {
       )}
       {isPopPfEdit ? (
         <EditPortfolio
-          portfolioDetailInfo={portfolioDetailInfo}
           setIsPopPfEdit={setIsPopPfEdit}
           portfolioId={selectedPortfolioId}
           getPortfolioList={getPortfolioList}
+          setIsEditComplete={setIsEditComplete}
         />
       ) : (
         <></>
       )}
+      <Popup
+        isOpen={isEditComplete}
+        onClose={() => setIsEditComplete(false)}
+        message="포트폴리오 수정이 완료되었습니다"
+        showConfirmButton={true}
+      />
     </ExpertListPageDiv>
   );
 }

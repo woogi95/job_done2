@@ -211,7 +211,7 @@ function Index() {
               <li className="td">
                 <p
                   className={
-                    reservation.completed === 6 ? "completed5" : "completed3"
+                    reservation.completed === 6 ? "completed5" : "completed0"
                   }
                 >
                   {getStatusText(reservation.completed)}

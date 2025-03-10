@@ -7,6 +7,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
+import { useState } from "react";
+import { Popup } from "../ui/Popup";
 
 const schema = yup.object({
   openingTime: yup.string(),
@@ -31,6 +33,9 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
     resolver: yupResolver(schema),
   });
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
   const onSubmit = async data => {
     console.log("제출된 데이터:", data);
     const requestData = { ...data, businessId: busiId };
@@ -44,10 +49,13 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
         closingTime: data.closingTime,
         tel: data.tel,
       });
-      setIsExpertInfoEdit(false);
       console.log(res.data);
+      setPopupMessage("업체정보 수정이 완료되었습니다.");
+      setIsPopupOpen(true);
     } catch (error) {
       console.log(error);
+      setPopupMessage("저장에 실패했습니다. 다시 시도해주세요.");
+      setIsPopupOpen(true);
     }
   };
 
@@ -57,61 +65,73 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
       : "사업자 번호 없음";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="edit-info-form">
-      <div className="info-area edit-info-area">
-        <h2>{businessState.businessName}</h2>
-        <span>{businessState.address}</span>
-        <div>
-          <p>
-            <FaChevronRight /> 카테고리 :{" "}
-            <em>
-              청소 {"_"} {businessState.detailTypeName}
-            </em>
-          </p>
-          <p>
-            <FaChevronRight /> 영업시간 :{" "}
-            <em>
-              <input
-                type="time"
-                name="openingTime"
-                id="openingTime"
-                {...register("openingTime")}
-              />{" "}
-              ~{" "}
-              <input
-                type="time"
-                name="closingTime"
-                id="closingTime"
-                {...register("closingTime")}
-              />
-            </em>
-          </p>
-          <p>
-            <FaChevronRight />
-            사업자번호 :{" "}
-            <em>{formatBusinessNumber(businessState.businessNum)}</em>
-          </p>
-          <p>
-            <FaChevronRight /> 대표번호 :{" "}
-            <em>
-              <input
-                type="text"
-                name="tel"
-                id="tel"
-                {...register("tel")}
-                placeholder="(-) 빼고 작성해 주세요"
-              />
-            </em>
-          </p>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="edit-info-form">
+        <div className="info-area edit-info-area">
+          <h2>{businessState.businessName}</h2>
+          <span>{businessState.address}</span>
+          <div>
+            <p>
+              <FaChevronRight /> 카테고리 :{" "}
+              <em>
+                청소 {"_"} {businessState.detailTypeName}
+              </em>
+            </p>
+            <p>
+              <FaChevronRight /> 영업시간 :{" "}
+              <em>
+                <input
+                  type="time"
+                  name="openingTime"
+                  id="openingTime"
+                  {...register("openingTime")}
+                />{" "}
+                ~{" "}
+                <input
+                  type="time"
+                  name="closingTime"
+                  id="closingTime"
+                  {...register("closingTime")}
+                />
+              </em>
+            </p>
+            <p>
+              <FaChevronRight />
+              사업자번호 :{" "}
+              <em>{formatBusinessNumber(businessState.businessNum)}</em>
+            </p>
+            <p>
+              <FaChevronRight /> 대표번호 :{" "}
+              <em>
+                <input
+                  type="text"
+                  name="tel"
+                  id="tel"
+                  {...register("tel")}
+                  placeholder="(-) 빼고 작성해 주세요"
+                />
+              </em>
+            </p>
+          </div>
+          <button
+            type="submit"
+            style={{ display: isExpertInfoEdit ? "flex" : "none" }}
+          >
+            저장
+          </button>
         </div>
-        <button
-          type="submit"
-          style={{ display: isExpertInfoEdit ? "flex" : "none" }}
-        >
-          저장
-        </button>
-      </div>
-    </form>
+      </form>
+
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={() => {
+          setIsPopupOpen(false);
+          setIsExpertInfoEdit(false);
+        }}
+        message={popupMessage}
+        showConfirmButton={true}
+      />
+    </>
   );
 };
 

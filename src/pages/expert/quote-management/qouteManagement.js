@@ -38,6 +38,8 @@ export const QuotationFormDiv = styled.div`
           width: 50%;
           display: flex;
           align-items: center;
+          font-size: 14px;
+          color: #353535;
           border-bottom: 1px dotted #333;
           &:last-child {
             border-bottom: none;
@@ -49,6 +51,7 @@ export const QuotationFormDiv = styled.div`
 
             h4 {
               height: auto;
+              min-width: 80px;
               min-height: 34px;
             }
 
@@ -95,10 +98,11 @@ export const QuotationFormDiv = styled.div`
 
         input {
           width: calc(100% - 80px);
-          padding: 5px;
+          padding: 5px 15px;
           /* border: 1px solid red; */
           font-size: 14px;
           height: 34px;
+          color: #353535;
         }
       }
     }
@@ -108,13 +112,48 @@ export const QuotationFormDiv = styled.div`
         width: 100%;
         height: 120px;
         resize: none;
-        border: 1px solid #333;
+        border: 1px solid #999;
         outline: none;
         padding: 15px;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 1.3em;
-        color: #333;
+        color: #353535;
       }
+    }
+  }
+
+  .option-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: calc(100% - 80px);
+    margin-bottom: 0 !important;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    div {
+      display: flex;
+      justify-content: space-between;
+      border: 1px dotted #999;
+      padding: 10px;
+      border-radius: 5px;
+      span {
+        font-size: 13px;
+        color: #333;
+
+        b {
+          font-weight: 600;
+          color: rgb(10, 55, 139);
+        }
+      }
+    }
+  }
+  .pyeong {
+    padding-right: 20px;
+    input[type="text"] {
+      text-align: right;
+      padding: 5px;
+      color: #353535;
     }
   }
 `;
@@ -125,12 +164,25 @@ export const AddOptionDiv = styled.div`
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 4px;
+    border-top: none !important;
+    &:last-child {
+      padding-bottom: 0;
+    }
+    > button {
+      background-color: #70be3b;
+      color: #fff;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
     /* flex-direction: column; */
     .tr {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 14px;
+      font-size: 13px;
       color: #fff;
       width: 100%;
       height: 34px;
@@ -172,6 +224,13 @@ export const AddOptionDiv = styled.div`
         width: 100%;
         background-color: transparent;
       }
+      button {
+        background-color: #333;
+        padding: 6px 10px;
+        border-radius: 3px;
+        font-size: 12px;
+        color: #fff;
+      }
     }
     .price {
       input {
@@ -186,6 +245,14 @@ export const DatePriceDiv = styled.div`
   }
   .price {
     border-top: 1px dotted #333;
+    > div {
+      background-color: rgba(255, 0, 0, 0.04);
+      padding: 0 15px;
+      height: 35px;
+      font-size: 14px;
+      width: calc(100% - 80px);
+      color: red;
+    }
   }
   /* 한줄 */
   > div {
@@ -205,6 +272,28 @@ export const DatePriceDiv = styled.div`
         justify-content: center;
       }
     }
+  }
+  .col2 {
+    /* border: 1px solid red; */
+    padding: 2px 10px;
+    justify-content: start;
+    width: calc(100% - 80px) !important;
+    input {
+      font-size: 12px;
+      color: #355353;
+    }
+    input::placeholder {
+      color: #2a58ad;
+    }
+
+    > span {
+      display: inline-block;
+      padding: 0 10px;
+    }
+  }
+  .dp-style {
+    border: none;
+    background-color: rgba(42, 88, 173, 0.11);
   }
 `;
 

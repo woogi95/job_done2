@@ -8,18 +8,27 @@ import * as yup from "yup";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
+import { BASE_URL } from "../../constants/constants";
+import {
+  PortfolioDetailImgState,
+  PortfolioDetailInfoState,
+} from "../../atoms/portfolioAtom";
 
-const BASE_URL = "112.222.157.157:5234";
-
-const AddPortfolio = ({
+const EditPortfolio = ({
   setIsPopPfEdit,
-  portfolioDetailInfo,
   portfolioId,
   getPortfolioList,
+  setIsEditComplete,
 }) => {
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const businessState = useRecoilValue(businessDetailState);
+  const [pfDetailImgList, setPfDetailImgList] = useRecoilState(
+    PortfolioDetailImgState,
+  );
+  const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
+    PortfolioDetailInfoState,
+  );
   console.log("businessInfo", businessInfo);
   console.log("businessId", businessState.businessId);
   const [formData, setFormData] = useState({
@@ -119,8 +128,21 @@ const AddPortfolio = ({
 
       if (res.data) {
         console.log("Success:", res.data);
+        // pfDetailImgList 업데이트 (blob URL 제외하고 서버 URL만 반영)
+        const updatedPfDetailImgList = filePreviews
+          .filter(file => file.preview && !file.preview.startsWith("blob:")) // blob URL 제외
+          .map(file => file.preview); // preview URL 추출
+        setPfDetailImgList(updatedPfDetailImgList);
+
+        // portfolioDetailInfo 업데이트
+        setPortfolioDetailInfoState(prev => ({
+          ...prev,
+          ...requestData, // 수정된 데이터 반영
+        }));
+
         getPortfolioList();
         setIsPopPfEdit(false);
+        setIsEditComplete(true); // 상위 컴포넌트에 수정 완료 알림
       }
     } catch (error) {
       console.log("API 에러:", error);
@@ -139,8 +161,8 @@ const AddPortfolio = ({
         // API에서 받은 이미지 URL을 filePreviews에 추가 (BASE_URL 포함)
         const initialFiles = res.data.resultData.map(pic => ({
           file: null, // 파일 객체는 없으므로 null로 설정
-          preview: `http://${BASE_URL}${pic.pic}`, // BASE_URL과 pic 경로를 결합
-          portfolioPicId: pic.portfolioPicId, // portfolioPicId 추가
+          preview: `${BASE_URL}${pic.pic}`, // BASE_URL과 pic 경로를 결합
+          portfolioPicId: pic.portfolioPicId,
           isInitial: true, // 초기 이미지임을 표시
         }));
         setFilePreviews(initialFiles); // 초기값으로 설정
@@ -183,6 +205,8 @@ const AddPortfolio = ({
             URL.revokeObjectURL(fileToRemove.preview);
             // filePreviews에서 해당 이미지 제거
             setFilePreviews(prev => prev.filter((_, i) => i !== index));
+            // pfDetailImgList에서도 동일한 순서로 삭제
+            setPfDetailImgList(prev => prev.filter((_, i) => i !== index));
           }
         } catch (error) {
           console.log("이미지 삭제 실패:", error);
@@ -194,6 +218,8 @@ const AddPortfolio = ({
         URL.revokeObjectURL(fileToRemove.preview);
         // filePreviews에서 해당 이미지 제거
         setFilePreviews(prev => prev.filter((_, i) => i !== index));
+        // pfDetailImgList에서도 동일한 순서로 삭제
+        setPfDetailImgList(prev => prev.filter((_, i) => i !== index));
       }
     }
   };
@@ -267,13 +293,11 @@ const AddPortfolio = ({
                   <FaPlus />
                 </label>
                 <button
+                  type="button"
                   onClick={() => document.getElementById("files").click()}
                 >
-
-
                   파일 선택
-
-               </button>
+                </button>
               </li>
 
               {/* 5개의 이미지 슬롯 */}
@@ -289,6 +313,7 @@ const AddPortfolio = ({
                   >
                     {filePreviews[index] && (
                       <button
+                        type="button"
                         className="del-preview"
                         onClick={() => handleRemoveFile(index)}
                       >
@@ -323,7 +348,7 @@ const AddPortfolio = ({
               취소
             </button>
             <button className="okay" type="submit">
-              등록하기
+              수정하기
             </button>
           </div>
         </form>
@@ -332,4 +357,4 @@ const AddPortfolio = ({
   );
 };
 
-export default AddPortfolio;
+export default EditPortfolio;

@@ -10,32 +10,21 @@ import {
   RoomType,
 } from "../../../types/MessageCenterType";
 
-function MessageCenter() {
-  //   const [cookies] = useCookies<string>([""]);
+function MessageCenter(): JSX.Element {
   const [cookies] = useCookies(["roomId"]);
   const roomId = cookies.roomId;
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  // const [connected, setConnected] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  // const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-  // const roomId = useRecoilValue(checkRoom);
 
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
 
-  // 메시지 컨테이너에 대한 ref 추가
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // roomId 변화 감지를 위한 useEffect 추가
-  useEffect(() => {
-    console.log("Current roomId:", roomId);
-  }, [roomId]);
-
-  // 메시지가 업데이트될 때마다 스크롤을 아래로 이동시키는 useEffect 추가
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
@@ -43,15 +32,8 @@ function MessageCenter() {
     }
   }, [messages]);
 
-  // username을 임시값으로 설정
-  useEffect(() => {
-    setUsername("User" + Math.floor(Math.random() * 1000));
-  }, []);
-
   useEffect(() => {
     let ws: WebSocket | null = null;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
       if (!roomId) {
@@ -62,18 +44,15 @@ function MessageCenter() {
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
-        // setConnected(true);
         setSocket(ws);
-        reconnectAttempts = 0;
       };
 
       ws.onmessage = event => {
-        console.log("웹소켓에서 수신한 데이터:", event.data);
-        console.log("웹소켓에서 수신한 데이터:", event);
+        // console.log("웹소켓에서 수신한 데이터:", event.data);
+        // console.log("웹소켓에서 수신한 데이터:", event);
 
         try {
           let messageData: MessageType = {} as MessageType;
-          console.log("Raw message received:", event.data);
 
           if (event.data instanceof Blob) {
             const reader = new FileReader();
@@ -81,15 +60,10 @@ function MessageCenter() {
               try {
                 if (typeof reader.result === "string") {
                   messageData = JSON.parse(reader.result);
-                  // if (!messageData.username) {
-                  //   messageData.username = username;
-                  // }
-                  console.log("Parsed Blob message:", messageData);
                   setMessages(prevMessages => {
                     const isDuplicate = prevMessages.some(
                       msg =>
                         msg.message === messageData.message &&
-                        msg.username === messageData.username &&
                         JSON.stringify(msg.file) ===
                           JSON.stringify(messageData.file),
                     );
@@ -107,15 +81,10 @@ function MessageCenter() {
             const decoder = new TextDecoder();
             const jsonStr = decoder.decode(event.data);
             messageData = JSON.parse(jsonStr);
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed ArrayBuffer message:", messageData);
             setMessages(prevMessages => {
               const isDuplicate = prevMessages.some(
                 msg =>
                   msg.message === messageData.message &&
-                  msg.username === messageData.username &&
                   JSON.stringify(msg.file) === JSON.stringify(messageData.file),
               );
               return isDuplicate
@@ -135,7 +104,6 @@ function MessageCenter() {
             if (!messageData.username) {
               messageData.username = username;
             }
-            console.log("Parsed string message:", messageData);
             setMessages(prevMessages => {
               const isDuplicate = prevMessages.some(
                 msg =>
@@ -146,21 +114,6 @@ function MessageCenter() {
               return isDuplicate
                 ? prevMessages
                 : [...prevMessages, messageData];
-            });
-          }
-
-          // 디버깅용 로그
-          if (messageData) {
-            console.log("수신된 메시지:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data
-                      ? messageData.file.data.substring(0, 50) + "..."
-                      : null,
-                  }
-                : null,
             });
           }
         } catch (error) {
@@ -175,15 +128,7 @@ function MessageCenter() {
 
       ws.onclose = () => {
         console.log("웹소켓 연결 종료");
-        // setConnected(false);
         setSocket(null);
-
-        // 재연결 시도
-        if (reconnectAttempts < maxReconnectAttempts) {
-          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
-          reconnectAttempts++;
-          setTimeout(connectWebSocket, 5000);
-        }
       };
     };
 
@@ -227,19 +172,14 @@ function MessageCenter() {
               roomId: roomId,
               message: inputMessage,
               file: fileData,
-              // contents: inputMessage,
             };
 
-            // JSON을 문자열로 변환
             const jsonString = JSON.stringify(messageData);
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
 
-            // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
-            setMessages(prevMessages => [...prevMessages, messageData]);
-
-            // 디버깅용 로그
+            // 로컬 메시지 추가 부분 제거
             console.log("전송할 메시지 데이터:", {
               ...messageData,
               file: messageData.file
@@ -256,17 +196,12 @@ function MessageCenter() {
             flag: 0,
             roomId: roomId,
             message: inputMessage,
-            // contents: inputMessage,
           };
 
-          // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
-
-          // 로컬 메시지 목록에 추가 (즉시 화면에 표시)
-          setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
         setInputMessage("");
@@ -279,7 +214,6 @@ function MessageCenter() {
         console.error("메시지 전송 실패:", error);
       }
     } else {
-      console.log("Socket status:", socket?.readyState);
       alert("채팅 서버에 연결되어 있지 않습니다.");
     }
   };
@@ -315,10 +249,8 @@ function MessageCenter() {
           room_id: roomId,
         },
       });
-      console.log("채팅 메시지:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setMessages(res.data.resultData);
-        console.log("채팅 메시지:", res.data.resultData);
       } else {
         setMessages([]);
       }
@@ -329,7 +261,6 @@ function MessageCenter() {
   };
 
   const handleRoomSelect = (roomId: number) => {
-    // setSelectedRoomId(roomId);
     setCookie("roomId", roomId, {
       path: "/",
       expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
@@ -366,21 +297,19 @@ function MessageCenter() {
         >
           <img
             src={
-              item.logo
-                ? `${IMAGE_BASE_URL}${item.logo}`
-                : "/default-profile.png"
+              item.pic ? `${IMAGE_BASE_URL}${item.pic}` : "/default-profile.png"
             }
             alt="업체 이미지"
             className="w-[50px] h-[50px] rounded-full object-cover"
           />
           <div className="flex flex-col gap-[5px] text-left w-full">
             <span className="text-[12px] font-semibold text-left">
-              {item.businessName}
+              {item.userName}
             </span>
             <div className="truncate font-[14px] text-left">
-              {item.title.length > 14
-                ? `${item.title.slice(0, 14)}...`
-                : item.title}
+              {item.recentlyChat.length > 14
+                ? `${item.recentlyChat.slice(0, 14)}...`
+                : item.recentlyChat}
             </div>
             <div className="text-[12px] text-[#B8B8B8] text-left">
               {item.roomCreatedAt}
@@ -403,7 +332,6 @@ function MessageCenter() {
   return (
     <div className="flex justify-center items-center">
       <div className="flex">
-        {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
           {/* 메시지 리스트 */}
           <div className="flex flex-col w-full overflow-y-auto">
@@ -419,18 +347,17 @@ function MessageCenter() {
           </div>
         </div>
 
-        {/* Message container */}
         <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
           {/* 상태 표시 헤더 */}
           <div className="flex p-[10px] justify-between items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
             <div className="flex gap-[5px]">
               <img
-                src={`${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId)?.logo}`}
+                src={`${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId)?.pic}`}
                 alt="Profile"
                 className="w-[45px] h-[45px] rounded-full"
               />
               <span className="flex justify-center items-center text-[24px] font-semibold pl-[10px]">
-                {roomList.find(room => room.roomId === roomId)?.businessName}
+                {roomList.find(room => room.roomId === roomId)?.userName}
               </span>
             </div>
             <button
@@ -446,70 +373,45 @@ function MessageCenter() {
             ref={messageContainerRef}
             className="flex flex-col w-full p-[20px] flex-grow overflow-y-auto bg-white"
           >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex gap-[10px] ${
-                  msg.flag === 1 ? "justify-start" : "justify-end"
-                } mb-4`}
-              >
-                {msg.flag === 1 && (
-                  <img
-                    src={`${IMAGE_BASE_URL}${msg.logo}`}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                )}
+            {messages.map((msg, index) => {
+              // console.log(`메시지 ${index}:`, msg.pic);
+              return (
                 <div
+                  key={index}
                   className={`flex ${
-                    msg.flag === 1 ? "flex-row" : "flex-row-reverse"
-                  } gap-3 max-w-[80%]`}
+                    msg.flag === 0 ? "self-end" : "self-start"
+                  } gap-[10px] py-[15px]`}
                 >
-                  <div
-                    className={`flex flex-col ${
-                      msg.flag === 1 ? "items-start" : "items-end"
-                    }`}
+                  {msg.flag === 1 && (
+                    <img
+                      src={`${IMAGE_BASE_URL}${msg.logo2}`}
+                      alt="Profile"
+                      className="w-[45px] h-[45px] rounded-full"
+                    />
+                  )}
+                  <span
+                    className={`flex flex-col justify-center items-start max-w-[240px] ${
+                      msg.flag === 0
+                        ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
+                        : "bg-[#f3f3f3] rounded-tr-[8px]"
+                    } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
                   >
-                    <div
-                      className={`p-3 rounded-lg ${
-                        msg.flag === 1
-                          ? "bg-[#F0F4FF] text-gray-800 rounded-br-none"
-                          : "bg-[#34C5F0] text-white rounded-bl-none"
-                      } shadow-sm`}
-                    >
-                      <div className="text-sm break-words whitespace-pre-wrap">
-                        {msg.message !== "" ? msg.message : null}
+                    <div className="m-4 break-all whitespace-pre-wrap">
+                      {msg.message}
+                    </div>
+                    {msg.pic && (
+                      <div className="mt-2">
+                        <img
+                          src={`${IMAGE_BASE_URL}${msg.pic}`}
+                          alt="Uploaded content"
+                          className="max-w-[200px] rounded-lg p-[5px]"
+                        />
                       </div>
-                      {msg.file && msg.file.data && (
-                        <div className="mt-2">
-                          <img
-                            src={`data:${msg.file.type};base64,${msg.file.data}`}
-                            alt={msg.file.name}
-                            className="max-w-[200px] rounded-lg p-[5px]"
-                          />
-                        </div>
-                      )}
-                      {msg.pics && msg.pics.length > 0 && (
-                        <div className="mx-4 mb-4">
-                          <img
-                            src={`${IMAGE_BASE_URL}${msg.pics[0].pic}`}
-                            alt={msg.pics[0].name}
-                            className="max-w-[200px] rounded p-[px]"
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {msg.createdAt &&
-                        new Date(msg.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                    </div>
-                  </div>
+                    )}
+                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* 메시지 입력 영역 */}

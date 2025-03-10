@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
@@ -45,8 +45,8 @@ function ContactUs() {
 
   useEffect(() => {
     let ws;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
+    // let reconnectAttempts = 0;
+    // const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
       if (!roomId) {
@@ -92,11 +92,11 @@ function ContactUs() {
         setConnected(false);
         setSocket(null);
 
-        if (reconnectAttempts < maxReconnectAttempts) {
-          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
-          reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000);
-        }
+        // if (reconnectAttempts < maxReconnectAttempts) {
+        //   console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
+        //   reconnectAttempts++;
+        //   setTimeout(connectWebSocket, 3000);
+        // }
       };
     };
 
@@ -360,7 +360,7 @@ function ContactUs() {
                     className={`flex flex-col justify-center items-start max-w-[240px] ${
                       msg.flag === 1
                         ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
-                        : "bg-white rounded-tr-[8px]"
+                        : "bg-[#f3f3f3] rounded-tr-[8px]"
                     } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
                   >
                     <div className="m-4 break-all whitespace-pre-wrap">

@@ -22,6 +22,7 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginApi } from "../../../apis/login";
 import { ProductState } from "../../../atoms/productAtom";
+import { Popup } from "../../../components/ui/Popup";
 
 function CompanyInfo() {
   const busiId = localStorage.getItem("businessId");
@@ -31,7 +32,17 @@ function CompanyInfo() {
   const businessState = useRecoilValue(businessDetailState);
   const [optionList, setOptionList] = useRecoilState(ProductState);
 
+  // 팝업 관련 상태 추가
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
   const navigate = useNavigate();
+
+  // 로고 수정 완료 콜백 함수
+  const handleLogoEditComplete = () => {
+    setIsLogoEdit(false);
+  };
+
   const getBusinessInfo = async busiId => {
     try {
       const res = await loginApi.get(
@@ -90,6 +101,9 @@ function CompanyInfo() {
               businessState={businessState}
               setIsLogoEdit={setIsLogoEdit}
               busiId={busiId}
+              setIsPopupOpen={setIsPopupOpen}
+              setPopupMessage={setPopupMessage}
+              onLogoEditComplete={handleLogoEditComplete}
             />
           ) : (
             <Logo businessState={businessState} setIsLogoEdit={setIsLogoEdit} />
@@ -179,6 +193,22 @@ function CompanyInfo() {
           </div>
         </OpContBoxDiv>
       </ExpertOptionInfoDiv>
+
+      {/* 팝업 컴포넌트 */}
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        message={popupMessage}
+        showConfirmButton={true}
+        onConfirm={() => {
+          console.log("onConfirm triggered"); // 디버깅용 로그
+          if (popupMessage === "로고가 수정되었습니다.") {
+            console.log("Closing LogoEdit mode"); // 디버깅용 로그
+            handleLogoEditComplete(); // 로고 수정 완료 콜백 호출
+          }
+          setIsPopupOpen(false);
+        }}
+      />
     </ExportPageDiv>
   );
 }

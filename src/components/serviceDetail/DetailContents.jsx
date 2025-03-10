@@ -29,12 +29,14 @@ import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
 import ContReview from "./ContReview";
 import { useCookies } from "react-cookie";
+import { PiSirenFill } from "react-icons/pi";
+
+import { BASE_URL } from "../../constants/constants";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
   const { id } = useParams();
   const navigate = useNavigate();
-  const BASE_URL = "http://112.222.157.157:5234";
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
@@ -268,17 +270,22 @@ const DetailContents = () => {
         <div className="inner">
           <div className="top">
             <h2>{businessDetail.businessName}</h2>
-            <div
-              className="like"
-              onClick={e => {
-                handleClickBusiness(e);
-              }}
-            >
-              {currentLikeStatus.isLiked ? (
-                <BsHeartFill />
-              ) : (
-                <BsHeart style={{ color: "gray" }} />
-              )}
+            <div className="btn-box">
+              <div
+                className="like"
+                onClick={e => {
+                  handleClickBusiness(e);
+                }}
+              >
+                {currentLikeStatus.isLiked ? (
+                  <BsHeartFill />
+                ) : (
+                  <BsHeart style={{ color: "gray" }} />
+                )}
+              </div>
+              <div className="siren">
+                <PiSirenFill />
+              </div>
             </div>
           </div>
           <CountStarCustomDiv>

@@ -1,5 +1,9 @@
+import { BASE_URL } from "../../constants/constants";
+import { useNavigate } from "react-router-dom";
+
 const Logo = ({ setIsLogoEdit, businessState }) => {
-  const BASE_URL = "http://112.222.157.157:5234";
+  const navigate = useNavigate();
+
   return (
     <div className="photo-area">
       <div className="logo">
@@ -9,7 +13,11 @@ const Logo = ({ setIsLogoEdit, businessState }) => {
         />
       </div>
       <div className="btn-area">
-        <button>상품 페이지</button>
+        <button
+          onClick={() => navigate(`/service/${businessState.businessId}`)}
+        >
+          상품 페이지
+        </button>
         <button
           onClick={() => {
             setIsLogoEdit(true);

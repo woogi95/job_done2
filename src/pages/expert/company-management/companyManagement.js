@@ -361,21 +361,34 @@ export const PortfolioListItemDiv = styled.div`
   width: calc((100% - 90px) / 4);
   min-width: 213px;
   height: 213px;
-  border: 1px solid #ddd;
+  border: 1px solid #eee;
+  border: 1px solid rgb(0, 67, 192, 0.15);
   background-color: #fff;
   overflow: hidden;
   border-radius: 5px;
   position: relative;
+  transition: all 0.3s;
+  &:hover {
+    transform: scale(1.02);
+    /* border: 1px solid rgb(0, 67, 192); */
+    box-shadow:
+      rgba(0, 0, 0, 0.19) 0px 10px 20px,
+      rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  }
 
   .thum {
     position: absolute;
     top: 0;
     left: 0;
-
+    cursor: pointer;
     width: 100%;
     height: 100%;
     background-color: #fdfdfd;
     overflow: hidden;
+    transition: all 0.3s;
+    &:hover {
+      transform: scale(1.05);
+    }
     img {
       position: absolute;
       width: 100%;
@@ -387,28 +400,33 @@ export const PortfolioListItemDiv = styled.div`
     }
   }
   .txt-area {
+    cursor: pointer;
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     padding: 10px 15px;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.85) 0%,
-      rgba(0, 0, 0, 0.6) 50%,
-      rgba(0, 0, 0, 0) 100%
+    height: 80px;
+    background-image: linear-gradient(
+      180deg,
+      transparent 0,
+      rgb(34, 34, 34, 0.85)
     );
     h4 {
+      position: absolute;
+      bottom: 6px;
+      left: 20px;
+      width: calc(100% - 40px);
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.04em;
       color: #fff;
-      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.65);
       margin-bottom: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.25em;
     }
-    .btn-area {
+
+    /* .btn-area {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -431,7 +449,7 @@ export const PortfolioListItemDiv = styled.div`
           background-color: #11b1e1;
         }
       }
-    }
+    } */
   }
 `;
 
@@ -451,13 +469,17 @@ export const EditDetailDiv = styled.div`
     height: 100%;
   }
   .inner-bg {
-    background-color: #fff;
+    box-shadow:
+      rgba(0, 0, 0, 0.08) 0px 10px 15px -3px,
+      rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   }
   h1 {
     font-size: 38px;
     text-align: center;
     display: block;
     padding: 80px 0 40px;
+    color: #143c99;
+    font-weight: 600;
   }
 
   label {
@@ -476,6 +498,8 @@ export const EditDetailDiv = styled.div`
       background-color: #eaeef1;
       padding: 10px;
       color: #333;
+      background-color: #1f3d9b;
+      color: #fff;
     }
     input {
       /* border: 1px solid #eee; */
@@ -493,6 +517,7 @@ export const EditDetailDiv = styled.div`
   .ql-toolbar {
     border: 1px solid #2a58ad50;
     background-color: #eaeef1;
+    background-color: #f2f5ff;
   }
   .btn-area {
     display: flex;
@@ -518,16 +543,16 @@ export const PreviewAreaDiv = styled(EditDetailDiv)`
 `;
 // 상세페이지 미리보기
 export const PreviewDetailDiv = styled(DContsDiv)`
-  width: 80%;
+  max-width: 1280px;
   margin: 0 auto;
   height: 100%;
   background-color: #fff;
 
   .box {
     padding: 0 !important;
-    height: calc(100vh - 303px);
+    height: calc(100vh - 279px);
     margin-bottom: 33px;
-    border: 1px solid #3987fc;
+    /* border: 1px solid #3987fc; */
     overflow-y: auto;
   }
 `;
@@ -663,6 +688,66 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
     border-bottom: 1px solid #ddd;
     &:last-child {
       border-bottom: 0;
+    }
+  }
+`;
+// 미리보기
+export const PreviewDiv = styled.div`
+  width: calc(100% + 200px) !important;
+  height: 100vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* border: 1px solid #000; */
+  background-color: #fff !important;
+  z-index: 99;
+  > div:nth-child(2) {
+    background-color: #fff;
+  }
+
+  .btn-area {
+    position: absolute;
+    max-width: 1280px;
+    width: 100%;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+    justify-content: end;
+    border-color: transparent !important;
+    > div {
+      /* border: 1px solid #000; */
+      margin-top: 60px;
+      display: flex;
+      gap: 12px;
+
+      button {
+        width: 100px;
+        height: 38px;
+        background-color: #fff;
+        color: #555;
+        border-radius: 5px;
+        transition: all 0.3s;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+      button[type="submit"] {
+        border: 1px solid #4581f0;
+        color: #4581f0;
+      }
+      button.close-btn {
+        background-color: #ccc;
+        color: #333;
+      }
+      button.edit-btn {
+        background-color: #2a58ad;
+        color: #fff;
+      }
     }
   }
 `;

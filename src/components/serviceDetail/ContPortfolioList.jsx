@@ -13,9 +13,9 @@ import "swiper/css/navigation";
 import { PortfolioListItem, PortfolioSwiperDiv } from "./serviceDetail";
 // import required modules
 import { Navigation } from "swiper/modules";
+import { BASE_URL } from "../../constants/constants";
 
 const ContPortfolioList = ({ handleImageClick }) => {
-  const BASE_URL = "http://112.222.157.157:5234";
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
 

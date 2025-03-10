@@ -7,9 +7,9 @@ import { ListItemDiv } from "./service";
 // icon
 import { BsHeartFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
+import { BASE_URL } from "../../constants/constants";
 
 const ServiceListItem = ({ business, onClick }) => {
-  const BASE_URL = "http://112.222.157.157:5234";
   const [likeStatus] = useRecoilState(likeStatusState);
   const currentLikeStatus = likeStatus[business.businessId] || {
     isLiked: false,

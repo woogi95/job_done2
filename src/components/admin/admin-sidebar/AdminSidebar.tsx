@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 // styled-components 적용
 
 // icon
@@ -9,9 +9,12 @@ import { SideMenuDiv } from "./adminsidebarD";
 const AdminSidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isActiveMenu, setIsActiveMenu] = useState(false);
-  const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
+const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
   const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // const navigate = useNavigate();
+
 
   const location = useLocation();
 
