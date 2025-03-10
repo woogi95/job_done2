@@ -10,11 +10,16 @@ import {
   QuotationDiv,
   QuotationFormDiv,
 } from "./qouteManagement";
+import { useLocation } from "react-router-dom";
 
 function QuotationForm() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const serviceIdFromUrl = queryParams.get("serviceId");
+
   const [papersInfo, setPapersInfo] = useState();
   const getBusinessId = localStorage.getItem("businessId");
-  const serviceId = getCookie("serviceId");
+  const serviceId = serviceIdFromUrl || getCookie("serviceId");
   const [startTime, setStartTime] = useState(dayjs().hour(10).minute(0));
   const [endTime, setEndTime] = useState(dayjs().hour(18).minute(0));
   const [startDate, setStartDate] = useState(null);
@@ -32,12 +37,10 @@ function QuotationForm() {
 
   const getPapersInfo = async () => {
     try {
-      const res = await loginApi.get("/api/service/detail", {
-        params: {
-          serviceId: serviceId,
-          businessId: getBusinessId,
-        },
-      });
+      const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}&businessId=${getBusinessId}`,
+        {},
+      );
       console.log("API 응답 데이터:", res.data);
       setPapersInfo(res.data.resultData);
 
@@ -58,6 +61,7 @@ function QuotationForm() {
     if (!serviceId) {
       console.warn("serviceId 쿠키를 찾을 수 없습니다");
     }
+    console.log("serviceId:", serviceId);
     getPapersInfo();
   }, []);
 
@@ -67,17 +71,6 @@ function QuotationForm() {
       setTotalPrice(papersInfo.totalPrice);
     }
   }, [papersInfo]);
-
-  // 추가 견적 금액이 변경될 때마다 총액 계산
-  // useEffect(() => {
-  //   const additionalTotal = additionalQuotes.reduce((sum, quote) => {
-  //     return sum + (Number(quote.price) || 0);
-  //   }, 0);
-
-  // 기존 금액과 추가 견적 금액의 합계
-  //   const newTotal = (papersInfo?.totalPrice || 0) + additionalTotal;
-  //   setTotalPrice(newTotal);
-  // }, [additionalQuotes, papersInfo]);
 
   const putQuotation = async () => {
     try {
@@ -150,7 +143,11 @@ function QuotationForm() {
             <div>
               <label>
                 <h4>사업자번호</h4>
-                <span>{papersInfo?.businessNum}</span>
+                <input
+                  type="text"
+                  value={papersInfo?.businessNum || ""}
+                  readOnly
+                />
               </label>
               <label>
                 <h4>연락처</h4>
@@ -172,13 +169,17 @@ function QuotationForm() {
                 <h4>분류</h4>
                 <input
                   type="text"
-                  value={papersInfo?.categoryName || ""}
+                  value={papersInfo?.detailTypeName || ""}
                   readOnly
                 />
               </label>
               <label>
                 <h4>주소</h4>
-                <input type="text" value={papersInfo?.address || ""} readOnly />
+                <input
+                  type="text"
+                  value={papersInfo?.businessAddress || ""}
+                  readOnly
+                />
               </label>
             </div>
           </div>
@@ -190,7 +191,7 @@ function QuotationForm() {
                 <h4>예약자명</h4>
                 <input
                   type="text"
-                  value={papersInfo?.customerName || ""}
+                  value={papersInfo?.userName || ""}
                   readOnly
                 />
               </label>
@@ -198,17 +199,13 @@ function QuotationForm() {
                 <h4>연락처</h4>
                 <input
                   type="text"
-                  value={papersInfo?.customerPhone || ""}
+                  value={papersInfo?.userPhone || ""}
                   readOnly
                 />
               </label>
               <label>
                 <h4>주소</h4>
-                <input
-                  type="text"
-                  value={papersInfo?.customerAddress || ""}
-                  readOnly
-                />
+                <input type="text" value={papersInfo?.address || ""} readOnly />
               </label>
             </div>
           </div>
@@ -224,22 +221,28 @@ function QuotationForm() {
                   readOnly
                 />
               </label>
-              <label>
+              <label className="pyeong">
                 <h4>평수</h4>
-                <input type="text" value={papersInfo?.pyeong || ""} readOnly />
+                <input
+                  type="text"
+                  value={papersInfo?.pyeong || ""}
+                  readOnly
+                />{" "}
+                평
               </label>
 
               <label className="flex">
                 <h4 className="flex-col flex !justify-center !items-center">
                   옵션
                 </h4>
-                <div className="flex flex-col gap-[5px]">
+                <div className=" option-box flex flex-col gap-[5px]">
                   {papersInfo?.options.map((item, index) => (
                     <div key={item.optionId}>
-                      <span className="font-semibold">{item.optionName} -</span>{" "}
-                      <span>{item.optionDetailName},</span>{" "}
-                      <span className="font-semibold">가격 : </span>
-                      <span>{item.optionDetailPrice}원</span>
+                      <span>
+                        <b>[옵션 {index + 1}]</b> {item.optionName} -{" "}
+                        {item.optionDetailName}
+                      </span>
+                      <span>{item.optionDetailPrice.toLocaleString()} 원</span>
                     </div>
                   ))}
                 </div>
@@ -249,18 +252,14 @@ function QuotationForm() {
           {/* 문의사항 */}
           <div className="text-area">
             <h3>문의사항</h3>
-            <textarea />
+            <textarea value={papersInfo?.comment || ""} readOnly />
           </div>
           {/* 견적내용 추가 */}
           <AddOptionDiv>
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold">추가견적</h3>
-              <button
-                type="button"
-                className="text-white font-[12px] bg-[#2a58ad] rounded px-4 py-2"
-                onClick={handleAddQuote}
-              >
-                추가
+            <div>
+              <h3>추가견적</h3>
+              <button type="button" onClick={handleAddQuote}>
+                견적추가 +
               </button>
             </div>
             <div>
@@ -296,7 +295,6 @@ function QuotationForm() {
                       <button
                         type="button"
                         onClick={() => handleRemoveQuote(quote.id)}
-                        className="text-white bg-red-500 rounded px-2 py-1 text-sm"
                       >
                         삭제
                       </button>
@@ -313,14 +311,16 @@ function QuotationForm() {
               {/* 견적일 */}
               <div>
                 <h4>견적일</h4>
-                <div className="flex items-center gap-2">
+                <div className="col2">
                   <DatePicker
+                    className="dp-style"
                     value={startDate}
                     onChange={date => setStartDate(date)}
                     placeholder="시작일"
                   />
-                  <span>-</span>
+                  <span> - </span>
                   <DatePicker
+                    className="dp-style"
                     value={endDate}
                     onChange={date => setEndDate(date)}
                     placeholder="종료일"
@@ -330,16 +330,18 @@ function QuotationForm() {
               {/* 견적시간 */}
               <div>
                 <h4>견적시간</h4>
-                <div className="flex items-center gap-2">
+                <div className="col2">
                   <TimePicker
+                    className="dp-style"
                     value={startTime}
                     onChange={time => setStartTime(time)}
                     format="HH:mm"
                     minuteStep={10}
                     placeholder="시작 시간"
                   />
-                  <span>-</span>
+                  <span> - </span>
                   <TimePicker
+                    className="dp-style"
                     value={endTime}
                     onChange={time => setEndTime(time)}
                     format="HH:mm"
@@ -352,7 +354,7 @@ function QuotationForm() {
             {/* 견적금액 */}
             <div className="price">
               <h4>견적금액</h4>
-              <div className="left-[5px]">{totalPrice.toLocaleString()}원</div>
+              <div>{totalPrice.toLocaleString()}원</div>
             </div>
           </DatePriceDiv>
           {/* 특이사항 */}

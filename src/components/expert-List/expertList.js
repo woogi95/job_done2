@@ -79,45 +79,4 @@ export const EFilterDiv = styled.div`
       }
     }
   }
-  .pagination {
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px; /* 버튼 사이 간격 */
-    margin: 20px 0;
-  }
-
-  .pagination button {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f9fa;
-    color: #333;
-    font-size: 14px;
-    cursor: pointer;
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-  }
-
-  .pagination button:hover {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-  }
-
-  .pagination button.active {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-    font-weight: bold;
-  }
-
-  .pagination button:disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
-    cursor: not-allowed;
-    border-color: #dee2e6;
-  }
 `;

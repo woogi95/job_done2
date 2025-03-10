@@ -2,9 +2,9 @@ import { FaStar } from "react-icons/fa";
 import { CountStarDiv, DetailTopDiv } from "./serviceDetail";
 import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
+import { BASE_URL } from "../../constants/constants";
 
 const DetailTop = () => {
-  const BASE_URL = "http://112.222.157.157:5234";
   const businessDetail = useRecoilValue(businessDetailState);
   // console.log(businessDetail);
   if (!businessDetail) {

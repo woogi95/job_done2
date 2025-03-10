@@ -2,11 +2,18 @@ import { useState } from "react";
 // icon
 import { IoCamera } from "react-icons/io5";
 import { loginApi } from "../../apis/login";
+import { BASE_URL } from "../../constants/constants";
 
-const LogoEdit = ({ setIsLogoEdit, businessState, busiId }) => {
+const LogoEdit = ({
+  businessState,
+  setIsLogoEdit,
+  busiId,
+  setIsPopupOpen,
+  setPopupMessage,
+  onLogoEditComplete,
+}) => {
   const [LogoPreview, setLogoPreview] = useState(null);
   const [LogoFile, setLogoFile] = useState(null);
-  const BASE_URL = "http://112.222.157.157:5234";
 
   const handleFileChange = e => {
     const file = e.target.files[0];
@@ -22,41 +29,47 @@ const LogoEdit = ({ setIsLogoEdit, businessState, busiId }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (LogoFile) {
-      try {
-        const requestData = {
-          p: {
-            businessId: busiId,
-          },
-        };
-        console.log("requestData:", requestData);
+    if (!LogoFile) {
+      setPopupMessage("수정할 이미지를 선택해주세요.");
+      setIsPopupOpen(true);
+      return;
+    }
 
-        const formData = new FormData();
+    try {
+      const requestData = {
+        p: {
+          businessId: busiId,
+        },
+      };
+      console.log("requestData:", requestData);
 
-        formData.append(
-          "p",
-          new Blob([JSON.stringify(requestData.p)], {
-            type: "application/json",
-          }),
-        );
+      const formData = new FormData();
 
-        // 파일이 존재하면 FormData에 추가
-        formData.append("logo", LogoFile);
-        console.log("formData!!!!!:", formData);
-        // 요청 보내기
-        const response = await loginApi.patch("/api/business/logo", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(requestData.p)], {
+          type: "application/json",
+        }),
+      );
 
-        if (response.status === 200) {
-          console.log("성공!!");
-          setIsLogoEdit(false);
-        }
-      } catch (error) {
-        console.error("회원정보 수정 실패:", error);
+      // 파일이 존재하면 FormData에 추가
+      formData.append("logo", LogoFile);
+      console.log("formData!!!!!:", formData);
+      // 요청 보내기
+      const response = await loginApi.patch("/api/business/logo", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("성공!!");
+        setPopupMessage("로고가 수정되었습니다.");
+        setIsPopupOpen(true);
+        onLogoEditComplete(); // 로고 수정 완료 콜백 호출
       }
+    } catch (error) {
+      console.error("회원정보 수정 실패:", error);
     }
   };
 
@@ -93,6 +106,18 @@ const LogoEdit = ({ setIsLogoEdit, businessState, busiId }) => {
           <button type="submit">로고 저장</button>
         </div>
       </div>
+      {/* <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        message={popupMessage}
+        showConfirmButton={true}
+        onConfirm={() => {
+          if (popupMessage === "로고가 수정되었습니다.") {
+            setIsLogoEdit(false);
+          }
+          setIsPopupOpen(false);
+        }}
+      /> */}
     </form>
   );
 };
