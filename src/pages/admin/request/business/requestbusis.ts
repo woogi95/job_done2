@@ -46,6 +46,30 @@ export const TableContainer = styled.table`
     border-bottom: 1px dotted #ececec;
   }
 
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 21%;
+  } /* 등록 시간 */
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 15%;
+  } /* 사업자 등록증 */
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 15%;
+  } /* 서비스 종류 */
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 12%;
+  } /* 신청자 */
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 19%;
+  } /* 업체 이름 */
+  th:nth-child(6),
+  td:nth-child(6) {
+    width: 18%;
+  } /* 상태 */
   tbody tr:nth-child(odd) {
     background: #ffffff;
   }

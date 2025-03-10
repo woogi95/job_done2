@@ -2,7 +2,7 @@
 export interface UserInfoType {
   userName: string;
   phone: string;
-  detailTypeName: string;
+  detailTypeName: string | null;
   serviceNumber: number;
   userId: number;
   type: string;
@@ -65,9 +65,27 @@ export interface StatesDashType {
   newUserCount: number;
   newUserPercent: number;
   unprocessedInquiries: number;
+  increaseUnprocessedInquiries: number;
   newBusinessCount: number;
+  newBusinessCountThenYesterday: number;
 }
-
+// 관리자 메인페이지
+// 6개월 매출 조회
+export interface SalesInfoDtosType {
+  categoryName: string;
+  totalPrice: number;
+}
+export interface StateSixMonthType {
+  month: string;
+  totalPrice: number;
+  salesInfoDtos: SalesInfoDtosType[];
+}
+// 일주일 접속한 유저 수
+export interface StateVitorType {
+  date: string;
+  dateOfWeek: string;
+  visitorCount: number;
+}
 // ===============================================================
 // 문의 사항
 export interface QaType {
