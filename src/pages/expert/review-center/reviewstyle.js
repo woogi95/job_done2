@@ -10,7 +10,6 @@ export const RequestBusiContainer = styled.div`
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   max-width: 100%;
   width: 100%;
-  margin: 20px auto;
 `;
 
 // 테이블 감싸는 박스

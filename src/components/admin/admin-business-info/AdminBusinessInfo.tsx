@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 // comp
 // styled
 import {
@@ -20,11 +20,11 @@ import { ProductState } from "../../../atoms/productAtom";
 import { businessDetailAtom } from "../../../atoms/third-atoms/business/adbusinessAtom";
 import AdminBusiLogo from "./AdminBusiLogo";
 
-interface BusinessInfoType {
+export interface BusinessInfoType {
   logo: string;
   detailTypeId: number;
   detailTypeName: string;
-  businessId: number;
+  businessId?: number;
   businessName: string;
   title: string;
   scoreAvg: number;
@@ -32,19 +32,19 @@ interface BusinessInfoType {
   like: number;
   address: string;
   serviceCount: number;
-  openingTime: string;
-  closingTime: string;
+  openingTime?: string;
+  closingTime?: string;
   years: number;
   contents: string;
   reviewCount: number;
-  safeTel: string;
   tel: string;
+  safeTel: string;
   businessNum: string;
 }
 
 function AdminBusinessInfo() {
-  const [searchParams] = useSearchParams();
-  const busiId = Number(searchParams.get("businessId"));
+  const { businessId } = useParams();
+  const busiId = Number(businessId);
   const [businessInfo, setBusinessInfo] =
     useRecoilState<BusinessInfoType>(businessDetailAtom);
   const businessState = useRecoilValue<BusinessInfoType>(businessDetailAtom);
@@ -54,7 +54,7 @@ function AdminBusinessInfo() {
   const getBusinessInfo = async (busiId: number) => {
     try {
       const res = await loginApi.get(
-        `/api/business/%7BbusinessId%7D?businessId=${busiId}`,
+        `/api/business/business?businessId=${busiId}`,
       );
       setBusinessInfo(res.data.resultData);
       console.log(res.data.resultData);
@@ -94,7 +94,6 @@ function AdminBusinessInfo() {
         </TitleAreaDiv>
         <ContBoxDiv>
           {/* 로고 & 로고수정 */}
-
           <AdminBusiLogo businessState={businessState} />
           <ExpertInfo />
         </ContBoxDiv>

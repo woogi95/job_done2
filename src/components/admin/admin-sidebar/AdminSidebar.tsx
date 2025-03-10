@@ -31,6 +31,13 @@ const AdminSidebar = () => {
       setIsActiveMenu(false);
     }
   }, [location.pathname]);
+  useEffect(() => {
+    if (location.pathname === "/admin/userlist") {
+      setUserIsActiveMenu(true);
+    } else {
+      setUserIsActiveMenu(false);
+    }
+  }, [location.pathname]);
 
   return (
     <SideMenuDiv>

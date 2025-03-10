@@ -54,23 +54,20 @@ export const TableContainer = styled.table`
   tbody tr:nth-child(even) {
     background: #f8f9fa;
   }
-   th:nth-child(1),
-  td:nth-child(1) {
-    width: 10%;
-  } /* 고객 이름 */
-  th:nth-child(2),
-  td:nth-child(2) {
-    width: 25%;
-  } /* 연락처 */
-  th:nth-child(3),
-  td:nth-child(3) {
-    width: 18%;
-  } /* 최근 요청 서비스 */
-  th:nth-child(4),
-  td:nth-child(4) {
-    width: 23%;
-  } /* 서비스 이용 횟수 */
-
+  .th,
+  .td {
+    &:nth-of-type(1) {
+      width: 20%;
+    }
+    &:nth-of-type(2) {
+      width: 30%;
+    }
+    &:nth-of-type(3) {
+      width: 20%;
+    }
+    &:nth-of-type(4) {
+      width: 20%;
+    }
   }
 `;
 

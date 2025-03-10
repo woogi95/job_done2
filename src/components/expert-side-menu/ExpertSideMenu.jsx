@@ -10,12 +10,18 @@ import { statusAtom } from "../../atoms/statusAtom";
 const ExpertSideMenu = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isActiveMenu, setIsActiveMenu] = useState(false);
+  const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState(false);
+  const [isUserActiveMenu, setUserIsActiveMenu] = useState(false);
   const navigate = useNavigate();
   const setStatus = useSetRecoilState(statusAtom);
 
   const toggleSubMenu = () => {
     setSubMenuOpen(prev => !prev);
   };
+  const toggleUserSubMenu = () => {
+    setIsUserSubMenuOpen(prev => !prev);
+  };
+
   const location = useLocation();
   useEffect(() => {
     if (location.pathname === "/expert/company-management/portfolio") {
@@ -24,7 +30,13 @@ const ExpertSideMenu = () => {
       setIsActiveMenu(false);
     }
   }, [location.pathname]);
-
+  useEffect(() => {
+    if (location.pathname === "/admin/userlist") {
+      setUserIsActiveMenu(true);
+    } else {
+      setUserIsActiveMenu(false);
+    }
+  }, [location.pathname]);
   // 메뉴 클릭 시 상태 변경 및 URL 변경
   const handleMenuClick = (newState, menuName) => {
     setStatus(newState); // Recoil 상태에 상태 값 저장
@@ -125,13 +137,46 @@ const ExpertSideMenu = () => {
             리뷰관리
           </NavLink>
         </li>
-        <li>
+
+        <li className="menu1">
           <NavLink
-            to={"/expert/statistics"}
-            className={({ isActive }) => (isActive ? "active" : "")}
+            to="/expert/statistics"
+            onClick={toggleUserSubMenu}
+            className={({ isUserActive }) =>
+              isUserActive || isUserActiveMenu ? "active" : ""
+            }
           >
             통계
+            <IoIosArrowDown
+              style={{
+                transform: isUserSubMenuOpen
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
+            />
           </NavLink>
+          <ul className={`sub-menu ${isUserSubMenuOpen ? "open" : ""}`}>
+            <li>
+              <NavLink
+                to="/expert/statistics"
+                className={({ isUserActive }) =>
+                  isUserActive && location.pathname !== "/expert/statistics"
+                    ? "active"
+                    : ""
+                }
+              >
+                최근 6개월 매출
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/expert/statistics/monthuser"
+                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+              >
+                최근 6개월 이용자
+              </NavLink>
+            </li>
+          </ul>
         </li>
       </ul>
       <NavLink to={"/"} className="userhome">

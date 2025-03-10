@@ -81,10 +81,56 @@ export interface StateSixMonthType {
   salesInfoDtos: SalesInfoDtosType[];
 }
 // 일주일 접속한 유저 수
-export interface StateVitorType {
+export interface StateVisitorType {
   date: string;
   dateOfWeek: string;
   visitorCount: number;
+}
+
+export interface StateCatePerType {
+  categoryId: number;
+  categoryName: string;
+  categoryCount: number;
+  categoryPercent: number;
+  detailTypeCounts: [
+    {
+      detailTypeId: number;
+      detailTypeName: string;
+      count: number;
+      detailTypePercent: number;
+    },
+  ];
+}
+// 카테고리 데이터 변환
+export interface cateDataType {
+  id: string;
+  value: number;
+  count: number;
+}
+export interface detailDataType {
+  id: string;
+  value: number;
+  count: number;
+}
+// 6개월 매출 데이터 변환
+export interface SixMonthDataType {
+  month: string;
+  totalPrice: number;
+}
+export interface BarSixMonthDataType {
+  data: SixMonthDataType;
+  month: string;
+  totalPrice: number;
+}
+// 최근 일주일 데이터 변환
+export interface DayUserDataType {
+  date: string;
+  visitorCount: number;
+}
+export interface BarDayUserDataType {
+  data: DayUserDataType[];
+  keys: string[];
+  indexBy: string;
 }
 // ===============================================================
 // 문의 사항

@@ -90,7 +90,7 @@ const CategorySearch = () => {
   };
   // 업체 정보 이동
   const handleNavigate = (businessId: number) => {
-    navigate(`infomationbusi?businessId=${businessId}`);
+    navigate(`infomationbusi/${businessId}`);
   };
   useEffect(() => {
     getBusinessList();

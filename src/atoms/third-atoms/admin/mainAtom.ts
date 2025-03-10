@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 import {
+  BarDayUserDataType,
+  BarSixMonthDataType,
+  cateDataType,
+  detailDataType,
+  StateCatePerType,
   StatesDashType,
   StateSixMonthType,
   StateVisitorType,
@@ -38,4 +43,70 @@ export const stateSixMonthAtom = atom<StateSixMonthType[]>({
 export const stateVisitorAtom = atom<StateVisitorType[]>({
   key: "stateVisitorAtom",
   default: [{ date: "", dateOfWeek: "", visitorCount: 0 }],
+});
+
+export const stateCatePerAtom = atom<StateCatePerType[]>({
+  key: "stateCatePerAtom",
+  default: [
+    {
+      categoryId: 0,
+      categoryName: "",
+      categoryCount: 0,
+      categoryPercent: 0,
+      detailTypeCounts: [
+        {
+          detailTypeId: 0,
+          detailTypeName: "",
+          count: 0,
+          detailTypePercent: 0,
+        },
+      ],
+    },
+  ],
+});
+
+// 그래프 데이터 가공 atom
+// 카테데이터
+export const dcCateDataAtom = atom<cateDataType[]>({
+  key: "dcCateDataAtom",
+  default: [{ id: "", value: 0, count: 0 }],
+});
+// 카테>디테일 데이터
+export const dcDetailDataAtom = atom<detailDataType[]>({
+  key: "dcDetailDataAtom",
+  default: [
+    {
+      id: "",
+      value: 0,
+      count: 0,
+    },
+  ],
+});
+
+// 6개월 데이터
+export const dcSixMonthDataAtom = atom<BarSixMonthDataType[]>({
+  key: "dcSixMonthDataAtom",
+  default: [
+    {
+      data: {
+        month: "",
+        totalPrice: 0,
+      },
+      month: "",
+      totalPrice: 0,
+    },
+  ],
+});
+
+// 최근 일주일 유저
+export const dcDaysUserDataAtom = atom<BarDayUserDataType>({
+  key: "dcDaysUserDataAtom",
+  default: {
+    data: {
+      date: "",
+      visitorCount: 0,
+    },
+    keys: [0],
+    indexBy: "",
+  },
 });

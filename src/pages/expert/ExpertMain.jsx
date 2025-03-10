@@ -10,6 +10,7 @@ import ExpertMainReserveList from "../../components/export-main-datas/ExpertMain
 import { loginApi } from "../../apis/login";
 import Index from "./statistics/Index";
 import ReserveUserCount from "../../components/export-statistics/ReserveUserCount";
+import TotalPriceMonth from "../../components/export-statistics/TotalPriceMonth";
 const BigBox = styled.div`
   height: 100%;
   width: 489px;
@@ -208,7 +209,7 @@ function ExpertMain() {
         }}
       >
         <BigBox>
-          <Index />
+          <TotalPriceMonth />
         </BigBox>
         <BigBox>
           <ReserveUserCount />

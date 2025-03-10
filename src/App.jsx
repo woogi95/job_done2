@@ -88,6 +88,7 @@ import CreateDetailPage from "./pages/expert/company-management/CreateDetailPage
 import CreateOptionPage from "./pages/expert/company-management/CreateOptionPage";
 import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
+import UserStatisitcs from "./pages/expert/statistics/UserStatisitcs";
 import AdminBusinessInfo from "./components/admin/admin-business-info/AdminBusinessInfo";
 
 function App() {
@@ -211,6 +212,7 @@ function App() {
             {/* 통계 */}
             <Route path="/expert/statistics">
               <Route index element={<Statistics />} />
+              <Route path="monthuser" element={<UserStatisitcs />} />
             </Route>
           </Route>
         </Route>
@@ -230,17 +232,16 @@ function App() {
             <Route path="businesssearch">
               <Route index element={<CategorySearch />} />
               <Route
-                path="infomationbusi"
-                index
-                element={<AdminBusinessInfo />}
-              />
-
-              <Route
                 path="reservesearch"
                 index
                 element={<ReservationSearch />}
               />
               <Route path="ruesearch" index element={<RevenueSearch />} />
+              <Route
+                path="infomationbusi/:businessId"
+                index
+                element={<AdminBusinessInfo />}
+              />
             </Route>
             {/* 업체,상품등록요청 */}
             <Route path="requestresi">
