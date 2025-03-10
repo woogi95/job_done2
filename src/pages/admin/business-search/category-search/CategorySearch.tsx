@@ -15,6 +15,7 @@ import {
   overlayStyle,
 } from "./categorysearchs";
 import { loginApi } from "../../../../apis/login";
+import { useNavigate } from "react-router-dom";
 
 type BusinessType = {
   id: number;
@@ -34,6 +35,7 @@ const CategorySearch = () => {
   const itemsPerPage = 10; // 한 페이지당 표시할 아이템 개수
   const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
   const [cateState, setCateState] = useState<string>("");
+  const navigate = useNavigate();
   // 등록모달 상태
   const [cateModal, setCateModal] = useState<boolean>(false);
   const [cateText, setCateText] = useState<string>("");
@@ -86,6 +88,10 @@ const CategorySearch = () => {
       console.log(error);
     }
   };
+  // 업체 정보 이동
+  const handleNavigate = (businessId: number) => {
+    navigate(`infomationbusi/${businessId}`);
+  };
   useEffect(() => {
     getBusinessList();
     getCategoryList();
@@ -130,7 +136,11 @@ const CategorySearch = () => {
               </tr>
             ) : (
               currentData.map(business => (
-                <tr key={business.businessId}>
+                <tr
+                  key={business.businessId}
+                  onClick={() => handleNavigate(business.businessId)}
+                  style={{ cursor: "pointer" }}
+                >
                   <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.categoryName}</td>

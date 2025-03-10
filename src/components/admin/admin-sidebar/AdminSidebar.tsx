@@ -9,13 +9,21 @@ import { SideMenuDiv } from "./adminsidebarD";
 const AdminSidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isActiveMenu, setIsActiveMenu] = useState(false);
+const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
+  const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   // const navigate = useNavigate();
+
 
   const location = useLocation();
 
   // 서브 메뉴 토글
   const toggleSubMenu = () => {
     setSubMenuOpen(prev => !prev);
+  };
+  const toggleUserSubMenu = () => {
+    setIsUserSubMenuOpen(prev => !prev);
   };
 
   // 현재 경로에 따라 활성화 메뉴 설정
@@ -24,6 +32,13 @@ const AdminSidebar = () => {
       setIsActiveMenu(true);
     } else {
       setIsActiveMenu(false);
+    }
+  }, [location.pathname]);
+  useEffect(() => {
+    if (location.pathname === "/admin/userlist") {
+      setUserIsActiveMenu(true);
+    } else {
+      setUserIsActiveMenu(false);
     }
   }, [location.pathname]);
 
@@ -92,13 +107,53 @@ const AdminSidebar = () => {
             </li>
           </ul>
         </li>
-        <li>
+        <li className="menu1">
           <NavLink
             to="/admin/userlist"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={toggleUserSubMenu}
+            className={({ isUserActive }) =>
+              isUserActive || isUserActiveMenu ? "active" : ""
+            }
           >
             유저 관리
+            <IoIosArrowDown
+              style={{
+                transform: isUserSubMenuOpen
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
+            />
           </NavLink>
+          <ul className={`sub-menu ${isUserSubMenuOpen ? "open" : ""}`}>
+            <li>
+              <NavLink
+                to="/admin/userlist"
+                className={({ isUserActive }) =>
+                  isUserActive && location.pathname !== "/admin/userlist"
+                    ? "active"
+                    : ""
+                }
+              >
+                사용자 관리
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/userlist/onebyone"
+                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+              >
+                문의 사항
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/userlist/userreport"
+                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+              >
+                신고
+              </NavLink>
+            </li>
+          </ul>
         </li>
       </ul>
       {/* 사용자 홈으로 이동 */}

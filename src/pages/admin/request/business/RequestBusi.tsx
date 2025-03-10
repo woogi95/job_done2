@@ -32,8 +32,8 @@ import {
 
 const RequestBusi = () => {
   const picURL = "http://112.222.157.157:5234";
-  // const [allData, setAllData] =
-  useRecoilState<BusinessApplyType[][]>(requestBusiAtom); // 🌟 모든 페이지 데이터 저장
+  const [allData, setAllData] =
+    useRecoilState<BusinessApplyType[][]>(requestBusiAtom); // 🌟 모든 페이지 데이터 저장
   const [currentPage, setCurrentPage] = useState(1); // 🌟 현재 페이지
   const [maxPage, setMaxPage] = useState(1); // 🌟 최대 페이지 (빈 데이터가 오면 종료)
   // 수락 , 취소 모달 state
@@ -360,6 +360,7 @@ const RequestBusi = () => {
                     src={`${picURL}${paper}`}
                     alt={`사업자 등록증 ${index + 1}`}
                     className="object-cover rounded-md shrink-0 cursor-pointer"
+                    style={{ height: "90%" }}
                   />
                 ))
               ) : (

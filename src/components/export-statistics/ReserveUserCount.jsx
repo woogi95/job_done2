@@ -36,12 +36,33 @@ function ReserveUserCount() {
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           height: "500px",
+          fontSize: "18px",
+          fontWeight: "bold",
+          color: "#555",
         }}
       >
-        <p>Loading chart...</p>
+        <div className="spinner" />
+        <p>차트를 불러오는 중...</p>
+        <style>
+          {`
+            .spinner {
+              width: 40px;
+              height: 40px;
+              border: 4px solid rgba(0, 0, 0, 0.1);
+              border-top-color: #3498db;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
       </div>
     );
   }
@@ -55,70 +76,58 @@ function ReserveUserCount() {
     <div
       style={{
         width: "100%",
-        height: "80%",
-        padding: "20px",
+        height: "90%",
+        margin: "10px auto",
+        padding: "10px",
         background: "#fff",
-        borderRadius: "10px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+        borderRadius: "12px",
+        boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      <div>이용자 수</div>
-      <ResponsiveBar
-        data={formattedData}
-        keys={["count"]}
-        indexBy="date"
-        margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
-        padding={0.3}
-        valueScale={{ type: "linear" }}
-        indexScale={{ type: "band", round: true }}
-        colors={{ scheme: "nivo" }}
-        borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "년-월",
-          legendPosition: "middle",
-          legendOffset: 32,
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "이용자 수",
-          legendPosition: "middle",
-          legendOffset: -40,
-        }}
-        labelSkipWidth={12}
-        labelSkipHeight={12}
-        labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
-        legends={[
-          {
-            dataFrom: "keys",
-            anchor: "bottom-right",
-            direction: "column",
-            translateX: 120,
-            itemsSpacing: 2,
-            itemWidth: 100,
-            itemHeight: 20,
-            itemDirection: "left-to-right",
-            itemOpacity: 0.85,
-            symbolSize: 20,
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemOpacity: 1,
-                },
-              },
-            ],
-          },
-        ]}
-        role="application"
-        ariaLabel="Nivo bar chart for user count"
-      />
+      <h2 style={{ fontSize: "22px", marginBottom: "10px", color: "#333" }}>
+        📊 최근 6개월 이용자 수
+      </h2>
+      {formattedData.length > 0 ? (
+        <ResponsiveBar
+          data={formattedData}
+          keys={["count"]}
+          indexBy="date"
+          margin={{ top: 50, right: 40, bottom: 50, left: 50 }}
+          padding={0.3}
+          valueScale={{ type: "linear" }}
+          indexScale={{ type: "band", round: true }}
+          colors={{ scheme: "set2" }}
+          borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
+          axisTop={null}
+          axisRight={null}
+          axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "년-월",
+            legendPosition: "middle",
+            legendOffset: 32,
+          }}
+          axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "이용자 수",
+            legendPosition: "middle",
+            legendOffset: -40,
+          }}
+          labelSkipWidth={12}
+          labelSkipHeight={12}
+          labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
+          role="application"
+          ariaLabel="Nivo bar chart for user count"
+        />
+      ) : (
+        <div className="noData">📉 데이터가 없습니다.</div>
+      )}
     </div>
   );
 }

@@ -26,11 +26,13 @@ const AdminLayout = () => {
       /* side menu */
       > div:nth-child(1) {
         width: 20%;
+        height: 100%;
         background-color: #2d3748;
       }
       /* outlet */
       > div:nth-child(2) {
         width: 80%;
+        height: 90%
         /* background-color: #eaeef1; */
         background-color: #f5f5f5;
       }
