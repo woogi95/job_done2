@@ -151,7 +151,7 @@ const EditPortfolio = ({
   };
   console.log("portfolioId", portfolioId);
 
-  const getPortfolioPics = async () => {
+  const getPortfolioPics = async portfolioId => {
     try {
       const res = await loginApi.get(
         `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
@@ -225,7 +225,7 @@ const EditPortfolio = ({
   };
 
   useEffect(() => {
-    getPortfolioPics();
+    getPortfolioPics(portfolioId);
   }, [portfolioId]);
 
   return (

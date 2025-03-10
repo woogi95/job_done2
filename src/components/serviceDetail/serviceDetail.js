@@ -822,27 +822,29 @@ export const ReportPopupDiv = styled.div`
         }
         > div {
           width: calc(50%);
-          display: flex;
-          align-items: top;
-          gap: 6px;
-          color: #555;
-          padding: 3px 8px 3px 0;
-          font-size: 15px;
-          line-height: 1.35em;
-          min-height: 52px;
-          word-break: keep-all;
-          cursor: pointer;
-          &:last-child {
-            min-height: 35px;
-          }
+          min-height: 40px;
+
           label {
             width: 100%;
-          }
-          > svg {
-            min-width: 18px;
-            width: 18px;
-            height: 18px;
-            transform: translateY(1px);
+            display: flex;
+            align-items: top;
+            gap: 6px;
+            color: #555;
+            padding: 3px 8px 3px 0;
+            font-size: 16px;
+            line-height: 1.35em;
+
+            word-break: keep-all;
+            cursor: pointer;
+            &:last-child {
+              min-height: 35px;
+            }
+            > svg {
+              min-width: 18px;
+              width: 18px;
+              height: 18px;
+              transform: translateY(2.5px);
+            }
           }
         }
       }

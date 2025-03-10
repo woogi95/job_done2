@@ -73,7 +73,7 @@ const PfPopup = ({
     if (portfolioId) {
       getPfDetailImgList(portfolioId);
     }
-  }, [portfolioId, pfDetailImgList]);
+  }, [portfolioId]);
 
   const handleDelete = async () => {
     try {
