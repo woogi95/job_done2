@@ -1,4 +1,17 @@
-import { Select } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
@@ -14,9 +27,18 @@ function Write() {
   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
   const [qaTypes, setQaTypes] = useState<QaType[]>([]);
   const [qaSelectTypeId, setQaSelectTypeId] = useState<number>(0);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!title.trim() || !content.trim()) {
+      setShowErrorAlert(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     navigate("/forum");
   };
 
@@ -28,7 +50,58 @@ function Write() {
     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
   };
 
-  const correctReviewImg = async (picId: number) => {
+  const correctQa = async () => {
+    try {
+      if (!title.trim() || !content.trim()) {
+        setShowErrorAlert(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const formData = new FormData();
+
+      const requestData = {
+        qaTypeDetailId: qaSelectTypeId,
+        title: title,
+        contents: content,
+        qaReportReason: "USERREPORT",
+      };
+      console.log("보내는 데이터:", requestData);
+
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(requestData)], {
+          type: "application/json",
+        }),
+      );
+
+      selectedImages.forEach(file => {
+        formData.append("pics", file);
+      });
+
+      for (const pair of formData.entries()) {
+        console.log("FormData Entry:", pair[0], pair[1]);
+      }
+
+      const res = await loginApi.post("/api/qa", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("데이터 업데이트?:", res.data);
+
+      if (res.data.resultData === 1) {
+        setIsSuccessModalOpen(true);
+      } else {
+        setShowErrorAlert(true);
+      }
+    } catch (error) {
+      console.error("리뷰 수정 실패:", error);
+    }
+  };
+
+  const correctQaImg = async (picId: number) => {
     try {
       const res = await loginApi.put("/api/review/state", {
         reviewPicId: picId,
@@ -44,7 +117,7 @@ function Write() {
       const newImageInfo = [...imageInfo];
       const removedImage = newImageInfo[index];
 
-      await correctReviewImg(removedImage.pk);
+      await correctQaImg(removedImage.pk);
       console.log("삭제된 이미지 PK:", removedImage.pk);
 
       newImageInfo.splice(index, 1);
@@ -73,37 +146,24 @@ function Write() {
     }
   };
 
-  const writeQa = async () => {
-    try {
-      const res = await loginApi.post("/api/qa", {
-        p: {
-          qaTypeDetailId: qaSelectTypeId,
-          title: title,
-          contents: content,
-          qaReportReason: "USERREPORT",
-          // qaTargetId: 0,
-        },
-        pics: selectedImages.length > 0 ? previewImages : [""],
-      });
-      console.log(res.data);
-      navigate("/forum");
-    } catch (error) {
-      console.error("게시글 작성 실패:", error);
-    }
-  };
-
   const qaTypeList = async () => {
     try {
       const res = await loginApi.get("/api/qa/qaTypeId", {
         params: { qaTypeId: 5 },
       });
       setQaTypes(res.data.resultData);
+      if (res.data.resultData.length > 0) {
+        setQaSelectTypeId(res.data.resultData[0].qaTypeDetailId);
+      }
     } catch (error) {
       console.error("게시글 작성 실패:", error);
     }
   };
 
-  // const forumWrite = async () => {};
+  const handleModalClose = () => {
+    setIsSuccessModalOpen(false);
+    navigate("/forum");
+  };
 
   useEffect(() => {
     qaTypeList();
@@ -111,6 +171,13 @@ function Write() {
 
   return (
     <div className="container max-w-[600px] mx-auto px-4 py-8">
+      {showErrorAlert && (
+        <Alert status="error" mb={4} className="animate-shake">
+          <AlertIcon />
+          <AlertTitle>입력 오류</AlertTitle>
+          <AlertDescription>제목과 내용을 모두 작성해주세요.</AlertDescription>
+        </Alert>
+      )}
       <div className="max-w-3xl mx-auto">
         <h1 className="flex justify-center items-center min-w-[150px] mb-10 text-2xl font-bold text-gray-800">
           게시글 작성
@@ -166,7 +233,7 @@ function Write() {
           <div className="flex justify-center items-center w-full max-w-[630px] min-h-[100px] rounded-[10px] border-[1px] border-[#DBDBDB] p-[10px] mx-auto">
             <div className="flex flex-wrap gap-2 w-full min-h-[160px] border-2 border-dashed border-gray-300 rounded-lg p-2">
               {previewImages.map((image, index) => (
-                <div key={index} className="relative w-[140px] h-[140px]">
+                <div key={index} className="relative w-[125px] h-[125px]">
                   <div className="w-full h-full border border-gray-200 rounded-lg overflow-hidden">
                     <img
                       src={image}
@@ -175,6 +242,7 @@ function Write() {
                     />
                   </div>
                   <button
+                    type="button"
                     onClick={() => handleRemoveImage(index)}
                     className="absolute -top-2 -right-2 bg-[#F53A3A] text-white rounded-full w-5 h-5 flex items-center justify-center text-sm"
                   >
@@ -196,13 +264,27 @@ function Write() {
             <button
               type="submit"
               className="flex justify-center items-center px-10 py-2 bg-[#3887FF] text-white border rounded-lg hover:bg-[#3887FF] text-[18px] font-thin"
-              onClick={writeQa}
+              onClick={correctQa}
             >
               등록
             </button>
           </div>
         </form>
       </div>
+
+      {/* Success Modal */}
+      <Modal isOpen={isSuccessModalOpen} onClose={handleModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>작성 완료</ModalHeader>
+          <ModalBody>게시글이 성공적으로 등록되었습니다.</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleModalClose}>
+              확인
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

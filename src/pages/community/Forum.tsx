@@ -1,12 +1,29 @@
-import { Posts } from "../../components/ServiceIcon";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../apis/login";
+import { QaListType } from "../../types/WriteQa";
 
 function Forum() {
   const navigate = useNavigate();
+  const [qaList, setQaList] = useState([]);
+
+  const letQaList = async () => {
+    try {
+      const res = await loginApi.get("/api/qa/qaBoard");
+      console.log(res.data);
+      setQaList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(qaList);
+  }, []);
 
   return (
     <div className="flex">
-      {/* Left Ad Banner */}
+      {/* 왼쪽 배너 */}
       <div className="w-64 bg-gray-100 p-4">
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-bold mb-2">광고 배너</h3>
@@ -60,25 +77,25 @@ function Forum() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {Posts.map(post => (
+              {qaList.map((post: QaListType) => (
                 <tr key={post.id} className="hover:bg-gray-50 cursor-pointer">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {post.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {post.title}
-                    <span className="ml-2 text-blue-500">
+                    {/* <span className="ml-2 text-blue-500">
                       ({post.comments})
-                    </span>
+                    </span> */}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {post.author}
+                    {post.userName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {post.date}
+                    {post.createdAt}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {post.views}
+                    {post.qaView}
                   </td>
                 </tr>
               ))}
@@ -91,7 +108,7 @@ function Forum() {
         </div>
       </div>
 
-      {/* Right Ad Banner */}
+      {/* 오른쪽 배너 */}
       <div className="w-64 bg-gray-100 p-4">
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-bold mb-2">광고 배너</h3>
