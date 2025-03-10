@@ -15,3 +15,11 @@ export type QaType = {
   qaTypeDetailId: number;
   qaDetailReason: string;
 };
+
+export type QaListType = {
+  id: number;
+  title: string;
+  userName: string;
+  createdAt: string;
+  qaView: number;
+};

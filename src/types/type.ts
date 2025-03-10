@@ -1,6 +1,7 @@
 // 고객 정보 조회
 export interface UserInfoType {
   userName: string;
+  userPic: string;
   phone: string;
   detailTypeName: string;
   serviceNumber: number;

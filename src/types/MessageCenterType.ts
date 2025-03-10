@@ -13,12 +13,15 @@ export type MessageType = {
   message?: string;
   username?: string;
   file?: CustomFile;
-  pics?: CustomPic[];
+  pic?: CustomPic;
   flag?: number;
   roomId?: number;
   contents?: string;
   logo?: string;
   createdAt?: string;
+  userPic?: string;
+  logo2?: string;
+  recentlyChat?: string;
 };
 
 export type RoomType = {
@@ -27,6 +30,9 @@ export type RoomType = {
   businessName: string;
   title: string;
   roomCreatedAt: string;
+  pic: string;
+  recentlyChat: string;
+  userName: string;
 };
 
 export type ApiError = {
