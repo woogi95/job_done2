@@ -15,6 +15,7 @@ import axios from "axios";
 import parse from "html-react-parser";
 import { IoIosArrowDown } from "react-icons/io";
 import { BASE_URL } from "../../constants/constants";
+import BusinessReportPopup from "./BusinessReportPopup";
 
 const ContReview = () => {
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
@@ -150,43 +151,49 @@ const ContReview = () => {
             <div className="rv-item" key={index}>
               {/* 유저리뷰 */}
               <div className="user-rv">
-                <div className="user-info">
-                  <div
-                    className="user-photo"
-                    style={{ display: item.writerPic ? "block" : "none" }}
-                  >
-                    {item.writerPic ? (
-                      <img
-                        src={`${BASE_URL}${item.writerPic}`}
-                        alt={item.name}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          backgroundColor: "#34c5f0",
-                          borderRadius: "100%",
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div className="desc">
-                    <div>
-                      {renderStars(item.score)}
-                      <span className="star-grade">
-                        {item.score.toFixed(1)}
-                      </span>
-                      <b>{item.createdAt.slice(0, 10)}</b>
+                <div className="user-info-box">
+                  <div className="user-info">
+                    <div
+                      className="user-photo"
+                      style={{ display: item.writerPic ? "block" : "none" }}
+                    >
+                      {item.writerPic ? (
+                        <img
+                          src={`${BASE_URL}${item.writerPic}`}
+                          alt={item.name}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            backgroundColor: "#34c5f0",
+                            borderRadius: "100%",
+                          }}
+                        />
+                      )}
                     </div>
-                    <h4>{item.name.slice(0, 1)}**</h4>
+                    <div className="desc">
+                      <div>
+                        {renderStars(item.score)}
+                        <span className="star-grade">
+                          {item.score.toFixed(1)}
+                        </span>
+                        <b>{item.createdAt.slice(0, 10)}</b>
+                      </div>
+                      <h4>{item.name.slice(0, 1)}**</h4>
+                    </div>
+                  </div>
+                  <div className="siren">
+                    <button>신고하기</button>
                   </div>
                 </div>
+
                 <div className="comment">
                   <span>{item.contents}</span>
                   <div className="photo">
@@ -249,7 +256,7 @@ const ContReview = () => {
           ))}
         </div>
       </ReviewDiv>
-
+      <BusinessReportPopup />
       {/* 이미지 팝업 */}
       {isModalOpen && (
         <PreviewImgDiv onClick={closeModal}>

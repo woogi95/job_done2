@@ -29,6 +29,8 @@ import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
 import ContReview from "./ContReview";
 import { useCookies } from "react-cookie";
+import { PiSirenFill } from "react-icons/pi";
+
 import { BASE_URL } from "../../constants/constants";
 
 const DetailContents = () => {
@@ -268,17 +270,22 @@ const DetailContents = () => {
         <div className="inner">
           <div className="top">
             <h2>{businessDetail.businessName}</h2>
-            <div
-              className="like"
-              onClick={e => {
-                handleClickBusiness(e);
-              }}
-            >
-              {currentLikeStatus.isLiked ? (
-                <BsHeartFill />
-              ) : (
-                <BsHeart style={{ color: "gray" }} />
-              )}
+            <div className="btn-box">
+              <div
+                className="like"
+                onClick={e => {
+                  handleClickBusiness(e);
+                }}
+              >
+                {currentLikeStatus.isLiked ? (
+                  <BsHeartFill />
+                ) : (
+                  <BsHeart style={{ color: "gray" }} />
+                )}
+              </div>
+              <div className="siren">
+                <PiSirenFill />
+              </div>
             </div>
           </div>
           <CountStarCustomDiv>

@@ -404,14 +404,28 @@ export const SummaryDiv = styled.div`
         color: rgba(0, 0, 0, 0.8);
         /* line-height: 1.5em; */
       }
-
-      .like svg {
+      .btn-box {
+        /* border: 1px solid #000; */
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         right: 10px;
-        width: 22px;
+        display: flex;
+        gap: 5px;
+        align-items: end;
+        justify-content: center;
+        .siren {
+          width: 22px;
+          height: 22px;
+          color: #fa3131;
+          cursor: pointer;
+          font-size: 28px;
+        }
+      }
+      .like svg {
+        width: 25px;
         height: 22px;
+        transform: translateY(3px);
         color: red;
         cursor: pointer;
       }
@@ -520,6 +534,17 @@ export const ReviewDiv = styled.div`
       /* 유저 리뷰 */
       .user-rv {
         /* border: 1px solid #eee; */
+        .user-info-box {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          /* border: 1px solid #eee; */
+          .siren {
+            color: #fa3131;
+            font-size: 14px;
+          }
+        }
         .user-info {
           display: flex;
           align-items: center;
@@ -748,6 +773,153 @@ export const PhotoAreaDiv = styled.div`
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+    }
+  }
+`;
+// 신고 모달
+export const ReportPopupDiv = styled.div`
+  background-color: rgba(0, 0, 0, 0.35);
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .layer {
+    background-color: #fff;
+    box-shadow:
+      rgba(0, 0, 0, 0.15) 0px 14px 28px,
+      rgba(0, 0, 0, 0.12) 0px 10px 10px;
+    max-width: 420px;
+    /* height: 540px; */
+    border-radius: 8px;
+    padding: 30px 30px;
+    position: relative;
+    form {
+      > h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 38px;
+      }
+      > h3 {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .report-list {
+        display: flex;
+        flex-wrap: wrap;
+        /* padding: 0 10px; */
+        input[type="radio"] {
+          display: none;
+        }
+        input[type="radio"]:checked + label svg {
+          color: #ff6b6b;
+        }
+        > div {
+          width: calc(50%);
+          display: flex;
+          align-items: top;
+          gap: 6px;
+          color: #555;
+          padding: 3px 8px 3px 0;
+          font-size: 15px;
+          line-height: 1.35em;
+          min-height: 52px;
+          word-break: keep-all;
+          cursor: pointer;
+          &:last-child {
+            min-height: 35px;
+          }
+          label {
+            width: 100%;
+          }
+          > svg {
+            min-width: 18px;
+            width: 18px;
+            height: 18px;
+            transform: translateY(1px);
+          }
+        }
+      }
+      .text-box {
+        /* padding: 0 10px; */
+        textarea {
+          width: 100%;
+          height: 80px;
+          resize: none;
+          padding: 10px;
+          border: 1px solid #ddd;
+          box-sizing: border-box;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #555;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      .photo-area {
+        h4 {
+          font-size: 13px;
+          font-weight: 600;
+          margin-top: 10px;
+          color: #555;
+        }
+        .img-box {
+          display: flex;
+          gap: 10px;
+          padding: 10px 0;
+          input[type="file"] {
+            display: none;
+          }
+          > div,
+          label {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+          }
+          label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            line-height: 1.25em;
+            background-color: #9391fc;
+            color: #333;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+
+            cursor: pointer;
+            &:hover {
+              background-color: #7a78f5;
+            }
+          }
+        }
+      }
+      .report-btn {
+        width: calc(100%);
+        margin-top: 10px;
+        height: 50px;
+        line-height: 40px;
+        background-color: #ff6b6b;
+        color: #fff;
+        border-radius: 4px;
+        &:hover {
+          background-color: #e65c5c;
+        }
+      }
+      .close-btn {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        font-size: 24px;
+        cursor: pointer;
       }
     }
   }
