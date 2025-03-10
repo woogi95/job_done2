@@ -18,14 +18,17 @@ function Forum() {
     }
   };
 
-  const qaBoardDetail = async (id: number) => {
+  const qaBoardDetail = async () => {
     try {
       const res = await loginApi.get(`/api/qa/qaBoardDetail`, {
         params: {
-          qaId: qaId,
+          qaId: isQaId,
         },
       });
       console.log("게시물 상세 정보:", res.data);
+      if (res.status === 200) {
+        navigate(`/forum/detail/${isQaId}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -38,6 +41,10 @@ function Forum() {
   useEffect(() => {
     console.log("qaList 업데이트:", qaList);
   }, [qaList]);
+
+  useEffect(() => {
+    qaBoardDetail();
+  }, [isQaId]);
 
   return (
     <div className="flex">
@@ -77,19 +84,19 @@ function Forum() {
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-50 border-b">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 py-3 text-[14px] font-medium text-gray-500">
                   번호
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-10 py-3 text-[14px] font-medium text-gray-500">
                   제목
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-[14px] font-medium text-gray-500">
                   작성자
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-[14px] font-medium text-gray-500">
                   작성일
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 py-3 text-[14px] font-medium text-gray-500">
                   조회
                 </th>
               </tr>
@@ -99,15 +106,18 @@ function Forum() {
                 <tr
                   key={post.id}
                   className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => setIsQaId(post.id)}
+                  onClick={() => {
+                    setIsQaId(post.qaId);
+                    console.log("qaId 번호:", post.qaId);
+                  }}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="flex justify-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {index + 1}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {post.title}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="flex justify-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {post.userName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

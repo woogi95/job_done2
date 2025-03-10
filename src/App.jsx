@@ -90,6 +90,7 @@ import MessageCenter from "./pages/expert/message-center/MessageCenter";
 import UserStatisitcs from "./pages/expert/statistics/UserStatisitcs";
 import AdminBusinessInfo from "./components/admin/admin-business-info/AdminBusinessInfo";
 import AlertTestPage from "./pages/AlertTestPage";
+import QaDetail from "./pages/community/QaDetail";
 
 function App() {
   return (
@@ -105,8 +106,12 @@ function App() {
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/testmessage" element={<TestMessage />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/forum/write" element={<Write />} />
+          {/* 커뮤니티 */}
+          <Route path="forum">
+            <Route index element={<Forum />} />
+            <Route path="write" element={<Write />} />
+            <Route path="detail/:qaId" element={<QaDetail />} />
+          </Route>
           {/* 카카오페이 관련 */}
           <Route path="/paySuccess" element={<PaymentSuccess />} />
           <Route path="/payFailed" element={<PaymentFailed />} />

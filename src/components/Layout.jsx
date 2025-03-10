@@ -27,9 +27,9 @@ function Layout() {
     });
   }, []);
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       {isLayourVisible && <Header />}
-      <main className="pt-[80px] pb-[100px]">
+      <main className="flex-grow py-[80px]">
         <Outlet />
       </main>
       {isLayourVisible && <Footer />}
