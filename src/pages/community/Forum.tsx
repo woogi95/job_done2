@@ -5,21 +5,39 @@ import { QaListType } from "../../types/WriteQa";
 
 function Forum() {
   const navigate = useNavigate();
-  const [qaList, setQaList] = useState([]);
+  const [qaList, setQaList] = useState<QaListType[]>([]);
+  const [isQaId, setIsQaId] = useState<number>();
 
   const letQaList = async () => {
     try {
       const res = await loginApi.get("/api/qa/qaBoard");
-      console.log(res.data);
-      setQaList(res.data);
+      setQaList(res.data.resultData);
+    } catch (error) {
+      console.log("API 호출 에러:", error);
+      setQaList([]);
+    }
+  };
+
+  const qaBoardDetail = async (id: number) => {
+    try {
+      const res = await loginApi.get(`/api/qa/qaBoardDetail`, {
+        params: {
+          qaId: qaId,
+        },
+      });
+      console.log("게시물 상세 정보:", res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    console.log(qaList);
+    letQaList();
   }, []);
+
+  useEffect(() => {
+    console.log("qaList 업데이트:", qaList);
+  }, [qaList]);
 
   return (
     <div className="flex">
@@ -77,16 +95,17 @@ function Forum() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {qaList.map((post: QaListType) => (
-                <tr key={post.id} className="hover:bg-gray-50 cursor-pointer">
+              {qaList.map((post: QaListType, index) => (
+                <tr
+                  key={post.id}
+                  className="hover:bg-gray-50 cursor-pointer"
+                  onClick={() => setIsQaId(post.id)}
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {post.id}
+                    {index + 1}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {post.title}
-                    {/* <span className="ml-2 text-blue-500">
-                      ({post.comments})
-                    </span> */}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {post.userName}
