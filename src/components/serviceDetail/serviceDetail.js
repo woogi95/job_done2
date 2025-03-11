@@ -820,6 +820,9 @@ export const ReportPopupDiv = styled.div`
         input[type="radio"]:checked + label svg {
           color: #ff6b6b;
         }
+        input[type="radio"]:checked + label {
+          color: #ff6b6b;
+        }
         > div {
           width: calc(50%);
           min-height: 40px;
@@ -843,6 +846,7 @@ export const ReportPopupDiv = styled.div`
               min-width: 18px;
               width: 18px;
               height: 18px;
+              font-size: 18px;
               transform: translateY(2.5px);
             }
           }
@@ -874,8 +878,8 @@ export const ReportPopupDiv = styled.div`
         }
         .img-box {
           display: flex;
-          gap: 10px;
-          padding: 10px 0;
+          gap: 12px;
+          padding: 14px 0;
           input[type="file"] {
             display: none;
           }
@@ -892,14 +896,18 @@ export const ReportPopupDiv = styled.div`
             align-items: center;
             font-size: 30px;
             line-height: 1.25em;
-            background-color: #9391fc;
+            background-color: #d9d9d9;
             color: #333;
             box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            svg {
+              font-size: 18px;
+              color: #fff;
+            }
 
             cursor: pointer;
             &:hover {
-              background-color: #7a78f5;
+              background-color: #999;
             }
           }
         }

@@ -101,23 +101,11 @@ function Write() {
     }
   };
 
-  const correctQaImg = async (picId: number) => {
-    try {
-      const res = await loginApi.put("/api/review/state", {
-        reviewPicId: picId,
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleRemoveImage = async (index: number) => {
     if (index < imageInfo.length) {
       const newImageInfo = [...imageInfo];
       const removedImage = newImageInfo[index];
 
-      await correctQaImg(removedImage.pk);
       console.log("삭제된 이미지 PK:", removedImage.pk);
 
       newImageInfo.splice(index, 1);

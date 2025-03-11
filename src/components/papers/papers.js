@@ -30,6 +30,13 @@ export const PapersDiv = styled.div`
     width: 120px;
     background: url(/images/logo.svg) no-repeat left center / contain;
   }
+
+  .inactive {
+    /* opacity: 0.6; */
+    pointer-events: none;
+    background-color: #ccc !important;
+    color: #999;
+  }
 `;
 export const PaperContDiv = styled.div`
   /* border: 1px solid #bbb; */

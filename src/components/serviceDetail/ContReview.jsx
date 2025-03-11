@@ -15,7 +15,6 @@ import axios from "axios";
 import parse from "html-react-parser";
 import { IoIosArrowDown } from "react-icons/io";
 import { BASE_URL } from "../../constants/constants";
-import BusinessReportPopup from "./BusinessReportPopup";
 
 const ContReview = () => {
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
@@ -256,7 +255,7 @@ const ContReview = () => {
           ))}
         </div>
       </ReviewDiv>
-      <BusinessReportPopup />
+
       {/* 이미지 팝업 */}
       {isModalOpen && (
         <PreviewImgDiv onClick={closeModal}>

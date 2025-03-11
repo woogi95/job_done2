@@ -223,6 +223,23 @@ const EditPortfolio = ({
       }
     }
   };
+  const putPortfolio = async (portfolioPicId, portfolioId) => {
+    try {
+      const res = await loginApi.put("/api/portfolio/state", {
+        params: {
+          portfolioPicId: portfolioPicId,
+          portfolioId: portfolioId,
+        },
+      });
+      console.log("포트폴리오 수정 : ", res.data);
+    } catch (error) {
+      console.log("API 에러:", error);
+    }
+  };
+
+  const handlePutPortfolio = () => {
+    putPortfolio();
+  };
 
   useEffect(() => {
     getPortfolioPics(portfolioId);

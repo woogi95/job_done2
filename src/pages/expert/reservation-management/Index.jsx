@@ -10,7 +10,7 @@ import ExpertReservation from "../../../components/papers/ExpertReservation";
 import { useRecoilValue } from "recoil";
 import { statusAtom } from "../../../atoms/statusAtom";
 // import axios from "axios";
-import { businessDetailState } from "../../../atoms/businessAtom";
+// import { businessDetailState } from "../../../atoms/businessAtom";
 import { loginApi } from "../../../apis/login";
 import { Pagination } from "antd";
 
@@ -25,7 +25,7 @@ function Index() {
 
   const businessId = localStorage.getItem("businessId");
   const status = useRecoilValue(statusAtom);
-  const businessDetail = useRecoilValue(businessDetailState);
+  // const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
   const [pagination, setPagination] = useState({
     all: { currentPage: 1, totalItems: 0 },
