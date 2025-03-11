@@ -24,5 +24,9 @@ export interface QaListType {
   qaView: number;
   qaId: number;
   contents: string;
+  reason: string;
   pics: string[];
+  userType: string;
+  qaType: string;
+  qaState: string;
 }

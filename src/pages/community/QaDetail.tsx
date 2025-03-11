@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
+import { Image } from "@chakra-ui/react";
 
 const QaDetail = () => {
   const { qaId } = useParams<{ qaId: string }>();
@@ -14,7 +15,6 @@ const QaDetail = () => {
         params: { qaId: qaId },
       });
       setPost(res.data.resultData);
-      console.log("Fetched pics:", res.data.resultData.pics);
     } catch (error) {
       console.log("게시물 상세 정보 가져오기 에러:", error);
     }
@@ -47,7 +47,7 @@ const QaDetail = () => {
             {Array.isArray(post.pics) &&
               post.pics.map((imgUrl: string, index: number) => (
                 <div key={index} className="aspect-w-1 aspect-h-1">
-                  <img
+                  <Image
                     src={`${PIC_URL}${imgUrl}`}
                     alt={`첨부 이미지 ${index + 1}`}
                     className="w-full h-auto object-contain rounded-lg max-w-[250px]"
