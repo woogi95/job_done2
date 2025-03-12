@@ -72,6 +72,7 @@ const PfPopup = ({
   useEffect(() => {
     if (portfolioId) {
       getPfDetailImgList(portfolioId);
+      getPfDetailInfoList(portfolioId);
     }
   }, [portfolioId]);
 

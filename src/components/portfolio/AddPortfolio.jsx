@@ -10,6 +10,8 @@ import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 
 const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
+  const { categoryId, detailTypeId, businessId } =
+    useRecoilValue(businessDetailState);
   // 파일 객체와 미리보기 URL을 함께 저장
   const [filePreviews, setFilePreviews] = useState([]);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
@@ -23,17 +25,20 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
     takingTime: "",
     title: "",
     contents: "",
+    youtubeUrl: "",
   });
+  const [previewImage, setPreviewImage] = useState(null);
 
   // Yup 스키마 정의
   const schema = yup.object().shape({
     title: yup.string().required("타이틀을 입력해주세요"),
     takingTime: yup
-      .number()
+      .string()
       .required("소요시간을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     price: yup
-      .number()
+      .number("가격을 숫자로 입력해주세요")
+      .typeError("가격은 숫자로 입력해주세요")
       .required("가격을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     contents: yup
@@ -73,6 +78,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         takingTime: data.takingTime,
         title: data.title,
         contents: data.contents,
+        youtubeUrl: data.youtubeUrl,
       };
 
       // JSON 데이터를 Blob으로 변환하여 FormData에 추가
@@ -88,6 +94,17 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         formData.append("pics", file.file);
       });
 
+      // 썸네일 추가
+      if (Array.isArray(previewImage)) {
+        previewImage.forEach(image => {
+          formData.append("thumb", image.file);
+        });
+      } else if (previewImage) {
+        console.log(previewImage);
+      } else {
+        console.error("No images to process");
+      }
+
       // API 요청
       const res = await loginApi.post("/api/portfolio", formData, {
         headers: {
@@ -99,7 +116,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         console.log("Success:", res.data);
         setPortfolioId(res.data.resultData);
         // 포트폴리오 목록 갱신
-        await getPortfolioList();
+        await getPortfolioList(categoryId, detailTypeId, businessId);
         // 모달 닫기
         setIsPopPfAdd(false);
       }
@@ -136,6 +153,17 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
     setFilePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <ModalDiv>
       <LayerDiv>
@@ -148,33 +176,67 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
               {...register("title")}
               onChange={e => handleChange("title", e.target.value)}
             />
-            {errors.title && <p className="error">{errors.title.message}</p>}
           </label>
-          <div className="time-price">
-            <label>
-              <h2>소요시간</h2>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                {...register("takingTime")}
-                onChange={e => handleChange("takingTime", e.target.value)}
-              />
-              {errors.takingTime && (
-                <p className="error">{errors.takingTime.message}</p>
-              )}
-            </label>
-            <label>
-              <h2>가격대</h2>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                {...register("price")}
-                onChange={e => handleChange("price", e.target.value)}
-              />
-              {errors.price && <p className="error">{errors.price.message}</p>}
-            </label>
+          {errors.title && (
+            <p className="error tit-error">{errors.title.message}</p>
+          )}
+          <div className="thum-price">
+            {/* 썸네일 */}
+            <div className="thum">
+              <label htmlFor="file">
+                <input
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="미리보기"
+                    style={{
+                      width: "85px",
+                      height: "85px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <FaPlus />
+                    <em>대표이미지</em>
+                  </>
+                )}
+              </label>
+            </div>
+            <div className="time-price">
+              <label>
+                <h2>소요시간</h2>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  {...register("takingTime")}
+                  onChange={e => handleChange("takingTime", e.target.value)}
+                />
+                {errors.takingTime && (
+                  <p className="error">{errors.takingTime.message}</p>
+                )}
+              </label>
+              <label>
+                <h2>가격대</h2>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  {...register("price")}
+                  onChange={e => handleChange("price", e.target.value)}
+                />
+                {errors.price && (
+                  <p className="error">{errors.price.message}</p>
+                )}
+              </label>
+            </div>
           </div>
 
           {/* 사진 업로드  */}
@@ -204,7 +266,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
                 </button>
               </li>
 
-              {/* 5개의 이미지 슬롯 */}
+              {/* 4개의 이미지 슬롯 */}
               {[...Array(5)].map((_, index) => (
                 <li key={index}>
                   <div
@@ -228,6 +290,18 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
               ))}
             </ul>
           </PicDiv>
+
+          <label className="youtube-url">
+            <h2>유튜브 URL</h2>
+            <input
+              type="text"
+              {...register("youtubeUrl")}
+              onChange={e => handleChange("youtubeUrl", e.target.value)}
+            />
+            {/* {errors.title && (
+              <p className="error">{errors.youtubeUrl.message}</p>
+            )} */}
+          </label>
 
           <div className="text-area">
             <h2>간단설명</h2>

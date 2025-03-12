@@ -34,20 +34,22 @@ const EditPortfolio = ({
   const [formData, setFormData] = useState({
     businessId: Number(businessState.businessId),
     price: 0,
-    takingTime: 0,
+    takingTime: "",
     title: "",
     contents: "",
+    youtubeUrl: "",
   });
 
   // Yup 스키마
   const schema = yup.object().shape({
     title: yup.string().required("타이틀을 입력해주세요"),
     takingTime: yup
-      .number()
+      .string()
       .required("소요시간을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     price: yup
-      .number()
+      .number("가격을 숫자로 입력해주세요")
+      .typeError("가격은 숫자로 입력해주세요")
       .required("가격을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     contents: yup
