@@ -167,7 +167,8 @@ function CompanyInfo() {
             <label>
               <b>기본금액 </b>
               <div className="basic-price">
-                {businessInfo.price.toLocaleString()} 원
+                {businessInfo?.price ? businessInfo.price.toLocaleString() : 0}{" "}
+                원
               </div>
             </label>
           </div>

@@ -3,10 +3,10 @@ import { ReportPopupDiv } from "./serviceDetail";
 import { RxCross1 } from "react-icons/rx";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
-import { FaPlus } from "react-icons/fa";
+// import { FaPlus } from "react-icons/fa";
 import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
-import { ImageInfoType } from "../../types/WriteQa";
+// import { ImageInfoType } from "../../types/WriteQa";
 // import { Popup } from "../ui/Popup";
 
 interface SirenType {
@@ -14,20 +14,20 @@ interface SirenType {
   qaDetailReason: string;
 }
 
-interface BusinessReportPopupProps {
+interface ReviewReportPopupProps {
   setIsReportPopupOpen: (isOpen: boolean) => void;
 }
 
-const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
+const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   setIsReportPopupOpen,
 }) => {
   const [sirenTypelist, setSirenTypelist] = useState<SirenType[]>([]);
   // ------
   const [qaTypeDetailId, setQaTypeDetailId] = useState<number>(0);
   const [content, setContent] = useState<string>("");
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
+  //   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  //   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  //   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId as number;
   //------
@@ -54,9 +54,9 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
     try {
       const formData = new FormData();
       const requestData = {
-        qaTypeDetailId: 1,
+        qaTypeDetailId: 2,
         contents: content,
-        qaReportReason: "BUSINESS",
+        qaReportReason: "REVIEW",
         qaTargetId: businessId,
       };
       console.log("보내는 데이터:", requestData);
@@ -68,9 +68,9 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
         }),
       );
 
-      selectedImages.forEach(file => {
-        formData.append("pics", file);
-      });
+      //   selectedImages.forEach(file => {
+      //     formData.append("pics", file);
+      //   });
 
       for (const pair of formData.entries()) {
         console.log("FormData Entry:", pair[0], pair[1]);
@@ -88,56 +88,56 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
         setIsReportPopupOpen(false);
       }
     } catch (error) {
-      console.error("업체신고 실패:", error);
+      console.error("리뷰신고 실패:", error);
     }
   };
 
   // 이미지 업로드
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setSelectedImages(prevImages => [...prevImages, ...files]);
+  //   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     const files = Array.from(event.target.files || []);
+  //     setSelectedImages(prevImages => [...prevImages, ...files]);
 
-    const newPreviews = files.map(file => URL.createObjectURL(file));
-    setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
-  };
+  //     const newPreviews = files.map(file => URL.createObjectURL(file));
+  //     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
+  //   };
 
-  const handleRemoveImage = async (index: number) => {
-    if (index < imageInfo.length) {
-      const newImageInfo = [...imageInfo];
-      const removedImage = newImageInfo[index];
+  //   const handleRemoveImage = async (index: number) => {
+  //     if (index < imageInfo.length) {
+  //       const newImageInfo = [...imageInfo];
+  //       const removedImage = newImageInfo[index];
 
-      console.log("삭제된 이미지 PK:", removedImage.pk);
+  //       console.log("삭제된 이미지 PK:", removedImage.pk);
 
-      newImageInfo.splice(index, 1);
-      setImageInfo(newImageInfo);
+  //       newImageInfo.splice(index, 1);
+  //       setImageInfo(newImageInfo);
 
-      const newPreviewImages = [...previewImages];
-      newPreviewImages.splice(index, 1);
-      setPreviewImages(newPreviewImages);
+  //       const newPreviewImages = [...previewImages];
+  //       newPreviewImages.splice(index, 1);
+  //       setPreviewImages(newPreviewImages);
 
-      console.log("기존 이미지 삭제 완료:", {
-        삭제된_이미지_PK: removedImage.pk,
-        남은_이미지_수: newImageInfo.length,
-      });
-    } else {
-      const adjustedIndex = index - imageInfo.length;
-      const newSelectedImages = [...selectedImages];
-      const newPreviewImages = [...previewImages];
+  //       console.log("기존 이미지 삭제 완료:", {
+  //         삭제된_이미지_PK: removedImage.pk,
+  //         남은_이미지_수: newImageInfo.length,
+  //       });
+  //     } else {
+  //       const adjustedIndex = index - imageInfo.length;
+  //       const newSelectedImages = [...selectedImages];
+  //       const newPreviewImages = [...previewImages];
 
-      newSelectedImages.splice(adjustedIndex, 1);
-      newPreviewImages.splice(index, 1);
+  //       newSelectedImages.splice(adjustedIndex, 1);
+  //       newPreviewImages.splice(index, 1);
 
-      setSelectedImages(newSelectedImages);
-      setPreviewImages(newPreviewImages);
+  //       setSelectedImages(newSelectedImages);
+  //       setPreviewImages(newPreviewImages);
 
-      console.log("새로 추가된 이미지 삭제 완료");
-    }
-  };
+  //       console.log("새로 추가된 이미지 삭제 완료");
+  //     }
+  //   };
   return (
     <ReportPopupDiv>
       <div className="layer">
         <form onSubmit={handleSubmit}>
-          <h1>업체 신고</h1>
+          <h1>리뷰 신고</h1>
           <div className="report-list">
             {sirenTypelist.map(item => (
               <div key={item.qaTypeDetailId}>
@@ -167,35 +167,7 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
               maxLength={1000}
             />
           </div>
-          <div className="photo-area">
-            <h4>첨부 사진</h4>
-            <div className="img-box">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-                id="img-btn"
-              />
-              <label htmlFor="img-btn">
-                <FaPlus />
-              </label>
-              {previewImages.map((image, index) => (
-                <div key={index} className="slot">
-                  <div>
-                    <img src={image} alt={`preview ${index}`} />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+
           <button type="submit" className="report-btn">
             신고하기
           </button>
@@ -213,4 +185,4 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   );
 };
 
-export default BusinessReportPopup;
+export default ReviewReportPopup;

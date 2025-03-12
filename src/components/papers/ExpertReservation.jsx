@@ -25,9 +25,9 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   // ---- //
 
   const completed = papersInfo.completed;
-  if (completed === 0) {
-  } else {
-  }
+  // if (completed === 0) {
+  // } else {
+  // }
 
   // 컨펌팝업
   const handleOpenPopup = () => {

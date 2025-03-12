@@ -90,7 +90,7 @@ import MessageCenter from "./pages/expert/message-center/MessageCenter";
 import UserStatisitcs from "./pages/expert/statistics/UserStatisitcs";
 import AdminBusinessInfo from "./components/admin/admin-business-info/AdminBusinessInfo";
 import AlertTestPage from "./pages/AlertTestPage";
-
+import ExpertEstimate from "./components/papers/ExpertEstimate";
 
 function App() {
   return (
@@ -179,6 +179,7 @@ function App() {
               <Route path="createoption" element={<CreateOptionPage />} />
               <Route path="editoption" element={<EditOptionPage />} />
               <Route path="createdetail" element={<CreateDetailPage />} />
+
               <Route
                 path="paymenthistory/:serviceId"
                 element={<ExpertPaymentHistory />}
@@ -193,6 +194,7 @@ function App() {
               <Route index element={<QuoteList />} />
               <Route path="quotation-form" element={<QuotationForm />} />
               <Route path="edit-quotation" element={<EditQuotation />} />
+              <Route path="estimate/:serviceId" element={<ExpertEstimate />} />
             </Route>
             {/* 결제관리 */}
             <Route path="/expert/payment-management">

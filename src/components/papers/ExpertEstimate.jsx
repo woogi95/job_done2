@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
+import { BtnAreaDiv, ExportFormDiv, PaperContDiv, PapersDiv } from "./papers";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
 import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
-import LoadingPopup from "../LoadingPopup";
-import { useNavigate } from "react-router-dom";
+import { CgClose } from "react-icons/cg";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Estimate = () => {
+const ExpertEstimate = () => {
   // 컨펌 팝업
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
-  const [isLoading, setIsLoading] = useState(false);
-  const [serviceId, setServiceId] = useState(null);
+  // const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
+  const { serviceId } = useParams();
+
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
@@ -28,7 +29,6 @@ const Estimate = () => {
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
     } catch (error) {
       console.error("견적서 조회 중 오류 발생:", error);
     }
@@ -66,7 +66,6 @@ const Estimate = () => {
     }
   };
   const handleClosePopup = () => setIsPopupOpen(false);
-  const handleCancelPopup = () => setIsPopupOpen(false);
 
   const formatPhoneNumber = phone =>
     phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
@@ -80,38 +79,8 @@ const Estimate = () => {
       console.error("serviceId가 없습니다.");
       return;
     }
-    setIsLoading(true);
-    // console.log("결제 누구야!", serviceId);
-    try {
-      const width = 480;
-      const height = 600;
-      const left = (window.innerWidth - width) / 2;
-      const top = (window.innerHeight - height) / 2;
-
-      const res = await loginApi.post(
-        `/api/payment/ready?serviceId=${serviceId}`,
-      );
-      if (res.data?.next_redirect_pc_url) {
-        const paymentWindow = window.open(
-          res.data.next_redirect_pc_url,
-          "_blank",
-          `width=${width},height=${height},left=${left},top=${top}`,
-        );
-
-        const checkWindowClosed = setInterval(() => {
-          if (paymentWindow.closed) {
-            setIsLoading(false);
-            clearInterval(checkWindowClosed);
-            navigate("/mypage/usage");
-          }
-        }, 1000);
-      }
-    } catch (error) {
-      console.error("결제 준비 중 오류 발생:", error);
-      setIsLoading(false);
-    }
+    navigate(`/expert/quote-management/quotation-form?serviceId=${serviceId}`);
   };
-
   useEffect(() => {
     const storedServiceId = getCookie("serviceId");
     if (storedServiceId) {
@@ -131,26 +100,10 @@ const Estimate = () => {
         <div className="logo"></div>
         <PaperContDiv>
           <h2 className="tit">
-            요청하신
-            <strong>
-              견적서가
-              <br /> 완료
-            </strong>
-            되었습니다.
+            {papersInfo.userName}님 <strong>견적 내역</strong>
           </h2>
-          <span className="description">
-            기다려 주셔서 감사합니다. <br />
-            예약 내역 및 견적 내용은 <em>마이페이지{">"}예약현황</em>에서
-            확인하실 수 있습니다.
-            <br /> 수정사항이나 문의 사항이 있으시면, "문의하기"를 통해 연락
-            주시기 바랍니다.
-            <br />
-            <b>
-              견적서를 받은 후 결제가 지연될 경우, 해당 견적은 취소될 수
-              있습니다.
-            </b>
-          </span>
-          <FormDiv>
+
+          <ExportFormDiv>
             <div className="company-info">
               <h3>예약업체 정보</h3>
               <ul>
@@ -262,29 +215,36 @@ const Estimate = () => {
                 </li>
               </ul>
             </div>
-          </FormDiv>
+          </ExportFormDiv>
           <BtnAreaDiv>
             <button className="cancel" onClick={handleOpenPopup}>
               예약취소
             </button>
             <button className="confirm" onClick={handleClickNewPage}>
-              결제하기
+              견적수정
             </button>
           </BtnAreaDiv>
+          <button
+            className="pop-close-btn"
+            onClick={() => {
+              navigate(`/expert/quote-management`);
+            }}
+          >
+            <CgClose />
+          </button>
         </PaperContDiv>
       </div>
       <Popup
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
-        onCancel={handleCancelPopup}
+        onCancel={handleClosePopup}
         title="예약 취소"
         message={popupMessage}
-        confirmLink="/mypage/reservation"
-        showConfirmButton
+        showConfirmButton={true}
+        onConfirm={handleClosePopup}
       />
-      {isLoading && <LoadingPopup />}
     </PapersDiv>
   );
 };
 
-export default Estimate;
+export default ExpertEstimate;

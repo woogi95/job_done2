@@ -13,6 +13,12 @@ export const PapersDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  .pop-close-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 30px;
+  }
 
   .inner {
     position: relative;
@@ -118,6 +124,10 @@ export const FormDiv = styled.div`
     }
   }
 `;
+export const ExportFormDiv = styled(FormDiv)`
+  margin-top: 30px;
+  height: 58vh;
+`;
 
 export const BtnAreaDiv = styled.div`
   padding: 40px 0 0;
@@ -151,11 +161,5 @@ export const ReservationPaperContDiv = styled(PaperContDiv)`
     strong {
       color: #4581f0;
     }
-  }
-  .pop-close-btn {
-    position: absolute;
-    top: 30px;
-    right: 40px;
-    font-size: 30px;
   }
 `;
