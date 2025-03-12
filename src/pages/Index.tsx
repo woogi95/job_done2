@@ -1,14 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-// import "swiper/css";
-// import "swiper/css/pagination";
 import { useQuery } from "@tanstack/react-query";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
+import anime from "animejs";
 
 interface Region {
   regionId: number;
@@ -81,56 +80,92 @@ const Index = () => {
     cheapest: cheapestData || [],
   };
 
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const roundLogRef = useRef<HTMLSpanElement>(null);
+  const totalUser = 74643;
+
+  const totalUserAnime = () => {
+    if (roundLogRef.current) {
+      anime({
+        targets: roundLogRef.current,
+        innerHTML: [0, totalUser.toLocaleString()],
+        easing: "linear",
+        round: 1,
+        duration: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // console.log("스크롤 Y 좌표:", window.scrollY);
+      if (window.scrollY >= 2700) {
+        totalUserAnime();
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const linkElement = linkRef.current;
+    if (linkElement) {
+      const handleMouseEnter = () => {
+        anime({
+          targets: linkElement.querySelector(".link-text"),
+          translateX: 100,
+        });
+      };
+
+      const handleMouseLeave = () => {
+        anime({
+          targets: linkElement.querySelector(".link-text"),
+          translateX: 0,
+        });
+      };
+
+      linkElement.addEventListener("mouseenter", handleMouseEnter);
+      linkElement.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        linkElement.removeEventListener("mouseenter", handleMouseEnter);
+        linkElement.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }
+  }, []);
+
   useEffect(() => {
     // console.log("추천 글 상태 업데이트:", companies);
   }, [companies]);
 
   return (
-    <div className="pt-[80px] min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
-      {/* 이벤트 배너 배경 */}
-      <div
-        className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(#000 0.5px, transparent 0.5px),
-            linear-gradient(to right, #000 0.5px, transparent 0.5px)
-          `,
-          backgroundSize: "50px 50px",
-        }}
-      ></div>
-
+    <div className="min-h-screen">
       <div>
         {/* 이벤트 배너 */}
-        <div className="w-full overflow-hidden">
+        <div className="relative h-[600px] overflow-hidden">
           <Swiper
-            modules={[Pagination, Autoplay]}
-            pagination={{
-              dynamicBullets: true,
-              clickable: true,
-              dynamicMainBullets: 3,
-            }}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
+            modules={[Autoplay]}
+            autoplay={{ delay: 5000 }}
             loop={true}
-            className="h-[250px] overflow-hidden [&_.swiper-pagination]:bottom-6 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+            className="h-full"
           >
             {EventBanner.map(item => (
               <SwiperSlide key={item.id}>
-                <Link
-                  to={item.link}
-                  className="flex h-[250px] max-w-[1280px] m-auto relative group overflow-hidden"
-                >
+                <Link to={item.link} className="block h-full relative">
                   <img
                     src={item.image}
                     alt="이벤트배너"
-                    className="w-full object-cover animate-kenburns"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/50">
-                    <span className="absolute left-[10%] top-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <h2 className="text-6xl font-bold text-white text-center max-w-4xl">
                       {item.title}
-                    </span>
+                    </h2>
                   </div>
                 </Link>
               </SwiperSlide>
@@ -174,10 +209,19 @@ const Index = () => {
       <div className="bg-white/30 backdrop-blur-sm py-10">
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             인기 글
-          </span>
-          <div className="mb-[80px]">
+          </span> */}
+          <div className="flex mb-[80px]">
+            <div className="py-[20px]">
+              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
+                <span className="text-[28px] font-bold text-[#e74964]">
+                  현재 인기
+                </span>
+                <br />
+                <span className="text-[20px] font-medium">서비스</span>
+              </div>
+            </div>
             {categories.popular && categories.popular.length > 0 ? (
               <Swiper
                 modules={[Pagination]}
@@ -235,7 +279,7 @@ const Index = () => {
           </div>
 
           {/* 상단 배너 */}
-          <div className="max-w-[1280px] m-auto py-[80px]">
+          {/* <div className="max-w-[1280px] m-auto py-[80px]">
             <Link
               to="/qna"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
@@ -251,13 +295,22 @@ const Index = () => {
                 </span>
               </div>
             </Link>
-          </div>
+          </div> */}
 
           {/* 최신 글 */}
-          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최신 글
-          </span>
-          <div className="mb-[80px]">
+          </span> */}
+          <div className="flex mb-[80px]">
+            <div className="py-[20px]">
+              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
+                <span className="text-[28px] font-bold text-[#4889dd]">
+                  최근 등록된
+                </span>
+                <br />
+                <span className="text-[20px] font-medium">서비스</span>
+              </div>
+            </div>
             {categories.latest && categories.latest.length > 0 ? (
               <Swiper
                 modules={[Pagination]}
@@ -314,7 +367,7 @@ const Index = () => {
             )}
           </div>
           {/* 중간 배너 */}
-          <div className="max-w-[1280px] m-auto py-[80px]">
+          {/* <div className="max-w-[1280px] m-auto py-[80px]">
             <Link
               to="/login/signup"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
@@ -331,13 +384,22 @@ const Index = () => {
                 </span>
               </div>
             </Link>
-          </div>
+          </div> */}
 
           {/* 최저가 글 */}
-          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최저가
-          </span>
-          <div>
+          </span> */}
+          <div className="flex mb-[80px]">
+            <div className="py-[20px]">
+              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
+                <span className="text-[28px] font-bold text-[#e4b041]">
+                  최저가
+                </span>
+                <br />
+                <span className="text-[20px] font-medium">서비스</span>
+              </div>
+            </div>
             {categories.cheapest && categories.cheapest.length > 0 ? (
               <Swiper
                 modules={[Pagination]}
@@ -394,7 +456,7 @@ const Index = () => {
             )}
           </div>
           {/* 하단 배너 */}
-          <div className="max-w-[1280px] m-auto py-[80px]">
+          {/* <div className="max-w-[1280px] m-auto py-[80px]">
             <Link
               to="/login"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
@@ -413,6 +475,37 @@ const Index = () => {
                 </span>
               </div>
             </Link>
+          </div> */}
+        </div>
+      </div>
+      {/* 회원가입 배너 */}
+      <div className="m-auto py-[80px] bg-gradient-to-b from-[#ffffff] to-[#d6d6d6]">
+        <div className="max-w-[1280px] m-auto py-[80px]">
+          <div className="flex justify-center items-center">
+            <Link
+              to="/login"
+              ref={linkRef}
+              className="flex items-center justify-center w-full h-[300px] bg-gradient-to-br from-blue-500 to-purple-500 text-white text-[48px] font-bold rounded-lg shadow-lg transition-transform duration-200"
+            >
+              <span className="link-text">
+                JOBDONE 회원가입하고 더 많은 혜택을 누리세요!
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* 총 이용자 수 */}
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col justify-center items-center">
+            <span className="text-[40px] font-bold text-[#e4b041] mt-20 pt-[100px]">
+              지금까지 총 이용자 수
+            </span>
+            <div className="text-[48px] font-bold text-[#1e1e1e] my-20">
+              <span ref={roundLogRef} className="round-log">
+                0
+              </span>
+              명
+            </div>
           </div>
         </div>
       </div>

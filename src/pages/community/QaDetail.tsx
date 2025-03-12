@@ -7,6 +7,7 @@ import { Image } from "@chakra-ui/react";
 const QaDetail = () => {
   const { qaId } = useParams<{ qaId: string }>();
   const [post, setPost] = useState<QaListType | null>(null);
+
   const PIC_URL = "http://112.222.157.157:5234";
 
   const fetchPostDetail = async () => {
@@ -20,8 +21,20 @@ const QaDetail = () => {
     }
   };
 
+  const answer = async () => {
+    try {
+      const res = await loginApi.get("/api/qa/answer", {
+        params: { qaId: qaId },
+      });
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchPostDetail();
+    answer();
   }, [qaId]);
 
   return (

@@ -2,7 +2,7 @@ import { Pagination } from "antd";
 import { useEffect, useState } from "react";
 import { loginApi } from "../../../../apis/login";
 import { QaListType } from "../../../../types/WriteQa";
-import { Image } from "@chakra-ui/react";
+import { Image, useDisclosure } from "@chakra-ui/react";
 
 const UserOneByOne = () => {
   const [isQaId, setIsQaId] = useState<number>();
@@ -15,6 +15,8 @@ const UserOneByOne = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const PIC_URL = "http://112.222.157.157:5234/";
 
@@ -43,6 +45,29 @@ const UserOneByOne = () => {
     }
   };
 
+  const qaAnswer = async (answer: string) => {
+    try {
+      const res = await loginApi.post("/api/qa/answer", {
+        qaId: isQaId,
+        answer: answer,
+      });
+
+      console.log(answer);
+      console.log("답변? : ", res.data.resultData);
+      if (res.status === 200) {
+        setQuestionList(prevList =>
+          prevList.map(item =>
+            item.qaId === isQaId ? { ...item, qaState: "00103" } : item,
+          ),
+        );
+        closeModal();
+        onOpen();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const updateCurrentPageData = () => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -54,9 +79,9 @@ const UserOneByOne = () => {
     setPageSize(pageSize);
   };
 
-  const handleDetail = (qaId: number) => {
+  const handleDetail = async (qaId: number) => {
     setIsQaId(qaId);
-    getQaDetail();
+    await getQaDetail();
     openModal();
   };
 
@@ -68,11 +93,19 @@ const UserOneByOne = () => {
     updateCurrentPageData();
   }, [currentPage, pageSize, questionList]);
 
+  useEffect(() => {
+    if (isQaId) {
+      getQaDetail();
+    }
+  }, [isQaId]);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -196,6 +229,7 @@ const UserOneByOne = () => {
                   <textarea
                     className="p-2 block w-full rounded-md border-gray-500 shadow-sm focus:border-sky-500 focus:ring-sky-500"
                     rows={5}
+                    onChange={e => setAnswer(e.target.value)}
                     placeholder="답변을 입력해주세요"
                   />
                 </div>
@@ -207,8 +241,29 @@ const UserOneByOne = () => {
                 >
                   닫기
                 </button>
-                <button className="px-4 py-2 text-sm font-medium text-white bg-sky-500 rounded-md hover:bg-sky-600">
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-sky-500 rounded-md hover:bg-sky-600"
+                  onClick={() => qaAnswer(answer)}
+                >
                   답변 저장
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 답변 완료 모달 */}
+        {isOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6">
+              <h2 className="text-lg font-bold">답변 완료</h2>
+              <p className="mt-2">답변이 성공적으로 저장되었습니다.</p>
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={onClose}
+                  className="px-4 py-2 text-sm font-medium text-white bg-sky-500 rounded-md hover:bg-sky-600"
+                >
+                  확인
                 </button>
               </div>
             </div>
