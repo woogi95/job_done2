@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../../apis/login";
 import { useEffect, useState } from "react";
 import {
   AcceptButton,
-  CancelButton,
   EmptyMessage,
   PageButton,
   PaginationContainer,
@@ -19,25 +17,30 @@ import {
   reviewPicsList,
   selectReviewAtom,
 } from "../../../atoms/reviewAtom";
+import ReviewView from "./ReviewView";
 
 function ReviewCenter() {
-  useEffect(() => {
-    reviewData();
-  }, []);
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
-  const [selectReview, setSelectReview] = useRecoilState(selectReviewAtom);
+  const [, setSelectReview] = useRecoilState(selectReviewAtom);
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewPicsData, setReviewPicsData] = useRecoilState(reviewPicsList);
-  // const [commentModal, setCommentModal] = useRecoilState(commentModals);
-  const [isSorted, setIsSorted] = useState(false);
-  const [isScored, setIsScored] = useState(false);
-  const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
+  const [, setReviewIds] = useRecoilState(reviewIdState);
   const [sortOrder, setSortOrder] = useState("latest");
   const [sortType, setSortType] = useState("high");
   const [filterType, setFilterType] = useState("all");
+  const [reviewView, setReviewView] = useState(false);
   const itemsPerPage = 10;
-  const navigate = useNavigate();
+
   const busiId = localStorage.getItem("businessId");
+
+  useEffect(() => {
+    reviewData();
+  }, []);
+
+  const handleCloseModal = () => {
+    setReviewView(false);
+    reviewData(); // ✅ 모달 닫을 때 데이터 갱신
+  };
 
   const reviewData = async () => {
     try {
@@ -72,19 +75,19 @@ function ReviewCenter() {
     const clickPicView = reviewPicsData.find(
       item => item.reviewId === data.reviewId,
     );
-    // console.log(clickView);
     setSelectReview(clickView);
     setReviewPicsData(clickPicView);
     setReviewIds(data.reviewId);
   };
+
   const handleSortChange = event => {
     const order = event.target.value;
     setSortOrder(order);
+    setCurrentPage(1);
 
     const sortedData = [...reviewDatas].sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
-
       return order === "latest" ? dateB - dateA : dateA - dateB;
     });
 
@@ -94,22 +97,24 @@ function ReviewCenter() {
   const handleScoreSort = event => {
     const order = event.target.value;
     setSortType(order);
+    setCurrentPage(1);
 
-    const sortedData = [...reviewDatas].sort((a, b) => {
-      return order === "high" ? b.score - a.score : a.score - b.score;
-    });
+    const sortedData = [...reviewDatas].sort((a, b) =>
+      order === "high" ? b.score - a.score : a.score - b.score,
+    );
 
     setReviewDatas(sortedData);
   };
 
   const handleFilterChange = event => {
     setFilterType(event.target.value);
+    setCurrentPage(1);
   };
 
   const filteredData = reviewDatas.filter(item => {
-    if (filterType === "waiting") return item.replyStatus === null; // ✅ 답글 없음 (작성 대기)
-    if (filterType === "completed") return item.replyStatus !== null; // ✅ 답글 있음 (작성 완료)
-    return true; // ✅ 전체 보기
+    if (filterType === "waiting") return item.replyStatus === null;
+    if (filterType === "completed") return item.replyStatus !== null;
+    return true;
   });
 
   const renderStars = score => {
@@ -129,57 +134,14 @@ function ReviewCenter() {
       </div>
     );
   };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
   const maxPage = Math.ceil(reviewDatas.length / itemsPerPage);
+
   return (
     <RequestBusiContainer>
-      {/* <EFilterDiv>
-        <ul className="btn-area">
-          <li>
-            <button
-              className={`completed3 ${statusFilter === "3" ? "active" : ""}`}
-              onClick={() => handleStatusFilter("3")}
-            >
-              취소
-            </button>
-          </li>
-          <li>
-            <button
-              className={`completed0 ${statusFilter === "0" ? "active" : ""}`}
-              onClick={() => handleStatusFilter("0")}
-            >
-              대기
-            </button>
-          </li>
-          <li>
-            <button
-              className={`completed1 ${statusFilter === "1" ? "active" : ""}`}
-              onClick={() => handleStatusFilter("1")}
-            >
-              완료
-            </button>
-          </li>
-          <li>
-            <button
-              className={`completed5 ${statusFilter === "5" ? "active" : ""}`}
-              onClick={() => handleStatusFilter("5")}
-            >
-              거절
-            </button>
-          </li>
-          <li>
-            <button
-              className={`all ${statusFilter === "all" ? "active" : ""}`}
-              onClick={() => handleStatusFilter("all")}
-            >
-              전체보기
-            </button>
-          </li>
-        </ul>
-      </EFilterDiv> */}
-
       <TableWrapper>
         <TableContainer>
           <thead>
@@ -222,7 +184,7 @@ function ReviewCenter() {
             </tr>
           </thead>
           <tbody>
-            {reviewDatas.length === 0 ? (
+            {currentData.length === 0 ? (
               <tr>
                 <EmptyMessage colSpan={6}>등록된 리뷰가 없습니다.</EmptyMessage>
               </tr>
@@ -235,25 +197,14 @@ function ReviewCenter() {
                   <td>{item.createdAt}</td>
                   <td>{renderStars(item.score)}</td>
                   <td>
-                    {item.comment === null ? (
-                      <CancelButton
-                        onClick={item => {
-                          viewData(item);
-                          navigate("/expert/review-center/reviewview");
-                        }}
-                      >
-                        작성 대기
-                      </CancelButton>
-                    ) : (
-                      <AcceptButton
-                        onClick={() => {
-                          viewData(item);
-                          navigate("/expert/review-center/reviewview");
-                        }}
-                      >
-                        작성 완료
-                      </AcceptButton>
-                    )}
+                    <AcceptButton
+                      onClick={() => {
+                        viewData(item);
+                        setReviewView(true);
+                      }}
+                    >
+                      {item.replyStatus ? "작성 완료" : "작성 대기"}
+                    </AcceptButton>
                   </td>
                 </tr>
               ))
@@ -261,7 +212,7 @@ function ReviewCenter() {
           </tbody>
         </TableContainer>
       </TableWrapper>
-      {/* ✅ 페이지네이션 UI 추가 */}
+
       {maxPage > 1 && (
         <PaginationContainer>
           {[...Array(maxPage)].map((_, index) => (
@@ -275,7 +226,42 @@ function ReviewCenter() {
           ))}
         </PaginationContainer>
       )}
+
+      {reviewView && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1000,
+            background: "white",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+            width: "50%",
+            maxWidth: "600px",
+          }}
+        >
+          <button
+            onClick={handleCloseModal}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              background: "transparent",
+              border: "none",
+              fontSize: "20px",
+              cursor: "pointer",
+            }}
+          >
+            ✖
+          </button>
+          <ReviewView />
+        </div>
+      )}
     </RequestBusiContainer>
   );
 }
+
 export default ReviewCenter;

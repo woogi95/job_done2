@@ -10,7 +10,9 @@ interface SirenType {
 }
 
 const BusinessReportPopup = () => {
-  const [selectedReport, setSelectedReport] = useState<string | null>(null);
+  const [selectedReport, setSelectedReport] = useState<string | null | number>(
+    null,
+  );
   const [sirenTypelist, setSirenTypelist] = useState<SirenType[]>([]);
 
   const getSirenTypelist = async () => {

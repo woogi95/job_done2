@@ -6,7 +6,7 @@ import {
   cancelCommentAtom,
   cancelStateAtom,
   reqBusinessIdAtom,
-  requestBusiAtom,
+  // requestBusiAtom,
 } from "../../../../atoms/third-atoms/requests/requestAtom";
 import { BusinessApplyType } from "../../../../types/type";
 import {
@@ -32,10 +32,10 @@ import {
 
 const RequestBusi = () => {
   const picURL = "http://112.222.157.157:5234";
-  const [allData, setAllData] =
-    useRecoilState<BusinessApplyType[][]>(requestBusiAtom); // 🌟 모든 페이지 데이터 저장
-  const [currentPage, setCurrentPage] = useState(1); // 🌟 현재 페이지
-  const [maxPage, setMaxPage] = useState(1); // 🌟 최대 페이지 (빈 데이터가 오면 종료)
+  // const [allData, setAllData] =
+  //   useRecoilState<BusinessApplyType[][]>(requestBusiAtom); //
+  const [currentPage, setCurrentPage] = useState(1); //
+  const [maxPage, setMaxPage] = useState(1); //
   // 수락 , 취소 모달 state
   const [cancel, setCancel] = useRecoilState<boolean>(cancelStateAtom);
   const [approve, setApprove] = useRecoilState<boolean>(approveStateAtom);
@@ -74,21 +74,17 @@ const RequestBusi = () => {
 
     await fetchData(page);
 
-    // ✅ 데이터를 모두 가져온 후에 `allData`, `flatData`, `filteredData` 업데이트
-    // setAllData([...allPagesData]);
-
     const dataFlat = allPagesData.flat();
     setFlatData(dataFlat);
 
-    // ✅ 초기 페이지네이션 세팅 (데이터가 있으면 1페이지부터 시작)
     const paginatedData: BusinessApplyType[][] = [];
     for (let i = 0; i < dataFlat.length; i += 10) {
       paginatedData.push(dataFlat.slice(i, i + 10));
     }
 
     setFilteredData(paginatedData);
-    setMaxPage(paginatedData.length || 1); // 최소 1페이지 유지
-    setCurrentPage(1); // 첫 번째 페이지로 자동 이동
+    setMaxPage(paginatedData.length || 1);
+    setCurrentPage(1);
   };
 
   // state 값 데이터 필터링
@@ -106,7 +102,7 @@ const RequestBusi = () => {
 
     setFilteredData(paginatedData);
     setMaxPage(paginatedData.length || 1);
-    setCurrentPage(1); // 필터링 시 첫 페이지로 이동
+    setCurrentPage(1);
   };
   // 승인 , 취소 Api
   //승인 Api
@@ -145,9 +141,9 @@ const RequestBusi = () => {
   // 사진 모달 open
   const openPicModal = (papers: string | string[]) => {
     if (typeof papers === "string") {
-      setPicList([papers]); // 단일 이미지일 경우 배열로 변환 ✅
+      setPicList([papers]);
     } else {
-      setPicList(papers); // 이미 배열이면 그대로 저장 ✅
+      setPicList(papers);
     }
     console.log(`${picURL}${papers}`);
     setPicModal(true);
@@ -155,7 +151,7 @@ const RequestBusi = () => {
   //사진 모달 close
   const closePicModal = () => {
     setPicModal(false);
-    setPicList([]); // 닫을 때 초기화 ✅
+    setPicList([]);
   };
 
   //  필터링 실행
@@ -163,12 +159,10 @@ const RequestBusi = () => {
     filterData();
   }, [stateList, flatData]);
 
-  // ✅ 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
     getAllData();
   }, []);
 
-  // ✅ 현재 페이지 데이터 가져오기
   const currentData = filteredData[currentPage - 1] || [];
 
   return (

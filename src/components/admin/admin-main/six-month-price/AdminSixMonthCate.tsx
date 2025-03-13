@@ -3,20 +3,22 @@ import { useRecoilState } from "recoil";
 import { stateSixMonthAtom } from "../../../../atoms/third-atoms/admin/mainAtom";
 
 const AdminSixMonth = () => {
-  const [serverData, setServerData] = useRecoilState(stateSixMonthAtom);
+  const [serverData, _setServerData] = useRecoilState(stateSixMonthAtom);
   console.log(serverData);
   const categories = [
     ...new Set(
-      serverData.flatMap(item => item.salesInfoDtos.map(s => s.categoryName)),
+      serverData
+        .flatMap(item => item.salesInfoDtos?.map(s => s.categoryName ?? "기타"))
+        .filter(Boolean),
     ),
-  ];
+  ] as string[];
 
   // 🔹 (2) 데이터를 Nivo 차트 형식으로 변환
   const nivoData = serverData.map(item => {
     const formattedMonth = item.month.replace("-", "."); // "2024-10" → "24.10" 변환
     const salesData: Record<string, number> = {};
     // 각 카테고리의 `totalPrice` 매핑
-    item.salesInfoDtos.forEach(cur => {
+    item.salesInfoDtos?.forEach(cur => {
       salesData[cur.categoryName] = cur.totalPrice;
     }, {});
 

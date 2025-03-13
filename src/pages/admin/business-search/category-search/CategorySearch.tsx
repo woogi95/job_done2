@@ -106,6 +106,36 @@ const CategorySearch = () => {
   return (
     <RequestBusiContainer>
       <TableWrapper>
+        <div style={{ display: "flex", justifyContent: "right" }}>
+          <button
+            style={{
+              border: "2px solid #333",
+              backgroundColor: "#fff",
+              color: "#333",
+              width: "100px",
+              height: "32px",
+              padding: "5px 5px",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              marginBottom: "10px",
+            }}
+            onMouseOver={e => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#f5f5f5";
+            }}
+            onMouseOut={e => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#fff";
+            }}
+            onClick={() => setCateModal(true)}
+          >
+            카테고리 등록
+          </button>
+        </div>
+
         <TableContainer>
           <thead>
             <tr>
@@ -162,17 +192,6 @@ const CategorySearch = () => {
           alignItems: "center",
         }}
       >
-        <button
-          style={{
-            border: "2px solid black",
-            width: "10%",
-            padding: "3px",
-            height: "30px",
-          }}
-          onClick={() => setCateModal(true)}
-        >
-          카테고리 등록
-        </button>
         {maxPage > 1 && (
           <PaginationContainer style={{ alignItems: "center" }}>
             {[...Array(maxPage)].map((_, index) => (

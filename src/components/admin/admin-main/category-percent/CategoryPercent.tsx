@@ -85,7 +85,7 @@ const CategoryPercent = () => {
             symbolShape: "circle",
           },
         ]}
-        onClick={handleCategoryClick} // ✅ 클릭 이벤트
+        onClick={() => handleCategoryClick} // ✅ 클릭 이벤트
         tooltip={({ datum }) => (
           <div
             style={{
