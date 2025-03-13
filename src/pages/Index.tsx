@@ -13,12 +13,31 @@ import { BusinessItem, Region } from "../types/TypeBox";
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
-  const [topLayout, setTopLayout] = useState<boolean>(false);
+  const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
 
   const LetTopLayout = () => {
     return (
-      <div className={"fixed top-0 w-full z-50 h-[100px]"}>
-        <div className="bg-black"></div>
+      <div
+        className={`bg-[#1e1e1e] backdrop-blur-sm py-4 fixed top-[80px] left-0 w-full z-50 ${TopLayoutVisible ? "block" : "hidden"}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-white">JobDone</h1>
+          <nav className="flex gap-6 justify-center items-center">
+            {regions.map(region => (
+              <button
+                key={region.regionId}
+                onClick={() => setSelectedRegion(region.regionId)}
+                className={`text-[16px] font-medium ${
+                  selectedRegion === region.regionId
+                    ? "text-white"
+                    : "text-gray-400 hover:text-white"
+                } transition-colors`}
+              >
+                {region.region}
+              </button>
+            ))}
+          </nav>
+        </div>
       </div>
     );
   };
@@ -94,16 +113,25 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // console.log("스크롤 Y 좌표:", window.scrollY);
+      if (window.scrollY >= 750) {
+        setTopLayoutVisible(true);
+      } else {
+        setTopLayoutVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
       if (window.scrollY >= 2700) {
         totalUserAnime();
         window.removeEventListener("scroll", handleScroll);
-      }
-
-      if (window.scrollY >= 800) {
-        setTopLayout(true);
-      } else {
-        setTopLayout(false);
       }
     };
 
@@ -147,6 +175,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      {/* 스크롤 800px 추가 레이아웃 */}
       {LetTopLayout()}
       <div>
         {/* 이벤트 배너 */}
@@ -207,6 +236,8 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      <div className="h-[100px]"></div>
 
       {/* 컨텐츠 */}
       <div className="bg-white/30 backdrop-blur-sm py-10">
