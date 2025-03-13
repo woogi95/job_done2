@@ -8,25 +8,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import anime from "animejs";
-
-interface Region {
-  regionId: number;
-  region: string;
-}
-
-interface BusinessItem {
-  businessId: number;
-  pic: string;
-  title: string;
-  price: number;
-  businessName: string;
-  scoreAvg: number;
-  serviceCount: number;
-}
+import { BusinessItem, Region } from "../types/TypeBox";
 
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
+  const [topLayout, setTopLayout] = useState<boolean>(false);
+
+  const LetTopLayout = () => {
+    return (
+      <div className={"fixed top-0 w-full z-50 h-[100px]"}>
+        <div className="bg-black"></div>
+      </div>
+    );
+  };
+
   const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",
@@ -103,6 +99,12 @@ const Index = () => {
         totalUserAnime();
         window.removeEventListener("scroll", handleScroll);
       }
+
+      if (window.scrollY >= 800) {
+        setTopLayout(true);
+      } else {
+        setTopLayout(false);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -145,9 +147,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      {LetTopLayout()}
       <div>
         {/* 이벤트 배너 */}
-        <div className="relative h-[600px] overflow-hidden">
+        <div className="relative h-[500px] overflow-hidden">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 5000 }}
@@ -278,25 +281,6 @@ const Index = () => {
             )}
           </div>
 
-          {/* 상단 배너 */}
-          {/* <div className="max-w-[1280px] m-auto py-[80px]">
-            <Link
-              to="/qna"
-              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
-            >
-              <img
-                src="./images/event/event_banner_1.png"
-                alt="이벤트배너"
-                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
-                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
-                  서비스에 대해 궁금하다면?
-                </span>
-              </div>
-            </Link>
-          </div> */}
-
           {/* 최신 글 */}
           {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최신 글
@@ -366,25 +350,6 @@ const Index = () => {
               </div>
             )}
           </div>
-          {/* 중간 배너 */}
-          {/* <div className="max-w-[1280px] m-auto py-[80px]">
-            <Link
-              to="/login/signup"
-              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
-            >
-              <img
-                src="./images/order/event_2.jpg"
-                alt="이벤트배너"
-                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
-                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
-                  회원가입 하고{" "}
-                  <p className="text-5xl py-[10px]">잡던을 이용해보세요!</p>
-                </span>
-              </div>
-            </Link>
-          </div> */}
 
           {/* 최저가 글 */}
           {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
