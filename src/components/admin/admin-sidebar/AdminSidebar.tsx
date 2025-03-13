@@ -11,9 +11,6 @@ const AdminSidebar = () => {
   const [isActiveMenu, setIsActiveMenu] = useState(false);
   const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
   const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
-  // const navigate = useNavigate();
-
-  // const navigate = useNavigate();
 
   const location = useLocation();
 

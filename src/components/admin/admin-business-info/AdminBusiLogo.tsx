@@ -1,4 +1,13 @@
-const AdminBusiLogo = ({ businessState }) => {
+type BusinessStateType = {
+  logo: string;
+  businessName: string;
+};
+
+const AdminBusiLogo = ({
+  businessState,
+}: {
+  businessState: BusinessStateType;
+}) => {
   const BASE_URL = "http://112.222.157.157:5234";
   return (
     <div className="photo-area">

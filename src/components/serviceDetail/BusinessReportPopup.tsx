@@ -14,6 +14,7 @@ interface SirenType {
   qaDetailReason: string;
 }
 
+
 interface BusinessReportPopupProps {
   setIsReportPopupOpen: (isOpen: boolean) => void;
 }
@@ -21,6 +22,7 @@ interface BusinessReportPopupProps {
 const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   setIsReportPopupOpen,
 }) => {
+
   const [sirenTypelist, setSirenTypelist] = useState<SirenType[]>([]);
   // ------
   const [qaTypeDetailId, setQaTypeDetailId] = useState<number>(0);

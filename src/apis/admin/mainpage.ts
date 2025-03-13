@@ -1,6 +1,7 @@
 import {
   BarDayUserDataType,
   DayUserDataType,
+  SixMonthDataType,
   StateCatePerType,
   StatesDashType,
   StateSixMonthType,
@@ -13,12 +14,17 @@ import axios from "axios";
 export const getMainData = async (
   setDashBoardData: (data: StatesDashType) => void,
   setSixMonthData: (data: StateSixMonthType[]) => void,
+  setDcSixMonthData: (
+    data: {
+      [key: string]: string | number;
+    }[],
+  ) => void,
   setVisitorData: (data: StateVisitorType[]) => void,
-  setDcVisitorData: (data: BarDayUserDataType[]) => void,
+  setDcVisitorData: (data: BarDayUserDataType) => void,
   setCatePer: (data: StateCatePerType[]) => void,
 ) => {
   await getDashBoardData(setDashBoardData);
-  await getSixMonthData(setSixMonthData);
+  await getSixMonthData(setSixMonthData, setDcSixMonthData);
   await getVisitorData(setVisitorData, setDcVisitorData);
   await getCatePer(setCatePer);
 };
@@ -43,17 +49,31 @@ export const getDashBoardData = async (
 // 6개월 총매출 조회
 
 export const getSixMonthData = async (
-  setSixMonthData: (data: StateSixMonthType[]) => void,
+  setSixMonthData: (data: SixMonthDataType[]) => void,
+  setDcSixMonthData: (data: { [key: string]: string | number }[]) => void,
 ) => {
   try {
     const res = await axios.get("/api/admin/statsSales");
-    console.log(res);
     if (res) {
       const filterData = res.data.resultData;
       setSixMonthData(filterData);
+
+      // 데이터 가공 (Nivo 차트에 맞게 변환)
+      const nivoData = filterData.map(
+        (item: { [key: string]: string | number }) => ({
+          month: String(item.month)
+            .split("-")
+            .map((val, idx) => (idx === 0 ? val.slice(2) : val))
+            .join("-"),
+          totalPrice: Number(item.totalPrice),
+        }),
+      );
+
+      // Recoil 상태 업데이트
+      setDcSixMonthData(nivoData);
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching six-month data:", error);
   }
 };
 
@@ -69,10 +89,12 @@ export const getVisitorData = async (
       const filterData = res.data.resultData;
 
       // ✅ 방문자 데이터 변환
-      const nivoData: DayUserDataType[] = filterData.map(item => ({
-        date: item.date.slice(5), // ✅ "2025-03-04" → "03-04" 변환
-        visitorCount: item.visitorCount, // ✅ 방문자 수
-      }));
+      const nivoData: DayUserDataType[] = filterData.map(
+        (item: DayUserDataType) => ({
+          date: item.date.slice(5), // ✅ "2025-03-04" → "03-04" 변환
+          visitorCount: item.visitorCount, // ✅ 방문자 수
+        }),
+      );
 
       // ✅ Bar 차트 데이터 변환
       const barChartData: BarDayUserDataType = {

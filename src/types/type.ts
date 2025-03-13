@@ -1,7 +1,7 @@
 // 고객 정보 조회
 export interface UserInfoType {
   userName: string;
-  userPic: string;
+  userPic?: string;
   phone: string;
   detailTypeName: string | null;
   serviceNumber: number;
@@ -79,11 +79,11 @@ export interface SalesInfoDtosType {
 export interface StateSixMonthType {
   month: string;
   totalPrice: number;
-  salesInfoDtos: SalesInfoDtosType[];
+  salesInfoDtos?: SalesInfoDtosType[];
 }
 // 일주일 접속한 유저 수
 export interface StateVisitorType {
-  date: string;
+  date?: string;
   dateOfWeek: string;
   visitorCount: number;
 }
@@ -119,9 +119,9 @@ export interface SixMonthDataType {
   totalPrice: number;
 }
 export interface BarSixMonthDataType {
-  data: SixMonthDataType;
-  month: string;
-  totalPrice: number;
+  data?: SixMonthDataType;
+  month?: string;
+  totalPrice?: number;
 }
 // 최근 일주일 데이터 변환
 export interface DayUserDataType {
@@ -129,8 +129,8 @@ export interface DayUserDataType {
   visitorCount: number;
 }
 export interface BarDayUserDataType {
-  data: DayUserDataType[];
-  keys: string[];
+  data?: DayUserDataType[];
+  keys: ["visitorCount"];
   indexBy: string;
 }
 // ===============================================================
