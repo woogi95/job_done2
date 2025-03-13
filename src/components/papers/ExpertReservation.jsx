@@ -8,7 +8,7 @@ import {
 } from "./papers";
 // icon
 import { CgClose } from "react-icons/cg";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
 import { Popup } from "../ui/Popup";
@@ -20,14 +20,12 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   const [isSuccess, setIsSuccess] = useState(true);
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const businessId = Number(localStorage.getItem("businessId"));
   // ---- //
 
   const completed = papersInfo.completed;
-  // if (completed === 0) {
-  // } else {
-  // }
 
   // 컨펌팝업
   const handleOpenPopup = () => {
@@ -71,18 +69,20 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
 
   const getEstimate = async serviceId => {
     try {
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
-      console.log("API 응답 데이터:", res.data); // API 응답 데이터 로그
+      const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}&businessId=${businessId}`,
+      );
+      console.log("API 응답 데이터:", res.data);
       if (res.data && res.data.resultData) {
-        setPapersInfo(res.data.resultData); // papersInfo 상태 업데이트
-        console.log("papersInfo 상태 업데이트:", res.data.resultData); // papersInfo 상태 로그
+        setPapersInfo(res.data.resultData);
+        console.log("papersInfo 상태 업데이트:", res.data.resultData);
       } else {
         console.error("API 응답 데이터가 올바르지 않습니다:", res.data);
       }
-      setLoading(false); // 데이터 로딩 완료
+      setLoading(false);
     } catch (error) {
       console.error("API 호출 중 오류 발생:", error);
-      setLoading(false); // 에러 발생 시 로딩 종료
+      setLoading(false);
     }
   };
 
@@ -93,7 +93,7 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
 
   useEffect(() => {
     if (serviceId) {
-      setLoading(true); // 데이터 로딩 시작
+      setLoading(true);
       getEstimate(serviceId);
     }
   }, [serviceId]);
@@ -102,11 +102,11 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   console.log("papersInfo 상태:", papersInfo);
 
   if (loading) {
-    return <div>Loading...</div>; // 로딩 중일 때 표시
+    return <div>Loading...</div>;
   }
 
   if (!papersInfo) {
-    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>; // 데이터가 없을 때 표시
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
   }
 
   return (

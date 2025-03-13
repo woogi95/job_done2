@@ -93,7 +93,7 @@ import AlertTestPage from "./pages/AlertTestPage";
 import QaDetail from "./pages/community/QaDetail";
 
 import ExpertEstimate from "./components/papers/ExpertEstimate";
-
+import WeatherTest from "./pages/WeatherTest";
 
 function App() {
   return (
@@ -105,6 +105,7 @@ function App() {
         <Route path="/fe/redirect" element={<OAuth2Handler />} />
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route path="/alerttest" element={<AlertTestPage />} />
+        <Route path="/weathertest" element={<WeatherTest />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />
