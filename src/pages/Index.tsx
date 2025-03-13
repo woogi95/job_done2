@@ -14,8 +14,6 @@ const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
 
-  const [_topLayout, setTopLayout] = useState<boolean>(false);
-
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
 
 
