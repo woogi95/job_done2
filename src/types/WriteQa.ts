@@ -16,10 +16,17 @@ export type QaType = {
   qaDetailReason: string;
 };
 
-export type QaListType = {
+export interface QaListType {
   id: number;
   title: string;
   userName: string;
   createdAt: string;
   qaView: number;
-};
+  qaId: number;
+  contents: string;
+  reason: string;
+  pics: string[];
+  userType: string;
+  qaType: string;
+  qaState: string;
+}
