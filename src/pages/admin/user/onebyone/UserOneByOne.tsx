@@ -1,4 +1,4 @@
-import { Pagination } from "antd";
+import { Pagination, Select } from "antd";
 import { useEffect, useState } from "react";
 import { loginApi } from "../../../../apis/login";
 import { QaListType } from "../../../../types/WriteQa";
@@ -17,8 +17,9 @@ const UserOneByOne = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [answer, setAnswer] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedState, setSelectedState] = useState<string>("all");
 
-  const PIC_URL = "http://112.222.157.157:5234/";
+  const PIC_URL = "http://112.222.157.157:5234";
 
   const getAllQuestion = async () => {
     try {
@@ -71,7 +72,12 @@ const UserOneByOne = () => {
   const updateCurrentPageData = () => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    setCurrentPageData(questionList.slice(startIndex, endIndex));
+    const filteredList =
+      selectedState === "all"
+        ? questionList
+        : questionList.filter(item => item.qaState === selectedState);
+    setCurrentPageData(filteredList.slice(startIndex, endIndex));
+    setTotalItems(filteredList.length);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -91,7 +97,7 @@ const UserOneByOne = () => {
 
   useEffect(() => {
     updateCurrentPageData();
-  }, [currentPage, pageSize, questionList]);
+  }, [currentPage, pageSize, questionList, selectedState]);
 
   useEffect(() => {
     if (isQaId) {
@@ -110,7 +116,23 @@ const UserOneByOne = () => {
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">1:1 문의 관리</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">1:1 문의 관리</h1>
+
+        <div className="flex justify-end mb-2">
+          <Select
+            defaultValue="all"
+            onChange={value => {
+              setSelectedState(value);
+              setCurrentPage(1);
+            }}
+            className="w-[90px]"
+          >
+            <Select.Option value="all">전체</Select.Option>
+            <Select.Option value="00101">미답변</Select.Option>
+            <Select.Option value="00102">검토중</Select.Option>
+            <Select.Option value="00103">답변완료</Select.Option>
+          </Select>
+        </div>
 
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           {/* 문의 리스트 헤더 */}
@@ -130,7 +152,7 @@ const UserOneByOne = () => {
             {currentPageData.map((item: QaListType, index: number) => (
               <div
                 key={item.qaId}
-                className="grid grid-cols-[40px_160px_110px_115px_50px_1fr] gap-11 p-4 text-sm text-gray-600 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                className="grid grid-cols-[40px_155px_115px_115px_50px_1fr] gap-11 p-4 text-sm text-gray-600 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
                 onClick={() => handleDetail(item.qaId)}
               >
                 <div className="flex items-center justify-center">
@@ -188,10 +210,7 @@ const UserOneByOne = () => {
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    제목
-                  </label>
-                  <div className="mt-1 text-gray-900">
+                  <div className="my-2 text-gray-900 font-bold text-[24px]">
                     {selectedQuestion.title}
                   </div>
                 </div>
@@ -208,18 +227,88 @@ const UserOneByOne = () => {
                     사진
                   </label>
                   <div className="mt-1 text-gray-900">
-                    {Array.isArray(selectedQuestion.pics) &&
-                      selectedQuestion.pics.map(
-                        (imgUrl: string, index: number) => (
-                          <div key={index} className="aspect-w-1 aspect-h-1">
-                            <Image
-                              src={`${PIC_URL}${imgUrl}`}
-                              alt={`첨부 이미지 ${index + 1}`}
-                              className="w-full h-auto object-contain rounded-lg max-w-[250px]"
-                            />
-                          </div>
-                        ),
-                      )}
+                    {selectedQuestion.pics.map(
+                      (imgUrl: string, index: number) => (
+                        <div key={index} className="aspect-w-1 aspect-h-1">
+                          <Image
+                            src={`${PIC_URL}${imgUrl}`}
+                            alt={`첨부 이미지 ${index + 1}`}
+                            className="w-full h-auto object-contain rounded-lg max-w-[250px]"
+                          />
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    답변
+                  </label>
+                  <textarea
+                    className="p-2 block w-full rounded-md border-gray-500 shadow-sm focus:border-sky-500 focus:ring-sky-500"
+                    rows={5}
+                    onChange={e => setAnswer(e.target.value)}
+                    placeholder="답변을 입력해주세요"
+                  />
+                </div>
+              </div>
+              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end space-x-2">
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  닫기
+                </button>
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-sky-500 rounded-md hover:bg-sky-600"
+                  onClick={() => qaAnswer(answer)}
+                >
+                  답변 저장
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 답변완료 보기 모달 */}
+        {isModalOpen && selectedQuestion && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <div className="px-6 py-4">
+                <h2 className="text-xl font-bold text-gray-800">
+                  문의 상세 보기
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <div className="my-2 text-gray-900 font-bold text-[24px]">
+                    {selectedQuestion.title}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    내용
+                  </label>
+                  <div className="mt-1 text-gray-900 whitespace-pre-line">
+                    {selectedQuestion.contents}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    사진
+                  </label>
+                  <div className="mt-1 text-gray-900">
+                    {selectedQuestion.pics.map(
+                      (imgUrl: string, index: number) => (
+                        <div key={index} className="aspect-w-1 aspect-h-1">
+                          <Image
+                            src={`${PIC_URL}${imgUrl}`}
+                            alt={`첨부 이미지 ${index + 1}`}
+                            className="w-full h-auto object-contain rounded-lg max-w-[250px]"
+                          />
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
                 <div>

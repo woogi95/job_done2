@@ -9,14 +9,21 @@ import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import anime from "animejs";
 import { BusinessItem, Region } from "../types/TypeBox";
+import { fetchWeather } from "../components/weather/Weather";
+import { WeatherDisplayItem, WeatherItem } from "../types/TypeBox";
 
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
-
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
+  const BASE_URL = "http://112.222.157.157:5234";
+  const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
+  const [currentDate, setCurrentDate] = useState("");
+  const [currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
+    null,
+  );
 
-
+  // 지역 스크롤 레이아웃
   const LetTopLayout = () => {
     return (
       <div
@@ -44,8 +51,7 @@ const Index = () => {
     );
   };
 
-
-
+  // 지역 이름
   const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",
@@ -53,13 +59,13 @@ const Index = () => {
     4: "포항",
     5: "부산",
   };
+
   const [regions] = useState<Region[]>(
     Array.from({ length: 5 }, (_, i) => ({
       regionId: i + 1,
       region: regionNames[i + 1],
     })),
   );
-  const BASE_URL = "http://112.222.157.157:5234";
 
   const fetchBusinessData = async (
     regionId: number,
@@ -114,6 +120,10 @@ const Index = () => {
       });
     }
   };
+
+  useEffect(() => {
+    fetchWeather("daegu", setWeatherItems, setCurrentDate, setCurrentWeather);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -179,8 +189,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-
-
       {/* 스크롤 800px 추가 레이아웃 */}
       {LetTopLayout()}
 
@@ -244,15 +252,33 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="h-[100px]"></div>
+      {/* 날씨 */}
+      <div className="h-[200px]">
+        <div className="flex flex-col gap-[10px] max-w-[1100px] mx-auto px-4">
+          <span className="flex justify-center text-[18px] font-bold mb-[20px]">
+            이번 주 날씨
+          </span>
+          <div className="flex mx-auto gap-[20px]" id="weather-container">
+            {weatherItems.map(item => (
+              <div
+                key={item.date}
+                className="flex flex-col items-center justify-center"
+              >
+                <div className="text-[18px] font-semibold">
+                  {item.averageTemp}°C
+                </div>
+                <img src={item.iconUrl} alt="날씨 아이콘" />
+                <div className="text-[16px] font-semibold">{item.date}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* 컨텐츠 */}
       <div className="bg-white/30 backdrop-blur-sm py-10">
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            인기 글
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
@@ -320,9 +346,6 @@ const Index = () => {
           </div>
 
           {/* 최신 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            최신 글
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
@@ -390,9 +413,6 @@ const Index = () => {
           </div>
 
           {/* 최저가 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            최저가
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
