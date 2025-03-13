@@ -15,13 +15,7 @@ const Index = () => {
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const [topLayout, setTopLayout] = useState<boolean>(false);
 
-  const LetTopLayout = () => {
-    return (
-      <div className={"fixed top-0 w-full z-50 h-[100px]"}>
-        <div className="bg-black"></div>
-      </div>
-    );
-  };
+  //
 
   const regionNames: { [key: number]: string } = {
     1: "대구",
@@ -147,7 +141,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {LetTopLayout()}
       <div>
         {/* 이벤트 배너 */}
         <div className="relative h-[500px] overflow-hidden">
