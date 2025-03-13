@@ -14,6 +14,7 @@ export const EListContDiv = styled.div`
 // 스크롤
 export const ExportPageDiv = styled.div`
   padding: 30px 20px;
+  background-color: #f6f6f6;
   position: relative;
   overflow-y: auto;
   h2.tit {
