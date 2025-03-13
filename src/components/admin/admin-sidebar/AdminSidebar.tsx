@@ -9,12 +9,10 @@ import { SideMenuDiv } from "./adminsidebarD";
 const AdminSidebar = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isActiveMenu, setIsActiveMenu] = useState(false);
-const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
+  const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
   const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   // const navigate = useNavigate();
-
 
   const location = useLocation();
 

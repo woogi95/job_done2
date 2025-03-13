@@ -34,25 +34,6 @@ function LoginPage() {
       if (message === true) {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
-
-        // Cookies.set("accessToken", accessToken, {
-        //   maxAge: 3 * 60,
-        //   // secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
-        //   // sameSite: "Strict", // SameSite 설정
-        // });
-
-        // accessToken을 쿠키에 직접 저장
-        // const expiresInMinutes = 3;
-        // const expirationDate = new Date();
-        // expirationDate.setMinutes(
-        //   expirationDate.getMinutes() + expiresInMinutes,
-        // );
-
-        // Cookies.set("accessToken", accessToken, {
-        //   expires: 3 / (24 * 60),
-        //   secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
-        //   sameSite: "Strict",
-        // });
         setCookie(`accessToken`, res.data.resultData.accessToken, {
           path: "/",
         });
@@ -67,6 +48,7 @@ function LoginPage() {
           businessId: businessId,
           isLogind: true,
         });
+
         // localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("businessId", businessId);
 

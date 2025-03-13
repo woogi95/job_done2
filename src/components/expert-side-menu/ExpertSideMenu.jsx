@@ -140,10 +140,10 @@ const ExpertSideMenu = () => {
 
         <li className="menu1">
           <NavLink
-            to="/expert/statistics"
+            to={"/expert/statistics"}
             onClick={toggleUserSubMenu}
-            className={({ isUserActive }) =>
-              isUserActive || isUserActiveMenu ? "active" : ""
+            className={({ isActive }) =>
+              isActive || isUserActiveMenu ? "active" : ""
             }
           >
             통계
@@ -158,9 +158,10 @@ const ExpertSideMenu = () => {
           <ul className={`sub-menu ${isUserSubMenuOpen ? "open" : ""}`}>
             <li>
               <NavLink
-                to="/expert/statistics"
-                className={({ isUserActive }) =>
-                  isUserActive && location.pathname !== "/expert/statistics"
+                to={"/expert/statistics"}
+                className={({ isActive }) =>
+                  isActive &&
+                  location.pathname !== "/expert/statistics/monthuser"
                     ? "active"
                     : ""
                 }
@@ -170,8 +171,8 @@ const ExpertSideMenu = () => {
             </li>
             <li>
               <NavLink
-                to="/expert/statistics/monthuser"
-                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+                to={"/expert/statistics/monthuser"}
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
                 최근 6개월 이용자
               </NavLink>

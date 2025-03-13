@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../../apis/login";
+// import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
 
 function Forum() {
   const navigate = useNavigate();
-  const [qaList, setQaList] = useState([]);
+  const [qaList, _setQaList] = useState([]);
 
-  const letQaList = async () => {
-    try {
-      const res = await loginApi.get("/api/qa/qaBoard");
-      console.log(res.data);
-      setQaList(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const letQaList = async () => {
+  //   try {
+  //     const res = await loginApi.get("/api/qa/qaBoard");
+  //     console.log(res.data);
+  //     setQaList(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     console.log(qaList);

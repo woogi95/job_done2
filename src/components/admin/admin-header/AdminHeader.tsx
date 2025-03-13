@@ -8,6 +8,7 @@ import {
 } from "../../../types/type";
 import {
   dcDaysUserDataAtom,
+  dcSixMonthDataAtom,
   mainDashBoardAtom,
   stateCatePerAtom,
   stateSixMonthAtom,
@@ -18,27 +19,27 @@ import { getMainData } from "../../../apis/admin/mainpage";
 
 const AdminHeader = () => {
   // 대쉬 보드 API
-  const [dashBoardData, setDashBoardData] =
+  const [_dashBoardData, setDashBoardData] =
     useRecoilState<StatesDashType>(mainDashBoardAtom);
   // 최근 일주일 접속 유저 수
-  const [visitorData, setVisitorData] =
+  const [_visitorData, setVisitorData] =
     useRecoilState<StateVisitorType[]>(stateVisitorAtom);
-  const [dcVisitorData, setDcVisitorData] =
+  const [_dcVisitorData, setDcVisitorData] =
     useRecoilState<BarDayUserDataType>(dcDaysUserDataAtom);
   // 6개월 총매출 조회
-  const [sixMonthData, setSixMonthData] =
+  const [_sixMonthData, setSixMonthData] =
     useRecoilState<StateSixMonthType[]>(stateSixMonthAtom);
+  const [_dcSixMonthData, setDcSixMonthData] =
+    useRecoilState<{ [key: string]: string | number }[]>(dcSixMonthDataAtom);
   // 카테고리 비율
-  const [catePer, setCatePer] =
+  const [_catePer, setCatePer] =
     useRecoilState<StateCatePerType[]>(stateCatePerAtom);
-  console.log("방문자 : ", visitorData);
-  console.log("6개월 : ", sixMonthData);
-  console.log("대쉬보드 : ", dashBoardData);
-
+  console.log(_dcVisitorData);
   useEffect(() => {
     getMainData(
       setDashBoardData,
       setSixMonthData,
+      setDcSixMonthData,
       setVisitorData,
       setDcVisitorData,
       setCatePer,
