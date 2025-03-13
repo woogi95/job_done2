@@ -34,20 +34,22 @@ const EditPortfolio = ({
   const [formData, setFormData] = useState({
     businessId: Number(businessState.businessId),
     price: 0,
-    takingTime: 0,
+    takingTime: "",
     title: "",
     contents: "",
+    youtubeUrl: "",
   });
-
+  const [previewImage, setPreviewImage] = useState(null);
   // Yup 스키마
   const schema = yup.object().shape({
     title: yup.string().required("타이틀을 입력해주세요"),
     takingTime: yup
-      .number()
+      .string()
       .required("소요시간을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     price: yup
-      .number()
+      .number("가격을 숫자로 입력해주세요")
+      .typeError("가격은 숫자로 입력해주세요")
       .required("가격을 입력해주세요")
       .min(0, "0 이상의 숫자를 입력해주세요"),
     contents: yup
@@ -76,6 +78,7 @@ const EditPortfolio = ({
         takingTime: portfolioDetailInfo.takingTime || 0,
         title: portfolioDetailInfo.title || "",
         contents: portfolioDetailInfo.contents || "",
+        youtubeUrl: portfolioDetailInfo.youtubeUrl || "",
       };
       setFormData(updatedFormData);
       reset(updatedFormData);
@@ -105,6 +108,7 @@ const EditPortfolio = ({
         takingTime: data.takingTime,
         title: data.title,
         contents: data.contents,
+        youtubeUrl: data.youtubeUrl,
       };
 
       console.log("Request Data:", requestData);
@@ -119,6 +123,19 @@ const EditPortfolio = ({
       filePreviews.forEach(file => {
         formData.append("pics", file.file);
       });
+
+      // --
+      // 썸네일 추가
+      if (Array.isArray(previewImage)) {
+        previewImage.forEach(image => {
+          formData.append("thumb", image.file);
+        });
+      } else if (previewImage) {
+        console.log(previewImage);
+      } else {
+        console.error("No images to process");
+      }
+      // --
 
       const res = await loginApi.put("/api/portfolio", formData, {
         headers: {
@@ -151,7 +168,7 @@ const EditPortfolio = ({
   };
   console.log("portfolioId", portfolioId);
 
-  const getPortfolioPics = async () => {
+  const getPortfolioPics = async portfolioId => {
     try {
       const res = await loginApi.get(
         `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
@@ -180,10 +197,10 @@ const EditPortfolio = ({
       return;
     }
 
-    // 파일 객체와 미리보기 URL을 함께 저장 (BASE_URL 없음)
+    // 파일 객체와 미리보기 URL을 함께 저장
     const newFilesWithPreviews = selectedFiles.map(file => ({
       file, // 파일 객체
-      preview: URL.createObjectURL(file), // 미리보기 URL (BASE_URL 없음)
+      preview: URL.createObjectURL(file), // 미리보기 URL
     }));
 
     setFilePreviews(prev => [...prev, ...newFilesWithPreviews]);
@@ -223,10 +240,38 @@ const EditPortfolio = ({
       }
     }
   };
+  const putPortfolio = async (portfolioPicId, portfolioId) => {
+    try {
+      const res = await loginApi.put("/api/portfolio/state", {
+        params: {
+          portfolioPicId: portfolioPicId,
+          portfolioId: portfolioId,
+        },
+      });
+      console.log("포트폴리오 수정 : ", res.data);
+    } catch (error) {
+      console.log("API 에러:", error);
+    }
+  };
+
+  const handlePutPortfolio = (portfolioPicId, portfolioId) => {
+    putPortfolio(portfolioPicId, portfolioId);
+  };
 
   useEffect(() => {
-    getPortfolioPics();
+    getPortfolioPics(portfolioId);
   }, [portfolioId]);
+
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <ModalDiv>
@@ -241,35 +286,68 @@ const EditPortfolio = ({
               value={formData.title}
               onChange={e => handleChange("title", e.target.value)}
             />
-            {errors.title && <p className="error">{errors.title.message}</p>}
           </label>
-          <div className="time-price">
-            <label>
-              <h2>소요시간</h2>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                {...register("takingTime")}
-                value={formData.takingTime}
-                onChange={e => handleChange("takingTime", e.target.value)}
-              />
-              {errors.takingTime && (
-                <p className="error">{errors.takingTime.message}</p>
-              )}
-            </label>
-            <label>
-              <h2>가격대</h2>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                {...register("price")}
-                value={formData.price}
-                onChange={e => handleChange("price", e.target.value)}
-              />
-              {errors.price && <p className="error">{errors.price.message}</p>}
-            </label>
+          {errors.title && (
+            <p className="error tit-error">{errors.title.message}</p>
+          )}
+          <div className="thum-price">
+            <div className="thum">
+              <label htmlFor="file">
+                <input
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="미리보기"
+                    style={{
+                      width: "85px",
+                      height: "85px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <FaPlus />
+                    <em>대표이미지</em>
+                  </>
+                )}
+              </label>
+            </div>
+            <div className="time-price">
+              <label>
+                <h2>소요시간</h2>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  {...register("takingTime")}
+                  value={formData.takingTime}
+                  onChange={e => handleChange("takingTime", e.target.value)}
+                />
+                {errors.takingTime && (
+                  <p className="error">{errors.takingTime.message}</p>
+                )}
+              </label>
+              <label>
+                <h2>가격대</h2>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  {...register("price")}
+                  value={formData.price}
+                  onChange={e => handleChange("price", e.target.value)}
+                />
+                {errors.price && (
+                  <p className="error">{errors.price.message}</p>
+                )}
+              </label>
+            </div>
           </div>
 
           {/* 사진 업로드  */}
@@ -301,7 +379,8 @@ const EditPortfolio = ({
               </li>
 
               {/* 5개의 이미지 슬롯 */}
-              {[...Array(5)].map((_, index) => (
+              {[...Array(5)].map((item, index) => (
+                // <li key={item.portfolioPicId}>
                 <li key={index}>
                   <div
                     className="slot"
@@ -326,6 +405,17 @@ const EditPortfolio = ({
             </ul>
           </PicDiv>
 
+          <label className="youtube-url">
+            <h2>유튜브 URL</h2>
+            <input
+              type="text"
+              {...register("youtubeUrl")}
+              onChange={e => handleChange("youtubeUrl", e.target.value)}
+            />
+            {/* {errors.title && (
+              <p className="error">{errors.youtubeUrl.message}</p>
+            )} */}
+          </label>
           <div className="text-area">
             <h2>간단설명</h2>
             <textarea

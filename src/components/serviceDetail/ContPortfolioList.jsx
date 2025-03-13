@@ -21,13 +21,10 @@ const ContPortfolioList = ({ handleImageClick }) => {
 
   const [portfolioListState, setPortfolioListState] =
     useRecoilState(PortfolioListState);
-  // const portfolioList = useRecoilState(PortfolioListState);
   const getPortFolioList = async businessId => {
-    // console.log("이거", businessId);
     try {
       // /api/portfolio?categoryId=1&detailTypeId=1&businessId=1
       const res = await axios.get(`/api/portfolio?businessId=${businessId}`);
-      // console.log("===================", res.data.resultData);
       setPortfolioListState(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -66,7 +63,7 @@ const ContPortfolioList = ({ handleImageClick }) => {
                 onClick={() => handleImageClick(portfolio.portfolioId)}
               >
                 <img
-                  src={`${BASE_URL}${portfolio.isThumbnail}`}
+                  src={`${BASE_URL}${portfolio.thumbnail}`}
                   alt={portfolio.title}
                 />
               </div>

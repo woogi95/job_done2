@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 
 // 전체 컨테이너
 export const RequestBusiContainer = styled.div`
-  padding: 30px 20px;
+  padding: 0px 20px;
   background: #f9f9f9;
   border-radius: 10px;
   box-shadow:

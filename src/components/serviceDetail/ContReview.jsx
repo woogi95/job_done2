@@ -15,7 +15,9 @@ import axios from "axios";
 import parse from "html-react-parser";
 import { IoIosArrowDown } from "react-icons/io";
 import { BASE_URL } from "../../constants/constants";
-import BusinessReportPopup from "./BusinessReportPopup";
+import ReviewReportPopup from "./ReviewReportPopup";
+import { Popup } from "../ui/Popup";
+import { getCookie } from "../../utils/Cookie";
 
 const ContReview = () => {
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
@@ -31,7 +33,12 @@ const ContReview = () => {
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
   const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지
-
+  const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
+  //팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupTitle, setPopupTitle] = useState("");
+  const [popupLink, setPopupLink] = useState("");
   // 정렬 방식에 따른 API 호출
   const handleSortTypeClick = (businessId, option, state) => {
     console.log("businessId, status!!!", businessId, option, state);
@@ -39,6 +46,10 @@ const ContReview = () => {
     setStatus(option);
     setSelectedOption(option);
     getReviewList(businessId, state);
+  };
+
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
   };
 
   // 리뷰 목록 가져오기
@@ -96,6 +107,18 @@ const ContReview = () => {
   const closeModal = () => {
     setIsModalOpen(false); // 모달 닫기
     setSelectedImage(null); // 선택된 이미지 초기화
+  };
+
+  const handleReport = () => {
+    const accessToken = getCookie("accessToken");
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+    } else {
+      setIsReportPopupOpen(true);
+    }
   };
 
   return (
@@ -190,7 +213,14 @@ const ContReview = () => {
                     </div>
                   </div>
                   <div className="siren">
-                    <button>신고하기</button>
+                    <button
+                      onClick={() => {
+                        console.log("Siren clicked");
+                        handleReport();
+                      }}
+                    >
+                      신고하기
+                    </button>
                   </div>
                 </div>
 
@@ -256,7 +286,16 @@ const ContReview = () => {
           ))}
         </div>
       </ReviewDiv>
-      <BusinessReportPopup />
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handlePopupClose}
+        title={popupTitle}
+        message={popupMessage}
+        onCancel={handlePopupClose}
+        confirmLink={popupLink}
+        showCancelButton={true}
+        showConfirmButton={true}
+      />
       {/* 이미지 팝업 */}
       {isModalOpen && (
         <PreviewImgDiv onClick={closeModal}>
@@ -267,6 +306,10 @@ const ContReview = () => {
             <button onClick={closeModal}>닫기</button>
           </div>
         </PreviewImgDiv>
+      )}
+      {/* 리뷰 신고 모달 */}
+      {isReportPopupOpen && (
+        <ReviewReportPopup setIsReportPopupOpen={setIsReportPopupOpen} />
       )}
     </>
   );

@@ -18,7 +18,7 @@ export const LayerDiv = styled.div`
   background-color: #fff;
   min-height: 520px;
   border-radius: 12px;
-  padding: 60px 50px;
+  padding: 50px;
   background-color: #f3f8ff;
   border: 1px solid rgba(53, 96, 177, 0.15);
   box-shadow:
@@ -32,12 +32,68 @@ export const LayerDiv = styled.div`
     margin-bottom: 32px;
     color: #1b428b;
   }
-  .time-price {
+
+  .thum-price {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 12px;
+    /* border: 1px solid #000; */
+
+    .thum {
+      min-width: 80px;
+      height: 80px;
+      background-color: #dbebff;
+      border-radius: 5px;
+      label {
+        position: relative;
+        margin-bottom: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #dbebff;
+        cursor: pointer;
+        transition: all 0.3s;
+        &:hover {
+          background-color: #2a58ad30;
+        }
+      }
+      input {
+        display: none;
+      }
+      svg {
+        color: #2a58ad;
+        font-size: 20px;
+        /* border: 1px solid; */
+      }
+      em {
+        width: 100%;
+        font-size: 13px;
+        color: #2a58ad;
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        font-style: normal;
+        opacity: 0.5;
+      }
+    }
+    .time-price {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 80px);
+      label {
+        margin-bottom: 0;
+        width: 100%;
+      }
+    }
   }
+
   label {
+    position: relative;
     border: 1px solid #c6deff;
     background-color: #fff;
     display: flex;
@@ -66,6 +122,13 @@ export const LayerDiv = styled.div`
       text-align: center;
     }
   }
+  label.youtube-url {
+    margin-top: 18px;
+    margin-bottom: 12px;
+    h2 {
+      min-width: 85px;
+    }
+  }
   //간단설명
   .text-area {
     h2 {
@@ -78,7 +141,7 @@ export const LayerDiv = styled.div`
       background-color: #fff;
       resize: none;
       width: 100%;
-      height: 85px;
+      height: 75px;
       font-size: 13px;
       color: #555;
       padding: 10px;
@@ -120,7 +183,21 @@ export const LayerDiv = styled.div`
   .error {
     color: red;
     font-size: 12px;
-    margin-top: 4px;
+    /* margin-top: 4px;
+    position: absolute;
+    left: 110px;
+    top: 6px; */
+  }
+  label .error {
+    position: absolute;
+    left: 110px;
+    top: 9px;
+  }
+  .error.tit-error {
+    bottom: 0px;
+    top: auto;
+    left: 0;
+    margin: -15px 0 10px;
   }
 `;
 //  작업물
@@ -142,6 +219,12 @@ export const PicDiv = styled.div`
       overflow: hidden;
       position: relative;
       border-radius: 3px;
+      &.thum {
+        /* border: 1px solid #000; */
+        button {
+          position: relative;
+        }
+      }
 
       img {
         top: 0;

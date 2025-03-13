@@ -820,29 +820,35 @@ export const ReportPopupDiv = styled.div`
         input[type="radio"]:checked + label svg {
           color: #ff6b6b;
         }
+        input[type="radio"]:checked + label {
+          color: #ff6b6b;
+        }
         > div {
           width: calc(50%);
-          display: flex;
-          align-items: top;
-          gap: 6px;
-          color: #555;
-          padding: 3px 8px 3px 0;
-          font-size: 15px;
-          line-height: 1.35em;
-          min-height: 52px;
-          word-break: keep-all;
-          cursor: pointer;
-          &:last-child {
-            min-height: 35px;
-          }
+          min-height: 40px;
+
           label {
             width: 100%;
-          }
-          > svg {
-            min-width: 18px;
-            width: 18px;
-            height: 18px;
-            transform: translateY(1px);
+            display: flex;
+            align-items: top;
+            gap: 6px;
+            color: #555;
+            padding: 3px 8px 3px 0;
+            font-size: 16px;
+            line-height: 1.35em;
+
+            word-break: keep-all;
+            cursor: pointer;
+            &:last-child {
+              min-height: 35px;
+            }
+            > svg {
+              min-width: 18px;
+              width: 18px;
+              height: 18px;
+              font-size: 18px;
+              transform: translateY(2.5px);
+            }
           }
         }
       }
@@ -872,8 +878,8 @@ export const ReportPopupDiv = styled.div`
         }
         .img-box {
           display: flex;
-          gap: 10px;
-          padding: 10px 0;
+          gap: 12px;
+          padding: 14px 0;
           input[type="file"] {
             display: none;
           }
@@ -890,14 +896,18 @@ export const ReportPopupDiv = styled.div`
             align-items: center;
             font-size: 30px;
             line-height: 1.25em;
-            background-color: #9391fc;
+            background-color: #d9d9d9;
             color: #333;
             box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            svg {
+              font-size: 18px;
+              color: #fff;
+            }
 
             cursor: pointer;
             &:hover {
-              background-color: #7a78f5;
+              background-color: #999;
             }
           }
         }
@@ -921,6 +931,24 @@ export const ReportPopupDiv = styled.div`
         font-size: 24px;
         cursor: pointer;
       }
+    }
+  }
+`;
+// 리뷰 신고 모달
+export const ReportReviewPopupDiv = styled(ReportPopupDiv)`
+  .report-list {
+    flex-direction: column;
+    min-width: 320px;
+    > div {
+      width: 100% !important;
+    }
+  }
+  label {
+    width: 100% !important;
+  }
+  .text-box {
+    textarea {
+      height: 100px !important;
     }
   }
 `;

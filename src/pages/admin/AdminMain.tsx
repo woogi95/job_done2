@@ -10,7 +10,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
+
 import AdminSixMonth from "../../components/admin/admin-main/six-month-price/AdminSixMonth";
 import DaysUser from "../../components/admin/admin-main/days-user/DaysUser";
 import { useRecoilState } from "recoil";
@@ -34,78 +34,7 @@ ChartJS.register(
 const AdminMain = () => {
   // 최근일주일 방문자 수
   const [dashBoardData] = useRecoilState<StatesDashType>(mainDashBoardAtom);
-  // 테스트 데이터
 
-  // 도넛 차트 데이터
-  const doughnutChartData = {
-    labels: ["청소", "이사", "수리", "기타"],
-    datasets: [
-      {
-        data: [40, 30, 20, 10],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(54, 162, 235, 0.5)",
-          "rgba(255, 206, 86, 0.5)",
-          "rgba(75, 192, 192, 0.5)",
-        ],
-      },
-    ],
-  };
-
-  // 최근 매물 데이터 예시
-  const recentProperties = [
-    {
-      id: 1,
-      name: "강남 역삼동 오피스텔",
-      price: "3.5억",
-      type: "매매",
-      date: "2024-03-15",
-    },
-    {
-      id: 2,
-      name: "서초동 투룸",
-      price: "월 150만원",
-      type: "전세",
-      date: "2024-03-14",
-    },
-    {
-      id: 3,
-      name: "잠실동 아파트",
-      price: "6.2억",
-      type: "매매",
-      date: "2024-03-14",
-    },
-    {
-      id: 4,
-      name: "송파동 상가",
-      price: "월 300만원",
-      type: "임대",
-      date: "2024-03-13",
-    },
-  ];
-
-  // 공지사항 데이터 예시
-  const notifications = [
-    { id: 1, title: "시스템 점검 안내", type: "공지", date: "2024-03-15" },
-    {
-      id: 2,
-      title: "부동산 중개 수수료 개정 안내",
-      type: "중요",
-      date: "2024-03-14",
-    },
-    {
-      id: 3,
-      title: "신규 기능 업데이트 안내",
-      type: "안내",
-      date: "2024-03-13",
-    },
-    {
-      id: 4,
-      title: "개인정보 처리방침 변경",
-      type: "중요",
-      date: "2024-03-12",
-    },
-  ];
   return (
     <div className="min-h-screen flex overflow-auto">
       {/* Main Content */}
@@ -204,7 +133,8 @@ const AdminMain = () => {
               </div>
               <div className="p-4">
                 <div className="space-y-4">
-                  {notifications.map(notice => (
+                  <span>공지</span>
+                  {/* {notifications.map(notice => (
                     <div
                       key={notice.id}
                       className="flex justify-between items-center border-b pb-2"
@@ -227,7 +157,7 @@ const AdminMain = () => {
                         {notice.date}
                       </span>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </div>
               {/* </div> */}

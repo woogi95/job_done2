@@ -1,7 +1,6 @@
 import { atom } from "recoil";
 import {
   BarDayUserDataType,
-  BarSixMonthDataType,
   cateDataType,
   detailDataType,
   StateCatePerType,
@@ -84,14 +83,10 @@ export const dcDetailDataAtom = atom<detailDataType[]>({
 });
 
 // 6개월 데이터
-export const dcSixMonthDataAtom = atom<BarSixMonthDataType[]>({
+export const dcSixMonthDataAtom = atom<{ [key: string]: string | number }[]>({
   key: "dcSixMonthDataAtom",
   default: [
     {
-      data: {
-        month: "",
-        totalPrice: 0,
-      },
       month: "",
       totalPrice: 0,
     },
@@ -102,11 +97,14 @@ export const dcSixMonthDataAtom = atom<BarSixMonthDataType[]>({
 export const dcDaysUserDataAtom = atom<BarDayUserDataType>({
   key: "dcDaysUserDataAtom",
   default: {
-    data: {
-      date: "",
-      visitorCount: 0,
-    },
-    keys: [0],
-    indexBy: "",
+    data: [
+      {
+        date: "",
+        visitorCount: 0,
+      },
+    ],
+
+    keys: ["visitorCount"],
+    indexBy: "date",
   },
 });

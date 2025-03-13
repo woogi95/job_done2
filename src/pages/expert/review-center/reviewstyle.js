@@ -16,7 +16,7 @@ export const RequestBusiContainer = styled.div`
 export const TableWrapper = styled.div`
   width: 100%;
   background: white;
-  border-radius: 8px;
+  min-height: calc(100vh - 390px);
   padding: 25px 20px;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
@@ -27,12 +27,12 @@ export const TableWrapper = styled.div`
 export const TableContainer = styled.table`
   width: 100%;
   border-collapse: collapse;
-
+  font-size: 14px;
   th {
     background: #f8f9fa;
     color: #a0a3ab;
     font-weight: bold;
-    padding: 10px;
+    padding: 5px;
     text-align: center;
     border-bottom: 1px solid #ececec;
   }

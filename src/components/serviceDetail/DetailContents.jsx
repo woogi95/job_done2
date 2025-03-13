@@ -30,6 +30,7 @@ import { Popup } from "../ui/Popup";
 import ContReview from "./ContReview";
 import { useCookies } from "react-cookie";
 import { PiSirenFill } from "react-icons/pi";
+import BusinessReportPopup from "./BusinessReportPopup";
 
 import { BASE_URL } from "../../constants/constants";
 
@@ -41,9 +42,7 @@ const DetailContents = () => {
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
   const businessDetail = useRecoilValue(businessDetailState);
-  // const serviceIdState = useRecoilValue(serviceIdState);
   const businessId = businessDetail.businessId;
-  // const serviceId = serviceIdState.serviceId;
 
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   // 팝업
@@ -52,6 +51,7 @@ const DetailContents = () => {
   const [popupTitle, setPopupTitle] = useState("");
   const [popupLink, setPopupLink] = useState("");
   const [isCheckRoom, setIsCheckRoom] = useRecoilState(checkRoom);
+  const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
   const currentLikeStatus = likeStatus[businessId] || {
     isLiked: false,
   };
@@ -80,11 +80,6 @@ const DetailContents = () => {
         updatedState[businessId] = { isLiked: newLikeStatus };
         return updatedState;
       });
-      // if (res.status === 200) {
-      //   console.log("success:", res.data);
-      // } else {
-      //   console.log("Failed:", res.data);
-      // }
     } catch (error) {
       console.error(error);
     }
@@ -149,6 +144,18 @@ const DetailContents = () => {
       navigate(`/reservation/?businessId=${businessId}`);
     }
   };
+  const handleReport = () => {
+    const accessToken = getCookie("accessToken");
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+    } else {
+      setIsReportPopupOpen(true);
+    }
+  };
+  // ---- 채팅 ----
 
   const [cookies, setCookie, removeCookie] = useCookies(["roomId"]);
 
@@ -283,7 +290,13 @@ const DetailContents = () => {
                   <BsHeart style={{ color: "gray" }} />
                 )}
               </div>
-              <div className="siren">
+              <div
+                className="siren"
+                onClick={() => {
+                  console.log("Siren clicked");
+                  handleReport();
+                }}
+              >
                 <PiSirenFill />
               </div>
             </div>
@@ -331,6 +344,9 @@ const DetailContents = () => {
         showConfirmButton={true}
         confirmLink={popupLink}
       />
+      {isReportPopupOpen && (
+        <BusinessReportPopup setIsReportPopupOpen={setIsReportPopupOpen} />
+      )}
     </DetailLayout>
   );
 };

@@ -10,28 +10,36 @@ import AddPortfolio from "../../../components/portfolio/AddPortfolio";
 import EditPortfolio from "../../../components/portfolio/EditPortfolio";
 import { loginApi } from "../../../apis/login";
 import PfPopup from "../../../components/serviceDetail/PfPopup";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { PortfolioDetailInfoState } from "../../../atoms/portfolioAtom";
 import { BASE_URL } from "../../../constants/constants";
 import { Popup } from "../../../components/ui/Popup";
+import { businessDetailState } from "../../../atoms/businessAtom";
 
 function Portfolio() {
+  const { categoryId, detailTypeId, businessId } =
+    useRecoilValue(businessDetailState);
   const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
     PortfolioDetailInfoState,
   );
+  console.log("portfolioDetailInfo32424", portfolioDetailInfo);
+  const [portfolioList, setPortfolioList] = useState([]);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
+
+  // 포트폴리오 팝업
   const [isPopPfAdd, setIsPopPfAdd] = useState(false);
   const [isPopPfEdit, setIsPopPfEdit] = useState(false);
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
-  const [portfolioList, setPortfolioList] = useState([]);
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
+  // 확인 팝업
   const [isDeleteComplete, setIsDeleteComplete] = useState(false);
   const [isEditComplete, setIsEditComplete] = useState(false);
 
-  const getPortfolioList = async () => {
+  // 포트폴리오 리스트 get
+  const getPortfolioList = async (categoryId, detailTypeId, businessId) => {
     try {
       // /api/portfolio?categoryId=1&detailTypeId=2&businessId=2
       const res = await loginApi.get(
-        `/api/portfolio?categoryId=1&detailTypeId=2&businessId=2`,
+        `/api/portfolio?categoryId=${categoryId}&detailTypeId=${detailTypeId}&businessId=${businessId}`,
       );
       if (res.status === 200) {
         console.log("포트폴리오 리스트", res.data.resultData);
@@ -41,6 +49,8 @@ function Portfolio() {
       console.log(error);
     }
   };
+
+  // 포트폴리오 상세 정보 get
   const getDetailPortfolio = async portfolioId => {
     try {
       const res = await loginApi.get(`/api/portfolio/${portfolioId}`);
@@ -77,14 +87,20 @@ function Portfolio() {
   };
 
   const handleEditClick = async portfolioId => {
+    console.log("portfolioIdfasf222", portfolioId);
     setSelectedPortfolioId(portfolioId);
     setIsPopPfEdit(true);
     await getDetailPortfolio(portfolioId);
   };
+  const handleGetPortfolioInfo = async portfolioId => {
+    setSelectedPortfolioId(portfolioId);
+    await getDetailPortfolio(portfolioId);
+    setIsPfDetailPop(true);
+  };
 
   useEffect(() => {
-    getPortfolioList();
-  }, []);
+    getPortfolioList(categoryId, detailTypeId, businessId);
+  }, [categoryId, detailTypeId, businessId]);
 
   return (
     <ExpertListPageDiv>
@@ -104,12 +120,11 @@ function Portfolio() {
           <PortfolioListItemDiv
             key={item.portfolioId}
             onClick={() => {
-              setSelectedPortfolioId(item.portfolioId);
-              setIsPfDetailPop(true);
+              handleGetPortfolioInfo(item.portfolioId);
             }}
           >
             <div className="thum">
-              <img src={`${BASE_URL}${item.isThumbnail}`} alt={item.title} />
+              <img src={`${BASE_URL}${item.thumbnail}`} alt={item.title} />
             </div>
             <div className="txt-area">
               <h4 className="tit">{item.title}</h4>
@@ -117,6 +132,7 @@ function Portfolio() {
           </PortfolioListItemDiv>
         ))}
       </PortfolioListDiv>
+      {/* 포트폴리오 상세 팝업 */}
       <PfPopup
         isPfDetailPop={isPfDetailPop}
         setIsPfDetailPop={setIsPfDetailPop}
@@ -139,6 +155,7 @@ function Portfolio() {
         message="포트폴리오 삭제가 완료되었습니다"
         showConfirmButton={true}
       />
+      {/* 포트폴리오 추가 팝업 */}
       {isPopPfAdd ? (
         <AddPortfolio
           setIsPopPfAdd={setIsPopPfAdd}
@@ -148,6 +165,7 @@ function Portfolio() {
       ) : (
         <></>
       )}
+      {/* 포트폴리오 수정 팝업 */}
       {isPopPfEdit ? (
         <EditPortfolio
           setIsPopPfEdit={setIsPopPfEdit}

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../../apis/login";
+// import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
 import { Pagination } from "antd";
 
 function Forum() {
   const navigate = useNavigate();
+
   // const [qaList, setQaList] = useState<QaListType[]>([]);
   const [isQaId, setIsQaId] = useState<number>();
   const [allQaList, setAllQaList] = useState<QaListType[]>([]);
@@ -52,6 +53,19 @@ function Forum() {
       console.log(error);
     }
   };
+
+
+
+  // const letQaList = async () => {
+  //   try {
+  //     const res = await loginApi.get("/api/qa/qaBoard");
+  //     console.log(res.data);
+  //     setQaList(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
 
   const handleDetail = (qaId: number) => {
     setIsQaId(qaId);

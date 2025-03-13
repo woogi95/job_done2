@@ -6,7 +6,6 @@ import { useRecoilState } from "recoil";
 import { loginApi } from "../../../apis/login";
 import {
   reviewIdState,
-  reviewListState,
   reviewPicsList,
   selectReviewAtom,
 } from "../../../atoms/reviewAtom";
@@ -14,11 +13,10 @@ import {
 const ReviewView = () => {
   const BASE_URL = "http://112.222.157.157:5234";
   const [form] = Form.useForm();
-  const [selectReview, setSelectReview] = useRecoilState(selectReviewAtom);
-  const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
-  const [reviewPicsData, setReviewPicsData] = useRecoilState(reviewPicsList);
-  const [reviewComment, setReviewComment] = useState(true);
-  const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
+  const [selectReview] = useRecoilState(selectReviewAtom);
+  const [reviewPicsData] = useRecoilState(reviewPicsList);
+  const [, setReviewComment] = useState(true);
+  const [reviewIds] = useRecoilState(reviewIdState);
   const [isComments, setIsComments] = useState(selectReview.replyStatus !== "");
   const [busiReview, setBusiReview] = useState(
     selectReview.replyStatus.contents ? selectReview.replyStatus.contents : "",
@@ -264,7 +262,7 @@ const ReviewView = () => {
             >
               수정
             </button>
-            <button
+            {/* <button
               onClick={() => navigate("/expert/review-center")}
               style={{
                 padding: "8px 16px",
@@ -276,7 +274,7 @@ const ReviewView = () => {
               }}
             >
               목록으로
-            </button>
+            </button> */}
           </div>
         </div>
       )}

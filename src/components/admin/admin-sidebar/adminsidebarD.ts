@@ -10,6 +10,8 @@ export const SideMenuDiv: StyledComponent<
 > = styled.div`
   /* border: 1px solid; */
   display: flex;
+  height: 100%;
+  flex-grow: 1;
   justify-content: space-between;
   flex-direction: column;
   .userhome {
