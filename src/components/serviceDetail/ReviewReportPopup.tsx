@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ReportPopupDiv } from "./serviceDetail";
+import { ReportPopupDiv, ReportReviewPopupDiv } from "./serviceDetail";
 import { RxCross1 } from "react-icons/rx";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
@@ -34,7 +34,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
 
   const getSirenTypelist = async () => {
     try {
-      const res = await loginApi.get(`/api/qa/qaTypeId?qaTypeId=1`);
+      const res = await loginApi.get(`/api/qa/qaTypeId?qaTypeId=2`);
       setSirenTypelist(res.data.resultData);
     } catch (error) {
       console.error("신고 유형 목록 불러오기 실패:", error);
@@ -134,7 +134,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   //     }
   //   };
   return (
-    <ReportPopupDiv>
+    <ReportReviewPopupDiv>
       <div className="layer">
         <form onSubmit={handleSubmit}>
           <h1>리뷰 신고</h1>
@@ -181,7 +181,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
           </div>
         </form>
       </div>
-    </ReportPopupDiv>
+    </ReportReviewPopupDiv>
   );
 };
 

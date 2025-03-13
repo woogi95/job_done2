@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, ExportFormDiv, PaperContDiv, PapersDiv } from "./papers";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { papersState } from "../../atoms/businessAtom";
+import { businessDetailState, papersState } from "../../atoms/businessAtom";
 import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
@@ -14,6 +14,8 @@ const ExpertEstimate = () => {
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   // const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
+  const businessId = Number(localStorage.getItem("businessId"));
+  console.log("businessId:", businessId);
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
   const { serviceId } = useParams();
@@ -39,12 +41,13 @@ const ExpertEstimate = () => {
     patchServiceState(3, serviceId);
   };
 
-  const patchServiceState = async (completed, serviceId) => {
+  const patchServiceState = async (completed, serviceId, businessId) => {
     try {
       // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
-        serviceId,
+        serviceId: Number(serviceId),
+        businessId,
       });
       // console.log(res.data.resultData);
 
@@ -74,19 +77,21 @@ const ExpertEstimate = () => {
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
       : "사업자 번호 없음";
 
-  const handleClickNewPage = async () => {
+  const handleClickNewPage = () => {
     if (!serviceId) {
       console.error("serviceId가 없습니다.");
       return;
     }
+    patchServiceState(1, serviceId, businessId);
+
     navigate(`/expert/quote-management/quotation-form?serviceId=${serviceId}`);
   };
-  useEffect(() => {
-    const storedServiceId = getCookie("serviceId");
-    if (storedServiceId) {
-      setServiceId(storedServiceId);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedServiceId = getCookie("serviceId");
+  //   if (storedServiceId) {
+  //     setServiceId(storedServiceId);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (serviceId) {

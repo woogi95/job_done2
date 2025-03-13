@@ -12,10 +12,13 @@ import { Pagination } from "antd";
 // import ExpertReservation from "../../../components/papers/ExpertReservation";
 import { useNavigate } from "react-router-dom";
 import ExpertEstimate from "../../../components/papers/ExpertEstimate";
+import ExpertReservation from "../../../components/papers/ExpertReservation";
 
 function Index() {
-  const [isEstimatePop, setIsEstimatePop] = useState(false);
+  const [isReservationPop, setIsReservationPop] = useState(false);
   const [seletedServiceId, setSeletedServiceId] = useState(null);
+  // const [isEstimatePop, setIsEstimatePop] = useState(false);
+  // const [seletedServiceId, setSeletedServiceId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all"); // 상태 필터
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
@@ -127,14 +130,16 @@ function Index() {
   };
 
   const handlePageChange = page => {
-    setCurrentPage(page); // 페이지 변경 시 currentPage 업데이트
-    getStatusList(businessId, page); // 해당 페이지의 데이터를 가져옴
+    setCurrentPage(page);
+    getStatusList(businessId, page);
   };
 
-  const handleEstimateClick = serviceId => {
-    setSeletedServiceId(serviceId);
-    setIsEstimatePop(true);
+  const handleEstimateClick = async serviceId => {
     navigate(`/expert/quote-management/estimate/${serviceId}`);
+  };
+  const handleReservationClick = serviceId => {
+    setSeletedServiceId(serviceId);
+    setIsReservationPop(true);
   };
   return (
     <ExpertListPageDiv>
@@ -214,7 +219,11 @@ function Index() {
               <li className="td blue btn-area">
                 <button
                   onClick={() => {
-                    handleEstimateClick(reservation.serviceId);
+                    if (reservation.completed === 2) {
+                      handleEstimateClick(reservation.serviceId);
+                    } else {
+                      handleReservationClick(reservation.serviceId);
+                    }
                   }}
                 >
                   견적서
@@ -234,14 +243,13 @@ function Index() {
           onChange={handlePageChange} // 페이지 변경 시 호출
         />
       </EListContDiv>
-      {/* {isEstimatePop && (
-        <ExpertEstimate
-          isEstimatePop={isEstimatePop}
-          setIsEstimatePop={setIsEstimatePop}
-          // serviceId={seletedServiceId}
-          serviceId={2}
+      {isReservationPop && (
+        <ExpertReservation
+          isReservationPop={isReservationPop}
+          setIsReservationPop={setIsReservationPop}
+          serviceId={seletedServiceId}
         />
-      )} */}
+      )}
     </ExpertListPageDiv>
   );
 }

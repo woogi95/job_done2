@@ -934,3 +934,21 @@ export const ReportPopupDiv = styled.div`
     }
   }
 `;
+// 리뷰 신고 모달
+export const ReportReviewPopupDiv = styled(ReportPopupDiv)`
+  .report-list {
+    flex-direction: column;
+    min-width: 320px;
+    > div {
+      width: 100% !important;
+    }
+  }
+  label {
+    width: 100% !important;
+  }
+  .text-box {
+    textarea {
+      height: 100px !important;
+    }
+  }
+`;
