@@ -13,15 +13,7 @@ import { BusinessItem, Region } from "../types/TypeBox";
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
-  const [topLayout, setTopLayout] = useState<boolean>(false);
-
-  const LetTopLayout = () => {
-    return (
-      <div className={"fixed top-0 w-full z-50 h-[100px]"}>
-        <div className="bg-black"></div>
-      </div>
-    );
-  };
+  const [_topLayout, setTopLayout] = useState<boolean>(false);
 
   const regionNames: { [key: number]: string } = {
     1: "대구",
@@ -147,7 +139,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {LetTopLayout()}
       <div>
         {/* 이벤트 배너 */}
         <div className="relative h-[500px] overflow-hidden">
