@@ -17,7 +17,7 @@ function CreateDetailPage() {
   const { businessId } = useRecoilValue(businessDetailState);
   const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const businessDetail = useRecoilValue(businessDetailState);
+  // const businessDetail = useRecoilValue(businessDetailState);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -106,10 +106,10 @@ function CreateDetailPage() {
       toolbar: {
         container: [
           [{ header: [1, 3, 5, 6, false] }],
-          [{ font: [] }],
-          [{ align: [] }],
+          // [{ font: [] }],
+          // [{ align: [] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
-          [{ list: "ordered" }, { list: "bullet" }, "link"],
+          // [{ list: "ordered" }, { list: "bullet" }, "link"],
           [
             {
               color: [
@@ -154,7 +154,7 @@ function CreateDetailPage() {
             { background: [] },
           ],
           ["image", "video"],
-          ["clean"],
+          // ["clean"],
         ],
         // 이미지 관련해서는 내가 직접 처리할께.
         handlers: {
@@ -174,7 +174,10 @@ function CreateDetailPage() {
               <button type="submit">저장</button>
               <button
                 type="button"
-                onClick={() => navigate("/expert/company-management/detail")}
+                onClick={async () => {
+                  await handleSubmit({ preventDefault: () => {} });
+                  navigate("/expert/company-management/detail");
+                }}
               >
                 미리보기
               </button>

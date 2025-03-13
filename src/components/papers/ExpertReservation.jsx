@@ -29,7 +29,7 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
 
   // 컨펌팝업
   const handleOpenPopup = () => {
-    patchServiceState(4, serviceId);
+    patchServiceState(5, serviceId, businessId);
     setIsPopupOpen(true);
   };
   const handleClosePopup = () => {
@@ -39,12 +39,13 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
     setIsPopupOpen(false);
   };
 
-  const patchServiceState = async (completed, serviceId) => {
+  const patchServiceState = async (completed, serviceId, businessId) => {
     try {
       // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
+        businessId,
       });
       // console.log(res.data.resultData);
 

@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { ImageInfoType } from "../../types/WriteQa";
-// import { Popup } from "../ui/Popup";
+import PopupT from "../ui/PopupT";
 
 interface SirenType {
   qaTypeDetailId: number;
@@ -29,7 +29,8 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
   const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail[0].businessId as number;
+  const businessId = businessDetail[0]?.businessId as number;
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   //------
 
   const getSirenTypelist = async () => {
@@ -54,7 +55,7 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
     try {
       const formData = new FormData();
       const requestData = {
-        qaTypeDetailId: 1,
+        qaTypeDetailId,
         contents: content,
         qaReportReason: "BUSINESS",
         qaTargetId: businessId,
@@ -83,7 +84,7 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
       });
 
       if (res.data.resultData) {
-        setIsReportPopupOpen(false);
+        setIsSuccessPopupOpen(true);
       } else {
         setIsReportPopupOpen(false);
       }
@@ -187,10 +188,11 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
                     <img src={image} alt={`preview ${index}`} />
                   </div>
                   <button
+                    className="remove-img-btn"
                     type="button"
                     onClick={() => handleRemoveImage(index)}
                   >
-                    X
+                    <RxCross1 />
                   </button>
                 </div>
               ))}
@@ -209,6 +211,15 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
           </div>
         </form>
       </div>
+      <PopupT
+        isOpen={isSuccessPopupOpen}
+        message="업체신고가 완료되었습니다"
+        showConfirmButton={true}
+        handleConfirmClick={() => {
+          setIsSuccessPopupOpen(false);
+          setIsReportPopupOpen(false);
+        }}
+      />
     </ReportPopupDiv>
   );
 };

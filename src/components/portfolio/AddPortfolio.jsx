@@ -81,7 +81,6 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         youtubeUrl: data.youtubeUrl,
       };
 
-      // JSON 데이터를 Blob으로 변환하여 FormData에 추가
       formData.append(
         "p",
         new Blob([JSON.stringify(requestData)], {

@@ -100,8 +100,8 @@ function ExpertMainReserveList() {
             <li className="th">예약현황</li>
           </ul>
 
-          <div ref={containerRef} className="w-full h-72 overflow-y-scroll">
-            {reservationData.map((reservation, index) => {
+          <div ref={containerRef}>
+            {reservationData.map(reservation => {
               // console.log(`✅ 화면에 표시될 데이터 ${index}:`, reservation);
               return (
                 <button
