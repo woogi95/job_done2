@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 // import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
 import { Pagination } from "antd";
+import { loginApi } from "../../apis/login";
 
 function Forum() {
   const navigate = useNavigate();
@@ -54,8 +55,6 @@ function Forum() {
     }
   };
 
-
-
   // const letQaList = async () => {
   //   try {
   //     const res = await loginApi.get("/api/qa/qaBoard");
@@ -65,7 +64,6 @@ function Forum() {
   //     console.log(error);
   //   }
   // };
-
 
   const handleDetail = (qaId: number) => {
     setIsQaId(qaId);

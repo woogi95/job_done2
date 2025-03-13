@@ -14,7 +14,6 @@ interface SirenType {
   qaDetailReason: string;
 }
 
-
 interface BusinessReportPopupProps {
   setIsReportPopupOpen: (isOpen: boolean) => void;
 }
@@ -22,7 +21,6 @@ interface BusinessReportPopupProps {
 const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   setIsReportPopupOpen,
 }) => {
-
   const [sirenTypelist, setSirenTypelist] = useState<SirenType[]>([]);
   // ------
   const [qaTypeDetailId, setQaTypeDetailId] = useState<number>(0);
@@ -31,7 +29,7 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
   const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail.businessId as number;
+  const businessId = businessDetail[0].businessId as number;
   //------
 
   const getSirenTypelist = async () => {

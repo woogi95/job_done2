@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ReportPopupDiv, ReportReviewPopupDiv } from "./serviceDetail";
+import { ReportReviewPopupDiv } from "./serviceDetail";
 import { RxCross1 } from "react-icons/rx";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
@@ -29,7 +29,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   //   const [previewImages, setPreviewImages] = useState<string[]>([]);
   //   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
   const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail.businessId as number;
+  const businessId = businessDetail[0].businessId as number;
   //------
 
   const getSirenTypelist = async () => {

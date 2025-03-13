@@ -13,6 +13,9 @@ import { BusinessItem, Region } from "../types/TypeBox";
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
+
+  const [_topLayout, setTopLayout] = useState<boolean>(false);
+
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
 
 
@@ -42,6 +45,7 @@ const Index = () => {
       </div>
     );
   };
+
 
 
   const regionNames: { [key: number]: string } = {
@@ -177,6 +181,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+
 
       {/* 스크롤 800px 추가 레이아웃 */}
       {LetTopLayout()}
