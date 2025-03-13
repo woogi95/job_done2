@@ -4,21 +4,27 @@ import {
   ExpertListPageDiv,
   ExportListDiv,
 } from "../reservation-management/reservationMangement";
-import { useRecoilValue } from "recoil";
+// import { useRecoilValue } from "recoil";
 import { useEffect, useState, useMemo } from "react";
-import { statusAtom } from "../../../atoms/statusAtom";
+// import { statusAtom } from "../../../atoms/statusAtom";
 import { loginApi } from "../../../apis/login";
 import { Pagination } from "antd";
+// import ExpertReservation from "../../../components/papers/ExpertReservation";
+import { useNavigate } from "react-router-dom";
+import ExpertEstimate from "../../../components/papers/ExpertEstimate";
 import ExpertReservation from "../../../components/papers/ExpertReservation";
 
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
   const [seletedServiceId, setSeletedServiceId] = useState(null);
+  // const [isEstimatePop, setIsEstimatePop] = useState(false);
+  // const [seletedServiceId, setSeletedServiceId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all"); // 상태 필터
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
   const [appliedSearchQuery, setAppliedSearchQuery] = useState(""); // 적용된 검색어 상태
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   const businessId = localStorage.getItem("businessId");
   const [reservationData, setReservationData] = useState([]);
@@ -124,10 +130,17 @@ function Index() {
   };
 
   const handlePageChange = page => {
-    setCurrentPage(page); // 페이지 변경 시 currentPage 업데이트
-    getStatusList(businessId, page); // 해당 페이지의 데이터를 가져옴
+    setCurrentPage(page);
+    getStatusList(businessId, page);
   };
 
+  const handleEstimateClick = async serviceId => {
+    navigate(`/expert/quote-management/estimate/${serviceId}`);
+  };
+  const handleReservationClick = serviceId => {
+    setSeletedServiceId(serviceId);
+    setIsReservationPop(true);
+  };
   return (
     <ExpertListPageDiv>
       <h2 className="tit">견적관리</h2>
@@ -206,8 +219,11 @@ function Index() {
               <li className="td blue btn-area">
                 <button
                   onClick={() => {
-                    setSeletedServiceId(reservation.serviceId);
-                    setIsReservationPop(true);
+                    if (reservation.completed === 2) {
+                      handleEstimateClick(reservation.serviceId);
+                    } else {
+                      handleReservationClick(reservation.serviceId);
+                    }
                   }}
                 >
                   견적서

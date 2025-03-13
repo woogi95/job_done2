@@ -22,6 +22,12 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   const [isSuccess, setIsSuccess] = useState(true);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const navigate = useNavigate(); // useNavigate 훅 사용
+  // ---- //
+
+  const completed = papersInfo.completed;
+  // if (completed === 0) {
+  // } else {
+  // }
 
   // 컨펌팝업
   const handleOpenPopup = () => {
@@ -201,25 +207,37 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button
-              className="cancel"
-              onClick={() => {
-                handleOpenPopup();
-              }}
-            >
-              예약취소
-            </button>
-            <button
-              className="okay"
-              onClick={() => {
-                patchServiceState(1, serviceId);
-                navigate(
-                  `/expert/quote-management/quotation-form?serviceId=${serviceId}`,
-                );
-              }}
-            >
-              견적서작성
-            </button>
+            {completed === 0 ? (
+              <button
+                className="cancel"
+                onClick={() => {
+                  handleOpenPopup();
+                }}
+              >
+                예약취소
+              </button>
+            ) : (
+              <button className="cancel inactive" disabled>
+                예약취소
+              </button>
+            )}
+            {completed === 0 ? (
+              <button
+                className="okay"
+                onClick={() => {
+                  patchServiceState(1, serviceId);
+                  navigate(
+                    `/expert/quote-management/quotation-form?serviceId=${serviceId}`,
+                  );
+                }}
+              >
+                견적서작성
+              </button>
+            ) : (
+              <button className="okay inactive" disabled>
+                견적서작성
+              </button>
+            )}
           </BtnAreaDiv>
           <button
             className="pop-close-btn"

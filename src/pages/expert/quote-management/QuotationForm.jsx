@@ -10,12 +10,13 @@ import {
   QuotationDiv,
   QuotationFormDiv,
 } from "./qouteManagement";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function QuotationForm() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const serviceIdFromUrl = queryParams.get("serviceId");
+  const navigate = useNavigate();
 
   const [papersInfo, setPapersInfo] = useState();
   const getBusinessId = localStorage.getItem("businessId");
@@ -95,6 +96,11 @@ function QuotationForm() {
       const res = await loginApi.put("/api/service", requestData);
       console.log("API 응답 데이터:", res.data);
       setAddPrice();
+
+      if (res.data.resultData) {
+        console.log("견적서 작성 완료");
+        navigate("/expert/quote-management");
+      }
     } catch (error) {
       console.log("API 에러:", error);
     }

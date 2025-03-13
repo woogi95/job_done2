@@ -1,9 +1,9 @@
 import { atom } from "recoil";
 
-export const PortfolioListState = atom({
-  key: "PortfolioListState",
-  default: [],
-});
+// export const PortfolioListState = atom({
+//   key: "PortfolioListState",
+//   default: [],
+// });
 export const PortfolioDetailImgState = atom({
   key: "PortfolioDetailImgState",
   default: [],
@@ -20,4 +20,15 @@ export const PortfolioDetailInfoState = atom({
     detailType: "",
     category: "",
   },
+});
+export const PortfolioListState = atom({
+  key: "PortfolioListState",
+  default: [
+    {
+      businessId: 0,
+      portfolioId: 0,
+      title: "",
+      thumbnail: "",
+    },
+  ],
 });

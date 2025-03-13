@@ -72,8 +72,9 @@ const PfPopup = ({
   useEffect(() => {
     if (portfolioId) {
       getPfDetailImgList(portfolioId);
+      getPfDetailInfoList(portfolioId);
     }
-  }, [portfolioId, pfDetailImgList]);
+  }, [portfolioId]);
 
   const handleDelete = async () => {
     try {

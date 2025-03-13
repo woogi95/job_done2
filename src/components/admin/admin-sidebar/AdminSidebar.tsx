@@ -12,8 +12,6 @@ const AdminSidebar = () => {
   const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
   const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
 
-  // const navigate = useNavigate();
-
   const location = useLocation();
 
   // 서브 메뉴 토글
