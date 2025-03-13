@@ -15,6 +15,7 @@ const Index = () => {
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
 
+
   const LetTopLayout = () => {
     return (
       <div
@@ -41,6 +42,7 @@ const Index = () => {
       </div>
     );
   };
+
 
   const regionNames: { [key: number]: string } = {
     1: "대구",
@@ -175,8 +177,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+
       {/* 스크롤 800px 추가 레이아웃 */}
       {LetTopLayout()}
+
       <div>
         {/* 이벤트 배너 */}
         <div className="relative h-[500px] overflow-hidden">

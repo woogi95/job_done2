@@ -124,8 +124,8 @@ export const ExportListDiv = styled.div`
     color: #00a500;
   }
   .black {
-    color: #555;
-    font-weight: 500;
+    color: #595959;
+    font-weight: 600;
   }
   .red {
     color: red;

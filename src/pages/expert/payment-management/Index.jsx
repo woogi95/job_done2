@@ -206,7 +206,9 @@ function Index() {
             >
               <li className="td">{reservation.startDate || "N/A"}</li>
               <li className="td">{reservation.address || "N/A"}</li>
-              <li className="td black">{reservation.price}</li>
+              <li className="td black">
+                {reservation.price?.toLocaleString()} 원
+              </li>
               <li className="td">{reservation.userName}</li>
               <li className="td">
                 <p
