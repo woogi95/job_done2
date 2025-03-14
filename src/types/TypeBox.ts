@@ -11,6 +11,7 @@ export interface BusinessItem {
   businessName: string;
   scoreAvg: number;
   serviceCount: number;
+  logo?: string;
 }
 
 export type WeatherItem = {

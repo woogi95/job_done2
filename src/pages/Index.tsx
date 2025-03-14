@@ -22,6 +22,31 @@ const Index = () => {
   const [currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
     null,
   );
+  const [logo, setLogo] = useState<BusinessItem[]>([]);
+
+  const LOGO_URL = "http://112.222.157.157:5234";
+
+  const justWantLogo = async () => {
+    try {
+      const res = await axios.get("/api/business");
+      console.log("로고", res.data.resultData);
+      if (
+        Array.isArray(res.data.resultData) &&
+        res.data.resultData.length > 0
+      ) {
+        setLogo(res.data.resultData);
+      } else {
+        setLogo([]);
+      }
+    } catch (error) {
+      console.log(error);
+      setLogo([]);
+    }
+  };
+
+  useEffect(() => {
+    justWantLogo();
+  }, []);
 
   // 지역 스크롤 레이아웃
   const LetTopLayout = () => {
@@ -478,27 +503,6 @@ const Index = () => {
               </div>
             )}
           </div>
-          {/* 하단 배너 */}
-          {/* <div className="max-w-[1280px] m-auto py-[80px]">
-            <Link
-              to="/login"
-              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
-            >
-              <img
-                src="./images/order/event_3.jpg"
-                alt="이벤트배너"
-                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
-                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
-                  잡던과 함께!{" "}
-                  <p className="text-5xl py-[10px]">
-                    당신의 비즈니스를 성장시키세요!
-                  </p>
-                </span>
-              </div>
-            </Link>
-          </div> */}
         </div>
       </div>
       {/* 회원가입 배너 */}
@@ -531,6 +535,47 @@ const Index = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center items-center bg-[#d6d6d6] h-[300px]">
+        <span className="text-[40px] font-bold text-[#1e1e1e]">
+          믿을 수 있는 기업들이 함께 합니다.
+        </span>
+      </div>
+      <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={10}
+          loop={true}
+          autoplay={true}
+          className="flex justify-center items-center"
+        >
+          {logo.slice(0, 15).map(item => (
+            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
+              <img
+                src={`${LOGO_URL}${item.logo}`}
+                alt="로고"
+                className="w-[150px] h-[100px] pointer-events-none"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={10}
+          loop={true}
+          autoplay={true}
+          className="flex justify-center items-center"
+        >
+          {logo.slice(16, 30).map(item => (
+            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
+              <img
+                src={`${LOGO_URL}${item.logo}`}
+                alt="로고"
+                className="w-[150px] h-[100px] pointer-events-none"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );
