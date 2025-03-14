@@ -50,6 +50,7 @@ function ExpertDetailPage() {
       getBusinessDetail(id);
     }
   }, [id]);
+
   return (
     <PreviewDiv>
       <DetailTopDiv>

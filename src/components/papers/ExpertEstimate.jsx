@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, ExportFormDiv, PaperContDiv, PapersDiv } from "./papers";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState, papersState } from "../../atoms/businessAtom";
-import { getCookie } from "../../apis/cookie";
+// import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
 import { CgClose } from "react-icons/cg";
