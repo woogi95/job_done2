@@ -9,14 +9,46 @@ import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import anime from "animejs";
 import { BusinessItem, Region } from "../types/TypeBox";
+import { fetchWeather } from "../components/weather/Weather";
+import { WeatherDisplayItem, WeatherItem } from "../types/TypeBox";
 
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
-
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
+  const BASE_URL = "http://112.222.157.157:5234";
+  const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
+  const [currentDate, setCurrentDate] = useState("");
+  const [currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
+    null,
+  );
+  const [logo, setLogo] = useState<BusinessItem[]>([]);
 
+  const LOGO_URL = "http://112.222.157.157:5234";
 
+  const justWantLogo = async () => {
+    try {
+      const res = await axios.get("/api/business");
+      console.log("로고", res.data.resultData);
+      if (
+        Array.isArray(res.data.resultData) &&
+        res.data.resultData.length > 0
+      ) {
+        setLogo(res.data.resultData);
+      } else {
+        setLogo([]);
+      }
+    } catch (error) {
+      console.log(error);
+      setLogo([]);
+    }
+  };
+
+  useEffect(() => {
+    justWantLogo();
+  }, []);
+
+  // 지역 스크롤 레이아웃
   const LetTopLayout = () => {
     return (
       <div
@@ -44,8 +76,7 @@ const Index = () => {
     );
   };
 
-
-
+  // 지역 이름
   const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",
@@ -53,13 +84,13 @@ const Index = () => {
     4: "포항",
     5: "부산",
   };
+
   const [regions] = useState<Region[]>(
     Array.from({ length: 5 }, (_, i) => ({
       regionId: i + 1,
       region: regionNames[i + 1],
     })),
   );
-  const BASE_URL = "http://112.222.157.157:5234";
 
   const fetchBusinessData = async (
     regionId: number,
@@ -114,6 +145,10 @@ const Index = () => {
       });
     }
   };
+
+  useEffect(() => {
+    fetchWeather("daegu", setWeatherItems, setCurrentDate, setCurrentWeather);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -179,8 +214,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-
-
       {/* 스크롤 800px 추가 레이아웃 */}
       {LetTopLayout()}
 
@@ -244,15 +277,33 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="h-[100px]"></div>
+      {/* 날씨 */}
+      <div className="h-[200px]">
+        <div className="flex flex-col gap-[10px] max-w-[1100px] mx-auto px-4">
+          <span className="flex justify-center text-[18px] font-bold mb-[20px]">
+            이번 주 날씨
+          </span>
+          <div className="flex mx-auto gap-[20px]" id="weather-container">
+            {weatherItems.map(item => (
+              <div
+                key={item.date}
+                className="flex flex-col items-center justify-center"
+              >
+                <div className="text-[18px] font-semibold">
+                  {item.averageTemp}°C
+                </div>
+                <img src={item.iconUrl} alt="날씨 아이콘" />
+                <div className="text-[16px] font-semibold">{item.date}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* 컨텐츠 */}
       <div className="bg-white/30 backdrop-blur-sm py-10">
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            인기 글
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
@@ -320,9 +371,6 @@ const Index = () => {
           </div>
 
           {/* 최신 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            최신 글
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
@@ -390,9 +438,6 @@ const Index = () => {
           </div>
 
           {/* 최저가 글 */}
-          {/* <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
-            최저가
-          </span> */}
           <div className="flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
@@ -458,27 +503,6 @@ const Index = () => {
               </div>
             )}
           </div>
-          {/* 하단 배너 */}
-          {/* <div className="max-w-[1280px] m-auto py-[80px]">
-            <Link
-              to="/login"
-              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
-            >
-              <img
-                src="./images/order/event_3.jpg"
-                alt="이벤트배너"
-                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
-                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
-                  잡던과 함께!{" "}
-                  <p className="text-5xl py-[10px]">
-                    당신의 비즈니스를 성장시키세요!
-                  </p>
-                </span>
-              </div>
-            </Link>
-          </div> */}
         </div>
       </div>
       {/* 회원가입 배너 */}
@@ -511,6 +535,47 @@ const Index = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center items-center bg-[#d6d6d6] h-[300px]">
+        <span className="text-[40px] font-bold text-[#1e1e1e]">
+          믿을 수 있는 기업들이 함께 합니다.
+        </span>
+      </div>
+      <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={10}
+          loop={true}
+          autoplay={true}
+          className="flex justify-center items-center"
+        >
+          {logo.slice(0, 15).map(item => (
+            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
+              <img
+                src={`${LOGO_URL}${item.logo}`}
+                alt="로고"
+                className="w-[150px] h-[100px] pointer-events-none"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={10}
+          loop={true}
+          autoplay={true}
+          className="flex justify-center items-center"
+        >
+          {logo.slice(16, 30).map(item => (
+            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
+              <img
+                src={`${LOGO_URL}${item.logo}`}
+                alt="로고"
+                className="w-[150px] h-[100px] pointer-events-none"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );
