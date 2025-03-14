@@ -62,7 +62,6 @@ html .calendar-div {
 
 .modal-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
 

@@ -232,7 +232,7 @@ function ReviewCenter() {
           style={{
             position: "fixed",
             top: "50%",
-            left: "50%",
+            left: "57%",
             transform: "translate(-50%, -50%)",
             zIndex: 1000,
             background: "white",

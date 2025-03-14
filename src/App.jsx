@@ -94,6 +94,8 @@ import QaDetail from "./pages/community/QaDetail";
 
 import ExpertEstimate from "./components/papers/ExpertEstimate";
 import WeatherTest from "./pages/WeatherTest";
+import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
+import AdMonth from "./pages/admin/statistics/AdMonth";
 
 function App() {
   return (
@@ -258,6 +260,10 @@ function App() {
             {/* 업체,상품등록요청 */}
             <Route path="requestresi">
               <Route index element={<RequestBusi />} />
+            </Route>
+            <Route path="statistics">
+              <Route index element={<AdMonth />} />
+              <Route path="daysuser" index element={<AdDaysUser />} />
             </Route>
           </Route>
         </Route>

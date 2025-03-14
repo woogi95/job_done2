@@ -68,7 +68,7 @@ function ReserveUserCount() {
   }
 
   const formattedData = userData.map(({ year, month, serviceCount }) => ({
-    date: `${String(year).slice(2)}-${String(month).padStart(2, "0")}`,
+    date: `${String(year).slice(2)}년 ${String(month).padStart(2, "0")}월`,
     count: serviceCount ?? 0,
   }));
 
@@ -118,12 +118,33 @@ function ReserveUserCount() {
             legend: "이용자 수",
             legendPosition: "middle",
             legendOffset: -40,
+            tickValues: 5, // ✅ 자동 생성되면서도 정수만 표시
+            format: value => Math.floor(value), // ✅ 혹시라도 소수점이 있으면 내림 처리
           }}
           labelSkipWidth={12}
           labelSkipHeight={12}
           labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
           role="application"
           ariaLabel="Nivo bar chart for user count"
+          tooltip={({ indexValue, value }) => {
+            return (
+              <div
+                style={{
+                  background: "rgba(0, 0, 0, 0.8)",
+                  color: "#fff",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+                }}
+              >
+                <strong>📅 {indexValue}</strong>
+                <br />
+                <span style={{ color: "#f4d03f", fontWeight: "bold" }}>
+                  👥 이용자 수: {new Intl.NumberFormat().format(value)}명
+                </span>
+              </div>
+            );
+          }}
         />
       ) : (
         <div className="noData">📉 데이터가 없습니다.</div>

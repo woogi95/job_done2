@@ -29,8 +29,8 @@ function Index() {
     if (info.event._def.extendedProps.completed === 6) {
       setIsModal(true);
       setModalPosition({
-        top: info.jsEvent.clientY, // 마우스 아래 10px
-        left: info.jsEvent.clientX - 150, // 마우스 오른쪽 10px
+        top: info.jsEvent.clientY + 50, // 마우스 아래 10px
+        left: info.jsEvent.clientX, // 마우스 오른쪽 10px
       });
     }
   };

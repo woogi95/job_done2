@@ -47,10 +47,11 @@ const TotalPriceMonth = () => {
           {
             id: priceData[0]?.businessName ?? "Unknown Business",
             data: priceData
-              .filter(({ year, month }) => year > 0 && month > 0) // ✅ 유효한 데이터만 필터링
+              .filter(({ year, month }) => year > 0 && month > 0)
               .map(({ year, month, totalPrice }) => ({
-                x: `${String(year).slice(2)}-${String(month).padStart(2, "0")}`,
+                x: `${String(year).slice(2)}년${String(month).padStart(2, "0")}월`,
                 y: totalPrice ?? 0,
+                formattedY: new Intl.NumberFormat().format(totalPrice ?? 0),
               })),
           },
         ]
@@ -91,7 +92,10 @@ const TotalPriceMonth = () => {
             legendOffset: -80,
             legendPosition: "middle",
             tickValues: 5,
-            format: value => new Intl.NumberFormat().format(value),
+            format: value =>
+              value >= 1000000
+                ? `${new Intl.NumberFormat().format(value / 10000)}만원`
+                : new Intl.NumberFormat().format(value),
           }}
           colors={{ scheme: "set2" }}
           lineWidth={3}
@@ -99,20 +103,32 @@ const TotalPriceMonth = () => {
           pointColor={{ from: "color", modifiers: [["darker", 0.3]] }}
           pointBorderWidth={3}
           pointBorderColor={{ from: "serieColor" }}
-          enableSlices="x"
           useMesh={true}
           motionConfig="gentle"
-          //   legends={[
-          //     {
-          //       anchor: "bottom-right",
-          //       direction: "column",
-          //       translateX: 100,
-          //       itemWidth: 120,
-          //       itemHeight: 20,
-          //       symbolSize: 16,
-          //       symbolShape: "circle",
-          //     },
-          //   ]}
+          tooltip={({ point }) => {
+            const amount = point.data.y;
+            const formattedAmount =
+              amount >= 1000000
+                ? `${new Intl.NumberFormat().format(amount / 10000)}만원`
+                : `${new Intl.NumberFormat().format(amount)}원`;
+            return (
+              <div
+                style={{
+                  background: "rgba(0, 0, 0, 0.8)",
+                  color: "#fff",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+                }}
+              >
+                <strong style={{ fontSize: "14px" }}>{point.data.x}</strong>
+                <br />
+                <span style={{ color: point.serieColor, fontWeight: "bold" }}>
+                  💰 매출: {formattedAmount}
+                </span>
+              </div>
+            );
+          }}
         />
       ) : (
         <div className="noData">📉 데이터가 없습니다.</div>
