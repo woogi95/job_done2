@@ -410,7 +410,7 @@ export const PortfolioListItemDiv = styled.div`
     background-image: linear-gradient(
       180deg,
       transparent 0,
-      rgb(34, 34, 34, 0.85)
+      rgb(34, 34, 34, 0.45)
     );
     h4 {
       position: absolute;
@@ -519,6 +519,7 @@ export const EditDetailDiv = styled.div`
     background-color: #eaeef1;
     background-color: #f2f5ff;
   }
+
   .btn-area {
     display: flex;
     align-items: center;
@@ -537,6 +538,36 @@ export const EditDetailDiv = styled.div`
       color: #4581f0;
     }
   }
+  /* 퀼 : 에디터 상세페이지 */
+  .ql-video {
+    max-width: 652px;
+    width: 100%;
+    /* min-height: 400px; */
+    height: 70%;
+  }
+  .ql-editor {
+    h1 {
+      font-size: 45px;
+      line-height: 1.25em;
+      text-align: left;
+    }
+    h3 {
+      font-size: 32px;
+      line-height: 1.25em;
+    }
+    h5 {
+      font-size: 24px;
+      line-height: 1.35em;
+    }
+    h6 {
+      font-size: 18px;
+      line-height: 1.25em;
+    }
+    p {
+      padding: 5px 0px;
+      font-size: 15px;
+    }
+  }
 `;
 export const PreviewAreaDiv = styled(EditDetailDiv)`
   height: auto;
@@ -552,8 +583,13 @@ export const PreviewDetailDiv = styled(DContsDiv)`
     padding: 0 !important;
     height: calc(100vh - 279px);
     margin-bottom: 33px;
-    /* border: 1px solid #3987fc; */
+
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -699,7 +735,7 @@ export const PreviewDiv = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* border: 1px solid #000; */
+
   background-color: #fff !important;
   z-index: 99;
   > div:nth-child(2) {
@@ -736,16 +772,18 @@ export const PreviewDiv = styled.div`
           opacity: 0.8;
         }
       }
+      /* 미리보기 */
       button[type="submit"] {
         border: 1px solid #4581f0;
         color: #4581f0;
       }
       button.close-btn {
-        background-color: #ccc;
+        background-color: #ddd;
         color: #333;
       }
       button.edit-btn {
         background-color: #2a58ad;
+        background-color: #ff5665;
         color: #fff;
       }
     }

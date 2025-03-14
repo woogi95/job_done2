@@ -14,6 +14,8 @@ export const DetailTopDiv = styled.div`
   justify-content: center;
   align-items: center;
   padding: 30px 0;
+  margin-top: -1px;
+  box-shadow: 0px 7px 21px 0px rgba(0, 0, 0, 0.06);
 
   .inner {
     max-width: 1280px;
@@ -37,6 +39,7 @@ export const DetailTopDiv = styled.div`
       /* border: 1px solid #000; */
       display: flex;
       gap: 12px;
+
       margin-bottom: 16px;
       .logo {
         width: 65px;
@@ -57,6 +60,7 @@ export const DetailTopDiv = styled.div`
             margin-left: 5px;
             font-size: 13px;
             font-weight: 400;
+            font-style: normal;
             color: rgba(0, 0, 0, 0.65);
           }
         }
@@ -199,6 +203,35 @@ export const DContsDiv = styled.div`
     > img {
       width: 100%;
       padding: 0px 10px;
+    }
+  }
+  /* 상세페이지 커스텀*/
+  .title-b {
+    .ql-video {
+      max-width: 652px;
+      width: 100%;
+      min-height: 400px;
+      height: 70%;
+    }
+    h1 {
+      font-size: 45px;
+      line-height: 1.25em;
+    }
+    h3 {
+      font-size: 32px;
+      line-height: 1.25em;
+    }
+    h5 {
+      font-size: 24px;
+      line-height: 1.35em;
+    }
+    h6 {
+      font-size: 18px;
+      line-height: 1.25em;
+    }
+    p {
+      padding: 5px 0px;
+      font-size: 15px;
     }
   }
 `;
@@ -908,6 +941,35 @@ export const ReportPopupDiv = styled.div`
             cursor: pointer;
             &:hover {
               background-color: #999;
+            }
+          }
+          .slot {
+            overflow: hidden;
+            position: relative;
+            img {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .remove-img-btn {
+              position: absolute;
+              top: 1px;
+              right: 1px;
+              background-color: rgba(255, 255, 255, 0.45);
+              padding: 1px;
+              border-radius: 100%;
+              border: 1px solid #bbbbbb75;
+              color: #000;
+              font-size: 12px;
+              cursor: pointer;
+              transition: all 0.3s;
+              &:hover {
+                background-color: rgba(255, 255, 255, 0.85);
+              }
             }
           }
         }

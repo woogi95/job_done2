@@ -19,6 +19,8 @@ export const PortfolioDetailInfoState = atom({
     contents: "",
     detailType: "",
     category: "",
+    youtubeUrl: "",
+    youtubeId: "",
   },
 });
 export const PortfolioListState = atom({

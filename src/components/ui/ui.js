@@ -10,7 +10,7 @@ export const PopupDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
 `;
 export const PopupContDiv = styled.div`
   background: #fff;
@@ -18,6 +18,7 @@ export const PopupContDiv = styled.div`
   border-radius: 8px;
   width: 380px;
   text-align: center;
+  z-index: 10001;
   h4 {
     margin-bottom: 15px;
     font-size: 24px;
@@ -57,5 +58,26 @@ export const PopupContDiv = styled.div`
 
   .btn-area button:nth-child(1):hover {
     background-color: #999;
+  }
+`;
+export const PopupTContDiv = styled(PopupContDiv)`
+  max-width: 300px;
+  padding: 35px 30px;
+  .t-message {
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  .t-confirm-btn {
+    background-color: #4581f0;
+    color: white;
+    width: 45%;
+    height: 40px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
   }
 `;

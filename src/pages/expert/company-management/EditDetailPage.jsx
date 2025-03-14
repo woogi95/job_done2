@@ -27,8 +27,7 @@ function EditDetailPage() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      // businessId 값 한번 더 확인
-      console.log("Submitting with businessId:", businessId);
+      console.log(" businessId:", businessId);
 
       const response = await loginApi.post("/api/business/contents", {
         businessId: businessId,
@@ -107,8 +106,6 @@ function EditDetailPage() {
       toolbar: {
         container: [
           [{ header: [1, 3, 5, 6, false] }],
-          [{ font: [] }],
-          [{ align: [] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
           [{ list: "ordered" }, { list: "bullet" }, "link"],
           [
@@ -155,9 +152,7 @@ function EditDetailPage() {
             { background: [] },
           ],
           ["image", "video"],
-          ["clean"],
         ],
-        // 이미지 관련해서는 내가 직접 처리할께.
         handlers: {
           image: imageHandler,
         },
@@ -177,7 +172,10 @@ function EditDetailPage() {
               <button type="submit">저장</button>
               <button
                 type="button"
-                onClick={() => navigate("/expert/company-management/detail")}
+                onClick={async () => {
+                  await handleSubmit({ preventDefault: () => {} });
+                  navigate("/expert/company-management/detail");
+                }}
               >
                 미리보기
               </button>

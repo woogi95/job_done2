@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
-import { Pagination } from "antd";
+import { Pagination, Modal } from "antd";
 import { loginApi } from "../../apis/login";
 
 function Forum() {
   const navigate = useNavigate();
 
-  // const [qaList, setQaList] = useState<QaListType[]>([]);
   const [isQaId, setIsQaId] = useState<number>();
   const [allQaList, setAllQaList] = useState<QaListType[]>([]);
   const [currentPageData, setCurrentPageData] = useState<QaListType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const accessToken = localStorage.getItem("accessToken");
 
   const letQaList = async () => {
     try {
@@ -55,18 +56,25 @@ function Forum() {
     }
   };
 
-  // const letQaList = async () => {
-  //   try {
-  //     const res = await loginApi.get("/api/qa/qaBoard");
-  //     console.log(res.data);
-  //     setQaList(res.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleDetail = (qaId: number) => {
     setIsQaId(qaId);
+  };
+
+  const handleWriteClick = () => {
+    if (!accessToken) {
+      setIsModalVisible(true);
+    } else {
+      navigate("/forum/write");
+    }
+  };
+
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+    navigate("/login");
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
   };
 
   useEffect(() => {
@@ -101,7 +109,7 @@ function Forum() {
               className="px-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
-              onClick={() => navigate("/forum/write")}
+              onClick={handleWriteClick}
               className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
             >
               글쓰기
@@ -166,6 +174,17 @@ function Forum() {
           </div>
         </div>
       </div>
+
+      <Modal
+        title="로그인 필요합니다."
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        okText="로그인"
+        cancelText="취소"
+      >
+        <p>로그인이 필요합니다. 이동하시겠습니까?</p>
+      </Modal>
     </div>
   );
 }
