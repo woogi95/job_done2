@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 // styled-components 적용
 
 // icon
@@ -184,7 +184,7 @@ const AdminSidebar = () => {
                     : ""
                 }
               >
-                사용자 관리
+                매출
               </NavLink>
             </li>
             <li>
@@ -192,7 +192,7 @@ const AdminSidebar = () => {
                 to="/admin/statistics/daysuser"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                문의 사항
+                방문자 수
               </NavLink>
             </li>
           </ul>

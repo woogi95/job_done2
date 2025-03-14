@@ -72,7 +72,7 @@ function ExpertMain() {
           </div>
           <div>
             <p>작성된 리뷰</p>
-            <span>0건</span>
+            <span>{countReview}건</span>
           </div>
         </div>
       </div>

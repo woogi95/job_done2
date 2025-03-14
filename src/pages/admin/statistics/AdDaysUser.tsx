@@ -17,7 +17,7 @@ const AdDaysUser = () => {
   return (
     <Container>
       <div style={{ display: "flex", margin: "left" }}>
-        <h2 className="tit">견적관리</h2>
+        <h2 className="tit">방문자 수</h2>
       </div>
       <DaysUser />
     </Container>

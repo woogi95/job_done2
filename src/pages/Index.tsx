@@ -18,8 +18,8 @@ const Index = () => {
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
   const BASE_URL = "http://112.222.157.157:5234";
   const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
-  const [currentDate, setCurrentDate] = useState("");
-  const [currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
+  const [_currentDate, setCurrentDate] = useState("");
+  const [_currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
     null,
   );
   const [logo, setLogo] = useState<BusinessItem[]>([]);
@@ -43,7 +43,6 @@ const Index = () => {
       setLogo([]);
     }
   };
-
 
   useEffect(() => {
     justWantLogo();
@@ -77,7 +76,6 @@ const Index = () => {
       </div>
     );
   };
-
 
   // 지역 이름
 
