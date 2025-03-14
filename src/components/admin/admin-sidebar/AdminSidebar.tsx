@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 // styled-components 적용
 
 // icon
@@ -11,6 +11,8 @@ const AdminSidebar = () => {
   const [isActiveMenu, setIsActiveMenu] = useState(false);
   const [isUserSubMenuOpen, setIsUserSubMenuOpen] = useState<boolean>(false);
   const [isUserActiveMenu, setUserIsActiveMenu] = useState<boolean>(false);
+  const [isStatActive, setIsStatActive] = useState<boolean>(false);
+  const [isStatSubMenuOpen, setIsStatSubMenuOpen] = useState<boolean>(false);
 
   const location = useLocation();
 
@@ -20,6 +22,9 @@ const AdminSidebar = () => {
   };
   const toggleUserSubMenu = () => {
     setIsUserSubMenuOpen(prev => !prev);
+  };
+  const toggleStatSubMenu = () => {
+    setIsStatSubMenuOpen(prev => !prev);
   };
 
   // 현재 경로에 따라 활성화 메뉴 설정
@@ -35,6 +40,13 @@ const AdminSidebar = () => {
       setUserIsActiveMenu(true);
     } else {
       setUserIsActiveMenu(false);
+    }
+  }, [location.pathname]);
+  useEffect(() => {
+    if (location.pathname === "/admin/statistics") {
+      setIsStatActive(true);
+    } else {
+      setIsStatActive(false);
     }
   }, [location.pathname]);
 
@@ -77,7 +89,9 @@ const AdminSidebar = () => {
               <NavLink
                 to="/admin/businesssearch"
                 className={({ isActive }) =>
-                  isActive && location.pathname !== "/admin/businesssearch"
+                  isActive &&
+                  location.pathname !== "/admin/businesssearch/reservesearch" &&
+                  location.pathname !== "/admin/businesssearch/ruesearch"
                     ? "active"
                     : ""
                 }
@@ -107,8 +121,8 @@ const AdminSidebar = () => {
           <NavLink
             to="/admin/userlist"
             onClick={toggleUserSubMenu}
-            className={({ isUserActive }) =>
-              isUserActive || isUserActiveMenu ? "active" : ""
+            className={({ isActive }) =>
+              isActive || isUserActiveMenu ? "active" : ""
             }
           >
             유저 관리
@@ -124,8 +138,8 @@ const AdminSidebar = () => {
             <li>
               <NavLink
                 to="/admin/userlist"
-                className={({ isUserActive }) =>
-                  isUserActive && location.pathname !== "/admin/userlist"
+                className={({ isActive }) =>
+                  isActive && location.pathname !== "/admin/userlist/onebyone"
                     ? "active"
                     : ""
                 }
@@ -136,17 +150,49 @@ const AdminSidebar = () => {
             <li>
               <NavLink
                 to="/admin/userlist/onebyone"
-                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
                 문의 사항
               </NavLink>
             </li>
+          </ul>
+        </li>
+        <li className="menu1">
+          <NavLink
+            to="/admin/statistics"
+            onClick={toggleStatSubMenu}
+            className={({ isActive }) =>
+              isActive || isStatActive ? "active" : ""
+            }
+          >
+            통계
+            <IoIosArrowDown
+              style={{
+                transform: isStatSubMenuOpen
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
+            />
+          </NavLink>
+          <ul className={`sub-menu ${isStatSubMenuOpen ? "open" : ""}`}>
             <li>
               <NavLink
-                to="/admin/userlist/userreport"
-                className={({ isUserActive }) => (isUserActive ? "active" : "")}
+                to="/admin/statistics"
+                className={({ isActive }) =>
+                  isActive && location.pathname !== "/admin/statistics/daysuser"
+                    ? "active"
+                    : ""
+                }
               >
-                신고
+                사용자 관리
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/statistics/daysuser"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                문의 사항
               </NavLink>
             </li>
           </ul>

@@ -7,7 +7,7 @@ import {
   RequestBusiContainer,
   TableContainer,
   TableWrapper,
-} from "../category-search/categorysearchs";
+} from "./RevenueSearchs";
 
 interface BusirevenueType {
   id: number;
@@ -49,6 +49,7 @@ const RevenueSearch = () => {
   const maxPage = Math.ceil(revenueList.length / itemsPerPage);
   return (
     <RequestBusiContainer>
+      <h2 className="tit">매출 별 조회</h2>
       <TableWrapper>
         <TableContainer>
           <thead>
@@ -71,8 +72,8 @@ const RevenueSearch = () => {
                   <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.detailTypeName}</td>
-                  <td>{business.totalRevenue}</td>
-                  <td>{business.thisMonthRevenue}</td>
+                  <td>{business.totalRevenue.toLocaleString()}</td>
+                  <td>{business.thisMonthRevenue.toLocaleString()}</td>
                 </tr>
               ))
             )}
@@ -82,9 +83,7 @@ const RevenueSearch = () => {
 
       {/* ✅ 페이지네이션 UI 추가 */}
       {maxPage > 1 && (
-        <PaginationContainer
-          style={{ marginTop: "20px", justifyContent: "right" }}
-        >
+        <PaginationContainer>
           {[...Array(maxPage)].map((_, index) => (
             <PageButton
               key={index + 1}

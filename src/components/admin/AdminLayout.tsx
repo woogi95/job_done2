@@ -15,15 +15,14 @@ const AdminLayout = () => {
     max-width: 1280px;
     width: 100%;
     backgroundcolor: #b6b6b6;
-    min-height: 100vh;
-    flex-grow: 1;
+    height: 100%;
     box-shadow:
       rgba(0, 0, 0, 0.25) 0px 14px 28px,
       rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
     .main {
       display: flex;
-      height: calc(100% - 67px);
+      height: calc(100% - 56px);
       /* side menu */
       > div:nth-child(1) {
         width: 20%;

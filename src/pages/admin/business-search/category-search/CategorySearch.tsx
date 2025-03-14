@@ -56,9 +56,12 @@ const CategorySearch = () => {
       if (cateState === "") {
         setBusinessList(filterData);
       } else if (cateState) {
-        const cateData = filterData.filter(
-          (item: BusinessType) => item.categoryName === cateState,
-        );
+        const cateData = filterData
+          .filter((item: BusinessType) => item.categoryName === cateState)
+          .map((item: BusinessType, index: number) => ({
+            ...item,
+            id: index + 1, // ✅ 필터링 후 다시 1부터 번호 부여
+          }));
         setBusinessList(cateData);
       }
     } catch (error) {
@@ -105,6 +108,7 @@ const CategorySearch = () => {
 
   return (
     <RequestBusiContainer>
+      <h2 className="tit">카테고리 조회 | 등록</h2>
       <TableWrapper>
         <div style={{ display: "flex", justifyContent: "right" }}>
           <button
@@ -183,29 +187,20 @@ const CategorySearch = () => {
       </TableWrapper>
 
       {/* ✅ 페이지네이션 UI 추가 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          marginTop: "20px",
-          alignItems: "center",
-        }}
-      >
-        {maxPage > 1 && (
-          <PaginationContainer style={{ alignItems: "center" }}>
-            {[...Array(maxPage)].map((_, index) => (
-              <PageButton
-                key={index + 1}
-                onClick={() => setCurrentPage(index + 1)}
-                active={currentPage === index + 1}
-              >
-                {index + 1}
-              </PageButton>
-            ))}
-          </PaginationContainer>
-        )}
-      </div>
+
+      {maxPage > 1 && (
+        <PaginationContainer style={{ alignItems: "center" }}>
+          {[...Array(maxPage)].map((_, index) => (
+            <PageButton
+              key={index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+              active={currentPage === index + 1}
+            >
+              {index + 1}
+            </PageButton>
+          ))}
+        </PaginationContainer>
+      )}
 
       {cateModal && (
         <div style={overlayStyle}>

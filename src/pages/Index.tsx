@@ -44,11 +44,13 @@ const Index = () => {
     }
   };
 
+
   useEffect(() => {
     justWantLogo();
   }, []);
 
   // 지역 스크롤 레이아웃
+
   const LetTopLayout = () => {
     return (
       <div
@@ -76,7 +78,9 @@ const Index = () => {
     );
   };
 
+
   // 지역 이름
+
   const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",

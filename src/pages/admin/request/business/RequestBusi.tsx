@@ -167,15 +167,7 @@ const RequestBusi = () => {
 
   return (
     <RequestBusiContainer>
-      <div
-        style={{
-          display: "flex",
-          gap: "15px",
-          justifyContent: "flex-end",
-          width: "100%",
-          marginBottom: "20px",
-        }}
-      ></div>
+      <h2 className="tit">업체 등록 요청</h2>
       <TableWrapper>
         <TableContainer>
           <thead>

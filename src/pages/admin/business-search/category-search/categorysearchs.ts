@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 
 // 전체 컨테이너
 export const RequestBusiContainer = styled.div`
-  padding: 0px 20px;
+  padding: 30px 20px;
   background: #f9f9f9;
   border-radius: 10px;
   box-shadow:
@@ -11,7 +11,11 @@ export const RequestBusiContainer = styled.div`
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   max-width: 100%;
   width: 100%;
-  margin: 20px auto;
+  h2.tit {
+    font-size: 28px;
+    font-weight: 600;
+    padding: 20px 0;
+  }
 `;
 
 // 테이블 감싸는 박스
@@ -54,10 +58,10 @@ export const TableContainer = styled.table`
   tbody tr:nth-child(even) {
     background: #f8f9fa;
   }
-  .th,
-  .td {
+  th,
+  td {
     &:nth-of-type(1) {
-      width: 20%;
+      width: 10%;
     }
     &:nth-of-type(2) {
       width: 30%;
@@ -126,6 +130,7 @@ export const PaginationContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 6px;
+  margin-top: 20px;
 `;
 
 interface PageButtonProps {
@@ -152,8 +157,8 @@ export const PageButton = styled.button<PageButtonProps>`
 export const CancelButton = styled.button`
   padding: 10px 24px; /* 내부 여백 증가 */
   font-size: 18px; /* 글자 크기 증가 */
-  width: 170px; /* 버튼 크기 조절 */
-  height: 60px;
+  width: 150px; /* 버튼 크기 조절 */
+  height: 40px;
   border: none;
   border-radius: 8px; /* 둥근 모서리 */
   cursor: pointer;
@@ -162,7 +167,9 @@ export const CancelButton = styled.button`
   color: white;
   transition: 0.3s;
   box-sizing: border-box;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     background: #ff3044;
   }
@@ -178,8 +185,8 @@ export const textareaStyle = {
 export const ApplyButton = styled.button`
   padding: 12px 24px; /* 내부 여백 증가 */
   font-size: 18px; /* 글자 크기 증가 */
-  width: 170px; /* 버튼 크기 조절 */
-  height: 60px;
+  width: 150px; /* 버튼 크기 조절 */
+  height: 40px;
   border: none;
   border-radius: 8px; /* 둥근 모서리 */
   cursor: pointer;
@@ -188,7 +195,9 @@ export const ApplyButton = styled.button`
   color: white;
   transition: 0.3s;
   box-sizing: border-box;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     background: #218838;
   }

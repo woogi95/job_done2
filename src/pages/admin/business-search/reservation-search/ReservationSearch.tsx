@@ -7,7 +7,7 @@ import {
   RequestBusiContainer,
   TableContainer,
   TableWrapper,
-} from "../category-search/categorysearchs";
+} from "./ReservationSearchs";
 
 interface BusiServiceCountType {
   id: number;
@@ -50,6 +50,7 @@ const ReservationSearch = () => {
   const maxPage = Math.ceil(countList.length / itemsPerPage);
   return (
     <RequestBusiContainer>
+      <h2 className="tit">예약 별 조회</h2>
       <TableWrapper>
         <TableContainer>
           <thead>
@@ -82,19 +83,21 @@ const ReservationSearch = () => {
       </TableWrapper>
 
       {/* ✅ 페이지네이션 UI 추가 */}
-      {maxPage > 1 && (
-        <PaginationContainer>
-          {[...Array(maxPage)].map((_, index) => (
-            <PageButton
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
-              active={currentPage === index + 1}
-            >
-              {index + 1}
-            </PageButton>
-          ))}
-        </PaginationContainer>
-      )}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {maxPage > 1 && (
+          <PaginationContainer>
+            {[...Array(maxPage)].map((_, index) => (
+              <PageButton
+                key={index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+                active={currentPage === index + 1}
+              >
+                {index + 1}
+              </PageButton>
+            ))}
+          </PaginationContainer>
+        )}
+      </div>
     </RequestBusiContainer>
   );
 };

@@ -125,41 +125,7 @@ const AdminMain = () => {
                 </div>
               </div>
               {/* <div className="bg-white rounded-lg shadow-md"> */}
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">공지사항 및 알림</h2>
-                <button className="text-blue-500 hover:text-blue-700">
-                  전체보기
-                </button>
-              </div>
-              <div className="p-4">
-                <div className="space-y-4">
-                  <span>공지</span>
-                  {/* {notifications.map(notice => (
-                    <div
-                      key={notice.id}
-                      className="flex justify-between items-center border-b pb-2"
-                    >
-                      <div className="flex items-center">
-                        <span
-                          className={`px-2 py-1 rounded text-xs mr-2 ${
-                            notice.type === "중요"
-                              ? "bg-red-100 text-red-800"
-                              : notice.type === "공지"
-                                ? "bg-blue-100 text-blue-800"
-                                : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {notice.type}
-                        </span>
-                        <span className="font-medium">{notice.title}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        {notice.date}
-                      </span>
-                    </div>
-                  ))} */}
-                </div>
-              </div>
+
               {/* </div> */}
             </div>
           </div>
