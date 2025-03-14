@@ -93,15 +93,9 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         formData.append("pics", file.file);
       });
 
-      // 썸네일 추가
-      if (Array.isArray(previewImage)) {
-        previewImage.forEach(image => {
-          formData.append("thumb", image.file);
-        });
-      } else if (previewImage) {
-        console.log(previewImage);
-      } else {
-        console.error("No images to process");
+      // 썸네일 추가 (단일 파일로 처리)
+      if (previewImage && previewImage.file) {
+        formData.append("thumb", previewImage.file);
       }
 
       // API 요청
@@ -155,11 +149,10 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
   const handleImageChange = e => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setPreviewImage({
+        file,
+        preview: URL.createObjectURL(file),
+      });
     }
   };
 
@@ -192,7 +185,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
                 />
                 {previewImage ? (
                   <img
-                    src={previewImage}
+                    src={previewImage.preview}
                     alt="미리보기"
                     style={{
                       width: "85px",

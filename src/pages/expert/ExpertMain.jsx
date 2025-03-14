@@ -81,10 +81,12 @@ function ExpertMain() {
         <div className="col2-box">
           {/*  예약 현황 */}
           <div className="col4-box">
+            <h4>예약현황</h4>
             <ExpertMainReserveList />
           </div>
           {/* 미니 켈린더 */}
           <div className="col4-box">
+            <h4>일정관리</h4>
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
@@ -109,9 +111,11 @@ function ExpertMain() {
         {/* 최근결제, 알림 */}
         <div className="col2-box">
           <div className="col4-box">
+            <h4>매출현황</h4>
             <TotalPriceMonth />
           </div>
           <div className="col4-box">
+            <h4>예약자수 현황</h4>
             <ReserveUserCount />
           </div>
         </div>

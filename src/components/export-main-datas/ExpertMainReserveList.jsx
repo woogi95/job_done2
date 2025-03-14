@@ -91,7 +91,10 @@ function ExpertMainReserveList() {
     <ExpertListPageDiv>
       <EListContDiv>
         <ExportListDiv>
-          <ul className="tr" style={{ width: "100%", marginBottom: "5px" }}>
+          <ul
+            className="tr top-tr"
+            style={{ marginBottom: "5px", backgroundColor: "#e9f4ff" }}
+          >
             <li className="th">접수일</li>
             <li className="th">예약날짜</li>
             <li className="th">서비스 종류</li>
@@ -100,7 +103,7 @@ function ExpertMainReserveList() {
             <li className="th">예약현황</li>
           </ul>
 
-          <div ref={containerRef}>
+          <div className="list" ref={containerRef}>
             {reservationData.map(reservation => {
               // console.log(`✅ 화면에 표시될 데이터 ${index}:`, reservation);
               return (
@@ -113,7 +116,7 @@ function ExpertMainReserveList() {
                   }}
                   onClick={() => handleViewDetail(reservation.serviceId)}
                 >
-                  <div className="w-full space-y-4">
+                  <div>
                     <ul className="tr">
                       <li className="td">{reservation.startDate || "미정"}</li>
                       <li className="td black">

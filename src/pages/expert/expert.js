@@ -6,14 +6,15 @@ export const ExportMainDiv = styled(ExportPageDiv)`
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
+    gap: 20px;
     background-color: #fff;
-    padding: 10px;
+    padding: 20px;
     border: 1px solid #eee;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.05);
   }
   .box {
-    width: 310px;
+    width: calc(100% / 3);
     height: 100px;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
@@ -58,15 +59,48 @@ export const ExportMainDiv = styled(ExportPageDiv)`
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 33vh;
+      height: 500px;
       gap: 30px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+      padding: 20px;
 
-      border: 1px solid #000;
+      border: 1px solid #eee;
       /* 1/4 박스 */
       .col4-box {
         width: 50%;
         height: 100%;
-        overflow: hidden;
+        /* overflow: hidden; */
+        h4 {
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 10px;
+          color: #333;
+        }
+        /* 예약 컴포넌트 안 */
+        > div {
+          border: 1px solid #eee;
+          padding: 10px;
+          .top-tr {
+            background-color: #dbedff;
+            .th {
+              color: #333 !important;
+            }
+          }
+          .tr {
+            background-color: #fff;
+          }
+          .list {
+            overflow-y: auto;
+            height: 355px;
+          }
+
+          > div {
+            padding: 0;
+            box-shadow: none;
+          }
+        }
       }
     }
   }

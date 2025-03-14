@@ -19,9 +19,9 @@ export const EListContDiv = styled.div`
 // 예약리스트
 export const ExportListDiv = styled.div`
   padding: 2px;
-  > div {
-    overflow-y: auto;
-  }
+  height: 400px;
+  overflow-y: hidden;
+
   .tr {
     display: flex;
     justify-content: center;
