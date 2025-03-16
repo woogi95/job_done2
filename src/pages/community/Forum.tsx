@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { QaListType } from "../../types/WriteQa";
 import { Pagination, Modal } from "antd";
 import { loginApi } from "../../apis/login";
+import { Cookies } from "react-cookie";
 
 function Forum() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Forum() {
   const [totalItems, setTotalItems] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const accessToken = localStorage.getItem("accessToken");
+  const cookies = new Cookies();
 
   const letQaList = async () => {
     try {
@@ -61,6 +62,7 @@ function Forum() {
   };
 
   const handleWriteClick = () => {
+    const accessToken = cookies.get("accessToken");
     if (!accessToken) {
       setIsModalVisible(true);
     } else {
