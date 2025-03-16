@@ -71,7 +71,8 @@ function Index() {
   const handleSearch = e => {
     e.preventDefault();
     setAppliedSearchQuery(searchQuery);
-    setCurrentPage(1); // 검색 시 페이지를 1로 초기화
+    setSearchQuery("");
+    setCurrentPage(1);
   };
 
   const handleKeyPress = e => {

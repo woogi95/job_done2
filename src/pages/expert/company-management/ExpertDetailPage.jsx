@@ -29,7 +29,14 @@ function ExpertDetailPage() {
   const businessDetail = useRecoilValue(businessDetailState);
   const navigate = useNavigate();
   console.log("businessDetail", businessDetail.contents);
-
+  useEffect(() => {
+    if (id) {
+      getBusinessDetail(id);
+    }
+  }, [id]);
+  useEffect(() => {
+    console.log("businessDetail", businessDetail.contents);
+  }, []);
   if (!businessDetail) {
     return <p>업체 정보를 불러오는 중입니다...</p>;
   }
@@ -45,11 +52,6 @@ function ExpertDetailPage() {
       console.log(error);
     }
   };
-  useEffect(() => {
-    if (id) {
-      getBusinessDetail(id);
-    }
-  }, [id]);
 
   return (
     <PreviewDiv>

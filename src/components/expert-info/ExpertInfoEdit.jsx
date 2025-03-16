@@ -13,21 +13,33 @@ import { Popup } from "../ui/Popup";
 const schema = yup.object({
   openingTime: yup.string(),
   closingTime: yup.string(),
-  tel: yup.string(),
+  tel: yup.string().length(13, "11자리 숫자를 입력해주세요."),
 });
 const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
   const businessState = useRecoilValue(businessDetailState);
   const [businessInfo, setbusinessInfo] = useRecoilState(businessDetailState);
   console.log("businessState", businessState);
+  const formatPhoneNumber = phone => {
+    if (!phone) return "-";
+    const cleaned = String(phone).replace(/\D/g, "");
+    if (cleaned.length === 11) {
+      return cleaned.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 11자리: 3-4-4
+    }
+    if (cleaned.length === 10) {
+      return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"); // 10자리: 3-3-4
+    }
+    return phone;
+  };
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm({
     defaultValues: {
       openingTime: businessState.openingTime,
       closingTime: businessState.closingTime,
-      tel: businessState.tel,
+      tel: formatPhoneNumber(businessState.tel),
     },
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -37,17 +49,20 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
   const [popupMessage, setPopupMessage] = useState("");
 
   const onSubmit = async data => {
-    console.log("제출된 데이터:", data);
-    const requestData = { ...data, businessId: busiId };
-    console.log("API 요청 데이터:", requestData);
+    const cleanedData = {
+      ...data,
+      tel: data.tel.replace(/\D/g, ""),
+      businessId: busiId,
+    };
+    console.log("제출된 데이터:", cleanedData);
 
     try {
-      const res = await loginApi.put(`/api/business/detail`, requestData);
+      const res = await loginApi.put(`/api/business/detail`, cleanedData);
       setbusinessInfo({
         ...businessInfo,
         openingTime: data.openingTime,
         closingTime: data.closingTime,
-        tel: data.tel,
+        tel: cleanedData.tel,
       });
       console.log(res.data);
       setPopupMessage("업체정보 수정이 완료되었습니다.");
@@ -64,6 +79,20 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
       : "사업자 번호 없음";
 
+  let serviceType;
+  switch (businessState.categoryId) {
+    case 1:
+      serviceType = "청소";
+      break;
+    case 2:
+      serviceType = "이사";
+      break;
+    case 3:
+      serviceType = "세차";
+      break;
+    default:
+      serviceType = "서비스";
+  }
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="edit-info-form">
@@ -73,9 +102,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
           <div>
             <p>
               <FaChevronRight /> 카테고리 :{" "}
-              <em>
-                청소 {"_"} {businessState.detailTypeName}
-              </em>
+              <em>{`${serviceType} ${"_"} ${businessState.detailTypeName}`}</em>
             </p>
             <p>
               <FaChevronRight /> 영업시간 :{" "}
@@ -85,6 +112,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
                   name="openingTime"
                   id="openingTime"
                   {...register("openingTime")}
+                  onFocus={e => e.target.showPicker()}
                 />{" "}
                 ~{" "}
                 <input
@@ -92,6 +120,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
                   name="closingTime"
                   id="closingTime"
                   {...register("closingTime")}
+                  onFocus={e => e.target.showPicker()}
                 />
               </em>
             </p>
@@ -108,8 +137,25 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
                   name="tel"
                   id="tel"
                   {...register("tel")}
-                  placeholder="(-) 빼고 작성해 주세요"
+                  placeholder="예) 010-1234-5678"
+                  onChange={e => {
+                    const formatted = formatPhoneNumber(e.target.value);
+                    setValue("tel", formatted);
+                  }}
                 />
+                {errors.tel && (
+                  <em
+                    style={{
+                      display: "block",
+                      position: "absolute",
+                      top: "calc(100% + 8px)",
+                      color: "red",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {errors.tel.message}
+                  </em>
+                )}
               </em>
             </p>
           </div>

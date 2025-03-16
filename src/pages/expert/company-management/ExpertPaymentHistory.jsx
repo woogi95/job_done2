@@ -22,7 +22,6 @@ const ExpertPaymentHistory = () => {
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
-      // console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
@@ -35,27 +34,6 @@ const ExpertPaymentHistory = () => {
       console.error("견적서 조회 중 오류 발생:", error);
     }
   };
-
-  const qaTypeId = {
-    qaTypeId: 4,
-  };
-
-  const qaTypeList = async () => {
-    try {
-      const res = await loginApi.get("/api/qa/qaTypeId", {
-        params: qaTypeId,
-      });
-      console.log("qaTypeList", res.data);
-      console.log("qaTypeList", res.data.resultData);
-      setIsQaTypeList(res.data.resultData);
-    } catch (error) {
-      console.error("qaTypeList 조회 중 오류 발생:", error);
-    }
-  };
-
-  useEffect(() => {
-    qaTypeList();
-  }, []);
 
   const formatPhoneNumber = phone =>
     phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
@@ -87,7 +65,7 @@ const ExpertPaymentHistory = () => {
         <div className="logo"></div>
         <PaperContDiv>
           <h2 className="tit">
-            {papersInfo.userName}님
+            {papersInfo.userName}님의
             <strong className="!text-[#FF3044]">
               <br />
               결제가 완료
@@ -100,10 +78,6 @@ const ExpertPaymentHistory = () => {
             <br /> 수정사항이나 문의 사항이 있으시면, "문의하기"를 통해 연락
             주시기 바랍니다.
             <br />
-            <b>
-              견적서를 받은 후 결제가 지연될 경우, 해당 견적은 취소될 수
-              있습니다.
-            </b>
           </span>
           <FormDiv>
             <div className="company-info">

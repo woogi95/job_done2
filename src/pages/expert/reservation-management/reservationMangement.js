@@ -40,11 +40,18 @@ export const ExportListDiv = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 12px 10px;
-    border-bottom: 1px dotted #ececec;
+    padding: 9px 10px;
+    margin-bottom: 5px;
+    border-top: 1px dotted #eee;
+    border-bottom: 1px dotted #eee;
+
     /* 항목이름 */
     &:nth-of-type(1) {
       border: 1px solid #ececec;
+      /* background-color: #f8f9fa; */
+      background-color: rgb(233, 244, 255);
+    }
+    &:nth-of-type(2n) {
       background-color: #f8f9fa;
     }
   }
@@ -76,11 +83,13 @@ export const ExportListDiv = styled.div`
     }
   }
   .th {
-    color: #a0a3ab;
+    /* color: #a0a3ab; */
+    color: rgb(0, 37, 94);
   }
 
   .td {
-    color: #777;
+    color: #6f6f6f;
+    font-weight: 300;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,6 +120,10 @@ export const ExportListDiv = styled.div`
       background-color: #fdeeec;
       color: #db3319;
     }
+    p.all {
+      background-color: #fff;
+      color: #333;
+    }
 
     /* 신청서 */
     button {
@@ -124,8 +137,8 @@ export const ExportListDiv = styled.div`
     color: #00a500;
   }
   .black {
-    color: #595959;
-    font-weight: 600;
+    color: #333;
+    font-weight: 400;
   }
   .red {
     color: red;

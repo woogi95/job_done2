@@ -83,20 +83,18 @@ function Index() {
 
   // 검색어 입력 핸들러
   const handleSearch = e => {
-    e.preventDefault(); // 기본 동작 방지
+    e.preventDefault();
     console.log("검색어:", searchQuery);
-    if (searchQuery.trim() === "") {
-      setAppliedSearchQuery(""); // 검색어가 비어 있으면 초기화
-    } else {
-      setAppliedSearchQuery(searchQuery);
-    }
-    setCurrentPage(1); // 검색 시 페이지를 1로 초기화
+    setAppliedSearchQuery(searchQuery);
+    setSearchQuery("");
+    setCurrentPage(1);
   };
 
   // 엔터키 이벤트 핸들러
   const handleKeyPress = e => {
     if (e.key === "Enter") {
-      e.preventDefault(); // 기본 동작 방지
+      e.preventDefault();
+
       handleSearch(e);
     }
   };
@@ -172,7 +170,7 @@ function Index() {
                   placeholder="이름, 업체명, 서비스명, 접수일, 예약날짜로 검색"
                 />
               </label>
-              <button type="button">검색</button>
+              <button type="submit">검색</button>
             </form>
           </div>
           <ul className="btn-area">

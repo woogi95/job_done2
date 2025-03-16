@@ -16,6 +16,7 @@ export const PortfolioDetailInfoState = atom({
     title: "",
     price: 0,
     takingTime: "",
+    thumbnail: "",
     contents: "",
     detailType: "",
     category: "",

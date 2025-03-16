@@ -73,7 +73,7 @@ export const ExpertInfoDiv = styled.div`
       img {
         width: 120px;
         height: 120px;
-        object-fit: contain;
+        object-fit: cover;
         padding: 8px;
         background: #eee;
         border-radius: 100%;

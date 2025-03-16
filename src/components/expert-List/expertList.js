@@ -77,6 +77,10 @@ export const EFilterDiv = styled.div`
         background-color: #fdeeec;
         color: #db3319;
       }
+      button.all {
+        background-color: #fff;
+        color: #333;
+      }
     }
   }
 `;

@@ -1,29 +1,30 @@
-import React from "react";
-import styled from "@emotion/styled";
+import React, { useEffect, useState } from "react";
+import { loginApi } from "../../apis/login";
+// 캘린더
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import "./expertmain.css";
+//  상태관리
 import { useRecoilState } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { reserveCountAtom, reserveList } from "../../atoms/reservationAtom";
 import ExpertMainReserveList from "../../components/export-main-datas/ExpertMainReserveList";
-
+// comp
 import ReserveUserCount from "../../components/export-statistics/ReserveUserCount";
-import TotalPriceMonth from "../../components/export-statistics/TotalPriceMonth";
-
+//  styled
 import { ExportMainDiv } from "./expert";
-// const BigBox = styled.div`
-//   height: 100%;
-//   width: 489px;
-//   border: 2px solid #d6d6d6;
-//   border-radius: 5px;
-//   background-color: white;
-//   font-family: "Pretendard-Regular", "Spoqa Han Sans Neo", "Roboto", sans-serif;
-// `;
+// nivo
+import { ResponsiveLine } from "@nivo/line";
+import { ResponsiveBar } from "@nivo/bar";
+
 function ExpertMain() {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const [reserveCount, setReserveCount] = useRecoilState(reserveCountAtom);
+  const busiId = localStorage.getItem("businessId");
+  const [priceData, setPriceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState([]);
+
   console.log(reserveInfo);
   // 신청 0.1.2
   const applyData = reserveCount.filter(item =>
@@ -40,6 +41,122 @@ function ExpertMain() {
   // 이용자수
   // 작성된 리뷰 수 8
   const countReview = reserveCount.filter(item => item.completed === 8).length;
+
+  useEffect(() => {
+    const getAllPrice = async () => {
+      if (!busiId) return;
+      try {
+        const res = await loginApi.get(
+          `/api/business/revenue?businessId=${busiId}`,
+        );
+        const sortedData = Array.isArray(res.data.resultData)
+          ? res.data.resultData.sort((a, b) =>
+              a.year === b.year ? a.month - b.month : a.year - b.year,
+            )
+          : [];
+        setPriceData(sortedData);
+      } catch (error) {
+        console.error("Error fetching price data:", error);
+        setPriceData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getAllPrice();
+
+    // 예약자수
+    const getAllPrice2 = async () => {
+      if (!busiId) return;
+      try {
+        const res = await loginApi.get(
+          `/api/business/serviceCount?businessId=${busiId}`,
+        );
+        const sortedData = Array.isArray(res.data.resultData)
+          ? res.data.resultData.sort((a, b) =>
+              a.year === b.year ? a.month - b.month : a.year - b.year,
+            )
+          : [];
+        setUserData(sortedData);
+      } catch (error) {
+        console.error("Error fetching price data:", error);
+        setUserData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getAllPrice2();
+  }, [busiId]);
+
+  if (loading) {
+    return (
+      <div className="loadingContainer">
+        <div className="spinner" />
+        <p>차트를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  const formattedData =
+    priceData.length > 0
+      ? [
+          {
+            id: priceData[0]?.businessName ?? "Unknown Business",
+            data: priceData
+              .filter(({ year, month }) => year > 0 && month > 0)
+              .map(({ month, totalPrice }) => ({
+                x: `${String(month).padStart(2, "0")}월`,
+                y: totalPrice ?? 0,
+                formattedY: new Intl.NumberFormat().format(totalPrice ?? 0),
+              })),
+          },
+        ]
+      : [];
+  console.log(priceData);
+  console.log(formattedData.length);
+  // -----end 매출현황------//
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "500px",
+          fontSize: "18px",
+          fontWeight: "bold",
+          color: "#555",
+        }}
+      >
+        <div className="spinner" />
+        <p>차트를 불러오는 중...</p>
+        <style>
+          {`
+            .spinner {
+              width: 40px;
+              height: 40px;
+              border: 4px solid rgba(0, 0, 0, 0.1);
+              border-top-color: #3498db;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
+
+  const visitedFormattedData = userData.map(({ month, serviceCount }) => ({
+    date: `${String(month).padStart(2, "0")}월`,
+    count: serviceCount ?? 0,
+  }));
 
   return (
     <ExportMainDiv>
@@ -85,7 +202,7 @@ function ExpertMain() {
             <ExpertMainReserveList />
           </div>
           {/* 미니 켈린더 */}
-          <div className="col4-box">
+          <div className="col4-box calendar-box">
             <h4>일정관리</h4>
             <FullCalendar
               plugins={[dayGridPlugin]}
@@ -109,14 +226,110 @@ function ExpertMain() {
           </div>
         </div>
         {/* 최근결제, 알림 */}
-        <div className="col2-box">
-          <div className="col4-box">
+        <div className="col2-box graph-box">
+          <div className="col4-box sales-box">
             <h4>매출현황</h4>
-            <TotalPriceMonth />
+            <div className="chartContainer">
+              <b>
+                월매출
+                <br />
+                <em>(단위 : 만원)</em>
+              </b>
+              {formattedData.length > 0 ? (
+                <ResponsiveLine
+                  data={formattedData}
+                  margin={{ top: 20, right: 15, bottom: 30, left: 55 }}
+                  xScale={{ type: "point" }}
+                  yScale={{ type: "linear" }}
+                  axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickValues: 5,
+                    format: value =>
+                      value >= 1000000
+                        ? `${new Intl.NumberFormat().format(value / 10000)}만원`
+                        : new Intl.NumberFormat().format(value),
+                  }}
+                  colors={["red"]}
+                  lineWidth={2}
+                  pointSize={4}
+                  pointColor={{ from: "color", modifiers: [["darker", 0.3]] }}
+                  pointBorderWidth={2}
+                  pointBorderColor={{ from: "serieColor" }}
+                  useMesh={true}
+                  motionConfig="gentle"
+                  tooltip={({ point }) => {
+                    const amount = point.data.y;
+                    const formattedAmount =
+                      amount >= 1000000
+                        ? `${new Intl.NumberFormat().format(amount / 10000)}만원`
+                        : `${new Intl.NumberFormat().format(amount)}원`;
+                    return (
+                      <div className="detail-price">
+                        <strong>{point.data.x} 평균 매출</strong>
+                        <span>{formattedAmount}</span>
+                      </div>
+                    );
+                  }}
+                />
+              ) : (
+                <div className="noData">📉 데이터가 없습니다.</div>
+              )}
+            </div>
           </div>
-          <div className="col4-box">
+          <div className="col4-box visited-box">
             <h4>예약자수 현황</h4>
-            <ReserveUserCount />
+            <div className="chartContainer">
+              <b>
+                예약자수
+                <br />
+                <em>(단위 : 명)</em>
+              </b>
+              {visitedFormattedData.length > 0 ? (
+                <ResponsiveBar
+                  data={visitedFormattedData}
+                  keys={["count"]}
+                  indexBy="date"
+                  margin={{ top: 40, right: 15, bottom: 30, left: 35 }}
+                  padding={0.2}
+                  valueScale={{ type: "linear" }}
+                  indexScale={{ type: "band", round: true }}
+                  colors={["#70BE3B"]}
+                  borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
+                  axisTop={null}
+                  axisRight={null}
+                  axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                  }}
+                  axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickValues: 5,
+                    format: value => `${Math.floor(value)}`,
+                  }}
+                  label={d => `${d.value}명`}
+                  labelTextColor="#ffffff"
+                  labelSkipWidth={16}
+                  labelSkipHeight={16}
+                  labelTextStyle={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                  role="application"
+                  tooltip={({ indexValue, value }) => {
+                    return (
+                      <div className="detail-price">
+                        <strong>{indexValue} 예약자 수</strong>
+                        <span>{new Intl.NumberFormat().format(value)}명</span>
+                      </div>
+                    );
+                  }}
+                />
+              ) : (
+                <div className="noData">📉 데이터가 없습니다.</div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,17 +1,16 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-// import DOMPurify from "dompurify";
 import { EditDetailDiv } from "./companyManagement";
-// import axios from "axios";
 import { loginApi } from "../../../apis/login";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
 import { Popup } from "../../../components/ui/Popup";
 
 function EditDetailPage() {
   const businessDetail = useRecoilValue(businessDetailState);
+  const [detailContent, setDetailContent] = useRecoilState(businessDetailState);
   const [content, setContent] = useState(businessDetail.contents || "");
   const [title, setTitle] = useState(businessDetail.title || "");
   const quillRef = useRef(null);
@@ -36,6 +35,12 @@ function EditDetailPage() {
       });
       console.log("저장 성공:", response.data);
 
+      setDetailContent(prev => ({
+        ...prev,
+        title: title,
+        contents: content,
+      }));
+
       // 저장 성공 후 팝업 표시
       setIsPopupOpen(true);
     } catch (error) {
@@ -46,10 +51,8 @@ function EditDetailPage() {
   // 이미지 처리
   const imageHandler = () => {
     console.log("이미지처리하기");
-    // 1. 현재 에디터를 찾아서 참조한다.
-    // useRef 로 보관한 내용물 참조(current)
+
     const editor = quillRef.current.getEditor();
-    // console.log(editor);
 
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -68,7 +71,7 @@ function EditDetailPage() {
         console.log("Using businessId in imageHandler:", businessId);
 
         // businessId가 undefined인 경우 기본값 설정
-        const blobData = { businessId: businessId || 2 };
+        const blobData = { businessId: businessId || 0 };
 
         formData.append(
           "p",
@@ -87,7 +90,7 @@ function EditDetailPage() {
             },
           },
         );
-
+        setDetailContent(res.data.resultData);
         // 서버에서 받아온 이미지 URL에 프로토콜과 도메인 추가
         const tempUrl = `http://${res.data.resultData.pics[0]}`;
         console.log("Modified image URL:", tempUrl);

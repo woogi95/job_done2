@@ -5,34 +5,15 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 import { useRecoilValue } from "recoil";
 // parser
 import parse from "html-react-parser";
-// import {  useState } from "react";
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function ExpertDetailPage() {
   const navigate = useNavigate();
-  // const BASE_URL = "http://112.222.157.157:5234";
-  // const [productDetail, setProductDetail] = useRecoilState(businessDetailState);
+
   const businessDetail = useRecoilValue(businessDetailState);
   console.log("businessDetail", businessDetail.contents);
-  // const businessId = businessDetail.businessId;
-  // const [detailPicList, setDetailPicList] = useState([]);
-  // const getDetailPagePic = async businessId => {
-  //   try {
-  //     // `/api/business/${businessId}?businessId=${businessId}`,
-  //     const res = await axios.get(
-  //       `/api/business/pic/${businessId}?businessId=${businessId}`,
-  //     );
-  //     setDetailPicList(res.data.resultData);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  // console.log(detailPicList);
-  // useEffect(() => {
-  //   getDetailPagePic(businessId);
-  // }, [businessId]);
   return (
     <PreviewAreaDiv>
       <div className="inner">

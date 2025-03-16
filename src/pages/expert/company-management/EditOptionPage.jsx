@@ -34,20 +34,16 @@ function EditOptionPage() {
     isOpen: false,
     message: "",
   });
-  //   console.log(productbasicPrice.price);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(priceSchema),
+
+  const { register, handleSubmit } = useForm({
     defaultValues: {
       productPrice: productPrice,
     },
-    mode: "onBlur",
   });
 
   const handleSubmitForm = async data => {
+    console.log("호출");
+    console.log("data34242344", data);
     // productId 필수값 확인
     if (!ProductInfo.productId) {
       console.error("productId가 없습니다.");
@@ -56,36 +52,35 @@ function EditOptionPage() {
 
     // options 데이터 변환
     const transformedOptions = ProductInfo.optionList.map(option => ({
-      optionId: option.optionId || 0, // 옵션 ID 포함
+      optionId: option.optionId || 0,
       optionName: option.optionName,
       optionDetails: option.optionDetailList.map(detail => ({
-        optionDetailId: detail.optionDetailId || 0, // 상세 옵션 ID 포함
+        optionDetailId: detail.optionDetailId || 0,
         optionDetailName: detail.optionDetailName,
         optionDetailPrice: detail.optionDetailPrice,
       })),
     }));
 
     const requestData = {
-      price: Number(data.productPrice),
+      price: productPrice,
       productId: ProductInfo.productId,
       options: transformedOptions,
-      productName: ProductInfo.productName,
-      productDescription: ProductInfo.productDescription,
-      categoryId: ProductInfo.categoryId,
-      businessId: ProductInfo.businessId,
     };
+
+    console.log("requestData", requestData);
 
     try {
       const res = await loginApi.post("/api/product/postAll", requestData);
       console.log("API 응답:", res.data);
       setProductInfo(prev => ({
         ...prev,
-        productPrice: data.productPrice,
+        productPrice: productPrice,
       }));
 
       // 팝업 표시
       setPopupState({
         isOpen: true,
+        message: "상품옵션 수정이 완료되었습니다.",
       });
     } catch (error) {
       console.error("API 오류:", error);
@@ -281,16 +276,9 @@ function EditOptionPage() {
   const handleProductPriceChange = e => {
     // console.log("가격변화!:", e.target.value);
     const value = e.target.value.replace(/,/g, "");
-    setProductPrice(value);
+    setProductPrice(Number(value));
   };
 
-  const handleProductPriceComplete = () => {
-    // console.log("Product Price:", productPrice);
-    if (productPrice.trim()) {
-      setProductPrice(productPrice);
-      handleSubmitForm({ productPrice: Number(productPrice) });
-    }
-  };
   useEffect(() => {
     if (productbasicPrice?.price) {
       setProductPrice(productbasicPrice.price);
@@ -344,11 +332,9 @@ function EditOptionPage() {
                   {...register("productPrice")}
                   value={Number(productPrice).toLocaleString()}
                   onChange={handleProductPriceChange}
-                  onBlur={handleProductPriceComplete}
                   onKeyDown={e => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      handleProductPriceComplete();
                     }
                   }}
                 />
@@ -457,7 +443,7 @@ function EditOptionPage() {
       </ExpertOptionInfoDiv>
       <Popup
         isOpen={popupState.isOpen}
-        message={"상품옵션 수정이 완료되었습니다."}
+        message={popupState.message}
         showConfirmButton={true}
         onConfirm={() => {
           navigate("/expert/company-management");

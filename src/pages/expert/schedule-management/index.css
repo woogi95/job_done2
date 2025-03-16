@@ -1,14 +1,13 @@
 /* 일요일 컬러 */
-/* .fc-day-sun a {
-
+.fc-day-sun a {
   color: #f35252;
-} */
+}
 
 /* 토요일 컬러 */
-/* .fc-day-sat a {
- color: #435aed;
-} */
-/* .fc {
+.fc-day-sat a {
+  color: #435aed;
+}
+.fc {
   background-color: white;
   padding: 10px;
 }
@@ -32,10 +31,10 @@ html .fc .fc-toolbar.fc-header-toolbar {
 
 .fc .fc-button:hover {
   background-color: transparent;
-} */
+}
 
 /* 포커스된 상태 테두리 없앰 */
-/* .fc .fc-button-primary:focus {
+.fc .fc-button-primary:focus {
   border: none;
   box-shadow: none;
 }
@@ -80,61 +79,4 @@ html .calendar-div {
 
 .modal button:hover {
   background-color: #0056b3;
-} */
-.fc-header-toolbar {
-  padding: 3px 10px;
-  background-color: #e9fff3 !important;
-}
-
-.fc .fc-button {
-  padding: 0.01em;
-  padding-bottom: 0.08em;
-  font-size: 12px;
-  background-color: #70be3b !important;
-  border: 1px solid #70be3b !important;
-  border-radius: 3px !important;
-  color: #fff !important;
-}
-.fc .fc-toolbar-title {
-  font-size: 16px;
-  margin: 0px;
-  font-weight: 600;
-  color: #434343;
-}
-
-.fc-header-toolbar,
-.fc-toolbar,
-.fc-toolbar-ltr {
-  padding: 5px;
-}
-.fc-today-button {
-  background-color: #fff !important;
-}
-.fc-toolbar-chunk {
-}
-.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
-  padding: 5px;
-  margin-bottom: 5px;
-}
-.fc-scroller.fc-scroller-liquid-absolute {
-  height: 356px !important;
-  /* border: 1px solid #70be3b; */
-  /* border-bottom: 1px solid #e2e8f0; */
-}
-.fc .fc-daygrid-day-number {
-  font-size: 12px;
-}
-.presentation {
-  height: 356px !important;
-}
-.fc.fc-scrollgrid-liquid {
-  height: 356px !important;
-}
-
-.fc.fc-daygrid-body-unbalanced.fc-daygrid-day-events {
-  min-height: 0.1em;
-}
-
-.fc-scroller.fc-scroller-liquid-absolute {
-  overflow-y: auto !important;
 }

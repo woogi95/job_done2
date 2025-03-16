@@ -97,7 +97,7 @@ function ExpertMainReserveList() {
           >
             <li className="th">접수일</li>
             <li className="th">예약날짜</li>
-            <li className="th">서비스 종류</li>
+            {/* <li className="th">서비스 종류</li> */}
             <li className="th">예약자</li>
             <li className="th">예상금액</li>
             <li className="th">예약현황</li>
@@ -122,7 +122,7 @@ function ExpertMainReserveList() {
                       <li className="td black">
                         {reservation.createdAt?.split(" ")[0] || "미정"}
                       </li>
-                      <li className="td">{reservation.detailTypeName}</li>
+                      {/* <li className="td">{reservation.detailTypeName}</li> */}
                       <li className="td">{reservation.userName}</li>
                       <li className="td">{reservation.price}</li>
                       <li className="td">
