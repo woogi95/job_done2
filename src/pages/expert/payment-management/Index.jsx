@@ -65,6 +65,7 @@ function Index() {
   const handleSearch = e => {
     e.preventDefault();
     setAppliedSearchQuery(searchQuery);
+    setSearchQuery("");
     setCurrentPage(1);
   };
 

@@ -47,16 +47,13 @@ export const ExportListDiv = styled.div`
       width: 20%;
     }
     &:nth-of-type(3) {
-      width: 15%;
+      width: 20%;
     }
     &:nth-of-type(4) {
-      width: 15%;
+      width: 20%;
     }
     &:nth-of-type(5) {
-      width: 15%;
-    }
-    &:nth-of-type(6) {
-      width: 15%;
+      width: 20%;
     }
   }
   .th {
@@ -94,6 +91,10 @@ export const ExportListDiv = styled.div`
     p.completed5 {
       background-color: #fdeeec;
       color: #db3319;
+    }
+    p.all {
+      background-color: #fff;
+      color: #333;
     }
 
     /* 신청서 */

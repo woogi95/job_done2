@@ -4,22 +4,48 @@ import { useRecoilValue } from "recoil";
 
 const ExpertInfo = () => {
   const businessState = useRecoilValue(businessDetailState);
+
   const formatPhoneNumber = phone => {
-    if (!phone) return "-"; // null 또는 undefined 처리
-    const cleaned = String(phone).replace(/\D/g, ""); // 숫자만 남기기
+    if (!phone) return "-";
+    const cleaned = String(phone).replace(/\D/g, "");
     if (cleaned.length === 11) {
       return cleaned.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 11자리: 3-4-4
     }
     if (cleaned.length === 10) {
       return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"); // 10자리: 3-3-4
     }
-    return phone; // 형식이 맞지 않으면 원본 값 반환
+    return phone;
   };
+
+  const formatTime = time => {
+    if (!time) return "-";
+    const [hour, minute] = time.split(":");
+    const period = hour < 12 ? "오전" : "오후";
+    const formattedHour = hour % 12 || 12;
+    return `${period} ${formattedHour}:${minute}`;
+  };
+
   const formatBusinessNumber = number =>
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
       : "사업자 번호 없음";
   // console.log("businessState", businessState);
+
+  let serviceType;
+  switch (businessState.categoryId) {
+    case 1:
+      serviceType = "청소";
+      break;
+    case 2:
+      serviceType = "이사";
+      break;
+    case 3:
+      serviceType = "세차";
+      break;
+    default:
+      serviceType = "서비스";
+  }
+
   return (
     <div className="info-area">
       <h2>{businessState.businessName}</h2>
@@ -27,14 +53,13 @@ const ExpertInfo = () => {
       <div>
         <p>
           <FaChevronRight /> 카테고리 :{" "}
-          <em>
-            청소 {"_"} {businessState.detailTypeName}
-          </em>
+          <em>{`${serviceType} ${"_"} ${businessState.detailTypeName}`}</em>
         </p>
         <p>
           <FaChevronRight /> 영업시간 :{" "}
           <em>
-            {businessState.openingTime}~{businessState.closingTime}
+            {formatTime(businessState.openingTime)} ~{" "}
+            {formatTime(businessState.closingTime)}
           </em>
         </p>
         <p>

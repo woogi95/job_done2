@@ -76,6 +76,8 @@ export const papersState = atom({
     detailTypeName: "",
     businessPhone: "",
     price: 0,
+    addPrice: 0,
+    totalPrice: 0,
     completed: 0,
     comment: "",
     addComment: "",
@@ -87,6 +89,8 @@ export const papersState = atom({
     businessNum: "",
     createdAt: "",
     updatedAt: "",
+    paidAt: "",
+    doneAt: "",
     pyeong: "",
     options: [
       {

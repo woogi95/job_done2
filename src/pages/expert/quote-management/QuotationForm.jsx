@@ -367,7 +367,7 @@ function QuotationForm() {
           <div className="text-area">
             <h3>특이사항</h3>
             <textarea
-              value={addComment}
+              value={addComment || papersInfo?.addComment || ""}
               onChange={e => setAddComment(e.target.value)}
             />
           </div>

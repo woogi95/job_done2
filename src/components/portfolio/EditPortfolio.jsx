@@ -38,6 +38,7 @@ const EditPortfolio = ({
     title: "",
     contents: "",
     youtubeUrl: "",
+    thumbnail: "",
   });
   const [previewImage, setPreviewImage] = useState(null);
   // Yup 스키마
@@ -79,9 +80,15 @@ const EditPortfolio = ({
         title: portfolioDetailInfo.title || "",
         contents: portfolioDetailInfo.contents || "",
         youtubeUrl: portfolioDetailInfo.youtubeUrl || "",
+        thumbnail: portfolioDetailInfo.thumbnail || "",
       };
       setFormData(updatedFormData);
       reset(updatedFormData);
+
+      // 썸네일 초기값 설정
+      if (portfolioDetailInfo.thumbnail) {
+        setPreviewImage(`${BASE_URL}${portfolioDetailInfo.thumbnail}`);
+      }
     }
   }, [portfolioDetailInfo, businessState.businessId, reset]);
 
@@ -101,7 +108,8 @@ const EditPortfolio = ({
     try {
       const formData = new FormData();
 
-      const requestData = {
+      // JSON 데이터를 Blob으로 변환
+      const jsonData = {
         businessId: Number(businessState.businessId),
         portfolioId: portfolioId,
         price: Number(data.price),
@@ -110,32 +118,28 @@ const EditPortfolio = ({
         contents: data.contents,
         youtubeUrl: data.youtubeUrl,
       };
-
-      console.log("Request Data:", requestData);
-
-      formData.append(
-        "p",
-        new Blob([JSON.stringify(requestData)], {
-          type: "application/json",
-        }),
-      );
-
-      filePreviews.forEach(file => {
-        formData.append("pics", file.file);
+      const jsonBlob = new Blob([JSON.stringify(jsonData)], {
+        type: "application/json",
       });
+      formData.append("p", jsonBlob);
 
-      // --
-      // 썸네일 추가
-      if (Array.isArray(previewImage)) {
-        previewImage.forEach(image => {
-          formData.append("thumb", image.file);
-        });
-      } else if (previewImage) {
-        console.log(previewImage);
-      } else {
-        console.error("No images to process");
+      // 썸네일 파일 추가
+      if (previewImage && previewImage.file) {
+        formData.append("thumbnail ", previewImage.file);
       }
-      // --
+
+      // 작업물 이미지 파일 추가
+      filePreviews
+        .filter(file => file.file)
+        .forEach(file => {
+          console.log("Adding pic:", file.file);
+          formData.append("pics", file.file); // 동일한 필드 이름으로 파일 추가
+        });
+
+      // FormData 내용 확인
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
       const res = await loginApi.put("/api/portfolio", formData, {
         headers: {
@@ -154,7 +158,7 @@ const EditPortfolio = ({
         // portfolioDetailInfo 업데이트
         setPortfolioDetailInfoState(prev => ({
           ...prev,
-          ...requestData,
+          ...data,
         }));
 
         getPortfolioList();
@@ -214,7 +218,7 @@ const EditPortfolio = ({
           // 포폴삭제 상태 바꾸는 요청 보내기
           const res = await loginApi.put(`/api/portfolio/state`, {
             portfolioPicId: fileToRemove.portfolioPicId,
-            portfolioId: portfolioId,
+            // portfolioId: portfolioId,
           });
           if (res.status === 200) {
             console.log("이미지 삭제 성공:", res.data);
@@ -244,11 +248,10 @@ const EditPortfolio = ({
   const handleImageChange = e => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setPreviewImage({
+        file,
+        preview: URL.createObjectURL(file),
+      });
     }
   };
 
