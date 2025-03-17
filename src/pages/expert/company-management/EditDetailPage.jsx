@@ -28,6 +28,10 @@ function EditDetailPage() {
     try {
       console.log(" businessId:", businessId);
 
+      const PostPicConf = await loginApi.post(
+        `/api/business/businessPicConf?businessId=${businessId}`,
+      );
+      console.log("저장 성공 PostPicConf:", PostPicConf.data.resultData);
       const response = await loginApi.post("/api/business/contents", {
         businessId: businessId,
         title: title,

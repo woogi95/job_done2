@@ -123,6 +123,10 @@ const DetailContents = () => {
     };
   }, [isFixed]);
 
+  useEffect(() => {
+    console.log("businessDetail.contents:", businessDetail.contents);
+  }, [businessDetail.contents]);
+
   const handleLinkClick = id => {
     setActiveLink(id);
   };

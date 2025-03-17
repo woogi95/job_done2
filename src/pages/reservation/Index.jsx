@@ -439,7 +439,9 @@ function Index() {
                                     <BsCircle className="text-[#333]" />
                                   )}
                                 </i>
-                                <b>{item.optionDetailName}</b>
+                                <b style={{ fontStyle: "normal" }}>
+                                  {item.optionDetailName}
+                                </b>
                               </em>
                               <span>
                                 {item.optionDetailPrice.toLocaleString()}원

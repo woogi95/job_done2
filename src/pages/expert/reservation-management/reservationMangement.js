@@ -125,6 +125,19 @@ export const ExportListDiv = styled.div`
       color: #333;
     }
 
+    p.completed-0 {
+      background-color: #edfbf3;
+      color: #41b662;
+    }
+    p.completed-1 {
+      background-color: #f8f9fa;
+      color: #a0a3ab;
+      min-width: 63px;
+    }
+    p.completed-2 {
+      background-color: #e8f2ff;
+      color: #4b8ff8;
+    }
     /* 신청서 */
     button {
       font-weight: 600;

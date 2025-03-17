@@ -32,10 +32,16 @@ function CreateDetailPage() {
       });
       console.log("저장 성공:", response.data);
 
+      const PostPicConf = await loginApi.post(
+        `/api/business/businessPicConf?businessId=${businessId}`,
+      );
+      console.log("저장 성공 PostPicConf:", PostPicConf.data.resultData);
+
       // 저장 성공 후 팝업 표시
       setIsPopupOpen(true);
     } catch (error) {
       console.error("저장 중 오류 발생:", error);
+      console.log("저장 실패 PostPicConf:", PostPicConf.data.resultData);
     }
   };
 
@@ -97,19 +103,17 @@ function CreateDetailPage() {
     });
   };
 
-  const handleCancel = () => {
-    navigate("/expert/company-management");
-  };
+  // const handleCancel = () => {
+  //   navigate("/expert/company-management");
+  // };
 
   const modules = useMemo(
     () => ({
       toolbar: {
         container: [
           [{ header: [1, 3, 5, 6, false] }],
-          // [{ font: [] }],
-          // [{ align: [] }],
+
           ["bold", "italic", "underline", "strike", "blockquote"],
-          // [{ list: "ordered" }, { list: "bullet" }, "link"],
           [
             {
               color: [
@@ -154,7 +158,6 @@ function CreateDetailPage() {
             { background: [] },
           ],
           ["image", "video"],
-          // ["clean"],
         ],
         // 이미지 관련해서는 내가 직접 처리할께.
         handlers: {

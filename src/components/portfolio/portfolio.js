@@ -39,7 +39,16 @@ export const LayerDiv = styled.div`
     gap: 10px;
     margin-bottom: 12px;
     /* border: 1px solid #000; */
+    strong {
+      font-size: 13px;
+      color: #2a58ad;
+      display: block;
+      width: 30px;
 
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+    }
     .thum {
       min-width: 80px;
       height: 80px;
@@ -85,6 +94,9 @@ export const LayerDiv = styled.div`
       align-items: center;
       gap: 10px;
       width: calc(100% - 80px);
+      input {
+        text-align: right;
+      }
       label {
         margin-bottom: 0;
         width: 100%;

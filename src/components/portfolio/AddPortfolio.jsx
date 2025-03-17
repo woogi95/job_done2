@@ -211,6 +211,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
                   {...register("takingTime")}
                   onChange={e => handleChange("takingTime", e.target.value)}
                 />
+                <strong>시간</strong>
                 {errors.takingTime && (
                   <p className="error">{errors.takingTime.message}</p>
                 )}
@@ -218,12 +219,20 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
               <label>
                 <h2>가격대</h2>
                 <input
-                  type="number"
+                  type="text"
                   min="0"
                   step="1"
-                  {...register("price")}
-                  onChange={e => handleChange("price", e.target.value)}
+                  {...register("price", {
+                    setValueAs: value =>
+                      value ? Number(value.replace(/,/g, "")) : null,
+                  })}
+                  onChange={e => {
+                    const rawValue = e.target.value.replace(/,/g, "");
+                    const formattedValue = Number(rawValue).toLocaleString();
+                    e.target.value = formattedValue;
+                  }}
                 />
+                <strong>원대</strong>
                 {errors.price && (
                   <p className="error">{errors.price.message}</p>
                 )}

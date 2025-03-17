@@ -19,13 +19,15 @@ const ExpertEstimate = () => {
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
   const { serviceId } = useParams();
-
+  useEffect(() => {
+    console.log("papersInfo333:", papersInfo);
+  }, [papersInfo]);
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
       // console.log(serviceId);
       const res = await loginApi.get(
-        `/api/service/detail?serviceId=${serviceId}`,
+        `/api/service/detail?serviceId=${serviceId}&businessId=${businessId}`,
       );
       // console.log("견적서 정보", res.data.resultData);
       if (res.data) {
@@ -38,7 +40,7 @@ const ExpertEstimate = () => {
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
-    patchServiceState(3, serviceId);
+    patchServiceState(5, serviceId, businessId);
   };
 
   const patchServiceState = async (completed, serviceId, businessId) => {
@@ -71,7 +73,7 @@ const ExpertEstimate = () => {
   const handleClosePopup = () => setIsPopupOpen(false);
 
   const formatPhoneNumber = phone =>
-    phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
+    phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-";
   const formatBusinessNumber = number =>
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")

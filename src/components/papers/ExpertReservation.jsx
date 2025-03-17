@@ -16,7 +16,6 @@ import { loginApi } from "../../apis/login";
 
 const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
   const [papersInfo, setPapersInfo] = useRecoilState(papersState);
-  // const papersInfo = useRecoilValue(papersState);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   const [isSuccess, setIsSuccess] = useState(true);
@@ -117,11 +116,8 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
         <ReservationPaperContDiv>
           <h2 className="tit">
             {papersInfo.userName}님이
-            <strong>
-              견적·예약 신청
-              <br />
-            </strong>
-            접수 하였습니다.
+            <br />
+            <strong>견적·예약 신청</strong>을 하였습니다.
           </h2>
           <FormDiv>
             <div className="company-info">
@@ -169,13 +165,15 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
                 </li>
                 <li>
                   <p>예약방문날짜</p>
-                  <span>
-                    {papersInfo.startDate} ~ {papersInfo.endDate}
-                  </span>
+                  <span>{papersInfo.startDate}</span>
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>{papersInfo.pyeong}</span>
+                  <span>{papersInfo.pyeong} 평</span>
+                </li>
+                <li>
+                  <p>문의사항</p>
+                  <span>{papersInfo.comment}</span>
                 </li>
                 {papersInfo.options && papersInfo.options.length > 0 && (
                   <li className="option">
@@ -188,7 +186,7 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
                             <em>({option.optionDetailName})</em>
                           </p>
                           <span>
-                            {option.optionDetailPrice.toLocaleString()}
+                            {option.optionDetailPrice.toLocaleString()} 원
                           </span>
                         </li>
                       ))}
@@ -196,13 +194,11 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
                   </li>
                 )}
 
-                <li>
+                <li style={{ backgroundColor: "#0084ff13" }}>
                   <p>예상비용</p>
-                  <span>{papersInfo.price.toLocaleString()}</span>
-                </li>
-                <li>
-                  <p>문이사항</p>
-                  <span>{papersInfo.comment}</span>
+                  <span style={{ color: "red", fontWeight: "bold" }}>
+                    {papersInfo.price.toLocaleString()} 원
+                  </span>
                 </li>
               </ul>
             </div>

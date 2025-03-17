@@ -17,8 +17,6 @@ import ExpertReservation from "../../../components/papers/ExpertReservation";
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
   const [seletedServiceId, setSeletedServiceId] = useState(null);
-  // const [isEstimatePop, setIsEstimatePop] = useState(false);
-  // const [seletedServiceId, setSeletedServiceId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all"); // 상태 필터
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
@@ -61,6 +59,8 @@ function Index() {
     switch (completed) {
       case 0:
         return "작성대기";
+      case 1:
+        return "작성중";
       case 2:
         return "견적완료";
       default:
@@ -78,7 +78,7 @@ function Index() {
   const handleKeyPress = e => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSearch(e); // 엔터키로 검색 실행
+      handleSearch(e);
     }
   };
 
@@ -90,6 +90,8 @@ function Index() {
       filtered = filtered.filter(item => item.completed === 2);
     } else if (statusFilter === "0") {
       filtered = filtered.filter(item => item.completed === 0);
+    } else if (statusFilter === "1") {
+      filtered = filtered.filter(item => item.completed === 1);
     } else if (statusFilter === "all") {
       // 전체보기
       filtered = reservationData;
@@ -172,6 +174,14 @@ function Index() {
             </li>
             <li>
               <button
+                className={`completed3 ${statusFilter === "1" ? "active" : ""}`}
+                onClick={() => handleStatusFilter("1")}
+              >
+                작성중
+              </button>
+            </li>
+            <li>
+              <button
                 className={`completed1 ${statusFilter === "2" ? "active" : ""}`}
                 onClick={() => handleStatusFilter("2")}
               >
@@ -209,21 +219,17 @@ function Index() {
               <li className="td">{reservation.userName}</li>
               <li className="td">{reservation.price?.toLocaleString()} 원</li>
               <li className="td">
-                <p
-                  className={
-                    reservation.completed === 0 ? "completed0" : "completed1"
-                  }
-                >
+                <p className={`completed-${reservation.completed}`}>
                   {getStatusText(reservation.completed)}
                 </p>
               </li>
               <li className="td blue btn-area">
                 <button
                   onClick={() => {
-                    if (reservation.completed === 2) {
-                      handleEstimateClick(reservation.serviceId);
-                    } else {
+                    if (reservation.completed === 0) {
                       handleReservationClick(reservation.serviceId);
+                    } else {
+                      handleEstimateClick(reservation.serviceId);
                     }
                   }}
                 >
