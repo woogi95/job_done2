@@ -63,7 +63,7 @@ export const fetchWeather = (
       };
       setCurrentDate(today.toLocaleDateString("ko-KR", options));
       setCurrentWeather(data.list[0]);
-      console.log(data.list[0]);
+      // console.log(data.list[0]);
     })
     .catch(error => console.error("날씨 정보를 가져오지 못했습니다:", error));
 };

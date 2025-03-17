@@ -203,7 +203,7 @@ function Header() {
             ))}
           </ul>
         </div>
-        <div className="flex items-center gap-4 text-sm ">
+        <div className="flex items-center gap-4 text-sm">
           {userInfo.isLogind ? (
             // 로그인 상태
             <>

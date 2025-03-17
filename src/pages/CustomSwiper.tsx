@@ -8,7 +8,6 @@ const CustomSwiper = () => {
   }
 `}
       </style>
-      ;
     </div>
   );
 };

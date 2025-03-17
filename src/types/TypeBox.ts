@@ -38,3 +38,11 @@ export type WeatherDisplayItem = {
   iconUrl: string;
   description: string;
 };
+
+export interface StealReview {
+  name: string;
+  score: number;
+  contents: string;
+  createdAt: string;
+  pic: string;
+}

@@ -1,16 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
+import anime from "animejs";
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  FramerMotionSlider,
+  FramerMotionSlider2,
+  FramerMotionSlider3,
+} from "../components/freamers/framers";
+import { LetTopLayout } from "../components/LetTopLayout";
 import { EventBanner } from "../components/ServiceIcon";
 import { ServiceSkeleton } from "../components/ServiceSkeleton";
-import anime from "animejs";
-import { BusinessItem, Region } from "../types/TypeBox";
 import { fetchWeather } from "../components/weather/Weather";
-import { WeatherDisplayItem, WeatherItem } from "../types/TypeBox";
+import {
+  BusinessItem,
+  Region,
+  StealReview,
+  WeatherDisplayItem,
+  WeatherItem,
+} from "../types/TypeBox";
 import CustomSwiper from "./CustomSwiper";
 
 const Index = () => {
@@ -24,13 +35,13 @@ const Index = () => {
     null,
   );
   const [logo, setLogo] = useState<BusinessItem[]>([]);
+  const [stealReview, setStealReview] = useState<StealReview[]>([]);
 
   const LOGO_URL = "http://112.222.157.157:5234";
 
   const justWantLogo = async () => {
     try {
       const res = await axios.get("/api/business");
-      console.log("로고", res.data.resultData);
       if (
         Array.isArray(res.data.resultData) &&
         res.data.resultData.length > 0
@@ -49,43 +60,20 @@ const Index = () => {
     justWantLogo();
   }, []);
 
-  // 지역 스크롤 레이아웃
-
-  const LetTopLayout = () => {
-    return (
-      <div
-        className={`bg-[#1e1e1e] backdrop-blur-sm py-4 fixed top-[80px] left-0 w-full z-50 ${TopLayoutVisible ? "block" : "hidden"}`}
-      >
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white">JobDone</h1>
-          <nav className="flex gap-6 justify-center items-center">
-            {regions.map(region => (
-              <button
-                key={region.regionId}
-                onClick={() => setSelectedRegion(region.regionId)}
-                className={`text-[16px] font-medium ${
-                  selectedRegion === region.regionId
-                    ? "text-white"
-                    : "text-gray-400 hover:text-white"
-                } transition-colors`}
-              >
-                {region.region}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
-    );
-  };
-
   // 지역 이름
-
   const regionNames: { [key: number]: string } = {
     1: "대구",
     2: "구미",
     3: "경주",
     4: "포항",
     5: "부산",
+  };
+  const weatherRegion: { [key: string]: string } = {
+    1: "daegu",
+    2: "gumi",
+    3: "gyeongju",
+    4: "pohang",
+    5: "busan",
   };
 
   const [regions] = useState<Region[]>(
@@ -135,7 +123,25 @@ const Index = () => {
 
   const linkRef = useRef<HTMLAnchorElement>(null);
   const roundLogRef = useRef<HTMLSpanElement>(null);
-  const totalUser = 74643;
+  const stepRef = useRef<HTMLDivElement>(null);
+  const totalUser = 94643;
+
+  const stepAnime = () => {
+    if (stepRef.current) {
+      stepRef.current.style.opacity = "0";
+
+      anime({
+        targets: stepRef.current,
+        translateX: [0, 50],
+        opacity: [0, 1],
+        delay: anime.stagger(100),
+        duration: 2000,
+        easing: "easeOutQuad",
+      });
+    } else {
+      console.error("stepRef is not attached to a DOM element.");
+    }
+  };
 
   const totalUserAnime = () => {
     if (roundLogRef.current) {
@@ -144,17 +150,38 @@ const Index = () => {
         innerHTML: [0, totalUser.toLocaleString()],
         easing: "linear",
         round: 1,
-        duration: 2000,
+        duration: 2500,
       });
     }
   };
 
+  const allReview = async () => {
+    try {
+      const res = await axios.get("/api/review/main");
+      setStealReview(res.data.resultData);
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchWeather("daegu", setWeatherItems, setCurrentDate, setCurrentWeather);
+    allReview();
   }, []);
 
   useEffect(() => {
+    const regionName = weatherRegion[selectedRegion];
+    fetchWeather(
+      regionName,
+      setWeatherItems,
+      setCurrentDate,
+      setCurrentWeather,
+    );
+  }, [selectedRegion]);
+
+  useEffect(() => {
     const handleScroll = () => {
+      // console.log(window.scrollY);
       if (window.scrollY >= 750) {
         setTopLayoutVisible(true);
       } else {
@@ -212,13 +239,51 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 3200) {
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     // console.log("추천 글 상태 업데이트:", companies);
   }, [companies]);
+
+  useEffect(() => {
+    if (stepRef.current) {
+      stepRef.current.style.opacity = "0";
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY >= 4500) {
+        stepAnime();
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen">
       {/* 스크롤 800px 추가 레이아웃 */}
-      {LetTopLayout()}
+      {LetTopLayout({
+        regions,
+        TopLayoutVisible,
+        selectedRegion,
+        setSelectedRegion,
+      })}
 
       <div>
         {/* 이벤트 배너 */}
@@ -527,8 +592,8 @@ const Index = () => {
         {/* 총 이용자 수 */}
         <div className="flex justify-center items-center">
           <div className="flex flex-col justify-center items-center">
-            <span className="text-[40px] font-bold text-[#e4b041] mt-20 pt-[100px]">
-              지금까지 총 이용자 수
+            <span className="text-[52px] font-bold text-[#e4b041] mt-20 pt-[100px]">
+              지금까지 이용자 수
             </span>
             <div className="text-[48px] font-bold text-[#1e1e1e] my-20">
               <span ref={roundLogRef} className="round-log">
@@ -539,60 +604,93 @@ const Index = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center bg-[#d6d6d6] h-[300px]">
-        <span className="text-[40px] font-bold text-[#1e1e1e]">
-          믿을 수 있는 기업들이 함께 합니다.
-        </span>
+
+      {/* 기업 로고들 */}
+      <div className="bg-[#d6d6d6]">
+        <div className="flex justify-center items-center bg-[#d6d6d6] h-[200px]">
+          <span className="text-[40px] font-bold text-[#1e1e1e]">
+            믿을 수 있는 기업들이 함께 합니다.
+          </span>
+        </div>
+        <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
+          <CustomSwiper />
+          <FramerMotionSlider items={logo.slice(0, 19)} LOGO_URL={LOGO_URL} />
+          <FramerMotionSlider2 items={logo.slice(20, 39)} LOGO_URL={LOGO_URL} />
+        </div>
       </div>
-      <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
-        <CustomSwiper />
-        <Swiper
-          modules={[Autoplay]}
-          slidesPerView={13}
-          loop={true}
-          autoplay={{
-            delay: 0,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: false,
-          }}
-          speed={2500}
-          className="flex justify-center items-center custom-swiper"
-          style={{ transitionTimingFunction: "linear" }}
-        >
-          {logo.slice(0, 15).map(item => (
-            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
-              <img
-                src={`${LOGO_URL}${item.logo}`}
-                alt="로고"
-                className="w-[100px] h-[100px] rounded-lg shadow-md pointer-events-none my-5 overflow-hidden"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <Swiper
-          modules={[Autoplay]}
-          slidesPerView={13}
-          loop={true}
-          autoplay={{
-            delay: 0,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: false,
-            reverseDirection: true,
-          }}
-          speed={2500}
-          className="flex justify-center items-center custom-swiper"
-          style={{ transitionTimingFunction: "linear" }}
-        >
-          {logo.slice(16, 30).map(item => (
-            <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
-              <img
-                src={`${LOGO_URL}${item.logo}`}
-                alt="로고"
-                className="w-[100px] h-[100px] rounded-lg shadow-md pointer-events-none my-5 overflow-hidden"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+
+      {/* 믿음과 신뢰 */}
+      <div className="flex justify-center items-center bg-[#ffffff] h-[600px]">
+        <div className="flex flex-col gap-5 justify-center items-center">
+          <span className="text-[48px] my-20 font-bold text-[#1e1e1e]">
+            지속되는 고평가 후기들
+          </span>
+          <FramerMotionSlider3
+            items={stealReview.slice(0, 17)}
+            LOGO_URL={LOGO_URL}
+          />
+        </div>
+      </div>
+
+      {/* 중개 절차 */}
+      <div className="bg-[#ffffff]">
+        <div className="max-w-3xl mx-auto p-6 bg-white mt-10">
+          <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+            중개 절차 안내
+          </h1>
+          <div className="space-y-6" ref={stepRef}>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                1. 상담 및 요구사항 파악
+              </h2>
+              <p className="text-gray-700">
+                고객의 요구사항을 파악하고, 적합한 서비스를 추천합니다.
+              </p>
+            </div>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                2. 서비스 제공자 매칭
+              </h2>
+              <p className="text-gray-700">
+                고객의 요구에 맞는 서비스 제공자를 매칭합니다.
+              </p>
+            </div>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                3. 계약 체결
+              </h2>
+              <p className="text-gray-700">
+                서비스 제공자와 고객 간의 계약을 체결합니다. 계약서에는 서비스
+                내용, 비용, 기간 등이 명시됩니다.
+              </p>
+            </div>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                4. 서비스 제공
+              </h2>
+              <p className="text-gray-700">
+                계약에 따라 서비스가 제공됩니다. 이 과정에서 고객은 진행 상황을
+                확인할 수 있습니다.
+              </p>
+            </div>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                5. 피드백 및 평가
+              </h2>
+              <p className="text-gray-700">
+                서비스 완료 후 고객의 피드백을 받고, 서비스 제공자를 평가합니다.
+              </p>
+            </div>
+            <div className="step">
+              <h2 className="text-xl font-semibold text-blue-600">
+                6. 사후 관리
+              </h2>
+              <p className="text-gray-700">
+                필요 시 추가 지원이나 사후 관리를 제공합니다.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
