@@ -68,24 +68,27 @@ export const PopularPost = [
 export const EventBanner = [
   {
     id: 1,
-    title: "즐거운 청소 이벤트!",
-    image: "/images/event/event_banner_1.png",
+    image: "/images/event/carwash.jpg",
     link: "/",
   },
   {
     id: 2,
+    image: "/images/event/moving.jpg",
+    link: "/",
+  },
+  {
+    id: 3,
     title: "이사가 고민이라면?",
     image: "/images/event/event_banner_2.jpg",
     link: "/",
   },
   {
-    id: 3,
-    title: "세차 이벤트를 만나보세요!",
-    image: "/images/event/event_banner_3.jpg",
+    id: 4,
+    image: "/images/event/cleaning.jpg",
     link: "/",
   },
   {
-    id: 4,
+    id: 5,
     title: "문의 게시판을 이용하세요!",
     image: "/images/event/event_banner_4.jpg",
     link: "/forum",

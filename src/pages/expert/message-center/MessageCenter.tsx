@@ -16,7 +16,7 @@ function MessageCenter(): JSX.Element {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
-  const [username, _setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -307,9 +307,9 @@ function MessageCenter(): JSX.Element {
               {item.userName}
             </span>
             <div className="truncate font-[14px] text-left">
-              {item.recentlyChat.length > 14
+              {item.recentlyChat && item.recentlyChat.length > 14
                 ? `${item.recentlyChat.slice(0, 14)}...`
-                : item.recentlyChat}
+                : item.recentlyChat || ""}
             </div>
             <div className="text-[12px] text-[#B8B8B8] text-left">
               {item.roomCreatedAt}

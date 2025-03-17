@@ -45,8 +45,8 @@ function ContactUs() {
 
   useEffect(() => {
     let ws;
-    // let reconnectAttempts = 0;
-    // const maxReconnectAttempts = 5;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 2;
 
     const connectWebSocket = () => {
       if (!roomId) {
@@ -92,11 +92,11 @@ function ContactUs() {
         setConnected(false);
         setSocket(null);
 
-        // if (reconnectAttempts < maxReconnectAttempts) {
-        //   console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
-        //   reconnectAttempts++;
-        //   setTimeout(connectWebSocket, 3000);
-        // }
+        if (reconnectAttempts < maxReconnectAttempts) {
+          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
+          reconnectAttempts++;
+          setTimeout(connectWebSocket, 3000);
+        }
       };
     };
 

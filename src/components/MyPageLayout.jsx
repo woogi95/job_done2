@@ -49,7 +49,7 @@ function MyPageLayout({ children }) {
             <img
               src={profileImg}
               alt="프로필"
-              className="w-[100px] h-[100px] rounded-full"
+              className="w-[100px] h-[100px] rounded-full object-cover"
             />
           </div>
           <div className="flex flex-col justify-center items-center gap-[10px]">
