@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import { statusAtom } from "../../atoms/statusAtom";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
+import { se } from "date-fns/locale";
 
 function ExpertMainReserveList() {
   const [isReservationPop, setIsReservationPop] = useState(false);
@@ -48,7 +49,7 @@ function ExpertMainReserveList() {
   const getStatusList = async businessId => {
     try {
       const res = await loginApi.get(
-        `/api/service?business_id=${businessId}&status=1&page=1&size=10`,
+        `/api/service?business_id=${businessId}&status=0&page=1&size=10`,
       );
       // console.log("📡 API 응답 데이터:", res.data);
       setReservationData(res.data.resultData || []); // 🚀 안전한 초기화
@@ -104,37 +105,40 @@ function ExpertMainReserveList() {
           </ul>
 
           <div className="list" ref={containerRef}>
-            {reservationData.map(reservation => {
-              // console.log(`✅ 화면에 표시될 데이터 ${index}:`, reservation);
-              return (
-                <button
-                  key={reservation.serviceId}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    marginBottom: "5px",
-                  }}
-                  onClick={() => handleViewDetail(reservation.serviceId)}
-                >
-                  <div>
-                    <ul className="tr">
-                      <li className="td">{reservation.startDate || "미정"}</li>
-                      <li className="td black">
-                        {reservation.createdAt?.split(" ")[0] || "미정"}
-                      </li>
-                      {/* <li className="td">{reservation.detailTypeName}</li> */}
-                      <li className="td">{reservation.userName}</li>
-                      <li className="td">{reservation.price}</li>
-                      <li className="td">
-                        <p className={`completed${reservation.completed}`}>
-                          {getStatusText(reservation.completed)}
-                        </p>
-                      </li>
-                    </ul>
-                  </div>
-                </button>
-              );
-            })}
+            {reservationData
+              .filter(reservation => [0, 1].includes(reservation.completed))
+              .map(reservation => {
+                return (
+                  <button
+                    key={reservation.serviceId}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      marginBottom: "5px",
+                    }}
+                    onClick={() => handleViewDetail(reservation.serviceId)}
+                  >
+                    <div>
+                      <ul className="tr">
+                        <li className="td">
+                          {reservation.startDate || "미정"}
+                        </li>
+                        <li className="td black">
+                          {reservation.createdAt?.split(" ")[0] || "미정"}
+                        </li>
+                        {/* <li className="td">{reservation.detailTypeName}</li> */}
+                        <li className="td">{reservation.userName}</li>
+                        <li className="td">{reservation.price}</li>
+                        <li className="td">
+                          <p className={`completed${reservation.completed}`}>
+                            {getStatusText(reservation.completed)}
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
         </ExportListDiv>
       </EListContDiv>
@@ -142,6 +146,7 @@ function ExpertMainReserveList() {
         <ExpertReservation
           isReservationPop={isReservationPop}
           setIsReservationPop={setIsReservationPop}
+          serviceId={seletedServiceId}
         />
       )}
     </ExpertListPageDiv>

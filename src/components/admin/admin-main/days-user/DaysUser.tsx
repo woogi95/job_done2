@@ -11,6 +11,10 @@ const DaysUser = () => {
     chartData ?? []
   ).map(item => ({
     date: item.date || "N/A",
+    formattedDate: String(item.date)
+      .split("-")
+      .map((val, idx) => (idx === 0 ? `${val}월` : `${val}일`)) // "24-01" → "24년 01월"
+      .join(" "),
     visitorCount: item.visitorCount ?? 0,
   }));
   console.log(formattedData);
@@ -19,7 +23,7 @@ const DaysUser = () => {
       <ResponsiveBar
         data={formattedData}
         keys={["visitorCount"]} // ✅ keys를 직접 지정
-        indexBy="date"
+        indexBy="formattedDate"
         margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
         padding={0.3}
         valueScale={{ type: "linear", min: 0 }} // ✅ Y축 최소값 0 설정
@@ -42,6 +46,25 @@ const DaysUser = () => {
           legendPosition: "middle",
           legendOffset: -40,
           format: value => new Intl.NumberFormat().format(value),
+        }}
+        tooltip={({ indexValue, value }) => {
+          return (
+            <div
+              style={{
+                background: "rgba(0, 0, 0, 0.8)",
+                color: "#fff",
+                padding: "8px 12px",
+                borderRadius: "6px",
+                boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+              }}
+            >
+              <strong>📅 {indexValue}</strong>
+              <br />
+              <span style={{ color: "#f4d03f", fontWeight: "bold" }}>
+                👥 이용자 수: {new Intl.NumberFormat().format(value)}명
+              </span>
+            </div>
+          );
         }}
       />
     </div>

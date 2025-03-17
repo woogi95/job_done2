@@ -12,6 +12,11 @@ export const RequestBusiContainer = styled.div`
   max-width: 100%;
   width: 100%;
   margin: 20px auto;
+  h2.tit {
+    font-size: 28px;
+    font-weight: 600;
+    padding: 20px 0;
+  }
 `;
 
 // 테이블 감싸는 박스

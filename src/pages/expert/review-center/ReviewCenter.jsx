@@ -142,6 +142,10 @@ function ReviewCenter() {
 
   return (
     <RequestBusiContainer>
+      <div style={{ display: "flex" }}>
+        <h2 className="tit">리뷰관리</h2>
+      </div>
+
       <TableWrapper>
         <TableContainer>
           <thead>

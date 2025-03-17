@@ -97,8 +97,12 @@ import WeatherTest from "./pages/WeatherTest";
 import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
 import AdMonth from "./pages/admin/statistics/AdMonth";
 import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
+import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
+import AdminRoute from "./pages/admin/AdminRoute";
+import UserRoute from "./pages/UserRoute";
 
 function App() {
+  const adminState = localStorage.getItem("admin") === adminLoginAtom;
   return (
     <Router>
       <ScrollToTop />
@@ -110,162 +114,167 @@ function App() {
         <Route path="/alerttest" element={<AlertTestPage />} />
         <Route path="/weathertest" element={<WeatherTest />} />
         <Route path="/kakaomap2" element={<KakaoMaps />} />
-        <Route element={<Layout />}>
-          <Route path="/ocr" element={<OCRUploader />} />
-          <Route path="/test" element={<TestPage />} />
-          <Route path="/testmessage" element={<TestMessage />} />
-          {/* 커뮤니티 */}
-          <Route path="forum">
-            <Route index element={<Forum />} />
-            <Route path="write" element={<Write />} />
-            <Route path="detail/:qaId" element={<QaDetail />} />
-          </Route>
-          {/* 카카오페이 관련 */}
-          <Route path="/paySuccess" element={<PaymentSuccess />} />
-          <Route path="/payFailed" element={<PaymentFailed />} />
-          {/* QnA */}
-          <Route path="/qna" element={<Qna />} />
-          {/* 메인 페이지 */}
-          <Route path="/" element={<Index />} />
-          {/* 로그인 및 회원가입 */}
-          <Route path="/login">
-            <Route index element={<LoginPage />} />
+        <Route element={<UserRoute adminState={adminState} />}>
+          <Route element={<Layout />}>
+            <Route path="/ocr" element={<OCRUploader />} />
+            <Route path="/test" element={<TestPage />} />
+            <Route path="/testmessage" element={<TestMessage />} />
+            {/* 커뮤니티 */}
+            <Route path="forum">
+              <Route index element={<Forum />} />
+              <Route path="write" element={<Write />} />
+              <Route path="detail/:qaId" element={<QaDetail />} />
+            </Route>
+            {/* 카카오페이 관련 */}
+            <Route path="/paySuccess" element={<PaymentSuccess />} />
+            <Route path="/payFailed" element={<PaymentFailed />} />
+            {/* QnA */}
+            <Route path="/qna" element={<Qna />} />
+            {/* 메인 페이지 */}
+            <Route path="/" element={<Index />} />
+            {/* 로그인 및 회원가입 */}
+            <Route path="/login">
+              <Route index element={<LoginPage />} />
 
-            <Route path="signup" element={<SignUpPage />} />
-            <Route path="email" element={<EmailPage />} />
-            <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epwcheck" element={<PasswordEmail />} />
-            <Route path="epw" element={<PasswordEmailCheck />} />
-            <Route path="epwedit" element={<PasswordEdit />} />
+              <Route path="signup" element={<SignUpPage />} />
+              <Route path="email" element={<EmailPage />} />
+              <Route path="signupdone" element={<SignUpDone />} />
+              <Route path="epwcheck" element={<PasswordEmail />} />
+              <Route path="epw" element={<PasswordEmailCheck />} />
+              <Route path="epwedit" element={<PasswordEdit />} />
+            </Route>
+            {/* 사업자 등록*/}
+            <Route path="/business">
+              <Route index element={<BusinessSignUp />} />
+              <Route path="number" element={<BusinessNumber />} />
+            </Route>
+            {/* 예약페이지 */}
+            <Route path="/reservation">
+              <Route index element={<Reservation />} />
+              <Route path="history" element={<ReservationHistory />} />
+            </Route>
+            {/* 서비스 페이지 */}
+            <Route path="/service">
+              <Route index element={<Service />} />
+              <Route path=":id" element={<Detail />} />
+            </Route>
+            {/* 마이페이지 */}
+            <Route path="/mypage">
+              <Route index element={<MyPage />} />
+              <Route path="message" element={<MyMessage />} />
+              <Route path="reservation" element={<MyReservation />} />
+              <Route path="review" element={<ReviewPage />} />
+              <Route path="usage" element={<UsageDetails />} />
+              <Route path="wishlist" element={<Wishlist />} />
+            </Route>
+            <Route path="/estimate/:serviceId" element={<Estimate />} />
+            <Route
+              path="/paymenthistory/:serviceId"
+              element={<PaymentHistory />}
+            />
+            <Route
+              path="/jobdonehistory/:serviceId"
+              element={<JobDoneHistory />}
+            />
+            <Route
+              path="/UserReservLook/:serviceId"
+              element={<UserReservLook />}
+            />
           </Route>
-          {/* 사업자 등록*/}
-          <Route path="/business">
-            <Route index element={<BusinessSignUp />} />
-            <Route path="number" element={<BusinessNumber />} />
-          </Route>
-          {/* 예약페이지 */}
-          <Route path="/reservation">
-            <Route index element={<Reservation />} />
-            <Route path="history" element={<ReservationHistory />} />
-          </Route>
-          {/* 서비스 페이지 */}
-          <Route path="/service">
-            <Route index element={<Service />} />
-            <Route path=":id" element={<Detail />} />
-          </Route>
-          {/* 마이페이지 */}
-          <Route path="/mypage">
-            <Route index element={<MyPage />} />
-            <Route path="message" element={<MyMessage />} />
-            <Route path="reservation" element={<MyReservation />} />
-            <Route path="review" element={<ReviewPage />} />
-            <Route path="usage" element={<UsageDetails />} />
-            <Route path="wishlist" element={<Wishlist />} />
-          </Route>
-          <Route path="/estimate/:serviceId" element={<Estimate />} />
-          <Route
-            path="/paymenthistory/:serviceId"
-            element={<PaymentHistory />}
-          />
-          <Route
-            path="/jobdonehistory/:serviceId"
-            element={<JobDoneHistory />}
-          />
-          <Route
-            path="/UserReservLook/:serviceId"
-            element={<UserReservLook />}
-          />
-        </Route>
-        {/* ----- 전문가 페이지 ----- */}
-        <Route element={<ExportLayout />}>
-          <Route path="/expert">
-            {/* 관리자 */}
-            <Route index element={<ExpertMain />} />
-            {/* 업체관리 */}
-            <Route path="/expert/company-management">
-              <Route index element={<CompanyInfo />} />
-              <Route path="edit" element={<EditCompanyInfo />} />
-              <Route path="editdetail" element={<EditDetailPage />} />
-              <Route path="portfolio" element={<Portfolio />} />
-              <Route path="detail" element={<ExpertDetailPage />} />
-              <Route path="createoption" element={<CreateOptionPage />} />
-              <Route path="editoption" element={<EditOptionPage />} />
-              <Route path="createdetail" element={<CreateDetailPage />} />
+          {/* ----- 전문가 페이지 ----- */}
+          <Route element={<ExportLayout />}>
+            <Route path="/expert">
+              {/* 관리자 */}
+              <Route index element={<ExpertMain />} />
+              {/* 업체관리 */}
+              <Route path="/expert/company-management">
+                <Route index element={<CompanyInfo />} />
+                <Route path="edit" element={<EditCompanyInfo />} />
+                <Route path="editdetail" element={<EditDetailPage />} />
+                <Route path="portfolio" element={<Portfolio />} />
+                <Route path="detail" element={<ExpertDetailPage />} />
+                <Route path="createoption" element={<CreateOptionPage />} />
+                <Route path="editoption" element={<EditOptionPage />} />
+                <Route path="createdetail" element={<CreateDetailPage />} />
 
-              <Route
-                path="paymenthistory/:serviceId"
-                element={<ExpertPaymentHistory />}
-              />
-            </Route>
-            {/* 예약관리 */}
-            <Route path="/expert/reservation-management">
-              <Route index element={<ReservationList />} />
-            </Route>
-            {/* 견적관리 */}
-            <Route path="/expert/quote-management">
-              <Route index element={<QuoteList />} />
-              <Route path="quotation-form" element={<QuotationForm />} />
-              <Route path="edit-quotation" element={<EditQuotation />} />
-              <Route path="estimate/:serviceId" element={<ExpertEstimate />} />
-            </Route>
-            {/* 결제관리 */}
-            <Route path="/expert/payment-management">
-              <Route index element={<PaymentList />} />
-            </Route>
-            {/* 일정관리 - 3차 */}
-            <Route path="/expert/schedule-management">
-              <Route index element={<ScheduleList />} />
-            </Route>
-            {/* 고객문의 */}
-            <Route path="/expert/message-center">
-              <Route index element={<MessageCenter />} />
-            </Route>
-            {/* 리뷰문의 */}
-            <Route path="/expert/review-center">
-              <Route index element={<ReviewCenter />} />
-              <Route path="reviewview" index element={<ReviewView />} />
-            </Route>
-            {/* 통계 */}
-            <Route path="/expert/statistics">
-              <Route index element={<Statistics />} />
-              <Route path="monthuser" element={<UserStatisitcs />} />
+                <Route
+                  path="paymenthistory/:serviceId"
+                  element={<ExpertPaymentHistory />}
+                />
+              </Route>
+              {/* 예약관리 */}
+              <Route path="/expert/reservation-management">
+                <Route index element={<ReservationList />} />
+              </Route>
+              {/* 견적관리 */}
+              <Route path="/expert/quote-management">
+                <Route index element={<QuoteList />} />
+                <Route path="quotation-form" element={<QuotationForm />} />
+                <Route path="edit-quotation" element={<EditQuotation />} />
+                <Route
+                  path="estimate/:serviceId"
+                  element={<ExpertEstimate />}
+                />
+              </Route>
+              {/* 결제관리 */}
+              <Route path="/expert/payment-management">
+                <Route index element={<PaymentList />} />
+              </Route>
+              {/* 일정관리 - 3차 */}
+              <Route path="/expert/schedule-management">
+                <Route index element={<ScheduleList />} />
+              </Route>
+              {/* 고객문의 */}
+              <Route path="/expert/message-center">
+                <Route index element={<MessageCenter />} />
+              </Route>
+              {/* 리뷰문의 */}
+              <Route path="/expert/review-center">
+                <Route index element={<ReviewCenter />} />
+                <Route path="reviewview" index element={<ReviewView />} />
+              </Route>
+              {/* 통계 */}
+              <Route path="/expert/statistics">
+                <Route index element={<Statistics />} />
+                <Route path="monthuser" element={<UserStatisitcs />} />
+              </Route>
             </Route>
           </Route>
         </Route>
+
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
-        {/* 관리자 */}
-        <Route element={<AdminLayout />}>
-          <Route path="/admin">
-            <Route index element={<AdminMain />} />
-            {/* 유저 관리 */}
-            <Route path="userlist">
-              <Route index element={<UserList />} />
-              <Route path="onebyone" index element={<UserOneByOne />} />
-              <Route path="userreport" index element={<UserReport />} />
-            </Route>
-            {/* 업체 조회 */}
-            <Route path="businesssearch">
-              <Route index element={<CategorySearch />} />
-              <Route
-                path="reservesearch"
-                index
-                element={<ReservationSearch />}
-              />
-              <Route path="ruesearch" index element={<RevenueSearch />} />
-              <Route
-                path="infomationbusi/:businessId"
-                index
-                element={<AdminBusinessInfo />}
-              />
-            </Route>
-            {/* 업체,상품등록요청 */}
-            <Route path="requestresi">
-              <Route index element={<RequestBusi />} />
-            </Route>
-            <Route path="statistics">
-              <Route index element={<AdMonth />} />
-              <Route path="daysuser" index element={<AdDaysUser />} />
+        {/* 어드민 */}
+        <Route element={<AdminRoute adminState={adminState} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin">
+              <Route index element={<AdminMain />} />
+              <Route path="userlist">
+                <Route index element={<UserList />} />
+                <Route path="onebyone" index element={<UserOneByOne />} />
+                <Route path="userreport" index element={<UserReport />} />
+              </Route>
+              <Route path="businesssearch">
+                <Route index element={<CategorySearch />} />
+                <Route
+                  path="reservesearch"
+                  index
+                  element={<ReservationSearch />}
+                />
+                <Route path="ruesearch" index element={<RevenueSearch />} />
+                <Route
+                  path="infomationbusi/:businessId"
+                  index
+                  element={<AdminBusinessInfo />}
+                />
+              </Route>
+              <Route path="requestresi">
+                <Route index element={<RequestBusi />} />
+              </Route>
+              <Route path="statistics">
+                <Route index element={<AdMonth />} />
+                <Route path="daysuser" index element={<AdDaysUser />} />
+              </Route>
             </Route>
           </Route>
         </Route>

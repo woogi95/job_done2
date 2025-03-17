@@ -1,10 +1,11 @@
 import DaysUser from "../../../components/admin/admin-main/days-user/DaysUser";
 import styled from "@emotion/styled";
+import { RequestBusiContainer } from "./chartD";
 
 const Container = styled.div`
-  width: 90%;
+  width: 100%;
   height: 85%;
-  margin: 40px auto;
+  margin: 20px auto;
   padding: 20px;
   background: #fff;
   border-radius: 12px;
@@ -15,12 +16,14 @@ const Container = styled.div`
 `;
 const AdDaysUser = () => {
   return (
-    <Container>
+    <RequestBusiContainer>
       <div style={{ display: "flex", margin: "left" }}>
         <h2 className="tit">방문자 수</h2>
       </div>
-      <DaysUser />
-    </Container>
+      <Container>
+        <DaysUser />
+      </Container>
+    </RequestBusiContainer>
   );
 };
 

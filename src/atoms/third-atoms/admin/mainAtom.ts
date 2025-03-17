@@ -108,3 +108,13 @@ export const dcDaysUserDataAtom = atom<BarDayUserDataType>({
     indexBy: "date",
   },
 });
+
+export const yearValueAtom = atom<number | string>({
+  key: "yearValueAtom",
+  default: 0,
+});
+
+export const adminLoginAtom = atom<boolean>({
+  key: "adminLoginAtom",
+  default: false,
+});
