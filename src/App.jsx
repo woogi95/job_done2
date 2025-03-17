@@ -96,6 +96,7 @@ import ExpertEstimate from "./components/papers/ExpertEstimate";
 import WeatherTest from "./pages/WeatherTest";
 import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
 import AdMonth from "./pages/admin/statistics/AdMonth";
+import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
 
 function App() {
   return (
@@ -108,6 +109,7 @@ function App() {
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route path="/alerttest" element={<AlertTestPage />} />
         <Route path="/weathertest" element={<WeatherTest />} />
+        <Route path="/kakaomap2" element={<KakaoMaps />} />
         <Route element={<Layout />}>
           <Route path="/ocr" element={<OCRUploader />} />
           <Route path="/test" element={<TestPage />} />

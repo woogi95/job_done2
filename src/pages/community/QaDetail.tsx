@@ -4,9 +4,15 @@ import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
 import { Image } from "@chakra-ui/react";
 
+interface AnswerType {
+  answer: string;
+  createdAt: string;
+}
+
 const QaDetail = () => {
   const { qaId } = useParams<{ qaId: string }>();
   const [post, setPost] = useState<QaListType | null>(null);
+  const [answers, setAnswers] = useState<AnswerType[]>([]); // Updated type
 
   const PIC_URL = "http://112.222.157.157:5234";
 
@@ -21,12 +27,12 @@ const QaDetail = () => {
     }
   };
 
-  const answer = async () => {
+  const fetchAnswers = async () => {
     try {
       const res = await loginApi.get("/api/qa/answer", {
         params: { qaId: qaId },
       });
-      console.log(res.data.resultData);
+      setAnswers(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +40,7 @@ const QaDetail = () => {
 
   useEffect(() => {
     fetchPostDetail();
-    answer();
+    fetchAnswers();
   }, [qaId]);
 
   return (
@@ -67,6 +73,27 @@ const QaDetail = () => {
                   />
                 </div>
               ))}
+          </div>
+
+          {/* 답글 영역 */}
+          <div className="flex justify-center items-center w-[100%] h-[2px] mt-20 bg-gray-300 mx-auto"></div>
+          <div className="mt-8">
+            <h2 className="text-xl font-bold mb-4">답글</h2>
+            {answers.length > 0 ? (
+              answers.map((answer, index) => (
+                <div key={index} className="border-b border-gray-300 py-4">
+                  <div className="font-semibold text-gray-800">
+                    <span>잡던 관리자</span>
+                  </div>
+                  <div className="text-gray-600">{answer.answer}</div>
+                  <div className="text-sm text-gray-500">
+                    {answer.createdAt}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">답글이 없습니다.</p>
+            )}
           </div>
         </>
       )}

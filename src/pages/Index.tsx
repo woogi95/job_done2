@@ -11,6 +11,7 @@ import anime from "animejs";
 import { BusinessItem, Region } from "../types/TypeBox";
 import { fetchWeather } from "../components/weather/Weather";
 import { WeatherDisplayItem, WeatherItem } from "../types/TypeBox";
+import CustomSwiper from "./CustomSwiper";
 
 const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
@@ -544,36 +545,50 @@ const Index = () => {
         </span>
       </div>
       <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
+        <CustomSwiper />
         <Swiper
-          spaceBetween={10}
-          slidesPerView={10}
+          modules={[Autoplay]}
+          slidesPerView={13}
           loop={true}
-          autoplay={true}
-          className="flex justify-center items-center"
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: false,
+          }}
+          speed={2500}
+          className="flex justify-center items-center custom-swiper"
+          style={{ transitionTimingFunction: "linear" }}
         >
           {logo.slice(0, 15).map(item => (
             <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
               <img
                 src={`${LOGO_URL}${item.logo}`}
                 alt="로고"
-                className="w-[150px] h-[100px] pointer-events-none"
+                className="w-[100px] h-[100px] rounded-lg shadow-md pointer-events-none my-5 overflow-hidden"
               />
             </SwiperSlide>
           ))}
         </Swiper>
         <Swiper
-          spaceBetween={10}
-          slidesPerView={10}
+          modules={[Autoplay]}
+          slidesPerView={13}
           loop={true}
-          autoplay={true}
-          className="flex justify-center items-center"
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: false,
+            reverseDirection: true,
+          }}
+          speed={2500}
+          className="flex justify-center items-center custom-swiper"
+          style={{ transitionTimingFunction: "linear" }}
         >
           {logo.slice(16, 30).map(item => (
             <SwiperSlide key={item.businessId} style={{ userSelect: "none" }}>
               <img
                 src={`${LOGO_URL}${item.logo}`}
                 alt="로고"
-                className="w-[150px] h-[100px] pointer-events-none"
+                className="w-[100px] h-[100px] rounded-lg shadow-md pointer-events-none my-5 overflow-hidden"
               />
             </SwiperSlide>
           ))}
