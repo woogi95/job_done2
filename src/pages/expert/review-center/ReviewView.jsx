@@ -1,6 +1,7 @@
 import { Button, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import DOMPurify from "dompurify";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loginApi } from "../../../apis/login";
@@ -156,9 +157,10 @@ const ReviewView = () => {
             borderRadius: "5px",
             border: "1px solid #ddd",
             marginBottom: "15px",
+            whiteSpace: "pre-line",
           }}
         >
-          <p>{busiReview}</p>
+          <p> {DOMPurify.sanitize(busiReview)}</p>
         </div>
       ) : (
         <Form
@@ -179,6 +181,7 @@ const ReviewView = () => {
                 padding: "10px",
                 borderRadius: "5px",
                 fontSize: "16px",
+                whiteSpace: "pre-line",
               }}
             />
           </Form.Item>

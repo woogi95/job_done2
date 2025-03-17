@@ -7,7 +7,9 @@ const DaysUser = () => {
 
   console.log("✅ Recoil에서 가져온 데이터:", barChartData);
   const chartData = barChartData.data;
-  const formattedData = chartData?.map(item => ({
+  const formattedData: { date: string; visitorCount: number }[] = (
+    chartData ?? []
+  ).map(item => ({
     date: item.date || "N/A",
     visitorCount: item.visitorCount ?? 0,
   }));
