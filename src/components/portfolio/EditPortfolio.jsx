@@ -218,7 +218,7 @@ const EditPortfolio = ({
           // 포폴삭제 상태 바꾸는 요청 보내기
           const res = await loginApi.put(`/api/portfolio/state`, {
             portfolioPicId: fileToRemove.portfolioPicId,
-            portfolioId: portfolioId,
+            // portfolioId: portfolioId,
           });
           if (res.status === 200) {
             console.log("이미지 삭제 성공:", res.data);
