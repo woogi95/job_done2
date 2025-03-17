@@ -169,15 +169,7 @@ const EditPortfolio = ({
           businessState.detailTypeId,
           businessState.businessId,
         );
-
-        // Update this line to preserve both portfolioPicId and pic
-        setPfDetailImgList(prev => [
-          ...prev,
-          ...res.data.resultData.pics.map(pic => ({
-            portfolioPicId: pic.portfolioPicId,
-            pic: pic.pic,
-          })),
-        ]);
+        setPfDetailImgList([...pfDetailImgList, ...res.data.resultData.pics]);
         setIsPopPfEdit(false);
         setIsEditComplete(true);
       }
