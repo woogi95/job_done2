@@ -198,11 +198,6 @@ const AdminSidebar = () => {
           </ul>
         </li>
       </ul>
-      {/* 사용자 홈으로 이동 */}
-      <NavLink to="/" className="userhome">
-        <div className="logo"></div>
-        <p>사용자 홈 바로가기</p>
-      </NavLink>
     </SideMenuDiv>
   );
 };
