@@ -97,6 +97,7 @@ import WeatherTest from "./pages/WeatherTest";
 import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
 import AdMonth from "./pages/admin/statistics/AdMonth";
 import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
+import KakaoMaps2 from "./pages/kakaomap/KakaoMaps2";
 import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
 import AdminRoute from "./pages/admin/AdminRoute";
 import UserRoute from "./pages/UserRoute";
@@ -115,7 +116,8 @@ function App() {
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route path="/alerttest" element={<AlertTestPage />} />
         <Route path="/weathertest" element={<WeatherTest />} />
-        <Route path="/kakaomap2" element={<KakaoMaps />} />
+        <Route path="/kakaomap" element={<KakaoMaps />} />
+        <Route path="/kakaomap2" element={<KakaoMaps2 />} />
         <Route element={<UserRoute adminState={adminState} />}>
           <Route element={<Layout />}>
             <Route path="/ocr" element={<OCRUploader />} />
