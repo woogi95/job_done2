@@ -230,9 +230,9 @@ const EditPortfolio = ({
           });
           if (res.status === 200) {
             console.log("이미지 삭제 성공:", res.data);
-            // 미리보기 URL 해제
+
             URL.revokeObjectURL(fileToRemove.preview);
-            // 해당 이미지 제거
+
             setFilePreviews(prev => prev.filter((_, i) => i !== index));
             setPfDetailImgList(prev => prev.filter((_, i) => i !== index));
           }

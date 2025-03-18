@@ -41,6 +41,8 @@ const ContReview = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupTitle, setPopupTitle] = useState("");
   const [popupLink, setPopupLink] = useState("");
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
+
   // 정렬 방식에 따른 API 호출
   const handleSortTypeClick = (businessId, option, state) => {
     console.log("businessId, status!!!", businessId, option, state);
@@ -116,7 +118,7 @@ const ContReview = () => {
     setSelectedImage(null); // 선택된 이미지 초기화
   };
 
-  const handleReport = () => {
+  const handleReport = reviewId => {
     const accessToken = getCookie("accessToken");
     if (!accessToken) {
       setPopupTitle("로그인 필요");
@@ -125,6 +127,7 @@ const ContReview = () => {
       setIsPopupOpen(true);
     } else {
       setIsReportPopupOpen(true);
+      setSelectedReviewId(reviewId);
     }
   };
 
@@ -223,7 +226,7 @@ const ContReview = () => {
                     <button
                       onClick={() => {
                         console.log("Siren clicked");
-                        handleReport();
+                        handleReport(item.reviewId);
                       }}
                     >
                       신고하기
@@ -316,7 +319,10 @@ const ContReview = () => {
       )}
       {/* 리뷰 신고 모달 */}
       {isReportPopupOpen && (
-        <ReviewReportPopup setIsReportPopupOpen={setIsReportPopupOpen} />
+        <ReviewReportPopup
+          setIsReportPopupOpen={setIsReportPopupOpen}
+          reviewId={selectedReviewId}
+        />
       )}
     </>
   );

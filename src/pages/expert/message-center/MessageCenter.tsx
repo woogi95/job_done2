@@ -22,7 +22,7 @@ function MessageCenter(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const IMAGE_BASE_URL = "https://job-done.r-e.kr:5234";
+  const IMAGE_BASE_URL = "https://job-done.r-e.kr:52340";
 
   useEffect(() => {
     if (messageContainerRef.current) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+// import * as yup from "yup";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import {
   ExpertOptionInfoDiv,
@@ -15,9 +15,9 @@ import { loginApi } from "../../../apis/login";
 import { ProductState } from "../../../atoms/productAtom";
 import { useNavigate } from "react-router-dom";
 import { Popup } from "../../../components/ui/Popup";
-const priceSchema = yup.object({
-  productPrice: yup.number(),
-});
+// const priceSchema = yup.object({
+//   productPrice: yup.number(),
+// });
 
 function EditOptionPage() {
   const navigate = useNavigate();
@@ -321,7 +321,7 @@ function EditOptionPage() {
               <label>
                 <b>카테고리 </b>
                 <span>
-                  <p>음식점청소</p>
+                  <p>{productbasicPrice.detailTypeName}</p>
                 </span>
               </label>
               <label>

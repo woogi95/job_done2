@@ -5,29 +5,37 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  selectedCategoryState,
-  selectedDetailTypeState,
+  // selectedCategoryState,
+  // selectedDetailTypeState,
   regionState,
   categoryList,
   detailList,
 } from "../../atoms/categoryAtom";
+import { useLocation } from "react-router-dom";
 
 const ServiceListTop = ({ setBusinessList }) => {
-  const [regionId, setRegionId] = useRecoilState(regionState); // 전체 기본
-
-  const regionIdVal = useRecoilValue(regionState);
-  const categoryId = useRecoilValue(selectedCategoryState);
-  const detailTypeId = useRecoilValue(selectedDetailTypeState);
+  const [regionId, setRegionId] = useRecoilState(regionState);
+  // const regionIdVal = useRecoilValue(regionState);
+  // const category = useRecoilValue(selectedCategoryState);
+  // const categoryId = category?.CategoryId;
+  // const detailType = useRecoilValue(selectedDetailTypeState);
+  // const detailTypeId = detailType?.detailTypeId;
   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
   const [detailDatas, setDetailDatas] = useRecoilState(detailList);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryIdFromURL = Number(queryParams.get("categoryId"));
+  const detailTypeIdFromURL = Number(queryParams.get("detailTypeId"));
+
   const cateName = categoryDatas.find(
-    item => item.categoryId === categoryId,
+    item => item.categoryId === categoryIdFromURL,
   )?.categoryName;
-  // console.log(detailDatas);
+  console.log("categoryName", cateName);
   const detailName =
     Object.values(detailDatas)
       .flat()
-      .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
+      .find(item => item.detailTypeId === detailTypeIdFromURL)
+      ?.detailTypeName || "";
 
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = async (
@@ -36,33 +44,30 @@ const ServiceListTop = ({ setBusinessList }) => {
     regionIdVal,
     searchTerm,
   ) => {
-    // console.log("검색어:", searchTerm);
-    // console.log(
-    //   "categoryId",
-    //   categoryId,
-    //   detailTypeId,
-    //   regionIdVal,
-    //   searchTerm,
-    // );
+    console.log("검색어:", searchTerm);
+    console.log(
+      "categoryId",
+      categoryId,
+      detailTypeId,
+      regionIdVal,
+      searchTerm,
+    );
     try {
-      let url = "/api/business?";
-
+      // let url = `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}&regionId=${regionIdVal}&searchTerm=${searchTerm}`;
+      let url = `/api/business?`;
       // categoryId가 있으면 추가
       if (categoryId !== undefined && categoryId !== null) {
         url += `categoryId=${categoryId}&`;
       }
 
-      // detailTypeId가 있으면 추가
       if (detailTypeId !== undefined && detailTypeId !== null) {
         url += `detailTypeId=${detailTypeId}&`;
       }
 
-      // regionIdVal가 있으면 추가
       if (regionIdVal !== undefined && regionIdVal !== null) {
         url += `regionId=${regionIdVal}&`;
       }
 
-      // searchTerm이 있으면 추가
       if (searchTerm !== undefined && searchTerm.trim() !== "") {
         url += `searchTerm=${searchTerm}&`;
       }
@@ -81,7 +86,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   };
 
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
-    // console.log(categoryId, detailTypeId, regionId);
+    console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
 
     try {
@@ -103,21 +108,23 @@ const ServiceListTop = ({ setBusinessList }) => {
   };
 
   useEffect(() => {
-    handleRegionClick(categoryId, detailTypeId, regionId);
-  }, []);
+    handleSearch(categoryIdFromURL, detailTypeIdFromURL, regionId);
+  }, [categoryIdFromURL, detailTypeIdFromURL, regionId]);
   return (
     <PageTopDiv>
       <div className="inner">
         <h1>{cateName}</h1>
         <span>
-          {cateName} {detailTypeId >= 1 ? <BiSolidRightArrow /> : ""}
+          {cateName} {detailTypeIdFromURL >= 1 ? <BiSolidRightArrow /> : ""}
           {detailName}
         </span>
         <ul>
           <li>
             <button
               to="/service"
-              onClick={() => handleRegionClick(categoryId, detailTypeId)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL)
+              }
               className={regionId === undefined ? "active" : ""}
             >
               전체
@@ -125,7 +132,9 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() => handleRegionClick(categoryId, detailTypeId, 1)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL, 1)
+              }
               className={regionId === 1 ? "active" : ""}
             >
               대구
@@ -133,7 +142,9 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() => handleRegionClick(categoryId, detailTypeId, 2)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL, 2)
+              }
               className={regionId === 2 ? "active" : ""}
             >
               부산
@@ -141,7 +152,9 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() => handleRegionClick(categoryId, detailTypeId, 3)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL, 3)
+              }
               className={regionId === 3 ? "active" : ""}
             >
               포항
@@ -149,7 +162,9 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() => handleRegionClick(categoryId, detailTypeId, 4)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL, 4)
+              }
               className={regionId === 4 ? "active" : ""}
             >
               경주
@@ -157,7 +172,9 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() => handleRegionClick(categoryId, detailTypeId, 5)}
+              onClick={() =>
+                handleRegionClick(categoryIdFromURL, detailTypeIdFromURL, 5)
+              }
               className={regionId === 5 ? "active" : ""}
             >
               구미
