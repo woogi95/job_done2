@@ -20,7 +20,7 @@ function ContactUs() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   // const roomId = useRecoilValue(checkRoom);
 
-  const IMAGE_BASE_URL = "https://job-done.r-e.kr";
+  const IMAGE_BASE_URL = "https://job-done.r-e.kr:5234";
 
   // 메시지 컨테이너에 대한 ref 추가
   const messageContainerRef = useRef(null);

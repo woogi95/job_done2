@@ -6,7 +6,7 @@ import MyPageLayout from "../../components/MyPageLayout";
 import { Link } from "react-router-dom";
 
 function Wishlist() {
-  const ImgURL = "https://job-done.r-e.kr";
+  const ImgURL = "https://job-done.r-e.kr:5234";
 
   const [wishlist, setWishlist] = useState([]);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
