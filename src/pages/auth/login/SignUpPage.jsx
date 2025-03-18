@@ -126,20 +126,24 @@ function SignUpPage() {
           ]}
         >
           <Input
-            style={{ alignItems: "center" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
             placeholder="이메일을 입력하세요."
             suffix={
-              <button
-                type="button"
-                className="bg-blue-500 border border-gray-400 w-20 h-6 rounded-lg mb-2"
-                onClick={() => {
-                  const email = upwForm.getFieldValue("email");
-
-                  emailCheck(email);
-                }}
-              >
-                중복확인
-              </button>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <button
+                  type="button"
+                  className="bg-blue-500 border border-gray-400 w-20 h-6 rounded-lg"
+                  onClick={() => {
+                    const email = upwForm.getFieldValue("email");
+                    emailCheck(email);
+                  }}
+                >
+                  중복확인
+                </button>
+              </div>
             }
           />
         </Form.Item>

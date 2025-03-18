@@ -72,8 +72,8 @@ const RevenueSearch = () => {
                   <td>{business.id}</td>
                   <td>{business.businessName}</td>
                   <td>{business.detailTypeName}</td>
-                  <td>{business.totalRevenue.toLocaleString()}</td>
-                  <td>{business.thisMonthRevenue.toLocaleString()}</td>
+                  <td>{business.totalRevenue.toLocaleString()} 원</td>
+                  <td>{business.thisMonthRevenue.toLocaleString()} 원</td>
                 </tr>
               ))
             )}

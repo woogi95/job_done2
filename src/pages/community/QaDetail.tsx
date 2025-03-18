@@ -14,7 +14,7 @@ const QaDetail = () => {
   const [post, setPost] = useState<QaListType | null>(null);
   const [answers, setAnswers] = useState<AnswerType>();
 
-  const PIC_URL = "https://job-done.r-e.kr:5234";
+  const PIC_URL = "https://job-done.r-e.kr:52340";
 
   const fetchPostDetail = async () => {
     try {

@@ -23,7 +23,7 @@ function Layout() {
 
   useEffect(() => {
     // 페이지가 로드되자마자 API 호출
-    axios.get("https://job-done.r-e.kr:5234/api/visit").catch(error => {
+    axios.get("https://job-done.r-e.kr:523400/api/visit").catch(error => {
       console.error("Error fetching data:", error);
     });
   }, []);

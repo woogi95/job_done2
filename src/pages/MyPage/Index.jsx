@@ -71,7 +71,7 @@ function MyPage() {
       setPhoneNumber(userData.phone);
       const profileImgUrl = userData.pic
         ? userData.pic.startsWith("/pic")
-          ? `https://job-done.r-e.kr:5234${userData.pic}`
+          ? `https://job-done.r-e.kr:52340${userData.pic}`
           : `${userData.pic}`
         : "/images/order/default_profile.jpg";
       console.log(profileImgUrl);
