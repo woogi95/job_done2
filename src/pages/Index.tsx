@@ -42,7 +42,7 @@ const Index = () => {
   const [logo, setLogo] = useState<BusinessItem[]>([]);
   const [stealReview, setStealReview] = useState<StealReview[]>([]);
 
-  const LOGO_URL = "https://job-done.r-e.kr";
+  const LOGO_URL = "https://job-done.r-e.kr:5234";
 
   const justWantLogo = async () => {
     try {
