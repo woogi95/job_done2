@@ -101,6 +101,7 @@ import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
 import AdminRoute from "./pages/admin/AdminRoute";
 import UserRoute from "./pages/UserRoute";
 import Adminlogin from "./pages/auth/login/Adminlogin";
+import PaymentLoading from "./components/PaymentLoading";
 
 function App() {
   const adminState = localStorage.getItem("admin") === adminLoginAtom;
@@ -129,6 +130,7 @@ function App() {
             {/* 카카오페이 관련 */}
             <Route path="/paySuccess" element={<PaymentSuccess />} />
             <Route path="/payFailed" element={<PaymentFailed />} />
+            <Route path="/payLoading" element={<PaymentLoading />} />
             {/* QnA */}
             <Route path="/qna" element={<Qna />} />
             {/* 메인 페이지 */}

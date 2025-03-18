@@ -26,13 +26,13 @@ function TestMessage() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-      ws = new WebSocket("ws://112.222.157.157:5234/chat/3");
+      ws = new WebSocket("wss://job-done.r-e.kr:5234/chat/3");
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
-        reconnectAttempts = 0; // 연결 성공시 재시도 횟수 초기화
+        reconnectAttempts = 0;
       };
 
       ws.onmessage = event => {

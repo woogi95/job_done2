@@ -5,6 +5,12 @@ import { FiSend } from "react-icons/fi";
 import { loginApi } from "../../apis/login";
 import { setCookie } from "../../utils/Cookie";
 import MyPageLayout from "../../components/MyPageLayout";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 
 function ContactUs() {
   const [cookies] = useCookies(["roomId"]);
@@ -18,19 +24,16 @@ function ContactUs() {
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
-  // const roomId = useRecoilValue(checkRoom);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const IMAGE_BASE_URL = "https://job-done.r-e.kr:5234";
+  const IMAGE_BASE_URL = "https://job-done.r-e.kr:52340";
 
-  // 메시지 컨테이너에 대한 ref 추가
   const messageContainerRef = useRef(null);
 
-  // roomId 변화 감지를 위한 useEffect 추가
   useEffect(() => {
-    console.log("Current roomId:", roomId);
+    // console.log("방 아이디? : ", roomId);
   }, [roomId]);
 
-  // 메시지가 업데이트될 때마다 스크롤을 아래로 이동시키는 useEffect 추가
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
@@ -50,13 +53,13 @@ function ContactUs() {
 
     const connectWebSocket = () => {
       if (!roomId) {
-        console.log("roomId가 없습니다.");
+        // console.log("roomId가 없습니다.");
         return;
       }
-      ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
+      ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
 
       ws.onopen = () => {
-        console.log("웹소켓 연결 성공!");
+        // console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
@@ -66,17 +69,13 @@ function ContactUs() {
       };
 
       ws.onmessage = async event => {
-        console.log("웹소켓에서 수신한 데이터:", event.data);
+        // console.log("웹소켓에서 수신한 데이터:", event.data);
 
         try {
-          // Blob 데이터인 경우 바로 텍스트로 변환
           const messageText =
             event.data instanceof Blob ? await event.data.text() : event.data;
 
-          // JSON 파싱
           const messageData = JSON.parse(messageText);
-
-          // 메시지 즉시 추가 (중복 체크 없이 바로 추가)
           setMessages(prevMessages => [...prevMessages, messageData]);
         } catch (error) {
           console.error("메시지 처리 에러:", error);
@@ -88,12 +87,12 @@ function ContactUs() {
       };
 
       ws.onclose = () => {
-        console.log("웹소켓 연결 종료");
+        // console.log("웹소켓 연결 종료");
         setConnected(false);
         setSocket(null);
 
         if (reconnectAttempts < maxReconnectAttempts) {
-          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
+          // console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
           setTimeout(connectWebSocket, 3000);
         }
@@ -114,7 +113,13 @@ function ContactUs() {
     if (file && file.type.startsWith("image/")) {
       setSelectedImage(file);
     } else {
-      alert("이미지 파일만 선택해주세요.");
+      alert(
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>오류!</AlertTitle>
+          <AlertDescription>이미지 파일만 선택해주세요.</AlertDescription>
+        </Alert>,
+      );
     }
   };
 
@@ -143,8 +148,6 @@ function ContactUs() {
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
-
-            // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
             setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
@@ -180,8 +183,8 @@ function ContactUs() {
         console.error("메시지 전송 실패:", error);
       }
     } else {
-      console.log("Socket status:", socket?.readyState);
-      alert("채팅 서버에 연결되어 있지 않습니다.");
+      // console.log("소켓 속성 ? :", socket?.readyState);
+      setErrorMessage("채팅 서버에 연결되어 있지 않습니다.");
     }
   };
 
@@ -189,7 +192,7 @@ function ContactUs() {
     try {
       setLoading(true);
       const res = await loginApi.get("/api/room");
-      console.log("뭐 들어옴", res.data);
+      // console.log("뭐 들어옴", res.data);
       if (Array.isArray(res.data.resultData)) {
         setRoomList(res.data.resultData);
       } else {
@@ -241,7 +244,7 @@ function ContactUs() {
         },
       });
       console.log("삭제 결과", res.data);
-      window.location.reload(); // 삭제 완료 후 페이지 새로고침
+      window.location.reload();
     } catch (error) {
       console.error("채팅 삭제 실패:", error);
     }
@@ -296,6 +299,17 @@ function ContactUs() {
 
   return (
     <MyPageLayout>
+      {/* 오류 메시지 표시 */}
+      {errorMessage && (
+        <Alert
+          status="error"
+          className="flex justify-center items-center animate-shake mb-[20px]"
+        >
+          <AlertIcon />
+          <AlertTitle>오류!</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
       <div className="flex">
         {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">

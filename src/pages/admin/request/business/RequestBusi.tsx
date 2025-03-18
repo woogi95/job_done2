@@ -31,7 +31,7 @@ import {
 } from "./requestbusis";
 
 const RequestBusi = () => {
-  const picURL = "https://job-done.r-e.kr:5234";
+  const picURL = "https://job-done.r-e.kr:52340";
   // const [allData, setAllData] =
   //   useRecoilState<BusinessApplyType[][]>(requestBusiAtom); //
   const [currentPage, setCurrentPage] = useState(1); //

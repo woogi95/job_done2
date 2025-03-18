@@ -28,7 +28,7 @@ export const Intermediary = () => {
     }
 
     const handleScroll = () => {
-      if (window.scrollY >= 4500) {
+      if (window.scrollY >= 4700) {
         stepAnime();
         window.removeEventListener("scroll", handleScroll);
       }
@@ -170,7 +170,7 @@ export const TotalUserAnime = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY >= 2700) {
+      if (window.scrollY >= 2900) {
         totalUserAnime();
         window.removeEventListener("scroll", handleScroll);
       }
@@ -184,12 +184,12 @@ export const TotalUserAnime = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center my-[100px]">
       <div className="flex flex-col justify-center items-center">
-        <span className="text-[52px] font-bold text-[#e4b041] mt-20 pt-[100px]">
+        <span className="text-[52px] font-bold text-[#1e1e1e] mt-20 pt-[100px]">
           지금까지 이용자 수
         </span>
-        <div className="text-[48px] font-bold text-[#1e1e1e] my-20">
+        <div className="text-[48px] font-bold text-[#ffffff] my-20">
           <span ref={roundLogRef} className="round-log">
             0
           </span>
@@ -235,7 +235,7 @@ export const ServiceCenter = () => {
     }
 
     const handleScroll = () => {
-      if (window.scrollY >= 5000) {
+      if (window.scrollY >= 5300) {
         serviceAnime();
         window.removeEventListener("scroll", handleScroll);
       }

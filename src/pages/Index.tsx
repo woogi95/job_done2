@@ -30,10 +30,9 @@ import {
 import CustomSwiper from "./CustomSwiper";
 
 const Index = () => {
-  const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
-  const BASE_URL = "https://job-done.r-e.kr:5234";
+  const BASE_URL = "https://job-done.r-e.kr:52340";
   const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
   const [_currentDate, setCurrentDate] = useState("");
   const [_currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
@@ -42,7 +41,7 @@ const Index = () => {
   const [logo, setLogo] = useState<BusinessItem[]>([]);
   const [stealReview, setStealReview] = useState<StealReview[]>([]);
 
-  const LOGO_URL = "https://job-done.r-e.kr:5234";
+  const LOGO_URL = "https://job-done.r-e.kr:52340";
 
   const justWantLogo = async () => {
     try {
@@ -129,7 +128,6 @@ const Index = () => {
     try {
       const res = await axios.get("/api/review/main");
       setStealReview(res.data.resultData);
-      console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -181,12 +179,7 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    // console.log("추천 글 상태 업데이트:", companies);
-  }, [companies]);
-
-  useEffect(() => {
     const handleScroll = () => {
-      // console.log(window.scrollY);
       if (window.scrollY >= 750) {
         setTopLayoutVisible(true);
       } else {
@@ -240,7 +233,7 @@ const Index = () => {
         </div>
 
         {/* 지역 아이콘 */}
-        <div className="bg-white/50 backdrop-blur-sm">
+        <div className="bg-white/50 backdrop-blur-sm my-[30px]">
           <div className="flex justify-center items-center py-[80px]">
             <div className="flex gap-8">
               {regions.map(region => (
@@ -500,20 +493,20 @@ const Index = () => {
         </div>
       </div>
       {/* 회원가입 배너 */}
-      <div className="m-auto py-[80px] bg-gradient-to-b from-[#ffffff] to-[#d6d6d6]">
+      <div className="m-auto py-[80px] bg-gradient-to-b from-[#ffffff] to-[#7395f1]">
         <LinkToSignUp />
         {/* 총 이용자 수 */}
         <TotalUserAnime />
       </div>
 
       {/* 기업 로고들 */}
-      <div className="bg-[#d6d6d6]">
-        <div className="flex justify-center items-center bg-[#d6d6d6] h-[200px]">
-          <span className="text-[40px] font-bold text-[#1e1e1e]">
+      <div className="bg-[#7395f1]">
+        <div className="flex justify-center items-center bg-[#7395f1] h-[200px]">
+          <span className="text-[40px] font-bold text-[#ffffff]">
             믿을 수 있는 기업들이 함께 합니다.
           </span>
         </div>
-        <div className="bg-gradient-to-b from-[#d6d6d6] to-[#ffffff] h-[400px] m-auto">
+        <div className="bg-gradient-to-b from-[#7395f1] to-[#ffffff] h-[400px] m-auto">
           <CustomSwiper />
           <FramerMotionSlider items={logo.slice(0, 20)} LOGO_URL={LOGO_URL} />
           <FramerMotionSlider2 items={logo.slice(20, 40)} LOGO_URL={LOGO_URL} />

@@ -40,14 +40,13 @@ function ContactUs() {
     const maxReconnectAttempts = 5;
 
     const connectWebSocket = () => {
-      // console.log("Attempting to connect with roomId:", roomId); // 웹소켓 연결 시 roomId 확인
-      ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
+      ws = new WebSocket(`wss://job-done.r-e.kr:5234/chat/${roomId}`);
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
-        reconnectAttempts = 0; // 연결 성공시 재시도 횟수 초기화
+        reconnectAttempts = 0;
       };
 
       ws.onmessage = event => {
@@ -160,14 +159,13 @@ function ContactUs() {
         if (reconnectAttempts < maxReconnectAttempts) {
           console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
-          setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
+          setTimeout(connectWebSocket, 3000);
         }
       };
     };
 
     connectWebSocket();
 
-    // 컴포넌트 언마운트 시 연결 종료
     return () => {
       if (ws) {
         ws.close();
@@ -187,13 +185,11 @@ function ContactUs() {
   const handleSendMessage = async e => {
     e.preventDefault();
 
-    // 메시지와 파일이 모두 비어 있는지 확인
     if (!inputMessage.trim() && !selectedImage) {
       alert("메시지나 이미지를 입력하세요.");
       return;
     }
 
-    // username 체크 조건 완화
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
         if (selectedImage) {
@@ -209,17 +205,13 @@ function ContactUs() {
               flag: 1,
               roomId: roomId,
               message: inputMessage,
-              // username: username,
               file: fileData,
             };
 
-            // JSON을 문자열로 변환
             const jsonString = JSON.stringify(messageData);
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
-
-            // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
             setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
@@ -239,19 +231,12 @@ function ContactUs() {
             flag: 1,
             roomId: roomId,
             message: inputMessage,
-            // username: username,
           };
 
-          // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
-          console.log("Sending message:", jsonString); // 디버깅용
-
-          // 일반 텍스트 메시지도 이미지와 동일한 방식으로 전송
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
-
-          // 로컬 메시지 목록에 추가 (즉시 화면에 표시)
           setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
