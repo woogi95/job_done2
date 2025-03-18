@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface QnaItemProps {
   question: string;
@@ -32,6 +33,7 @@ const QnaItem = ({ question, answer }: QnaItemProps) => {
 
 const Qna = () => {
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
   const qnaList = [
     {
       question: "예약은 어떻게 하나요?",
@@ -102,9 +104,9 @@ const Qna = () => {
         <p className="text-gray-600 mb-4">원하시는 답변을 찾지 못하셨나요?</p>
         <button
           className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
-          onClick={() => setShowModal(true)}
+          onClick={() => navigate("/forum")}
         >
-          1:1 문의하기
+          문의하기
         </button>
       </div>
 

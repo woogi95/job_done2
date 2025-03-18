@@ -241,7 +241,7 @@ function MyReservation() {
           if (paymentWindow.closed) {
             setIsLoading(false);
             clearInterval(checkWindowClosed);
-            navigate("/mypage/usage");
+            navigate("/mypage/reservation");
           }
         }, 1000);
       }

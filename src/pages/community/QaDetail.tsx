@@ -12,7 +12,7 @@ interface AnswerType {
 const QaDetail = () => {
   const { qaId } = useParams<{ qaId: string }>();
   const [post, setPost] = useState<QaListType | null>(null);
-  const [answers, setAnswers] = useState<AnswerType[]>([]); // Updated type
+  const [answers, setAnswers] = useState<AnswerType>();
 
   const PIC_URL = "http://112.222.157.157:5234";
 
@@ -77,20 +77,25 @@ const QaDetail = () => {
 
           {/* 답글 영역 */}
           <div className="flex justify-center items-center w-[100%] h-[2px] mt-20 bg-gray-300 mx-auto"></div>
-          <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4">답글</h2>
-            {answers.length > 0 ? (
-              answers.map((answer, index) => (
-                <div key={index} className="border-b border-gray-300 py-4">
-                  <div className="font-semibold text-gray-800">
-                    <span>잡던 관리자</span>
-                  </div>
-                  <div className="text-gray-600">{answer.answer}</div>
-                  <div className="text-sm text-gray-500">
-                    {answer.createdAt}
+          <div className="mt-8 bg-gray-50 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold mb-4 text-gray-700">답글</h2>
+            {answers ? (
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="font-medium text-gray-600 mb-2">
+                  <span>작성자 : 잡던 관리자</span>
+                </div>
+                <div className="flex items-center py-5 border-t border-b border-gray-200">
+                  <span className="flex font-semibold text-gray-800">
+                    답변 :{" "}
+                  </span>
+                  <div className="flex ml-2 text-gray-700">
+                    {answers.answer}
                   </div>
                 </div>
-              ))
+                <div className="text-sm text-gray-500 my-2">
+                  답변 시각 : {answers.createdAt}
+                </div>
+              </div>
             ) : (
               <p className="text-gray-500">답글이 없습니다.</p>
             )}
