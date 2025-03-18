@@ -1,6 +1,5 @@
 import { Region } from "../types/TypeBox";
 
-// 지역 스크롤 레이아웃
 export const LetTopLayout = ({
   regions,
   TopLayoutVisible,

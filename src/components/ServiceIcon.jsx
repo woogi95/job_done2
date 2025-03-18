@@ -68,31 +68,31 @@ export const PopularPost = [
 export const EventBanner = [
   {
     id: 1,
-    image: "/images/event/carwash.jpg",
-    link: "/",
+    image: "/images/event/cleaning2.jpg",
+    link: "/service?categoryId=1",
   },
   {
     id: 2,
-    image: "/images/event/moving.jpg",
-    link: "/",
+    image: "/images/event/moving2.jpg",
+    link: "/service?categoryId=2",
   },
   {
-    id: 3,
-    title: "이사가 고민이라면?",
-    image: "/images/event/event_banner_2.jpg",
-    link: "/",
+    id: 2,
+    image: "/images/event/carwash2.jpg",
+    link: "/service?categoryId=3",
   },
-  {
-    id: 4,
-    image: "/images/event/cleaning.jpg",
-    link: "/",
-  },
-  {
-    id: 5,
-    title: "문의 게시판을 이용하세요!",
-    image: "/images/event/event_banner_4.jpg",
-    link: "/forum",
-  },
+  // {
+  //   id: 4,
+  //   title: "이사가 고민이라면?",
+  //   image: "/images/event/event_banner_2.jpg",
+  //   link: "/",
+  // },
+  // {
+  //   id: 5,
+  //   title: "문의 게시판을 이용하세요!",
+  //   image: "/images/event/event_banner_4.jpg",
+  //   link: "/forum",
+  // },
 ];
 
 // 찜목록 더미데이터

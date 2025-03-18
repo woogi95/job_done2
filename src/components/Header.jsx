@@ -166,7 +166,7 @@ function Header() {
   }, [menuRef]);
 
   return (
-    <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
+    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <Link to="/">

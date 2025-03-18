@@ -20,10 +20,9 @@ function MessageCenter(): JSX.Element {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
   const IMAGE_BASE_URL = "http://112.222.157.157:5234";
-
-  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (messageContainerRef.current) {
@@ -134,7 +133,6 @@ function MessageCenter(): JSX.Element {
 
     connectWebSocket();
 
-    // 컴포넌트 언마운트 시 연결 종료
     return () => {
       if (ws) {
         ws.close();
@@ -179,7 +177,6 @@ function MessageCenter(): JSX.Element {
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
 
-            // 로컬 메시지 추가 부분 제거
             console.log("전송할 메시지 데이터:", {
               ...messageData,
               file: messageData.file
@@ -278,7 +275,7 @@ function MessageCenter(): JSX.Element {
         },
       });
       console.log("삭제 결과", res.data);
-      window.location.reload(); // 삭제 완료 후 페이지 새로고침
+      window.location.reload();
     } catch (error) {
       console.error("채팅 삭제 실패:", error);
     }
@@ -300,7 +297,7 @@ function MessageCenter(): JSX.Element {
               item.pic ? `${IMAGE_BASE_URL}${item.pic}` : "/default-profile.png"
             }
             alt="업체 이미지"
-            className="w-[50px] h-[50px] rounded-full object-cover"
+            className="min-w-[50px] h-[50px] rounded-full object-cover"
           />
           <div className="flex flex-col gap-[5px] text-left w-full">
             <span className="text-[12px] font-semibold text-left">
@@ -330,10 +327,14 @@ function MessageCenter(): JSX.Element {
   );
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex">
-        <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
+    <div className="m-auto p-[30px] h-screen">
+      <span className="flex text-[28px] font-semibold p-[20px]">고객문의</span>
+      <div className="flex justify-between items-center">
+        <div className="flex justify-center w-[220px] h-[700px] bg-[#FFFFFF] overflow-hidden shadow-md">
           {/* 메시지 리스트 */}
+          <div>
+            <span></span>
+          </div>
           <div className="flex flex-col w-full overflow-y-auto">
             {loading ? (
               <LoadingSpinner />
@@ -347,14 +348,14 @@ function MessageCenter(): JSX.Element {
           </div>
         </div>
 
-        <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
+        <div className="ml-[20px] flex flex-col  w-[800px] h-[700px] bg-[#F5F5F5] shadow-md">
           {/* 상태 표시 헤더 */}
           <div className="flex p-[10px] justify-between items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
             <div className="flex gap-[5px]">
               <img
                 src={`${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId)?.pic}`}
                 alt="Profile"
-                className="w-[45px] h-[45px] rounded-full"
+                className="w-[45px] h-[45px] rounded-full object-cover"
               />
               <span className="flex justify-center items-center text-[24px] font-semibold pl-[10px]">
                 {roomList.find(room => room.roomId === roomId)?.userName}
@@ -386,7 +387,7 @@ function MessageCenter(): JSX.Element {
                     <img
                       src={`${IMAGE_BASE_URL}${msg.logo2}`}
                       alt="Profile"
-                      className="w-[45px] h-[45px] rounded-full"
+                      className="w-[45px] h-[45px] rounded-full object-cover"
                     />
                   )}
                   <span
@@ -404,7 +405,7 @@ function MessageCenter(): JSX.Element {
                         <img
                           src={`${IMAGE_BASE_URL}${msg.pic}`}
                           alt="Uploaded content"
-                          className="max-w-[200px] rounded-lg p-[5px]"
+                          className="max-w-[200px] rounded-lg p-[5px] object-cover"
                         />
                       </div>
                     )}
@@ -415,7 +416,7 @@ function MessageCenter(): JSX.Element {
           </div>
 
           {/* 메시지 입력 영역 */}
-          <div className="flex flex-col w-full bg-white border-t border-gray-200">
+          <div className="flex flex-col w-full border-t border-gray-200 px-[100px] bg-[#F5F5F5]">
             {selectedImage && (
               <div className="flex gap-2 p-4 bg-gray-50">
                 <div className="relative">
@@ -482,7 +483,7 @@ function MessageCenter(): JSX.Element {
                 type="submit"
                 className="flex items-center justify-center w-10 h-10 bg-[#34C5F0] rounded-full hover:bg-[#2BAED8] transition-colors"
               >
-                <FiSend className="text-lg text-white" />
+                <FiSend className="flex justify-center items-center text-[20px] text-white" />
               </button>
             </form>
           </div>

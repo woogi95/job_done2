@@ -1,6 +1,7 @@
 import { BusinessItem, StealReview } from "../../types/TypeBox";
 import { motion } from "framer-motion";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 export const FramerMotionSlider = ({
   items,
@@ -10,20 +11,28 @@ export const FramerMotionSlider = ({
   LOGO_URL: string;
 }) => {
   const totalItems = [...items, ...items];
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDirection(prev => -prev);
+    }, 25000);
+
+    return () => clearTimeout(timer);
+  }, [direction]);
 
   return (
     <div className="overflow-hidden">
       <motion.div
         className="flex"
         initial={{ x: 0 }}
-        animate={{ x: `-${items.length * 100}%` }}
+        animate={{ x: `${direction * -items.length * 100}%` }}
         transition={{
           duration: 2500,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
         }}
-        style={{ display: "flex", width: `${totalItems.length * 100}px` }}
       >
         {totalItems.map((item, index) => (
           <motion.div
@@ -56,20 +65,28 @@ export const FramerMotionSlider2 = ({
   LOGO_URL: string;
 }) => {
   const totalItems = [...items, ...items];
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDirection(prev => -prev);
+    }, 25000);
+
+    return () => clearTimeout(timer);
+  }, [direction]);
 
   return (
     <div className="overflow-hidden">
       <motion.div
         className="flex"
         initial={{ x: 0 }}
-        animate={{ x: `-${items.length * 100}%` }}
+        animate={{ x: `${direction * -items.length * 100}%` }}
         transition={{
           duration: 2000,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
         }}
-        style={{ display: "flex", width: `${totalItems.length * 100}px` }}
       >
         {totalItems.map((item, index) => (
           <motion.div
@@ -102,13 +119,22 @@ export const FramerMotionSlider3 = ({
   LOGO_URL: string;
 }) => {
   const stealReview = [...items, ...items];
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDirection(prev => -prev);
+    }, 25000);
+
+    return () => clearTimeout(timer);
+  }, [direction]);
 
   return (
     <div className="overflow-hidden" style={{ overflowX: "hidden" }}>
       <motion.div
         className="flex"
         initial={{ x: 0 }}
-        animate={{ x: `-${items.length * 100}%` }}
+        animate={{ x: `${direction * -stealReview.length * 100}%` }}
         transition={{
           duration: 5000,
           ease: "linear",
