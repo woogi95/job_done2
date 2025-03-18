@@ -3,15 +3,12 @@ import {
   BarDayUserDataType,
   StateCatePerType,
   StatesDashType,
-  StateSixMonthType,
   StateVisitorType,
 } from "../../../types/type";
 import {
   dcDaysUserDataAtom,
-  dcSixMonthDataAtom,
   mainDashBoardAtom,
   stateCatePerAtom,
-  stateSixMonthAtom,
   stateVisitorAtom,
 } from "../../../atoms/third-atoms/admin/mainAtom";
 import { useEffect } from "react";
@@ -28,11 +25,7 @@ const AdminHeader = () => {
     useRecoilState<StateVisitorType[]>(stateVisitorAtom);
   const [_dcVisitorData, setDcVisitorData] =
     useRecoilState<BarDayUserDataType>(dcDaysUserDataAtom);
-  // 6개월 총매출 조회
-  const [_sixMonthData, setSixMonthData] =
-    useRecoilState<StateSixMonthType[]>(stateSixMonthAtom);
-  const [_dcSixMonthData, setDcSixMonthData] =
-    useRecoilState<{ [key: string]: string | number }[]>(dcSixMonthDataAtom);
+
   // 카테고리 비율
   const [_catePer, setCatePer] =
     useRecoilState<StateCatePerType[]>(stateCatePerAtom);
@@ -49,14 +42,7 @@ const AdminHeader = () => {
   };
   console.log(_dcVisitorData);
   useEffect(() => {
-    getMainData(
-      setDashBoardData,
-      setSixMonthData,
-      setDcSixMonthData,
-      setVisitorData,
-      setDcVisitorData,
-      setCatePer,
-    );
+    getMainData(setDashBoardData, setVisitorData, setDcVisitorData, setCatePer);
   }, []);
   return (
     <div className="bg-white shadow-md">

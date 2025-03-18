@@ -100,6 +100,7 @@ import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
 import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
 import AdminRoute from "./pages/admin/AdminRoute";
 import UserRoute from "./pages/UserRoute";
+import Adminlogin from "./pages/auth/login/Adminlogin";
 
 function App() {
   const adminState = localStorage.getItem("admin") === adminLoginAtom;
@@ -135,6 +136,7 @@ function App() {
             {/* 로그인 및 회원가입 */}
             <Route path="/login">
               <Route index element={<LoginPage />} />
+              <Route path="admin" index element={<Adminlogin />} />
 
               <Route path="signup" element={<SignUpPage />} />
               <Route path="email" element={<EmailPage />} />

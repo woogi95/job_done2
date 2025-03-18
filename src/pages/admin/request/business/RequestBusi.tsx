@@ -74,7 +74,14 @@ const RequestBusi = () => {
 
     await fetchData(page);
 
-    const dataFlat = allPagesData.flat();
+    const dataFlat = allPagesData
+      .flat()
+      .sort(
+        (a, b) =>
+          new Date(b.applicationCreatedAt).getTime() -
+          new Date(a.applicationCreatedAt).getTime(),
+      );
+
     setFlatData(dataFlat);
 
     const paginatedData: BusinessApplyType[][] = [];
