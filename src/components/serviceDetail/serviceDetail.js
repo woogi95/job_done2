@@ -25,11 +25,11 @@ export const DetailTopDiv = styled.div`
       font-size: 14px;
     }
     h1 {
-      font-size: 24px;
+      font-size: 21px;
       font-weight: 700;
       margin: 12px 0 16px;
       max-width: 780px;
-      line-height: 1.22em;
+      line-height: 1.28em;
       color: #333;
       word-break: keep-all;
     }
@@ -179,7 +179,7 @@ export const DContsDiv = styled.div`
   .box {
     padding: 0px 0 30px;
     &:nth-of-type(1) {
-      padding-top: 10px;
+      /* padding-top: 10px; */
     }
     /* &:nth-of-type(2) {
       border-top: 4px solid #3887ff;
@@ -464,10 +464,11 @@ export const SummaryDiv = styled.div`
       }
     }
     .tit {
-      word-break: break-all;
-      font-size: 20px;
+      word-break: keep-all;
+      font-size: 18px;
       font-weight: 600;
-      line-height: 1.3em;
+      line-height: 1.4em;
+      color: rgba(0, 0, 0, 0.85);
       margin: 15px 0 8px;
     }
 
@@ -514,9 +515,16 @@ export const SummaryDiv = styled.div`
         background-color: #34c5f0;
         color: #fff;
         text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        &:hover {
+          background-color: #22afd9;
+          border-color: #22afd9;
+        }
       }
       button:last-child {
-        color: #34c5f0;
+        text-shadow: none;
+        font-weight: bold;
+        color: #159dc5;
         background-color: #fff;
       }
     }

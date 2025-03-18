@@ -73,6 +73,15 @@ function QuotationForm() {
     }
   }, [papersInfo]);
 
+  useEffect(() => {
+    if (papersInfo?.startDate) {
+      setStartDate(dayjs(papersInfo.startDate));
+    }
+    if (papersInfo?.endDate) {
+      setEndDate(dayjs(papersInfo.endDate));
+    }
+  }, [papersInfo]);
+
   const putQuotation = async () => {
     try {
       const requestData = {
@@ -117,9 +126,14 @@ function QuotationForm() {
   };
 
   const handleQuoteChange = (id, field, value) => {
+    let processedValue = value;
+    if (field === "price") {
+      // 쉼표 제거 후 숫자만 저장
+      processedValue = value.replace(/,/g, "");
+    }
     setAdditionalQuotes(prev =>
       prev.map(quote =>
-        quote.id === id ? { ...quote, [field]: value } : quote,
+        quote.id === id ? { ...quote, [field]: processedValue } : quote,
       ),
     );
   };
@@ -134,11 +148,15 @@ function QuotationForm() {
       }));
     });
   };
-
+  const formatPhoneNumber = phone =>
+    phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-";
   useEffect(() => {
     console.log("보내볼까?", setAddPrice);
   }, []);
-
+  const formatBusinessNumber = number =>
+    number
+      ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
+      : "사업자 번호 없음";
   return (
     <QuotationDiv>
       <h2 className="tit">견적서 작성</h2>
@@ -151,7 +169,7 @@ function QuotationForm() {
                 <h4>사업자번호</h4>
                 <input
                   type="text"
-                  value={papersInfo?.businessNum || ""}
+                  value={formatBusinessNumber(papersInfo?.businessNum) || ""}
                   readOnly
                 />
               </label>
@@ -159,7 +177,7 @@ function QuotationForm() {
                 <h4>연락처</h4>
                 <input
                   type="text"
-                  value={papersInfo?.businessPhone || ""}
+                  value={formatPhoneNumber(papersInfo?.businessPhone) || ""}
                   readOnly
                 />
               </label>
@@ -205,7 +223,7 @@ function QuotationForm() {
                 <h4>연락처</h4>
                 <input
                   type="text"
-                  value={papersInfo?.userPhone || ""}
+                  value={formatPhoneNumber(papersInfo?.userPhone) || ""}
                   readOnly
                 />
               </label>
@@ -290,7 +308,9 @@ function QuotationForm() {
                   <div className="td price">
                     <input
                       type="text"
-                      value={quote.price}
+                      value={
+                        quote.price ? Number(quote.price).toLocaleString() : ""
+                      }
                       onChange={e =>
                         handleQuoteChange(quote.id, "price", e.target.value)
                       }
@@ -316,7 +336,7 @@ function QuotationForm() {
             <div className="date">
               {/* 견적일 */}
               <div>
-                <h4>견적일</h4>
+                <h4>작업일자</h4>
                 <div className="col2">
                   <DatePicker
                     className="dp-style"
@@ -335,7 +355,7 @@ function QuotationForm() {
               </div>
               {/* 견적시간 */}
               <div>
-                <h4>견적시간</h4>
+                <h4>작업시간</h4>
                 <div className="col2">
                   <TimePicker
                     className="dp-style"
@@ -372,7 +392,11 @@ function QuotationForm() {
             />
           </div>
           <BtnAreaDiv>
-            <button type="button" className="cancel">
+            <button
+              type="button"
+              className="cancel"
+              onClick={() => navigate("/expert/quote-management")}
+            >
               취소
             </button>
             <button type="button" className="okay" onClick={putQuotation}>

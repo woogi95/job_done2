@@ -4,8 +4,8 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
 import { FaPlus } from "react-icons/fa";
-import { useRecoilValue } from "recoil";
-import { businessDetailState } from "../../atoms/businessAtom";
+// import { useRecoilValue } from "recoil";
+// import { businessDetailState } from "../../atoms/businessAtom";
 import { ImageInfoType } from "../../types/WriteQa";
 import PopupT from "../ui/PopupT";
 
@@ -28,11 +28,11 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imageInfo, setImageInfo] = useState<ImageInfoType[]>([]);
-  const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail[0]?.businessId as number;
+  // const businessDetail = useRecoilValue(businessDetailState);
+  const businessId = localStorage.getItem("businessId");
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   //------
-
+  console.log("businessId ", businessId);
   const getSirenTypelist = async () => {
     try {
       const res = await loginApi.get(`/api/qa/qaTypeId?qaTypeId=1`);

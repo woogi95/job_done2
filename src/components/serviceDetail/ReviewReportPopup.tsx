@@ -4,9 +4,8 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
 import PopupT from "../ui/PopupT";
-
 import { useRecoilValue } from "recoil";
-import { businessDetailState } from "../../atoms/businessAtom";
+import { ReviewListState, reviewListStateT } from "../../atoms/reviewAtomT";
 
 interface SirenType {
   qaTypeDetailId: number;
@@ -24,10 +23,12 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   // ------
   const [qaTypeDetailId, setQaTypeDetailId] = useState<number>(0);
   const [content, setContent] = useState<string>("");
-  const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail[0]?.businessId as number;
+  const businessId = localStorage.getItem("businessId");
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
-  //------
+
+  // reviewId 가져오기
+  const [{ reviewId }] = useRecoilValue<ReviewListState[]>(reviewListStateT);
+  console.log("ㄷㄷㅈㄱ:", reviewId); // reviewId 콘솔 출력
 
   const getSirenTypelist = async () => {
     try {

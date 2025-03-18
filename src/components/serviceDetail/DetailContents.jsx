@@ -1,6 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // scroll
 import { Link } from "react-scroll";
 // parser
@@ -27,16 +26,17 @@ import { checkRoom } from "../../atoms/chechroom";
 import { likeStatusState } from "../../atoms/like";
 import { getCookie } from "../../utils/Cookie";
 import { Popup } from "../ui/Popup";
-import ContReview from "./ContReview";
+
 import { useCookies } from "react-cookie";
 import { PiSirenFill } from "react-icons/pi";
 import BusinessReportPopup from "./BusinessReportPopup";
+import ContReview from "./ContReview";
 
-import { BASE_URL } from "../../constants/constants";
+// import { BASE_URL } from "../../constants/constants";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
-  const { id } = useParams();
+  // const { id } = useParams();
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
@@ -86,25 +86,24 @@ const DetailContents = () => {
   };
 
   // 상세설명 사진들
-  const [detailPicList, setDetailPicList] = useState([]);
+  // const [detailPicList, setDetailPicList] = useState([]);
 
-  const getDetailPagePic = async businessId => {
-    try {
-      // `/api/business/${businessId}?businessId=${businessId}`,
-      const res = await axios.get(
-        `/api/business/pic/${businessId}?businessId=${businessId}`,
-      );
-      // console.log(res.data.resultData);
-      setDetailPicList(res.data.resultData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getDetailPagePic = async businessId => {
+  //   try {
+  //     // `/api/business/${businessId}?businessId=${businessId}`,
+  //     const res = await axios.get(
+  //       `/api/business/pic/${businessId}?businessId=${businessId}`,
+  //     );
+  //     // console.log(res.data.resultData);
+  //     setDetailPicList(res.data.resultData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  // console.log(detailPicList);
-  useEffect(() => {
-    getDetailPagePic(id);
-  }, [id]);
+  // useEffect(() => {
+  //   getDetailPagePic(id);
+  // }, [id]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,6 +121,10 @@ const DetailContents = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isFixed]);
+
+  useEffect(() => {
+    console.log("businessDetail.contents:", businessDetail.contents);
+  }, [businessDetail.contents]);
 
   const handleLinkClick = id => {
     setActiveLink(id);
@@ -249,13 +252,13 @@ const DetailContents = () => {
             <p className="title-b">
               {businessDetail.contents ? parse(businessDetail.contents) : ""}
             </p>
-            {detailPicList.map((item, index) => (
+            {/* {detailPicList.map((item, index) => (
               <img
                 key={businessDetail.businessId}
                 src={`${BASE_URL}${detailPicList[index].pic}`}
                 alt="상품디테일사진"
               />
-            ))}
+            ))} */}
           </div>
           <div className="box" id="portfolio">
             <h2>포트폴리오</h2>

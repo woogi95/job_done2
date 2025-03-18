@@ -36,7 +36,7 @@ const ExpertPaymentHistory = () => {
   };
 
   const formatPhoneNumber = phone =>
-    phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
+    phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-";
   const formatBusinessNumber = number =>
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
@@ -72,13 +72,13 @@ const ExpertPaymentHistory = () => {
             </strong>
             되었습니다.
           </h2>
-          <span className="description">
+          {/* <span className="description">
             예약 내역 및 견적 내용은 <em>마이페이지{">"}예약현황</em>에서
             확인하실 수 있습니다.
             <br /> 수정사항이나 문의 사항이 있으시면, "문의하기"를 통해 연락
             주시기 바랍니다.
             <br />
-          </span>
+          </span> */}
           <FormDiv>
             <div className="company-info">
               <h3>결제 내역</h3>
@@ -196,11 +196,13 @@ const ExpertPaymentHistory = () => {
                     </ul>
                   </li>
                 )}
-                <li>
+                <li style={{ backgroundColor: "#0084ff13" }}>
                   <p>견적비용</p>
-                  <span>{papersInfo.price.toLocaleString()}원</span>
+                  <span style={{ color: "red", fontWeight: "bold" }}>
+                    {papersInfo.price.toLocaleString()}원
+                  </span>
                 </li>
-                <li>
+                <li style={{ backgroundColor: "#41414113" }}>
                   <p>특이사항</p>
                   <span>{papersInfo.addComment}</span>
                 </li>

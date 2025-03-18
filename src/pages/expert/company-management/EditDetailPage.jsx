@@ -18,16 +18,15 @@ function EditDetailPage() {
   const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // businessId 상태 확인을 위한 useEffect 추가
-  useEffect(() => {
-    console.log("Current businessId:", businessId);
-  }, [businessId]);
-
   const handleSubmit = async e => {
     e.preventDefault();
     try {
       console.log(" businessId:", businessId);
 
+      const PostPicConf = await loginApi.post(
+        `/api/business/businessPicConf?businessId=${businessId}`,
+      );
+      console.log("저장 성공 PostPicConf:", PostPicConf.data.resultData);
       const response = await loginApi.post("/api/business/contents", {
         businessId: businessId,
         title: title,
@@ -57,7 +56,6 @@ function EditDetailPage() {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
-    console.log(input);
     input.click();
 
     input.addEventListener("change", async function () {
@@ -67,10 +65,7 @@ function EditDetailPage() {
         const formData = new FormData();
         formData.append("pics", file);
 
-        // 현재 businessId 값 확인
-        console.log("Using businessId in imageHandler:", businessId);
-
-        // businessId가 undefined인 경우 기본값 설정
+        // console.log("businessId33:", businessId);
         const blobData = { businessId: businessId || 0 };
 
         formData.append(
@@ -80,7 +75,6 @@ function EditDetailPage() {
           }),
         );
 
-        // axios 요청을 await로 처리
         const res = await loginApi.post(
           "/api/business/businessPicTemp",
           formData,
@@ -163,6 +157,7 @@ function EditDetailPage() {
     }),
     [],
   );
+
   return (
     <EditDetailDiv>
       <div className="inner inner-bg">
@@ -208,7 +203,16 @@ function EditDetailPage() {
             />
           </form>
         </div>
-        {/* <div>
+        {/* <div
+          style={{
+            position: "absolute",
+            width: "500px",
+
+            top: "100px",
+            right: "100px",
+            backgroundColor: "#fff",
+          }}
+        >
           <h2>입력중인 데이터(서버에 보내줄 글자)</h2>
           <p>{content}</p>
         </div> */}

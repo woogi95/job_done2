@@ -26,6 +26,7 @@ const EditPortfolio = ({
   const [pfDetailImgList, setPfDetailImgList] = useRecoilState(
     PortfolioDetailImgState,
   );
+
   const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
     PortfolioDetailInfoState,
   );
@@ -70,7 +71,6 @@ const EditPortfolio = ({
     defaultValues: formData,
   });
 
-  // portfolioDetailInfo가 변경될 때 formData 업데이트 및 reset 호출
   useEffect(() => {
     if (portfolioDetailInfo) {
       const updatedFormData = {
@@ -87,7 +87,10 @@ const EditPortfolio = ({
 
       // 썸네일 초기값 설정
       if (portfolioDetailInfo.thumbnail) {
-        setPreviewImage(`${BASE_URL}${portfolioDetailInfo.thumbnail}`);
+        setPreviewImage({
+          file: null,
+          preview: `${BASE_URL}${portfolioDetailInfo.thumbnail}`,
+        });
       }
     }
   }, [portfolioDetailInfo, businessState.businessId, reset]);
@@ -161,7 +164,12 @@ const EditPortfolio = ({
           ...data,
         }));
 
-        getPortfolioList();
+        getPortfolioList(
+          businessState.categoryId,
+          businessState.detailTypeId,
+          businessState.businessId,
+        );
+        setPfDetailImgList([...pfDetailImgList, ...res.data.resultData.pics]);
         setIsPopPfEdit(false);
         setIsEditComplete(true);
       }
@@ -284,7 +292,7 @@ const EditPortfolio = ({
                 />
                 {previewImage ? (
                   <img
-                    src={previewImage}
+                    src={previewImage.preview}
                     alt="미리보기"
                     style={{
                       width: "85px",
@@ -310,7 +318,8 @@ const EditPortfolio = ({
                   {...register("takingTime")}
                   value={formData.takingTime}
                   onChange={e => handleChange("takingTime", e.target.value)}
-                />
+                />{" "}
+                <strong>시간</strong>
                 {errors.takingTime && (
                   <p className="error">{errors.takingTime.message}</p>
                 )}
@@ -324,7 +333,8 @@ const EditPortfolio = ({
                   {...register("price")}
                   value={formData.price}
                   onChange={e => handleChange("price", e.target.value)}
-                />
+                />{" "}
+                <strong>원대</strong>
                 {errors.price && (
                   <p className="error">{errors.price.message}</p>
                 )}

@@ -25,6 +25,7 @@ export const PapersDiv = styled.div`
     max-width: 1024px;
     width: 100%;
     max-height: 95vh;
+
     background-color: #fff;
     border: 1px solid #c0c0c0;
     padding: 30px 40px;
@@ -92,6 +93,7 @@ export const FormDiv = styled.div`
         border-bottom: 1px dashed #bbb;
         padding: 10px;
         font-size: 14px;
+
         p {
           font-weight: 600;
           color: #333;

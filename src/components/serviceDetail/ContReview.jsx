@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { reviewListState } from "../../atoms/reviewAtom";
+import { reviewListStateT } from "../../atoms/reviewAtomT";
 import {
   PreviewImgDiv,
   ReviewDiv,
@@ -21,11 +22,12 @@ import { getCookie } from "../../utils/Cookie";
 
 const ContReview = () => {
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
+  const [reviewListT, setReviewListT] = useRecoilState(reviewListStateT);
   const businessDetail = useRecoilValue(businessDetailState);
   const options = ["최신순", "높은별점순", "낮은별점순"];
   const [optionOpen, setOptionOpen] = useState(false);
   const [status, setStatus] = useState(0); // 리뷰 정렬 상태
-  const [selectedOption, setSelectedOption] = useState("최신순"); // Default selected option
+  const [selectedOption, setSelectedOption] = useState("최신순");
   const businessId = businessDetail.businessId;
   const page = 1;
   const size = 10;
@@ -52,6 +54,10 @@ const ContReview = () => {
     setIsPopupOpen(false);
   };
 
+  useEffect(() => {
+    console.log("reviewListT 맞음?", reviewListT);
+  }, [reviewListT]);
+
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, state) => {
     try {
@@ -59,6 +65,7 @@ const ContReview = () => {
         `/api/review?businessId=${businessId}&state=${state}&page=${page}&size=${size}`,
       );
       setReviewList(res.data.resultData);
+      setReviewListT(res.data.resultData);
     } catch (error) {
       console.log(error);
     }

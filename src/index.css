@@ -206,3 +206,7 @@ img {
 .chakra-ui-light *:not(i):not(.fa):not(.fas):not(.far):not(.fab) {
   font-family: "Pretendard-Regular", "Roboto", sans-serif;
 }
+
+em {
+  font-style: normal !important;
+}
