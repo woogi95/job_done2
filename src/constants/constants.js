@@ -1,1 +1,1 @@
-export const BASE_URL = "http://112.222.157.157:5234";
+export const BASE_URL = "https://job-done.r-e.kr";

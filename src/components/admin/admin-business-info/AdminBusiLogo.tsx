@@ -8,7 +8,7 @@ const AdminBusiLogo = ({
 }: {
   businessState: BusinessStateType;
 }) => {
-  const BASE_URL = "http://112.222.157.157:5234";
+  const BASE_URL = "https://job-done.r-e.kr";
   return (
     <div className="photo-area">
       <div className="logo">

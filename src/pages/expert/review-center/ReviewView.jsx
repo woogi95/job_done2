@@ -12,7 +12,7 @@ import {
 } from "../../../atoms/reviewAtom";
 
 const ReviewView = () => {
-  const BASE_URL = "http://112.222.157.157:5234";
+  const BASE_URL = "https://job-done.r-e.kr";
   const [form] = Form.useForm();
   const [selectReview] = useRecoilState(selectReviewAtom);
   const [reviewPicsData] = useRecoilState(reviewPicsList);

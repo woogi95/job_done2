@@ -33,7 +33,7 @@ const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
-  const BASE_URL = "http://112.222.157.157:5234";
+  const BASE_URL = "https://job-done.r-e.kr";
   const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
   const [_currentDate, setCurrentDate] = useState("");
   const [_currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
@@ -42,7 +42,7 @@ const Index = () => {
   const [logo, setLogo] = useState<BusinessItem[]>([]);
   const [stealReview, setStealReview] = useState<StealReview[]>([]);
 
-  const LOGO_URL = "http://112.222.157.157:5234";
+  const LOGO_URL = "https://job-done.r-e.kr";
 
   const justWantLogo = async () => {
     try {

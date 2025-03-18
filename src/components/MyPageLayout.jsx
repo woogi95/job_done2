@@ -19,7 +19,7 @@ function MyPageLayout({ children }) {
       setPhoneNumber(userData.phone);
       const profileImgUrl = userData.pic
         ? userData.pic.startsWith("/pic")
-          ? `http://112.222.157.157:5234${userData.pic}`
+          ? `https://job-done.r-e.kr${userData.pic}`
           : `${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
