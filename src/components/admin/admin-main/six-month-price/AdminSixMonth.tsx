@@ -1,38 +1,96 @@
 import { ResponsiveBar } from "@nivo/bar";
 import { useRecoilState } from "recoil";
-import { dcSixMonthDataAtom } from "../../../../atoms/third-atoms/admin/mainAtom";
+import {
+  dcSixMonthDataAtom,
+  yearValueAtom,
+} from "../../../../atoms/third-atoms/admin/mainAtom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const AdminSixMonth = () => {
-  const [serverData] = useRecoilState(dcSixMonthDataAtom);
-  // console.log(serverData);
+  // const [serverData] = useRecoilState(dcSixMonthDataAtom);
+  const [serverData, setServerData] = useRecoilState(dcSixMonthDataAtom);
+  const [yearValue, _setYearValue] = useRecoilState(yearValueAtom);
 
-  // // 🔹 데이터를 Nivo 차트 형식으로 변환 (totalPrice만 포함)
-  // const nivoData = serverData.map(item => ({
-  //   month: item.month
-  //     .split("-")
-  //     .map((val, idx) => (idx === 0 ? val.slice(2) : val))
-  //     .join("-"),
-  //   totalPrice: item.totalPrice, // ✅ 전체 매출만 사용
-  // }));
+  const [yearData, setYearData] = useState<
+    { [key: string]: string | number }[]
+  >([
+    {
+      month: "",
+      totalPrice: 0,
+    },
+  ]);
+  const getSixData = async () => {
+    try {
+      const res = await axios.get("/api/admin/statsSales");
+      if (res) {
+        const filterData = res.data.resultData;
 
-  // // 🔹 Nivo 차트 설정 (keys에 'totalPrice'만 사용)
-  // const barChartData = {
-  //   data: nivoData,
-  //   keys: ["totalPrice"], // ✅ totalPrice만 차트에 표시
-  //   indexBy: "month", // ✅ X축을 "month" 기준으로 설정
-  // };
+        // 데이터 가공 (Nivo 차트에 맞게 변환)
+        const nivoData = filterData.map(
+          (item: { [key: string]: string | number }) => ({
+            month: String(item.month),
+            formattedMonth: String(item.month)
+              .split("-")
+              .map((val, idx) => (idx === 0 ? `${val.slice(2)}년` : `${val}월`)) // "24-01" → "24년 01월"
+              .join(" "),
+            totalPrice: Number(item.totalPrice),
+          }),
+        );
+        setServerData(nivoData);
+      }
+    } catch (error) {
+      console.error("Error fetching six-month data:", error);
+    }
+  };
+  const getYearData = async () => {
+    try {
+      const res = await axios.get(
+        `/api/admin/statsSalesYear?year=${yearValue}`,
+      );
+      if (res) {
+        const filterData = res.data.resultData;
+        // 데이터 가공
+        const nivoData = filterData.map(
+          (item: { [key: string]: string | number }) => ({
+            month: String(item.month),
+            formattedMonth: String(item.month)
+              .split("-")
+              .map((val, idx) => (idx === 0 ? `${val.slice(2)}년` : `${val}월`)) // "24-01" → "24년 01월"
+              .join(" "),
+            totalPrice: Number(item.totalPrice),
+          }),
+        );
+        setYearData(nivoData);
+      }
+    } catch (error) {
+      console.error("Error fetching six-month data:", error);
+    }
+  };
+  useEffect(() => {
+    if (yearValue === 0) {
+      console.log(yearValue);
+      getSixData();
+    } else {
+      getYearData();
+    }
+  }, [yearValue]);
 
-  // console.log(barChartData);
+  const grapeData = yearValue == 0 ? serverData : yearData;
 
   return (
     <div style={{ width: "100%", height: "90%" }}>
       <ResponsiveBar
-        data={serverData} // ✅ 변환된 데이터 사용
-        keys={["totalPrice"]} // ✅ totalPrice만 표시
-        indexBy="month" // ✅ X축을 "month" 기준으로 설정
-        margin={{ top: 50, right: -10, bottom: 50, left: 80 }}
-        padding={0.3}
-        valueScale={{ type: "linear" }}
+        data={
+          grapeData.length > 0
+            ? grapeData
+            : [{ month: "데이터 없음", totalPrice: 0 }]
+        }
+        keys={["totalPrice"]}
+        indexBy="formattedMonth"
+        margin={{ top: 50, right: 20, bottom: 50, left: 80 }}
+        padding={grapeData.length > 6 ? 0.3 : 0.5}
+        valueScale={{ type: "linear", min: "auto", max: "auto" }}
         indexScale={{ type: "band", round: true }}
         colors={{ scheme: "nivo" }}
         borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
@@ -51,11 +109,39 @@ const AdminSixMonth = () => {
           legend: "매출",
           legendPosition: "middle",
           legendOffset: -72,
-          format: value => new Intl.NumberFormat().format(value), // ✅ 1,000 단위 쉼표 추가
+          format: value =>
+            value >= 1000000
+              ? `${new Intl.NumberFormat().format(value / 10000)}만원`
+              : new Intl.NumberFormat().format(value),
+        }}
+        enableLabel={false}
+        animate={true}
+        tooltip={({ value, indexValue, color }) => {
+          const formattedAmount =
+            value >= 1000000
+              ? `${new Intl.NumberFormat().format(value / 10000)}만원`
+              : `${new Intl.NumberFormat().format(value)}원`;
+
+          return (
+            <div
+              style={{
+                background: "rgba(0, 0, 0, 0.8)",
+                color: "#fff",
+                padding: "10px",
+                borderRadius: "6px",
+                boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+              }}
+            >
+              <strong style={{ fontSize: "14px" }}>{indexValue}</strong>
+              <br />
+              <span style={{ color: color, fontWeight: "bold" }}>
+                💰 매출: {formattedAmount}
+              </span>
+            </div>
+          );
         }}
       />
     </div>
   );
 };
-
 export default AdminSixMonth;

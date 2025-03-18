@@ -1,10 +1,8 @@
 import {
   BarDayUserDataType,
   DayUserDataType,
-  SixMonthDataType,
   StateCatePerType,
   StatesDashType,
-  StateSixMonthType,
   StateVisitorType,
 } from "../../types/type";
 
@@ -13,18 +11,13 @@ import axios from "axios";
 // 전체 데이터 불러오기
 export const getMainData = async (
   setDashBoardData: (data: StatesDashType) => void,
-  setSixMonthData: (data: StateSixMonthType[]) => void,
-  setDcSixMonthData: (
-    data: {
-      [key: string]: string | number;
-    }[],
-  ) => void,
+
   setVisitorData: (data: StateVisitorType[]) => void,
   setDcVisitorData: (data: BarDayUserDataType) => void,
   setCatePer: (data: StateCatePerType[]) => void,
 ) => {
   await getDashBoardData(setDashBoardData);
-  await getSixMonthData(setSixMonthData, setDcSixMonthData);
+
   await getVisitorData(setVisitorData, setDcVisitorData);
   await getCatePer(setCatePer);
 };
@@ -43,37 +36,6 @@ export const getDashBoardData = async (
     }
   } catch (error) {
     console.log(error);
-  }
-};
-
-// 6개월 총매출 조회
-
-export const getSixMonthData = async (
-  setSixMonthData: (data: SixMonthDataType[]) => void,
-  setDcSixMonthData: (data: { [key: string]: string | number }[]) => void,
-) => {
-  try {
-    const res = await axios.get("/api/admin/statsSales");
-    if (res) {
-      const filterData = res.data.resultData;
-      setSixMonthData(filterData);
-
-      // 데이터 가공 (Nivo 차트에 맞게 변환)
-      const nivoData = filterData.map(
-        (item: { [key: string]: string | number }) => ({
-          month: String(item.month)
-            .split("-")
-            .map((val, idx) => (idx === 0 ? val.slice(2) : val))
-            .join("-"),
-          totalPrice: Number(item.totalPrice),
-        }),
-      );
-
-      // Recoil 상태 업데이트
-      setDcSixMonthData(nivoData);
-    }
-  } catch (error) {
-    console.error("Error fetching six-month data:", error);
   }
 };
 

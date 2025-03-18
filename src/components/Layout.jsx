@@ -14,6 +14,7 @@ function Layout() {
     "/login/epwcheck",
     "/login/epwedit",
     "/login/epw",
+    "/login/admin",
     "/business",
     "/business/number",
     // "/service/contactus",

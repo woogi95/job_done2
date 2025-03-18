@@ -74,7 +74,14 @@ const RequestBusi = () => {
 
     await fetchData(page);
 
-    const dataFlat = allPagesData.flat();
+    const dataFlat = allPagesData
+      .flat()
+      .sort(
+        (a, b) =>
+          new Date(b.applicationCreatedAt).getTime() -
+          new Date(a.applicationCreatedAt).getTime(),
+      );
+
     setFlatData(dataFlat);
 
     const paginatedData: BusinessApplyType[][] = [];
@@ -337,8 +344,24 @@ const RequestBusi = () => {
                 gap: "10px",
                 flexWrap: "wrap",
                 margin: "0 auto",
+                flexDirection: "column",
+                marginTop: "10px",
               }}
             >
+              <button
+                onClick={closePicModal}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                ✖
+              </button>
               {Array.isArray(picList) && picList.length > 0 ? (
                 picList.map((paper, index) => (
                   <img
@@ -353,16 +376,6 @@ const RequestBusi = () => {
                 <p>이미지가 없습니다.</p>
               )}
             </div>
-            <button
-              onClick={closePicModal}
-              style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-            >
-              닫기
-            </button>
           </div>
         </div>
       )}

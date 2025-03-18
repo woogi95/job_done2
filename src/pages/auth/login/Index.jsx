@@ -157,7 +157,7 @@ function LoginPage() {
           </div>
         </div>
       </Form>
-      <div style={{ width: 320, justifyContent: "center" }}></div>
+      )<div style={{ width: 320, justifyContent: "center" }}></div>
       {epwFail && (
         <div className="emailModalFull">
           <div className="emailModal">

@@ -14,9 +14,14 @@ import {
 import AdminSixMonth from "../../components/admin/admin-main/six-month-price/AdminSixMonth";
 import DaysUser from "../../components/admin/admin-main/days-user/DaysUser";
 import { useRecoilState } from "recoil";
-import { mainDashBoardAtom } from "../../atoms/third-atoms/admin/mainAtom";
+import {
+  mainDashBoardAtom,
+  yearValueAtom,
+} from "../../atoms/third-atoms/admin/mainAtom";
 import { StatesDashType } from "../../types/type";
 import CategoryPercent from "../../components/admin/admin-main/category-percent/CategoryPercent";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 // Chart.js 등록
 ChartJS.register(
@@ -34,7 +39,35 @@ ChartJS.register(
 const AdminMain = () => {
   // 최근일주일 방문자 수
   const [dashBoardData] = useRecoilState<StatesDashType>(mainDashBoardAtom);
-
+  const [_, setYearValue] = useRecoilState(yearValueAtom);
+  const [fourData, setFourData] = useState<{
+    growData: number;
+    newUser: number;
+    totalAvg: number;
+    totalCom: number;
+  }>({ growData: 0, newUser: 0, totalAvg: 0, totalCom: 0 });
+  const getFourData = async () => {
+    try {
+      const res = await axios.get("/api/admin/statsMain");
+      console.log(res);
+      if (res.status === 200) {
+        const data = res.data.resultData;
+        const formattData = {
+          growData: data.growthRate, // 전월대비 성장률
+          newUser: data.newCustomerCount, // 이번달 신규
+          totalAvg: data.totalAvg, // 총 리뷰 평점 평균
+          totalCom: data.compeletedServiceCount, // 총거래량
+        };
+        setFourData(formattData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    setYearValue(0);
+    getFourData();
+  }, []);
   return (
     <div className="min-h-screen flex overflow-auto">
       {/* Main Content */}
@@ -109,19 +142,23 @@ const AdminMain = () => {
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">전월 대비 성장률</span>
-                  <span className="text-green-500 font-semibold">+15.8%</span>
+                  <span className="text-green-500 font-semibold">
+                    {fourData.growData}%
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">신규 고객 수</span>
-                  <span className="font-semibold">127명</span>
+                  <span className="font-semibold">{fourData.newUser}명</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">평균 만족도</span>
-                  <span className="text-yellow-500 font-semibold">4.8/5.0</span>
+                  <span className="text-yellow-500 font-semibold">
+                    {fourData.totalAvg}/5.0
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">완료된 서비스</span>
-                  <span className="font-semibold">892건</span>
+                  <span className="font-semibold">{fourData.totalCom}건</span>
                 </div>
               </div>
               {/* <div className="bg-white rounded-lg shadow-md"> */}
