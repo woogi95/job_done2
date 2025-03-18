@@ -19,7 +19,7 @@ const UserOneByOne = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedState, setSelectedState] = useState<string>("all");
 
-  const PIC_URL = "https://job-done.r-e.kr";
+  const PIC_URL = "https://job-done.r-e.kr:5234";
 
   const getAllQuestion = async () => {
     try {

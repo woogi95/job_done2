@@ -33,7 +33,7 @@ const Index = () => {
   const [companies] = useState<BusinessItem[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
   const [TopLayoutVisible, setTopLayoutVisible] = useState<boolean>(false);
-  const BASE_URL = "https://job-done.r-e.kr";
+  const BASE_URL = "https://job-done.r-e.kr:5234";
   const [weatherItems, setWeatherItems] = useState<WeatherDisplayItem[]>([]);
   const [_currentDate, setCurrentDate] = useState("");
   const [_currentWeather, setCurrentWeather] = useState<WeatherItem | null>(
