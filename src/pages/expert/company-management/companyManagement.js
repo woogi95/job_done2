@@ -224,30 +224,47 @@ export const ExpertProductDiv = styled.div`
   /* ---- 업체상품 ---- */
   .product-info {
     border: 1px solid #ddd;
+    border-radius: 4px;
+    line-height: 1.25em;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5px 0;
+    /* padding: 5px 0; */
     > div {
       display: flex;
       justify-content: center;
       align-items: center;
+      border: 1px solid #000;
+      width: calc(100% - 100px);
+      height: 100%;
+      background-color: #eaeef1;
       p {
-        width: 80px;
+        width: 120px;
+        height: 100% !important;
+        /* min-height: 40px; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
         text-align: center;
-        border-right: 1px solid #bbb;
+        border-right: 1px solid #ccc;
         font-weight: 600;
+        color: #333;
       }
       h2 {
+        background-color: #fff;
         padding: 0 10px;
+        width: calc(100% - 120px);
         /* border: 1px solid;1 */
       }
     }
     a {
       background-color: #70be3b;
+      min-width: 65px;
+      height: 30px;
       color: #fff;
-      padding: 8px 10px;
+      padding: 5px 15px;
       margin-right: 10px;
       border-radius: 5px;
       font-size: 13px;
@@ -266,7 +283,7 @@ export const ExpertOptionInfoDiv = styled.div`
     width: 100%;
     min-height: calc(100vh - 485px);
     /* height: 100%; */
-    border: 1px solid #eee;
+    /* border: 1px solid #eee; */
     display: flex;
     flex-direction: column;
     gap: 15px;

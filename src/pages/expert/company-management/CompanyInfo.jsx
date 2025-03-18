@@ -157,7 +157,7 @@ function CompanyInfo() {
           {/* 옵션정보 */}
 
           <div className="option-info">
-            <h4 className="tit">상품기본 정보</h4>
+            <h4 className="tit">서비스 기본정보</h4>
             <label>
               <b>카테고리 </b>
               <span>
@@ -174,6 +174,7 @@ function CompanyInfo() {
           </div>
           {/* 옵션등록 */}
           <div className="option-list">
+            <h4 className="tit">서비스 옵션정보</h4>
             {optionList.optionList.map((option, optionIndex) => (
               <div className="option-box" key={option.optionId}>
                 <h3>
