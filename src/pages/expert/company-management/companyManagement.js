@@ -223,7 +223,7 @@ export const ExpertInfoDiv = styled.div`
 export const ExpertProductDiv = styled.div`
   /* ---- 업체상품 ---- */
   .product-info {
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     border-radius: 4px;
     line-height: 1.25em;
     width: 100%;
@@ -235,7 +235,7 @@ export const ExpertProductDiv = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 1px solid #000;
+      /* border: 1px solid #000; */
       width: calc(100% - 100px);
       height: 100%;
       background-color: #eaeef1;
@@ -248,15 +248,16 @@ export const ExpertProductDiv = styled.div`
         align-items: center;
         width: 120px;
         text-align: center;
-        border-right: 1px solid #ccc;
+        /* border-right: 1px solid #ccc; */
         font-weight: 600;
         color: #333;
       }
       h2 {
         background-color: #fff;
-        padding: 0 10px;
+        padding: 10px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.75);
         width: calc(100% - 120px);
-        /* border: 1px solid;1 */
       }
     }
     a {
@@ -282,15 +283,11 @@ export const ExpertOptionInfoDiv = styled.div`
   .option-list {
     width: 100%;
     min-height: calc(100vh - 485px);
-    /* height: 100%; */
-    /* border: 1px solid #eee; */
+
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
     .option-box {
-      padding-bottom: 15px;
-      border-bottom: 3px dotted #eee;
-
       h3 {
         padding: 10px;
         border-bottom: 2px solid #2a58ad;
@@ -298,6 +295,7 @@ export const ExpertOptionInfoDiv = styled.div`
         font-size: 15px;
         color: #2a58ad;
         background-color: rgba(42, 88, 173, 0.2);
+        background-color: #d5deee;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -313,7 +311,8 @@ export const ExpertOptionInfoDiv = styled.div`
 
       /* 옵션 디테일 리스트*/
       .op-detail-list {
-        background-color: rgba(42, 88, 173, 0.05);
+        /* background-color: rgba(42, 88, 173, 0.05); */
+        background-color: #f5f6fb;
         box-shadow:
           rgba(50, 50, 93, 0.06) 0px 6px 12px -2px,
           rgba(0, 0, 0, 0.12) 0px 3px 7px -3px;
@@ -324,6 +323,7 @@ export const ExpertOptionInfoDiv = styled.div`
           padding: 5px 10px;
           gap: 10px;
           border-bottom: 1px solid #ddd;
+          height: 47px;
           &:last-child {
             border-bottom: 0;
           }
@@ -620,6 +620,11 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
   align-items: center;
   margin-bottom: 30px;
   /* border: 1px solid #000; */
+  .option-box {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+  }
   .tit {
     width: 100%;
     font-size: 18px;
@@ -664,7 +669,8 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 8px;
+    padding: 0 20px;
+    margin: 8px 0;
     width: 100%;
     input {
       border: 1px solid #ddd;
@@ -696,15 +702,18 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
     gap: 8px;
     label {
       display: flex;
-      border: 1px solid #eaeef1;
+      border: 1px solid #eee;
+      border-radius: 5px;
       align-items: center;
       gap: 10px;
       font-size: 15px;
       font-weight: 600;
       color: #333;
       width: 100%;
+      height: 40px;
       b {
         width: 120px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;

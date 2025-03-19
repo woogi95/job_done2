@@ -16,7 +16,7 @@ function MessageCenter(): JSX.Element {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+  const [username, _setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

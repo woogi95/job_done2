@@ -14,22 +14,26 @@ interface SirenType {
 
 interface ReviewReportPopupProps {
   setIsReportPopupOpen: (isOpen: boolean) => void;
+  reviewId: number | null;
 }
 
 const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   setIsReportPopupOpen,
+  reviewId,
 }) => {
   const [sirenTypelist, setSirenTypelist] = useState<SirenType[]>([]);
   // ------
   const [qaTypeDetailId, setQaTypeDetailId] = useState<number>(0);
   const [content, setContent] = useState<string>("");
-  const businessId = localStorage.getItem("businessId");
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
 
   // reviewId 가져오기
-  const [{ reviewId }] = useRecoilValue<ReviewListState[]>(reviewListStateT);
-  console.log("ㄷㄷㅈㄱ:", reviewId); // reviewId 콘솔 출력
+  console.log("reviewId3424", reviewId);
+  const reviewIdFromRecoil = useRecoilValue<ReviewListState[]>(
+    reviewListStateT,
+  ).find(review => review.reviewId === reviewId)?.reviewId;
 
+  console.log("리뷰 아이디:", reviewIdFromRecoil);
   const getSirenTypelist = async () => {
     try {
       const res = await loginApi.get(`/api/qa/qaTypeId?qaTypeId=2`);
@@ -55,7 +59,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
         qaTypeDetailId,
         contents: content,
         qaReportReason: "REVIEW",
-        qaTargetId: businessId,
+        qaTargetId: reviewId,
       };
       console.log("보내는 데이터:", requestData);
 

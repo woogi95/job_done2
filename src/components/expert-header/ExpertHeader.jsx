@@ -15,6 +15,7 @@ const ExpertHeader = () => {
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
   const [reserveCount, setReserveCount] = useRecoilState(reserveCountAtom);
+  const iscontent = businessState.contents;
   const navigate = useNavigate();
   // 캘린더
   const getBusinessInfo = async busiId => {
@@ -83,7 +84,7 @@ const ExpertHeader = () => {
       </Link>
       <div className="user-info">
         <ul>
-          <li>
+          <li style={{ display: iscontent ? "none" : "block" }}>
             <Link to={"expert/company-management/createdetail"}>
               <em>신규등록</em>
             </Link>

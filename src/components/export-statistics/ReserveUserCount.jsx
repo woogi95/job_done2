@@ -118,8 +118,8 @@ function ReserveUserCount() {
             legend: "이용자 수",
             legendPosition: "middle",
             legendOffset: -40,
-            tickValues: 5, // ✅ 자동 생성되면서도 정수만 표시
-            format: value => Math.floor(value), // ✅ 혹시라도 소수점이 있으면 내림 처리
+            tickValues: 5,
+            format: value => Math.floor(value),
           }}
           labelSkipWidth={12}
           labelSkipHeight={12}

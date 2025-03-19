@@ -44,8 +44,8 @@ const DaysUser = () => {
           tickRotation: 0,
           legend: "방문자 수",
           legendPosition: "middle",
-          legendOffset: -40,
-          format: value => new Intl.NumberFormat().format(value),
+          tickValues: 5,
+          format: value => Math.floor(value),
         }}
         tooltip={({ indexValue, value }) => {
           return (

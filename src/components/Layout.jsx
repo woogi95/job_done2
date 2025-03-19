@@ -21,6 +21,7 @@ function Layout() {
   const isLayoutVisible = !nolayoutPaths.includes(pathname);
 
   useEffect(() => {
+
     const fetchData = async (retryCount = 0) => {
       try {
         const response = await axios.get(
@@ -47,6 +48,14 @@ function Layout() {
     };
 
     fetchData();
+// 
+//     // 페이지가 로드되자마자 API 호출
+
+//     axios.get("https://job-done.r-e.kr:52340/api/visit").catch(error => {
+
+//       console.error("Error fetching data:", error);
+//     });
+//
   }, []);
 
   return (
