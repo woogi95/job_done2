@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../apis/login";
-import MyPageLayout from "../../components/MyPageLayout";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 import UserReservation from "../../components/papers/UserReservation";
 import { statusText } from "../../components/ServiceIcon";
-import LoadingPopup from "../../components/LoadingPopup";
+import LoadingPopup from "../../components/kakao-pay/LoadingPopup";
 
 function MyReservation() {
   const [isLoading, setIsLoading] = useState(false);

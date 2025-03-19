@@ -6,7 +6,7 @@ import "./signuppage.css";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 
 function PasswordEdit() {
   const [match, setMatch] = useRecoilState(upwCheck);

@@ -46,3 +46,19 @@ export interface StealReview {
   createdAt: string;
   pic: string;
 }
+
+export interface UserReport {
+  title: string;
+  contents: string;
+  createdAt: string;
+  qaType: string;
+  qaId: number;
+  pics: string[];
+}
+
+export interface Answer {
+  contents: string;
+  createdAt: string;
+  qaId: number;
+  answer: string;
+}

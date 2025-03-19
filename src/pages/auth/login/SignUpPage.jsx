@@ -14,7 +14,7 @@ import "./signuppage.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 
 function SignUpPage() {
   const [match, setMatch] = useRecoilState(upwCheck);

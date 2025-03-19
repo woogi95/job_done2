@@ -3,16 +3,12 @@ import { useParams } from "react-router-dom";
 import { loginApi } from "../../apis/login";
 import { QaListType } from "../../types/WriteQa";
 import { Image } from "@chakra-ui/react";
-
-interface AnswerType {
-  answer: string;
-  createdAt: string;
-}
+import { Answer } from "../../types/TypeBox";
 
 const QaDetail = () => {
   const { qaId } = useParams<{ qaId: string }>();
   const [post, setPost] = useState<QaListType | null>(null);
-  const [answers, setAnswers] = useState<AnswerType>();
+  const [answers, setAnswers] = useState<Answer>();
 
   const PIC_URL = "https://job-done.r-e.kr:52340";
 

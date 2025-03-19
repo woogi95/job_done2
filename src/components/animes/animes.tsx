@@ -2,6 +2,54 @@ import { useEffect, useRef } from "react";
 import anime from "animejs/lib/anime.es.js";
 import { Link, useNavigate } from "react-router-dom";
 
+export const TotalUserAnime = () => {
+  const roundLogRef = useRef<HTMLSpanElement>(null);
+  const totalUser = 194643;
+
+  const totalUserAnime = () => {
+    if (roundLogRef.current) {
+      anime({
+        targets: roundLogRef.current,
+        innerHTML: [0, totalUser.toLocaleString()],
+        easing: "linear",
+        round: 1,
+        duration: 1500,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 2900) {
+        totalUserAnime();
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return (
+    <div className="flex justify-center items-center my-[100px]">
+      <div className="flex flex-col justify-center items-center">
+        <span className="text-[52px] font-bold text-[#1e1e1e] mt-20 pt-[100px]">
+          지금까지 이용자 수
+        </span>
+        <div className="text-[48px] font-bold text-[#ffffff] my-20">
+          <span ref={roundLogRef} className="round-log">
+            0
+          </span>
+          명
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Intermediary = () => {
   const stepRef = useRef<HTMLDivElement>(null);
 
@@ -135,66 +183,18 @@ export const LinkToSignUp = () => {
   }, []);
 
   return (
-    <div className="max-w-[1280px] m-auto py-[80px]">
+    <div className="max-w-[1100px] m-auto py-[80px]">
       <div className="flex justify-center items-center">
         <Link
           to="/login"
           ref={linkRef}
           target="_blank"
-          className="flex items-center justify-center w-full h-[300px] bg-gradient-to-br from-blue-500 to-purple-500 text-white text-[48px] font-bold rounded-lg shadow-lg transition-transform duration-200"
+          className="flex items-center justify-center w-full h-[200px] bg-gradient-to-br from-blue-500 to-purple-500 text-white text-[38px] font-bold rounded-lg shadow-lg transition-transform duration-200"
         >
           <span className="link-text">
             JOBDONE 회원가입하고 더 많은 혜택을 누리세요!
           </span>
         </Link>
-      </div>
-    </div>
-  );
-};
-
-export const TotalUserAnime = () => {
-  const roundLogRef = useRef<HTMLSpanElement>(null);
-  const totalUser = 94643;
-
-  const totalUserAnime = () => {
-    if (roundLogRef.current) {
-      anime({
-        targets: roundLogRef.current,
-        innerHTML: [0, totalUser.toLocaleString()],
-        easing: "linear",
-        round: 1,
-        duration: 2500,
-      });
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY >= 2900) {
-        totalUserAnime();
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  return (
-    <div className="flex justify-center items-center my-[100px]">
-      <div className="flex flex-col justify-center items-center">
-        <span className="text-[52px] font-bold text-[#1e1e1e] mt-20 pt-[100px]">
-          지금까지 이용자 수
-        </span>
-        <div className="text-[48px] font-bold text-[#ffffff] my-20">
-          <span ref={roundLogRef} className="round-log">
-            0
-          </span>
-          명
-        </div>
       </div>
     </div>
   );

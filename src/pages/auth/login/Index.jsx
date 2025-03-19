@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { setCookie } from "../../../apis/cookie";
 import { loginUser } from "../../../atoms/loginAtom";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 import "./Index.css";
 import { handleAllowNotification } from "../../../firebase/handleNotification";
 

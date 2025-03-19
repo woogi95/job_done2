@@ -9,7 +9,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./EmailPage.css";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 
 function PasswordEmail() {
   const [emailInfo] = useRecoilState(emailForm);

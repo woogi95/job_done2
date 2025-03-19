@@ -1,4 +1,4 @@
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

@@ -26,6 +26,9 @@ export default {
         kenburns: "kenburns 10s ease-in-out infinite",
         shake: "shake 0.5s cubic-bezier(.36,.07,.19,.97) both",
       },
+      screens: {
+        "lg-custom": "1150px",
+      },
     },
   },
   plugins: [],

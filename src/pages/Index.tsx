@@ -16,9 +16,8 @@ import {
   FramerMotionSlider2,
   FramerMotionSlider3,
 } from "../components/freamers/framers";
-import { LetTopLayout } from "../components/LetTopLayout";
+import { LetTopLayout } from "../components/layouts/LetTopLayout";
 import { EventBanner } from "../components/ServiceIcon";
-import { ServiceSkeleton } from "../components/ServiceSkeleton";
 import { fetchWeather } from "../components/weather/Weather";
 import {
   BusinessItem,
@@ -27,7 +26,8 @@ import {
   WeatherDisplayItem,
   WeatherItem,
 } from "../types/TypeBox";
-import CustomSwiper from "./CustomSwiper";
+import { ServiceSkeleton } from "../components/skeleton/ServiceSkeleton";
+import CustomSwiper from "../utils/CustomSwiper";
 
 const Index = () => {
   const [selectedRegion, setSelectedRegion] = useState<number>(1);
@@ -206,7 +206,7 @@ const Index = () => {
 
       <div>
         {/* 이벤트 배너 */}
-        <div className="relative h-[500px] overflow-hidden">
+        <div className="relative lg-custom:h-[500px] overflow-hidden h-[400px]">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 5000 }}
@@ -221,11 +221,7 @@ const Index = () => {
                     alt="이벤트배너"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {/* <h2 className="text-6xl font-bold text-white text-center max-w-4xl">
-                      {item.title}
-                    </h2> */}
-                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center"></div>
                 </Link>
               </SwiperSlide>
             ))}
@@ -289,9 +285,9 @@ const Index = () => {
 
       {/* 컨텐츠 */}
       <div className="bg-white/30 backdrop-blur-sm py-10">
-        <div className="max-w-[1280px] m-auto">
+        <div className="max-w-[1280px] m-auto mx-[20px]">
           {/* 인기 글 */}
-          <div className="flex mb-[80px]">
+          <div className="lg-custom:flex mb-[80px]">
             <div className="py-[20px]">
               <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
                 <span className="text-[28px] font-bold text-[#e74964]">

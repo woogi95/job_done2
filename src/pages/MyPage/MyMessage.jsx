@@ -4,7 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
 import { loginApi } from "../../apis/login";
 import { setCookie } from "../../utils/Cookie";
-import MyPageLayout from "../../components/MyPageLayout";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 import {
   Alert,
   AlertIcon,
@@ -299,6 +299,9 @@ function ContactUs() {
 
   return (
     <MyPageLayout>
+      <span className="flex justify-center items-center text-[24px] font-normal mb-[40px]">
+        예약현황
+      </span>
       {/* 오류 메시지 표시 */}
       {errorMessage && (
         <Alert

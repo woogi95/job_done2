@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./signuppage.css";
 import "./signupdone.css";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 
 function SignUpDone() {
   const navigate = useNavigate();
