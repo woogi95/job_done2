@@ -53,14 +53,14 @@ const AdminSidebar = () => {
   return (
     <SideMenuDiv>
       <ul>
-        <li>
+        {/* <li>
           <NavLink
             to="/admin"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             메인
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             to="/admin/requestresi"

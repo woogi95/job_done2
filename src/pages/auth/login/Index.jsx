@@ -9,6 +9,7 @@ import { setCookie } from "../../../apis/cookie";
 import { loginUser } from "../../../atoms/loginAtom";
 import UserLayout from "../../../components/UserLayout";
 import "./Index.css";
+import { handleAllowNotification } from "../../../firebase/handleNotification";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -48,7 +49,7 @@ function LoginPage() {
           businessId: businessId,
           isLogind: true,
         });
-
+        handleAllowNotification();
         // localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("businessId", businessId);
 

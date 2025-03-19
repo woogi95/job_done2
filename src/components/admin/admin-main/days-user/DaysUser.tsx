@@ -44,6 +44,7 @@ const DaysUser = () => {
           tickRotation: 0,
           legend: "방문자 수",
           legendPosition: "middle",
+          legendOffset: -50,
           tickValues: 5,
           format: value => Math.floor(value),
         }}

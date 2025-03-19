@@ -14,6 +14,7 @@ function ReserveUserCount() {
         const res = await loginApi.get(
           `/api/business/serviceCount?businessId=${busiId}`,
         );
+        console.log(res);
         const sortedData = Array.isArray(res.data.resultData)
           ? res.data.resultData.sort((a, b) =>
               a.year === b.year ? a.month - b.month : a.year - b.year,
@@ -71,7 +72,7 @@ function ReserveUserCount() {
     date: `${String(year).slice(2)}년 ${String(month).padStart(2, "0")}월`,
     count: serviceCount ?? 0,
   }));
-
+  console.log("이용자 수", formattedData);
   return (
     <div
       style={{
