@@ -97,10 +97,12 @@ import WeatherTest from "./pages/WeatherTest";
 import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
 import AdMonth from "./pages/admin/statistics/AdMonth";
 import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
+import KakaoMaps2 from "./pages/kakaomap/KakaoMaps2";
 import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
 import AdminRoute from "./pages/admin/AdminRoute";
 import UserRoute from "./pages/UserRoute";
 import Adminlogin from "./pages/auth/login/Adminlogin";
+import PaymentLoading from "./components/PaymentLoading";
 
 function App() {
   const adminState = localStorage.getItem("admin") === adminLoginAtom;
@@ -114,7 +116,8 @@ function App() {
         <Route path="/test-spinner" element={<TestSpinner />} />
         <Route path="/alerttest" element={<AlertTestPage />} />
         <Route path="/weathertest" element={<WeatherTest />} />
-        <Route path="/kakaomap2" element={<KakaoMaps />} />
+        <Route path="/kakaomap" element={<KakaoMaps />} />
+        <Route path="/kakaomap2" element={<KakaoMaps2 />} />
         <Route element={<UserRoute adminState={adminState} />}>
           <Route element={<Layout />}>
             <Route path="/ocr" element={<OCRUploader />} />
@@ -129,6 +132,7 @@ function App() {
             {/* 카카오페이 관련 */}
             <Route path="/paySuccess" element={<PaymentSuccess />} />
             <Route path="/payFailed" element={<PaymentFailed />} />
+            <Route path="/payLoading" element={<PaymentLoading />} />
             {/* QnA */}
             <Route path="/qna" element={<Qna />} />
             {/* 메인 페이지 */}

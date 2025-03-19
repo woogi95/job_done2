@@ -179,7 +179,7 @@ function Forum() {
 
       <Modal
         title="로그인 필요합니다."
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okText="로그인"

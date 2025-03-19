@@ -236,6 +236,11 @@ function MyReservation() {
           "_blank",
           `width=${width},height=${height},left=${left},top=${top}`,
         );
+        console.log("결제 준비 중 데이터 : ", res.data);
+
+        if (paymentWindow.open) {
+          navigate("/payLoading");
+        }
 
         const checkWindowClosed = setInterval(() => {
           if (paymentWindow.closed) {
