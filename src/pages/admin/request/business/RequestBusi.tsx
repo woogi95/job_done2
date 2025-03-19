@@ -47,6 +47,7 @@ const RequestBusi = () => {
   const [filteredData, setFilteredData] = useState<BusinessApplyType[][]>([]);
   const [picList, setPicList] = useState<string[] | null>(null);
   const [picModal, setPicModal] = useState<boolean>(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
   // Api 요청
   const getAllData = async () => {
     const allPagesData: BusinessApplyType[][] = [];
@@ -100,6 +101,28 @@ const RequestBusi = () => {
 
     if (stateList !== null) {
       dataList = flatData.filter(item => item.state === stateList);
+    }
+
+    const paginatedData: BusinessApplyType[][] = [];
+    for (let i = 0; i < dataList.length; i += 10) {
+      paginatedData.push(dataList.slice(i, i + 10));
+    }
+
+    setFilteredData(paginatedData);
+    setMaxPage(paginatedData.length || 1);
+    setCurrentPage(1);
+  };
+  const filterDataWithSearch = () => {
+    let dataList = flatData;
+
+    if (searchKeyword) {
+      dataList = flatData.filter(item =>
+        item.businessName.toLowerCase().includes(searchKeyword.toLowerCase()),
+      );
+    }
+
+    if (stateList !== null) {
+      dataList = dataList.filter(item => item.state === stateList);
     }
 
     const paginatedData: BusinessApplyType[][] = [];
@@ -170,11 +193,39 @@ const RequestBusi = () => {
     getAllData();
   }, []);
 
+  useEffect(() => {
+    filterDataWithSearch();
+  }, [searchKeyword, stateList]);
+
   const currentData = filteredData[currentPage - 1] || [];
 
   return (
     <RequestBusiContainer>
-      <h2 className="tit">업체 등록 요청</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2 className="tit">업체 등록 요청</h2>
+        <input
+          type="text"
+          placeholder="업체 이름 검색"
+          value={searchKeyword}
+          onChange={e => setSearchKeyword(e.target.value)}
+          style={{
+            padding: "5px",
+            fontSize: "16px",
+            width: "100%",
+            maxWidth: "300px",
+            height: "40px",
+            border: "2px solid #f6f6f6",
+            borderRadius: "5px",
+          }}
+        />
+      </div>
+
       <TableWrapper>
         <TableContainer>
           <thead>
@@ -208,7 +259,9 @@ const RequestBusi = () => {
           <tbody>
             {currentData.length === 0 ? (
               <tr>
-                <EmptyMessage colSpan={6}>등록된 리뷰가 없습니다</EmptyMessage>
+                <EmptyMessage colSpan={6}>
+                  등록 요청 업체가 없습니다
+                </EmptyMessage>
               </tr>
             ) : (
               currentData.map(item => (
@@ -317,7 +370,17 @@ const RequestBusi = () => {
 
             {approve && (
               <>
-                <span style={modalTitleStyle}>진짜 수락하시겠습니까?</span>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "80px",
+                  }}
+                >
+                  <span style={modalTitleStyle}>진짜 수락하시겠습니까?</span>
+                </div>
+
                 <div style={modalButtonContainerStyle}>
                   <ApplyButton onClick={() => approveReq(selectedBusinessId)}>
                     수락

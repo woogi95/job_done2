@@ -71,6 +71,7 @@ function ReviewCenter() {
   };
 
   const viewData = data => {
+    console.log(data);
     const clickView = reviewDatas.find(item => item.reviewId === data.reviewId);
     const clickPicView = reviewPicsData.find(
       item => item.reviewId === data.reviewId,

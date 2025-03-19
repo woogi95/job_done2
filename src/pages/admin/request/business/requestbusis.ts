@@ -231,7 +231,6 @@ export const textareaStyle = {
 export const modalButtonContainerStyle = {
   display: "flex",
   justifyContent: "space-between",
-  marginTop: "10px",
 };
 
 export const modalTitleStyle = {

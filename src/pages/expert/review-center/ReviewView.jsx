@@ -19,8 +19,9 @@ const ReviewView = () => {
   const [, setReviewComment] = useState(true);
   const [reviewIds] = useRecoilState(reviewIdState);
   const [isComments, setIsComments] = useState(selectReview.replyStatus !== "");
+  console.log(selectReview);
   const [busiReview, setBusiReview] = useState(
-    selectReview.replyStatus.contents ? selectReview.replyStatus.contents : "",
+    selectReview.replyStatus === null ? "" : selectReview.replyStatus.contents,
   );
   const navigate = useNavigate();
   console.log(selectReview);
@@ -30,7 +31,7 @@ const ReviewView = () => {
 
   const initData = {
     reviewId: reviewIds,
-    contents: busiReview || "",
+    contents: busiReview ? busiReview : "",
   };
   const renderStars = score => {
     const fullStars = Math.floor(score);
@@ -188,7 +189,7 @@ const ReviewView = () => {
           <div
             style={{ display: "flex", width: "100%", justifyContent: "right" }}
           >
-            {busiReview.contents == "" ? (
+            {selectReview.replyStatus === null ? (
               <Button
                 htmlType="submit"
                 style={{
