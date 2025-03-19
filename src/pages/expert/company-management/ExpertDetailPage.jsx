@@ -124,13 +124,13 @@ function ExpertDetailPage() {
           >
             수정하기
           </button>
-          <button
+          {/* <button
             type="button"
             className="close-btn"
             onClick={() => navigate("/expert/company-management")}
           >
             닫기
-          </button>
+          </button> */}
         </div>
       </div>
     </PreviewDiv>
