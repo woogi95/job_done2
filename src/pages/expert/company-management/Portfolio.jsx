@@ -177,6 +177,7 @@ function Portfolio() {
         <></>
       )}
       <Popup
+        title="알림"
         isOpen={isEditComplete}
         onClose={() => setIsEditComplete(false)}
         message="포트폴리오 수정이 완료되었습니다"

@@ -69,15 +69,15 @@ function Index() {
   const getStatusText = completed => {
     switch (completed) {
       case 0:
-        return "대기"; // Pending
+        return "대기";
       case 1:
-        return "완료"; // Completed
+        return "완료";
       case 3:
-        return "취소"; // Canceled
+        return "취소";
       case 5:
-        return "거절"; // Rejected
+        return "거절";
       default:
-        return "미정"; // Undefined
+        return "미정";
     }
   };
 

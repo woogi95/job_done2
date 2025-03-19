@@ -619,6 +619,7 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
   gap: 40px;
   align-items: center;
   margin-bottom: 30px;
+
   /* border: 1px solid #000; */
   .option-box {
     border-radius: 6px;
@@ -700,6 +701,7 @@ export const OpContBoxDiv = styled(ContBoxDiv)`
     display: flex;
     flex-direction: column;
     gap: 8px;
+
     label {
       display: flex;
       border: 1px solid #eee;
