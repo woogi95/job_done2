@@ -7,6 +7,7 @@ import {
 } from "../../types/type";
 
 import axios from "axios";
+import { loginApi } from "../login";
 
 // 전체 데이터 불러오기
 export const getMainData = async (
@@ -28,7 +29,7 @@ export const getDashBoardData = async (
   setDashBoardData: (data: StatesDashType) => void,
 ) => {
   try {
-    const res = await axios.get("/api/admin/statesDashBoard");
+    const res = await loginApi.get("/api/admin/statesDashBoard");
     console.log(res);
     if (res) {
       const filterData = res.data.resultData;
@@ -46,7 +47,7 @@ export const getVisitorData = async (
   setDcVisitorData: (data: BarDayUserDataType) => void, // ✅ 타입 수정
 ) => {
   try {
-    const res = await axios.get("/api/admin/statsVisitor");
+    const res = await loginApi.get("/api/admin/statsVisitor");
     if (res) {
       const filterData = res.data.resultData;
 
@@ -78,7 +79,7 @@ export const getCatePer = async (
   setCatePer: (data: StateCatePerType[]) => void,
 ) => {
   try {
-    const res = await axios.get("/api/admin/statsCategory");
+    const res = await loginApi.get("/api/admin/statsCategory");
     if (res) {
       const filterData = res.data.resultData;
       setCatePer(filterData);

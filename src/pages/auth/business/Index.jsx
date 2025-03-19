@@ -56,7 +56,7 @@ function BusinessSignUp() {
   // 로고 사진
   const handleFileChange = ({ file, fileList }) => {
     setFileList(fileList); // 파일 목록 상태 업데이트
-    setBusiInfo(prev => ({ ...prev, logo: file.originFileObj })); // Recoil 상태 업데이트
+    // setBusiInfo(prev => ({ ...prev, logo: file.originFileObj })); // Recoil 상태 업데이트
   };
   // 주소 검색 api
   const handleAddressSearch = () => {
@@ -102,6 +102,7 @@ function BusinessSignUp() {
   }));
   // 최종 등록 요청
   const onSubmit = async data => {
+    console.log(data);
     console.log(busiInfo);
     try {
       const formData = new FormData();
@@ -113,9 +114,8 @@ function BusinessSignUp() {
         detailTypeId: data.detailTypeId,
         busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
         tel: data.tel,
-        int: null,
-        lat: null,
       };
+      console.log(requestData);
       console.log(data.logo.file);
       // JSON 데이터를 FormData에 추가
       formData.append(

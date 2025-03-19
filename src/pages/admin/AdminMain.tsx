@@ -21,7 +21,7 @@ import {
 import { StatesDashType } from "../../types/type";
 import CategoryPercent from "../../components/admin/admin-main/category-percent/CategoryPercent";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { loginApi } from "../../apis/login";
 
 // Chart.js 등록
 ChartJS.register(
@@ -48,7 +48,7 @@ const AdminMain = () => {
   }>({ growData: 0, newUser: 0, totalAvg: 0, totalCom: 0 });
   const getFourData = async () => {
     try {
-      const res = await axios.get("/api/admin/statsMain");
+      const res = await loginApi.get("/api/admin/statsMain");
       console.log(res);
       if (res.status === 200) {
         const data = res.data.resultData;
