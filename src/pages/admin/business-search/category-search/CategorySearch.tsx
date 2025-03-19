@@ -13,6 +13,11 @@ import {
   CancelButton,
   modalStyle,
   overlayStyle,
+  deleteStyle,
+  PostDelete,
+  deleteSecondStyle,
+  CategoryButton,
+  YesOrNo,
 } from "./categorysearchs";
 import { loginApi } from "../../../../apis/login";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +44,9 @@ const CategorySearch = () => {
   // 등록모달 상태
   const [cateModal, setCateModal] = useState<boolean>(false);
   const [cateText, setCateText] = useState<string>("");
+  const [cateDeleteModal, setCateDeleteModal] = useState<boolean>(false);
+  const [checkModal, setCheckModal] = useState<boolean>(false);
+  const [deleteId, setDeleteId] = useState<number>(0);
   // ✅ API 요청 함수
   const getBusinessList = async () => {
     try {
@@ -68,7 +76,16 @@ const CategorySearch = () => {
       console.log("🚨 API 요청 오류:", error);
     }
   };
-
+  // category 삭제 api
+  const deleteCategory = async (item: number) => {
+    try {
+      const res = await loginApi.delete(`/api/category?categoryId=${item}`);
+      console.log(res);
+      setCheckModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // category 조회 api
   const getCategoryList = async () => {
     try {
@@ -110,34 +127,16 @@ const CategorySearch = () => {
     <RequestBusiContainer>
       <h2 className="tit">카테고리 조회 | 등록</h2>
       <TableWrapper>
-        <div style={{ display: "flex", justifyContent: "right" }}>
-          <button
-            style={{
-              border: "2px solid #333",
-              backgroundColor: "#fff",
-              color: "#333",
-              width: "100px",
-              height: "32px",
-              padding: "5px 5px",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-              marginBottom: "10px",
-            }}
-            onMouseOver={e => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                "#f5f5f5";
-            }}
-            onMouseOut={e => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                "#fff";
-            }}
-            onClick={() => setCateModal(true)}
-          >
-            카테고리 등록
-          </button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "right",
+            gap: "5px",
+            marginBottom: "20px",
+          }}
+        >
+          <PostDelete onClick={() => setCateModal(true)}>등록</PostDelete>
+          <PostDelete onClick={() => setCateDeleteModal(true)}>삭제</PostDelete>
         </div>
 
         <TableContainer>
@@ -203,10 +202,12 @@ const CategorySearch = () => {
       )}
 
       {cateModal && (
-        <div style={overlayStyle}>
+        <div style={overlayStyle} onClick={() => setCateModal(false)}>
+          {" "}
+          {/* ✅ 배경 클릭 시 모달 닫기 */}
           <div
             style={modalStyle as React.CSSProperties}
-            onClick={e => e.stopPropagation()}
+            onClick={e => e.stopPropagation()} // ✅ 모달 내부 클릭 시 이벤트 버블링 방지
           >
             <textarea
               value={cateText}
@@ -221,6 +222,64 @@ const CategorySearch = () => {
               <CancelButton onClick={() => setCateModal(false)}>
                 취소
               </CancelButton>
+            </div>
+          </div>
+        </div>
+      )}
+      {cateDeleteModal && (
+        <div style={overlayStyle} onClick={() => setCateDeleteModal(false)}>
+          <div
+            style={deleteStyle as React.CSSProperties}
+            // onClick={e => e.stopPropagation()} // ✅ 모달 내부 클릭 시 이벤트 버블링 방지
+          >
+            삭제하실 카테고리를 선택 해주세요
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "100%",
+                gap: "5px",
+                borderTop: "2px solid #777777",
+                padding: "10px",
+              }}
+            >
+              {categoryList.map(item => (
+                <CategoryButton
+                  key={item.categoryId}
+                  value={item.categoryName}
+                  onClick={() => {
+                    setDeleteId(item.categoryId);
+                    setCateDeleteModal(false);
+                    setCheckModal(true);
+                  }}
+                >
+                  {item.categoryName}
+                </CategoryButton>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {checkModal && (
+        <div style={overlayStyle} onClick={() => setCheckModal(false)}>
+          <div style={deleteSecondStyle} onClick={e => e.stopPropagation()}>
+            <div>
+              <span>정말 삭제 하시겠습니까?</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                height: "60px",
+              }}
+            >
+              <YesOrNo
+                style={{ width: "40%", height: "100%" }}
+                onClick={() => deleteCategory(deleteId)}
+              >
+                네
+              </YesOrNo>
+              <YesOrNo onClick={() => setCheckModal(false)}>아니요</YesOrNo>
             </div>
           </div>
         </div>

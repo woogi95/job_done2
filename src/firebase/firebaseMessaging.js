@@ -1,5 +1,5 @@
 import { getMessaging, onMessage } from "firebase/messaging";
-import { app } from "./handleNotification";
+import { app } from "./notificationPermission";
 
 const messaging = getMessaging(app);
 
