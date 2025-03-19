@@ -219,12 +219,12 @@ function EditDetailPage() {
       </div>
 
       <Popup
+        title={"알림"}
         isOpen={isPopupOpen}
-        title="알림"
-        message="저장되었습니다."
+        onClose={() => setIsPopupOpen(false)}
+        message="수정된 내용이 저장되었습니다."
         showConfirmButton={true}
         confirmLink="/expert/company-management"
-        onClose={() => setIsPopupOpen(false)}
       />
     </EditDetailDiv>
   );

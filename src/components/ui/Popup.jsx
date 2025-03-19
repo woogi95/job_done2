@@ -41,7 +41,7 @@ export const Popup = ({
       <PopupContDiv>
         {title && <h4>{title}</h4>}
         {message && <span>{message}</span>}
-        <div className="btn-area">
+        <div className="btn-area" style={{ border: "1px solid transparent" }}>
           {showCancelButton && (
             <button type="button" onClick={handleCancelClick}>
               취소
@@ -49,7 +49,11 @@ export const Popup = ({
           )}
 
           {showConfirmButton && (
-            <button type="button" onClick={handleConfirmClick}>
+            <button
+              style={{ backgroundColor: "#11b1e1", minHeight: "35px" }}
+              type="button"
+              onClick={handleConfirmClick}
+            >
               확인
             </button>
           )}

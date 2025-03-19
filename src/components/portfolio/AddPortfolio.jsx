@@ -161,17 +161,21 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
       <LayerDiv>
         <div className="tit">포트폴리오 등록</div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
-            <h2>타이틀</h2>
-            <input
-              type="text"
-              {...register("title")}
-              onChange={e => handleChange("title", e.target.value)}
-            />
-          </label>
-          {errors.title && (
-            <p className="error tit-error">{errors.title.message}</p>
-          )}
+          <div className="tit-area">
+            <label>
+              <h2>
+                타이틀<b>*</b>
+              </h2>
+              <input
+                type="text"
+                {...register("title")}
+                onChange={e => handleChange("title", e.target.value)}
+              />
+            </label>
+            {errors.title && (
+              <p className="error tit-error">{errors.title.message}</p>
+            )}
+          </div>
           <div className="thum-price">
             {/* 썸네일 */}
             <div className="thum">
@@ -196,14 +200,18 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
                 ) : (
                   <>
                     <FaPlus />
-                    <em>대표이미지</em>
+                    <em>
+                      대표이미지<b>*</b>
+                    </em>
                   </>
                 )}
               </label>
             </div>
             <div className="time-price">
               <label>
-                <h2>소요시간</h2>
+                <h2>
+                  소요시간<b>*</b>
+                </h2>
                 <input
                   type="number"
                   min="0"
@@ -217,7 +225,9 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
                 )}
               </label>
               <label>
-                <h2>가격대</h2>
+                <h2>
+                  가격대<b>*</b>
+                </h2>
                 <input
                   type="text"
                   min="0"
@@ -242,7 +252,9 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
 
           {/* 사진 업로드  */}
           <PicDiv>
-            <h2>작업물</h2>
+            <h2>
+              작업물<b>*</b>
+            </h2>
             <ul
               className="pic-list"
               style={{ display: "flex", flexWrap: "wrap" }}
@@ -305,7 +317,9 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
           </label>
 
           <div className="text-area">
-            <h2>간단설명</h2>
+            <h2>
+              간단설명<b>*</b>
+            </h2>
             <textarea
               placeholder="100자 이내로 입력하세요."
               maxLength={100}

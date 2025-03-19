@@ -24,7 +24,14 @@ export const LayerDiv = styled.div`
   box-shadow:
     rgba(53, 96, 177, 0.2) 0px 10px 15px -3px,
     rgba(11, 22, 41, 0.05) 0px 4px 6px -2px;
-
+  /* * */
+  em,
+  h2 {
+    b {
+      transform: translate(1px, -4px);
+      color: red;
+    }
+  }
   .tit {
     font-size: 24px;
     font-weight: 600;
@@ -115,7 +122,7 @@ export const LayerDiv = styled.div`
 
     h2 {
       height: 32px;
-      width: 60px;
+      min-width: 60px;
       border-right: 1px solid #c6deff;
       background-color: rgb(230, 239, 255);
       font-size: 13px;
@@ -191,25 +198,33 @@ export const LayerDiv = styled.div`
       background-color: #2a58ad;
     }
   }
-
+  .tit-area {
+    position: relative;
+    .tit-error {
+      position: absolute;
+      left: 0;
+      top: 50px !important;
+    }
+  }
   .error {
     color: red;
     font-size: 12px;
-    /* margin-top: 4px;
     position: absolute;
+    /* margin-top: 4px;
+    
     left: 110px;
     top: 6px; */
   }
   label .error {
     position: absolute;
-    left: 110px;
+    left: 67px;
     top: 9px;
   }
   .error.tit-error {
     bottom: 0px;
     top: auto;
     left: 0;
-    margin: -15px 0 10px;
+    margin: -14px 0 10px;
   }
 `;
 //  작업물

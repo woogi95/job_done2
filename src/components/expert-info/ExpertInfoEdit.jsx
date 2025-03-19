@@ -169,6 +169,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
       </form>
 
       <Popup
+        title={"알림"}
         isOpen={isPopupOpen}
         onClose={() => {
           setIsPopupOpen(false);
