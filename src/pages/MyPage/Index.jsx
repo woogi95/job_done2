@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import MyPageLayout from "../../components/MyPageLayout";
 import { IoIosCamera } from "react-icons/io";
 import { HiOutlinePencilAlt, HiEye, HiEyeOff } from "react-icons/hi";
 import axios from "axios";
 import * as yup from "yup";
 import { loginApi } from "../../apis/login";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 
 function MyPage() {
   const [isPhoneEdit, setIsPhoneEdit] = useState(false);

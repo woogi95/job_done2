@@ -5,7 +5,7 @@ import { papersState } from "../../atoms/businessAtom";
 import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
-import LoadingPopup from "../LoadingPopup";
+import LoadingPopup from "../kakao-pay/LoadingPopup";
 import { useNavigate } from "react-router-dom";
 
 const JobDoneHistory = () => {

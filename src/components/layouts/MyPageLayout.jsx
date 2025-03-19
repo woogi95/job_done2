@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { loginApi } from "../apis/login";
+import { loginApi } from "../../apis/login";
 
 function MyPageLayout({ children }) {
   const [profileImg, setProfileImg] = useState();
@@ -140,6 +140,20 @@ function MyPageLayout({ children }) {
                 }
               >
                 리뷰 관리
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/mypage/userReport"
+                className={({ isActive }) =>
+                  `text-[#616161] hover:text-[#11b1e1] transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#11b1e1] font-bold border-b-2 border-[#11b1e1]"
+                      : ""
+                  }`
+                }
+              >
+                내 신고
               </NavLink>
             </li>
           </ul>

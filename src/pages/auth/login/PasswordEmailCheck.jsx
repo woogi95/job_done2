@@ -1,5 +1,5 @@
 import React from "react";
-import UserLayout from "../../../components/UserLayout";
+import UserLayout from "../../../components/layouts/UserLayout";
 import { Button, Form, Input } from "antd";
 import "./passwordemailcheck.css";
 import { useRecoilState } from "recoil";

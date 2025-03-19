@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { BsHeartFill } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
-import MyPageLayout from "../../components/MyPageLayout";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 import { Link } from "react-router-dom";
 
 function Wishlist() {

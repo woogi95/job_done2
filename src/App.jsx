@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Layout from "./components/Layout";
+import Layout from "./components/layouts/Layout";
 import Index from "./pages/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 import BusinessSignUp from "./pages/auth/business/Index";
@@ -31,7 +31,7 @@ import Reservation from "./pages/reservation/Index";
 import ReservationHistory from "./pages/reservation/ReservationHistory";
 
 // --- 전문가 페이지
-import ExportLayout from "./components/ExpertLayout";
+import ExportLayout from "./components/layouts/ExpertLayout";
 // 업체관리
 import CompanyInfo from "./pages/expert/company-management/CompanyInfo";
 import EditCompanyInfo from "./pages/expert/company-management/EditCompanyInfo";
@@ -54,24 +54,22 @@ import ScheduleList from "./pages/expert/schedule-management/Index";
 // 리뷰센터
 import ReviewCenter from "./pages/expert/review-center/ReviewCenter";
 // 통계
-import TestPage from "./TestPage";
-import PaymentFailed from "./components/PaymentFailed";
-import PaymentSuccess from "./components/PaymentSuccess";
-import ScrollToTop from "./components/ScrollToTop";
+import TestPage from "./tests/TestPage";
+import PaymentFailed from "./components/kakao-pay/PaymentFailed";
+import PaymentSuccess from "./components/kakao-pay/PaymentSuccess";
 import Estimate from "./components/papers/Estimate";
 import PaymentHistory from "./components/papers/PaymentHistory";
-import Qna from "./pages/Qna";
+import Qna from "./utils/Qna";
 import ReviewView from "./pages/expert/review-center/ReviewView";
 import Statistics from "./pages/expert/statistics/Index";
 import TestMessage from "./pages/mypage/TestMessage";
 import UserReservLook from "./pages/mypage/UserReservLook";
 import ContactUs from "./pages/servicepage/ContactUs";
 
-import Maptest from "./Maptest";
 import AdminLayout from "./components/admin/AdminLayout";
 import JobDoneHistory from "./components/papers/JobDoneHistory";
 import OCRUploader from "./pages/OCRUploader";
-import TestSpinner from "./pages/TestSpinner";
+import TestSpinner from "./tests/TestSpinner";
 import AdminMain from "./pages/admin/AdminMain";
 import CategorySearch from "./pages/admin/business-search/category-search/CategorySearch";
 import ReservationSearch from "./pages/admin/business-search/reservation-search/ReservationSearch";
@@ -89,20 +87,22 @@ import EditOptionPage from "./pages/expert/company-management/EditOptionPage";
 import MessageCenter from "./pages/expert/message-center/MessageCenter";
 import UserStatisitcs from "./pages/expert/statistics/UserStatisitcs";
 import AdminBusinessInfo from "./components/admin/admin-business-info/AdminBusinessInfo";
-import AlertTestPage from "./pages/AlertTestPage";
+import AlertTestPage from "./tests/AlertTestPage";
 import QaDetail from "./pages/community/QaDetail";
 
 import ExpertEstimate from "./components/papers/ExpertEstimate";
-import WeatherTest from "./pages/WeatherTest";
+import WeatherTest from "./tests/WeatherTest";
 import AdDaysUser from "./pages/admin/statistics/AdDaysUser";
 import AdMonth from "./pages/admin/statistics/AdMonth";
 import KakaoMaps from "./pages/kakaomap/KaKaoMaps";
 import KakaoMaps2 from "./pages/kakaomap/KakaoMaps2";
 import { adminLoginAtom } from "./atoms/third-atoms/admin/mainAtom";
 import AdminRoute from "./pages/admin/AdminRoute";
-import UserRoute from "./pages/UserRoute";
 import Adminlogin from "./pages/auth/login/Adminlogin";
-import PaymentLoading from "./components/PaymentLoading";
+import PaymentLoading from "./components/kakao-pay/PaymentLoading";
+import UserReportPage from "./pages/mypage/UserReportPage";
+import ScrollToTop from "./tests/ScrollToTop";
+import UserRoute from "./pages/UserRoute";
 
 function App() {
   const adminState = localStorage.getItem("admin") === adminLoginAtom;
@@ -110,7 +110,6 @@ function App() {
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/map" element={<Maptest />} />
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/fe/redirect" element={<OAuth2Handler />} />
         <Route path="/test-spinner" element={<TestSpinner />} />
@@ -172,6 +171,7 @@ function App() {
               <Route path="review" element={<ReviewPage />} />
               <Route path="usage" element={<UsageDetails />} />
               <Route path="wishlist" element={<Wishlist />} />
+              <Route path="userReport" element={<UserReportPage />} />
             </Route>
             <Route path="/estimate/:serviceId" element={<Estimate />} />
             <Route

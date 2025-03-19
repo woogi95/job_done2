@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { loginApi } from "../../apis/login";
-import MyPageLayout from "../../components/MyPageLayout";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 import { statusText } from "../../components/ServiceIcon";
 
 function UsageDetails() {

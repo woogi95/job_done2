@@ -1,4 +1,4 @@
-import { Region } from "../types/TypeBox";
+import { Region } from "../../types/TypeBox";
 
 export const LetTopLayout = ({
   regions,
@@ -13,10 +13,10 @@ export const LetTopLayout = ({
 }) => {
   return (
     <div
-      className={`bg-[#1e1e1e] backdrop-blur-sm py-4 fixed top-[80px] left-0 w-full z-10 ${TopLayoutVisible ? "block" : "hidden"}`}
+      className={`bg-[#1e1e1e] backdrop-blur-sm py-4 px-[30px] fixed top-[80px] left-0 w-full z-10 ${TopLayoutVisible ? "block" : "hidden"}`}
     >
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-white">오늘 날씨</h1>
+        <h1 className="text-2xl font-bold text-white">뭐 먹지?</h1>
         <nav className="flex gap-6 justify-center items-center">
           {regions.map(region => (
             <button

@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { loginApi } from "../../apis/login";
-import MyPageLayout from "../../components/MyPageLayout";
+import MyPageLayout from "../../components/layouts/MyPageLayout";
 import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
-
-const convertImgUrlFiles = async imageUrls => {
-  const imageFiles = await Promise.all(
-    imageUrls.map(async imageUrl => {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const filename = imageUrl.split("/").pop();
-      return new File([blob], filename, { type: blob.type });
-    }),
-  );
-  return imageFiles;
-};
 
 function ReviewPage() {
   const picURL = "https://job-done.r-e.kr:52340";

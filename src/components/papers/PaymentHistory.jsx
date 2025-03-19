@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { papersState } from "../../atoms/businessAtom";
-import LoadingPopup from "../LoadingPopup";
+import LoadingPopup from "../kakao-pay/LoadingPopup";
 import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
 import axios from "axios";
 

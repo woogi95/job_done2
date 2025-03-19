@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginApi } from "../apis/login";
+import { loginApi } from "../../apis/login";
 import {
   categoriesState,
   categoryList,
@@ -10,9 +10,9 @@ import {
   detailTypesState,
   selectedCategoryState,
   selectedDetailTypeState,
-} from "../atoms/categoryAtom";
-import { loginUser } from "../atoms/loginAtom";
-import { remove_cookie } from "../utils/Cookie";
+} from "../../atoms/categoryAtom";
+import { loginUser } from "../../atoms/loginAtom";
+import { remove_cookie } from "../../utils/Cookie";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -166,7 +166,7 @@ function Header() {
   }, [menuRef]);
 
   return (
-    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
+    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee] px-[20px]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <div className="cursor-pointer" onClick={() => navigate("/")}>

@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 
 import styled from "@emotion/styled";
-import ExpertHeader from "./expert-header/ExpertHeader";
-import ExpertSideMenu from "./expert-side-menu/ExpertSideMenu";
+import ExpertHeader from "../expert-header/ExpertHeader";
+import ExpertSideMenu from "../expert-side-menu/ExpertSideMenu";
 
 const ExpertLayout = () => {
   const ExpertDiv = styled.div`
