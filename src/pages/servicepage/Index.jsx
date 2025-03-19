@@ -32,11 +32,31 @@ function Service() {
   const itemsPerPage = 20;
   // 업체 리스트
   const [businessList, setBusinessList] = useState([]);
-  const getBusinessList = async (categoryId, detailTypeId) => {
+  const getBusinessList = async (
+    categoryId,
+    detailTypeId,
+    regionId,
+    sortType,
+  ) => {
     try {
-      const res = await axios.get(
-        `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
-      );
+      let url = `/api/business?`;
+      if (categoryId !== null && categoryId !== undefined && categoryId !== 0)
+        url += `categoryId=${categoryId}&`;
+      if (
+        detailTypeId !== null &&
+        detailTypeId !== undefined &&
+        detailTypeId !== 0
+      )
+        url += `detailTypeId=${detailTypeId}&`;
+      if (regionId !== null && regionId !== undefined)
+        url += `regionId=${regionId}&`;
+      if (sortType !== null && sortType !== undefined)
+        url += `sortType=${sortType}&`;
+
+      // 마지막 '&' 제거
+      url = url.endsWith("&") ? url.slice(0, -1) : url;
+
+      const res = await axios.get(url);
       setBusinessList(res.data.resultData);
     } catch (error) {
       console.error(error);

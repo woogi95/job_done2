@@ -3,29 +3,23 @@ import { BiSolidRightArrow } from "react-icons/bi";
 import { PageTopDiv } from "./service";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import {
-  // selectedCategoryState,
-  // selectedDetailTypeState,
   regionState,
   categoryList,
   detailList,
 } from "../../atoms/categoryAtom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ServiceListTop = ({ setBusinessList }) => {
   const [regionId, setRegionId] = useRecoilState(regionState);
-  // const regionIdVal = useRecoilValue(regionState);
-  // const category = useRecoilValue(selectedCategoryState);
-  // const categoryId = category?.CategoryId;
-  // const detailType = useRecoilValue(selectedDetailTypeState);
-  // const detailTypeId = detailType?.detailTypeId;
   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
   const [detailDatas, setDetailDatas] = useRecoilState(detailList);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryIdFromURL = Number(queryParams.get("categoryId"));
   const detailTypeIdFromURL = Number(queryParams.get("detailTypeId"));
+  const navigate = useNavigate();
 
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryIdFromURL,
@@ -52,32 +46,30 @@ const ServiceListTop = ({ setBusinessList }) => {
       regionIdVal,
       searchTerm,
     );
+
     try {
-      // let url = `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}&regionId=${regionIdVal}&searchTerm=${searchTerm}`;
+      // API 요청 URL 구성
       let url = `/api/business?`;
-      // categoryId가 있으면 추가
-      if (categoryId !== undefined && categoryId !== null) {
+      if (categoryId !== null && categoryId !== undefined && categoryId !== 0)
         url += `categoryId=${categoryId}&`;
-      }
-
-      if (detailTypeId !== undefined && detailTypeId !== null) {
+      if (
+        detailTypeId !== null &&
+        detailTypeId !== undefined &&
+        detailTypeId !== 0
+      )
         url += `detailTypeId=${detailTypeId}&`;
-      }
-
-      if (regionIdVal !== undefined && regionIdVal !== null) {
+      if (regionIdVal !== null && regionIdVal !== undefined)
         url += `regionId=${regionIdVal}&`;
-      }
-
-      if (searchTerm !== undefined && searchTerm.trim() !== "") {
+      if (
+        searchTerm !== null &&
+        searchTerm !== undefined &&
+        searchTerm.trim() !== ""
+      )
         url += `searchTerm=${searchTerm}&`;
-      }
 
-      // 마지막 '&' 제거
       url = url.endsWith("&") ? url.slice(0, -1) : url;
 
       const res = await axios.get(url);
-      // console.log("검색 결과:", res.data.resultData);
-
       setBusinessList(res.data.resultData);
       setFilteredBusinessList(res.data.resultData);
     } catch (error) {
@@ -89,19 +81,38 @@ const ServiceListTop = ({ setBusinessList }) => {
     console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
 
+    // URL 업데이트
+    const newQueryParams = new URLSearchParams();
+    if (categoryId !== null && categoryId !== undefined)
+      newQueryParams.set("categoryId", categoryId);
+    if (
+      detailTypeId !== null &&
+      detailTypeId !== undefined &&
+      detailTypeId !== 0
+    )
+      newQueryParams.set("detailTypeId", detailTypeId);
+    if (regionId !== null && regionId !== undefined && regionId !== 0)
+      newQueryParams.set("regionId", regionId);
+    navigate(`/service?${newQueryParams.toString()}`);
+
     try {
-      let url = `/api/business?categoryId=${categoryId}`;
-      if (detailTypeId) {
-        url += `&detailTypeId=${detailTypeId}`;
-      }
-      if (regionId) {
-        url += `&regionId=${regionId}`;
-      }
+      // API 요청 URL 구성
+      let url = `/api/business?`;
+      if (categoryId !== null && categoryId !== undefined)
+        url += `categoryId=${categoryId}&`;
+      if (
+        detailTypeId !== null &&
+        detailTypeId !== undefined &&
+        detailTypeId !== 0
+      )
+        url += `detailTypeId=${detailTypeId}&`;
+      if (regionId !== null && regionId !== undefined && regionId !== 0)
+        url += `regionId=${regionId}&`;
+
+      url = url.endsWith("&") ? url.slice(0, -1) : url;
 
       const res = await axios.get(url);
-      // console.log(res.data.resultData);
       setBusinessList(res.data.resultData);
-      // setFilteredBusinessList(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -193,14 +204,24 @@ const ServiceListTop = ({ setBusinessList }) => {
             onKeyDown={e => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                handleSearch(categoryId, detailTypeId, regionId, searchTerm);
+                handleSearch(
+                  categoryIdFromURL,
+                  detailTypeIdFromURL,
+                  regionId,
+                  searchTerm,
+                );
               }
             }}
           />
           <button
             className="search-btn"
             onClick={() =>
-              handleSearch(categoryId, detailTypeId, regionId, searchTerm)
+              handleSearch(
+                categoryIdFromURL,
+                detailTypeIdFromURL,
+                regionId,
+                searchTerm,
+              )
             }
           >
             검색

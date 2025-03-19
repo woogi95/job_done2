@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import {
-  regionState,
-  selectedCategoryState,
-  selectedDetailTypeState,
-} from "../../atoms/categoryAtom";
+import { useLocation } from "react-router-dom";
 // styled
 import { FilterDiv } from "./service";
 // icon
@@ -16,34 +11,39 @@ const Filter = ({ setBusinessList }) => {
   const [sortType, setSortType] = useState("평점순");
   const options = ["평점순", "최신순", "주문량순", "저가순"];
 
-  const categoryId = useRecoilValue(selectedCategoryState);
-  const detailTypeId = useRecoilValue(selectedDetailTypeState);
-  const regionId = useRecoilValue(regionState);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryId = Number(queryParams.get("categoryId"));
+  const detailTypeId = Number(queryParams.get("detailTypeId"));
+  const regionId = Number(queryParams.get("regionId"));
+  const sortTypeFromURL = queryParams.get("sortType");
 
-  const handleSortTypeClick = async (
-    categoryId,
-    detailTypeId,
-    regionId,
-    sortType,
-  ) => {
+  useEffect(() => {
+    if (sortTypeFromURL) {
+      setSortType(sortTypeFromURL);
+    }
+  }, [sortTypeFromURL]);
+
+  const handleSortTypeClick = async sortType => {
     setSortType(sortType);
     setOptionOpen(false);
 
-    // 기본 URL
-    let url = "/api/business?";
-    if (categoryId) {
+    // API 요청 URL 구성
+    let url = `/api/business?`;
+    if (categoryId !== null && categoryId !== undefined && categoryId !== 0)
       url += `categoryId=${categoryId}&`;
-    }
-    if (detailTypeId) {
+    if (
+      detailTypeId !== null &&
+      detailTypeId !== undefined &&
+      detailTypeId !== 0
+    )
       url += `detailTypeId=${detailTypeId}&`;
-    }
-    if (sortType) {
-      url += `sortType=${sortType}&`;
-    }
-    if (regionId) {
+    if (regionId !== null && regionId !== undefined && regionId !== 0)
       url += `regionId=${regionId}&`;
-    }
-    // 마지막 "&" 제거
+    if (sortType !== null && sortType !== undefined && sortType !== "")
+      url += `sortType=${sortType}&`;
+
+    // 마지막 '&' 제거
     url = url.endsWith("&") ? url.slice(0, -1) : url;
 
     try {
@@ -53,10 +53,6 @@ const Filter = ({ setBusinessList }) => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    handleSortTypeClick(categoryId, detailTypeId, regionId, sortType);
-  }, [categoryId, detailTypeId, regionId, sortType]);
 
   return (
     <FilterDiv>
@@ -70,7 +66,7 @@ const Filter = ({ setBusinessList }) => {
             <div
               key={item}
               onClick={() => {
-                handleSortTypeClick(categoryId, detailTypeId, regionId, item);
+                handleSortTypeClick(item);
               }}
             >
               {item}

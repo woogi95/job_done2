@@ -200,15 +200,14 @@ function CompanyInfo() {
 
       {/* 팝업 컴포넌트 */}
       <Popup
+        title={"알림"}
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
         message={popupMessage}
         showConfirmButton={true}
         onConfirm={() => {
-          console.log("onConfirm triggered"); // 디버깅용 로그
           if (popupMessage === "로고가 수정되었습니다.") {
-            console.log("Closing LogoEdit mode"); // 디버깅용 로그
-            handleLogoEditComplete(); // 로고 수정 완료 콜백 호출
+            handleLogoEditComplete();
           }
           setIsPopupOpen(false);
         }}

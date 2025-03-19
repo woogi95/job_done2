@@ -14,9 +14,11 @@ export const PopupDiv = styled.div`
 `;
 export const PopupContDiv = styled.div`
   background: #fff;
-  padding: 30px;
+  /* padding: 30px; */
+  padding: 30px 30px;
   border-radius: 8px;
-  width: 380px;
+  /* width: 380px; */
+  width: 340px;
   text-align: center;
   z-index: 10001;
   h4 {
@@ -26,9 +28,11 @@ export const PopupContDiv = styled.div`
   }
 
   span {
-    margin-bottom: 35px;
+    margin-bottom: 15px;
     line-height: 1.2em;
     display: block;
+    font-size: 16px;
+    color: #333;
   }
 
   .btn-area {
@@ -38,8 +42,9 @@ export const PopupContDiv = styled.div`
   }
 
   .btn-area button {
-    padding: 14px 20px;
+    padding: 10px 0px;
     width: 50%;
+    min-height: 40px !important;
     background-color: #4581f0;
     color: white;
     border: none;

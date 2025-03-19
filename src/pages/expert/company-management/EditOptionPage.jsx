@@ -442,6 +442,7 @@ function EditOptionPage() {
         </form>
       </ExpertOptionInfoDiv>
       <Popup
+        title={"알림"}
         isOpen={popupState.isOpen}
         message={popupState.message}
         showConfirmButton={true}

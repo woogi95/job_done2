@@ -106,18 +106,6 @@ const LogoEdit = ({
           <button type="submit">로고 저장</button>
         </div>
       </div>
-      {/* <Popup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-        message={popupMessage}
-        showConfirmButton={true}
-        onConfirm={() => {
-          if (popupMessage === "로고가 수정되었습니다.") {
-            setIsLogoEdit(false);
-          }
-          setIsPopupOpen(false);
-        }}
-      /> */}
     </form>
   );
 };
