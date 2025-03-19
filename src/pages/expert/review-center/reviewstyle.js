@@ -35,16 +35,16 @@ export const TableContainer = styled.table`
   border-collapse: collapse;
   font-size: 14px;
   th {
-    background: #f8f9fa;
-    color: #a0a3ab;
+    background: rgb(233, 244, 255);
+    color: rgb(0, 37, 94);
     font-weight: bold;
     padding: 5px;
     text-align: center;
-    border-bottom: 1px solid #ececec;
+    border: 1px solid #ececec;
   }
 
   td {
-    padding: 14px;
+    padding: 4px 8px;
     text-align: center;
     color: #777;
     border-bottom: 1px dotted #ececec;

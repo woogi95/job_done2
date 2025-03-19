@@ -16,7 +16,7 @@ function MessageCenter(): JSX.Element {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+  const [username, _setUsername] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomList, setRoomList] = useState<RoomType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,7 +39,7 @@ function MessageCenter(): JSX.Element {
         console.log("roomId가 없습니다.");
         return;
       }
-      ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
+      ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");

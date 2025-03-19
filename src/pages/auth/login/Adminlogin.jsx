@@ -1,8 +1,8 @@
 import UserLayout from "../../../components/UserLayout";
 import { Button, Form, Input } from "antd";
-import { setCookie } from "../../../utils/Cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setCookie } from "../../../apis/cookie";
 
 const Adminlogin = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Adminlogin = () => {
     apw: "",
   };
 
-  const adminLogin = async (data: { aid: string; apw: string }) => {
+  const adminLogin = async data => {
     try {
       const res = await axios.post("/api/admin/sign-in", data, {
         withCredentials: true,
