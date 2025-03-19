@@ -20,7 +20,7 @@ function ContactUs() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   // const roomId = useRecoilValue(checkRoom);
 
-  const IMAGE_BASE_URL = "https://job-done.r-e.kr:5234";
+  const IMAGE_BASE_URL = "https://job-done.r-e.kr:52340";
 
   // 메시지 컨테이너에 대한 ref 추가
   const messageContainerRef = useRef(null);
@@ -53,7 +53,7 @@ function ContactUs() {
         console.log("roomId가 없습니다.");
         return;
       }
-      ws = new WebSocket(`ws://112.222.157.157:5234/chat/${roomId}`);
+      ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
 
       ws.onopen = () => {
         console.log("웹소켓 연결 성공!");

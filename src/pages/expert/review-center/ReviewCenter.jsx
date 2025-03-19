@@ -157,7 +157,7 @@ function ReviewCenter() {
                 <select
                   value={sortOrder}
                   onChange={handleSortChange}
-                  style={{ backgroundColor: "#f8f9fa" }}
+                  style={{ backgroundColor: "rgb(233, 244, 255)" }}
                 >
                   <option value="latest">최신순</option>
                   <option value="oldest">오래된 순</option>
@@ -167,7 +167,7 @@ function ReviewCenter() {
                 <select
                   value={sortType}
                   onChange={handleScoreSort}
-                  style={{ backgroundColor: "#f8f9fa" }}
+                  style={{ backgroundColor: "rgb(233, 244, 255)" }}
                 >
                   <option value="high">평점 높은 순</option>
                   <option value="low">평점 낮은 순</option>
@@ -178,7 +178,7 @@ function ReviewCenter() {
                 <select
                   value={filterType}
                   onChange={handleFilterChange}
-                  style={{ backgroundColor: "#f8f9fa" }}
+                  style={{ backgroundColor: "rgb(233, 244, 255)" }}
                 >
                   <option value="all">전체 보기</option>
                   <option value="waiting">작성 대기</option>
