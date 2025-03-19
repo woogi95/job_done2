@@ -37,7 +37,7 @@ export const FramerMotionSlider = ({
         {totalItems.map((item, index) => (
           <motion.div
             key={`${item.businessId}-${index}`}
-            className="min-w-[150px] h-[150px] rounded-lg shadow-md my-5 overflow-hidden"
+            className="md:min-w-[150px] md:h-[150px] min-w-[120px] h-[120px] rounded-lg shadow-md md:my-5 my-2 overflow-hidden"
             style={{
               userSelect: "none",
               pointerEvents: "none",
@@ -70,7 +70,7 @@ export const FramerMotionSlider2 = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDirection(prev => -prev);
-    }, 25000);
+    }, 40000);
 
     return () => clearTimeout(timer);
   }, [direction]);
@@ -91,7 +91,7 @@ export const FramerMotionSlider2 = ({
         {totalItems.map((item, index) => (
           <motion.div
             key={`${item.businessId}-${index}`}
-            className="min-w-[150px] h-[150px] rounded-lg shadow-md my-5 overflow-hidden"
+            className="md:min-w-[150px] md:h-[150px] min-w-[120px] h-[120px] rounded-lg shadow-md my-5 overflow-hidden"
             style={{
               userSelect: "none",
               pointerEvents: "none",

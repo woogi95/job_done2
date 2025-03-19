@@ -265,7 +265,7 @@ function ContactUs() {
             src={
               item.logo
                 ? `${IMAGE_BASE_URL}${item.logo}`
-                : "/default-profile.png"
+                : "./public/images/order/default_profile.jpg"
             }
             alt="업체 이미지"
             className="w-[50px] h-[50px] rounded-full object-cover"
@@ -300,7 +300,7 @@ function ContactUs() {
   return (
     <MyPageLayout>
       <span className="flex justify-center items-center text-[24px] font-normal mb-[40px]">
-        예약현황
+        메시지함
       </span>
       {/* 오류 메시지 표시 */}
       {errorMessage && (
@@ -330,13 +330,16 @@ function ContactUs() {
           </div>
         </div>
 
-        {/* Message container */}
         <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
           {/* 상태 표시 헤더 */}
           <div className="flex p-[10px] justify-between items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
             <div className="flex gap-[5px]">
               <img
-                src={`${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId)?.logo}`}
+                src={
+                  roomList.find(room => room.roomId === roomId)?.logo
+                    ? `${IMAGE_BASE_URL}${roomList.find(room => room.roomId === roomId).logo}`
+                    : "/images/order/default_profile.jpg"
+                }
                 alt="Profile"
                 className="w-[45px] h-[45px] rounded-full"
               />
