@@ -11,6 +11,7 @@ import {
   QuotationFormDiv,
 } from "./qouteManagement";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Popup } from "../../../components/ui/Popup";
 
 function QuotationForm() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function QuotationForm() {
   const [addPrice, setAddPrice] = useState();
   const [addComment, setAddComment] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     console.log("papersInfo 현재 상태:", papersInfo);
@@ -108,7 +110,7 @@ function QuotationForm() {
 
       if (res.data.resultData) {
         console.log("견적서 작성 완료");
-        navigate("/expert/quote-management");
+        setIsPopupOpen(true);
       }
     } catch (error) {
       console.log("API 에러:", error);
@@ -405,6 +407,16 @@ function QuotationForm() {
           </BtnAreaDiv>
         </form>
       </QuotationFormDiv>
+
+      {/* 팝업 추가 */}
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        title="알림"
+        message="견적서 작성을 완료하였습니다."
+        showConfirmButton={true}
+        onConfirm={() => navigate("/expert/quote-management")}
+      />
     </QuotationDiv>
   );
 }

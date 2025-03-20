@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, ExportFormDiv, PaperContDiv, PapersDiv } from "./papers";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { businessDetailState, papersState } from "../../atoms/businessAtom";
-// import { getCookie } from "../../apis/cookie";
+import { papersState } from "../../atoms/businessAtom";
+
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
 import { CgClose } from "react-icons/cg";
@@ -11,7 +11,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const ExpertEstimate = () => {
   // 컨펌 팝업
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  const [popupMessage, setPopupMessage] = useState("예약취소 하시겠습니까?");
+  const [isSuccess, setIsSuccess] = useState(true);
   // const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const businessId = Number(localStorage.getItem("businessId"));
@@ -40,20 +41,27 @@ const ExpertEstimate = () => {
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
+  };
+
+  const handleConfirmClick = () => {
     patchServiceState(5, serviceId, businessId);
+    setIsPopupOpen(false);
+    navigate(`/expert/quote-management`);
+  };
+
+  const handleCancelClick = () => {
+    setIsPopupOpen(false);
   };
 
   const patchServiceState = async (completed, serviceId, businessId) => {
     try {
-      // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId: Number(serviceId),
         businessId,
       });
-      // console.log(res.data.resultData);
 
-      if (res.data) {
+      if (res.data.resultData) {
         setIsSuccess(true);
         setPopupMessage("예약취소 요청하였습니다.");
       } else {
@@ -70,7 +78,6 @@ const ExpertEstimate = () => {
       );
     }
   };
-  const handleClosePopup = () => setIsPopupOpen(false);
 
   const formatPhoneNumber = phone =>
     phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-";
@@ -88,12 +95,6 @@ const ExpertEstimate = () => {
 
     navigate(`/expert/quote-management/quotation-form?serviceId=${serviceId}`);
   };
-  // useEffect(() => {
-  //   const storedServiceId = getCookie("serviceId");
-  //   if (storedServiceId) {
-  //     setServiceId(storedServiceId);
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (serviceId) {
@@ -224,7 +225,12 @@ const ExpertEstimate = () => {
             </div>
           </ExportFormDiv>
           <BtnAreaDiv>
-            <button className="cancel" onClick={handleOpenPopup}>
+            <button
+              className="cancel"
+              onClick={() => {
+                handleOpenPopup();
+              }}
+            >
               예약취소
             </button>
             <button className="confirm" onClick={handleClickNewPage}>
@@ -241,14 +247,16 @@ const ExpertEstimate = () => {
           </button>
         </PaperContDiv>
       </div>
+
       <Popup
         isOpen={isPopupOpen}
-        onClose={handleClosePopup}
-        onCancel={handleClosePopup}
+        onClose={handleCancelClick}
+        onCancel={handleCancelClick}
         title="예약 취소"
         message={popupMessage}
-        showConfirmButton={true}
-        onConfirm={handleClosePopup}
+        showCancelButton={isSuccess}
+        showConfirmButton={isSuccess}
+        onConfirm={handleConfirmClick}
       />
     </PapersDiv>
   );

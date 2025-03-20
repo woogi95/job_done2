@@ -28,30 +28,35 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
 
   // 컨펌팝업
   const handleOpenPopup = () => {
-    patchServiceState(5, serviceId, businessId);
     setIsPopupOpen(true);
   };
+
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
-  const handleCancelPopup = () => {
+
+  const handleConfirmClick = async () => {
+    await patchServiceState(5, serviceId, businessId);
+    setIsReservationPop(false);
+    setIsPopupOpen(false);
+    window.location.reload();
+  };
+
+  const handleCancelClick = () => {
     setIsPopupOpen(false);
   };
 
   const patchServiceState = async (completed, serviceId, businessId) => {
     try {
-      // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
         businessId,
       });
-      // console.log(res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);
-        setPopupMessage("예약취소 요청하였습니다.");
-        setIsPopupOpen(false);
+        setPopupMessage("예약 취소하시겠습니까?");
       } else {
         setIsSuccess(false);
         setPopupMessage(
@@ -249,11 +254,12 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
       <Popup
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
-        onCancel={handleCancelPopup}
+        onCancel={handleCancelClick}
         title="예약 취소"
         message={popupMessage}
-        showConfirmButton={true}
-        onConfirm={handleClosePopup}
+        showCancelButton={isSuccess}
+        showConfirmButton={isSuccess}
+        onConfirm={handleConfirmClick}
       />
     </PapersDiv>
   );
