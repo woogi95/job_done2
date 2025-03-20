@@ -18,6 +18,7 @@ import {
   selectReviewAtom,
 } from "../../../atoms/reviewAtom";
 import ReviewView from "./ReviewView";
+import { comModalState } from "../../../atoms/businessAtom";
 
 function ReviewCenter() {
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
@@ -28,7 +29,7 @@ function ReviewCenter() {
   const [sortOrder, setSortOrder] = useState("latest");
   const [sortType, setSortType] = useState("high");
   const [filterType, setFilterType] = useState("all");
-  const [reviewView, setReviewView] = useState(false);
+  const [reviewView, setReviewView] = useRecoilState(comModalState);
   const itemsPerPage = 10;
 
   const busiId = localStorage.getItem("businessId");
@@ -262,7 +263,7 @@ function ReviewCenter() {
           >
             ✖
           </button>
-          <ReviewView />
+          <ReviewView handleCloseModal={handleCloseModal} />
         </div>
       )}
     </RequestBusiContainer>

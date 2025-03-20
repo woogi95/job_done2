@@ -35,8 +35,10 @@ const QaDetail = () => {
   };
 
   useEffect(() => {
-    fetchPostDetail();
-    fetchAnswers();
+    if (qaId) {
+      fetchPostDetail();
+      fetchAnswers();
+    }
   }, [qaId]);
 
   return (

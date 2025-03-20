@@ -177,23 +177,37 @@ function CompanyInfo() {
             <h4 className="tit" style={{ marginBottom: "0px" }}>
               서비스 옵션정보
             </h4>
-            {optionList.optionList.map((option, optionIndex) => (
-              <div className="option-box" key={option.optionId}>
-                <h3>
-                  옵션 {optionIndex + 1} : {option.optionName}
-                </h3>
+            {optionList !== null ? (
+              optionList.optionList.map((option, optionIndex) => (
+                <div className="option-box" key={option.optionId}>
+                  <h3>
+                    옵션 {optionIndex + 1} : {option.optionName}
+                  </h3>
+                  <ul className="op-detail-list">
+                    {option.optionDetailList.map(item => (
+                      <li className="op-item" key={item.optionDetailId}>
+                        <p>
+                          <span>{item.optionDetailName}</span>
+                          <em>{item.optionDetailPrice.toLocaleString()} 원</em>
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            ) : (
+              <div className="option-box">
+                <h3>옵션 </h3>
                 <ul className="op-detail-list">
-                  {option.optionDetailList.map(item => (
-                    <li className="op-item" key={item.optionDetailId}>
-                      <p>
-                        <span>{item.optionDetailName}</span>
-                        <em>{item.optionDetailPrice.toLocaleString()} 원</em>
-                      </p>
-                    </li>
-                  ))}
+                  <li className="op-item">
+                    <p>
+                      <span>세부 옵션</span>
+                      <em> 원</em>
+                    </p>
+                  </li>
                 </ul>
               </div>
-            ))}
+            )}
           </div>
         </OpContBoxDiv>
       </ExpertOptionInfoDiv>

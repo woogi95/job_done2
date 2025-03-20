@@ -18,6 +18,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/chat": {
+        target: "wss://job-done.r-e.kr:52340",
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     },
   },
   // webSocket 연결을 위한 설정
