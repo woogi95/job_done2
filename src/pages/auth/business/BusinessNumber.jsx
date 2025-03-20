@@ -38,6 +38,7 @@ function BusinessNumber() {
   };
 
   const nextPage = async data => {
+    console.log(data);
     const formData = new FormData();
     if (data) {
       formData.append("paper", data);
@@ -95,7 +96,11 @@ function BusinessNumber() {
   };
 
   // 업체 최종 등록
-  const onSubmit = () => {
+  const onSubmit = data => {
+    setBusiInfo(prev => ({
+      ...prev, // 기존 데이터 유지
+      ...data, // 서버 데이터 덮어쓰기
+    }));
     navigate("/business");
   };
   return (

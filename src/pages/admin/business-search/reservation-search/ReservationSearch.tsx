@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   EmptyMessage,
@@ -8,6 +7,7 @@ import {
   TableContainer,
   TableWrapper,
 } from "./ReservationSearchs";
+import { loginApi } from "../../../../apis/login";
 
 interface BusiServiceCountType {
   id: number;
@@ -26,7 +26,7 @@ const ReservationSearch = () => {
   // ✅ API 요청
   const getBusiServiceCount = async () => {
     try {
-      const res = await axios.get("/api/business/serviceCount/byAdmin");
+      const res = await loginApi.get("/api/business/serviceCount/byAdmin");
       if (res.data.resultData) {
         const data = res.data.resultData.map(
           (item: BusiServiceCountType, index: number) => ({

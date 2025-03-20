@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   RequestBusiContainer,
@@ -50,7 +49,7 @@ const CategorySearch = () => {
   // ✅ API 요청 함수
   const getBusinessList = async () => {
     try {
-      const res = await axios.get(`/api/business`);
+      const res = await loginApi.get(`/api/business`);
       const resData = res.data.resultData;
 
       // ✅ 올바르게 객체 리스트를 저장
@@ -89,7 +88,7 @@ const CategorySearch = () => {
   // category 조회 api
   const getCategoryList = async () => {
     try {
-      const res = await axios.get("/api/category");
+      const res = await loginApi.get("/api/category");
       setCategoryList(res.data.resultData);
     } catch (error) {
       console.log(error);

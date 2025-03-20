@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableWrapper,
 } from "./RevenueSearchs";
+import { loginApi } from "../../../../apis/login";
 
 interface BusirevenueType {
   id: number;
@@ -28,7 +29,7 @@ const RevenueSearch = () => {
   // 📌 API 요청
   const getBusirevenue = async () => {
     try {
-      const res = await axios.get("/api/business/revenue/byAdmin");
+      const res = await loginApi.get("/api/business/revenue/byAdmin");
       if (res.data.resultData) {
         const data = res.data.resultData.map(
           (item: BusirevenueType, index: number) => ({
