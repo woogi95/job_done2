@@ -206,12 +206,12 @@ const Index = () => {
 
       <div>
         {/* 이벤트 배너 */}
-        <div className="relative lg-custom:h-[500px] md-custom:h-[400px] mb:h-[300px] h-[200px] overflow-hidden">
+        <div className="relative lg-custom:h-[500px] md-custom:h-[400px] md:h-[300px] h-[200px] overflow-hidden">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 5000 }}
             loop={true}
-            className="h-full"
+            className="w-full"
           >
             {EventBanner.map((item, index) => (
               <SwiperSlide key={`banner-${index}-${item.id}`}>

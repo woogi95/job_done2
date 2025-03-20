@@ -15,6 +15,7 @@ function Forum() {
   const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const cookies = new Cookies();
 
@@ -31,10 +32,22 @@ function Forum() {
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filteredQaList = allQaList.filter(
+    post =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   const updateCurrentPageData = () => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    setCurrentPageData(allQaList.slice(startIndex, endIndex));
+    setCurrentPageData(filteredQaList.slice(startIndex, endIndex));
+    setTotalItems(filteredQaList.length);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -105,11 +118,26 @@ function Forum() {
       <div className="flex gap-8">
         <div className="flex-1">
           <div className="flex justify-between mb-4">
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              className="px-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                className="px-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={searchTerm}
+                onChange={handleSearch}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    updateCurrentPageData();
+                  }
+                }}
+              />
+              <button
+                onClick={() => updateCurrentPageData()}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                검색
+              </button>
+            </div>
             <button
               onClick={handleWriteClick}
               className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"

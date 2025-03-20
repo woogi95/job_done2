@@ -115,12 +115,9 @@ function BusinessSignUp() {
         busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
         tel: data.tel,
       };
-<<<<<<< HEAD
-      console.log("도대체 뭔데? : ", data.logo.file);
-=======
       console.log(requestData);
       console.log(data.logo.file);
->>>>>>> bb1c808ac497175d5aa2f3a44b13dec3f7318b9a
+
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",

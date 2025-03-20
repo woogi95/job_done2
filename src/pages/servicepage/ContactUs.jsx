@@ -1,3 +1,9 @@
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+} from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FiSend } from "react-icons/fi";
@@ -10,18 +16,13 @@ function ContactUs() {
   const [inputMessage, setInputMessage] = useState("");
   const [username, setUsername] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  // const roomId = useRecoilValue(checkRoom);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // 메시지 컨테이너에 대한 ref 추가
+  const IMAGE_BASE_URL = "https://job-done.r-e.kr:52340";
+
   const messageContainerRef = useRef(null);
   const roomId = cookies.roomId;
 
-  // roomId 변화 감지를 위한 useEffect 추가
-  useEffect(() => {
-    console.log("Current roomId:", roomId);
-  }, [roomId]);
-
-  // 메시지가 업데이트될 때마다 스크롤을 아래로 이동시키는 useEffect 추가
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
@@ -37,13 +38,13 @@ function ContactUs() {
   useEffect(() => {
     let ws;
     let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
+    const maxReconnectAttempts = 2;
 
     const connectWebSocket = () => {
-      ws = new WebSocket(`wss://job-done.r-e.kr:5234/chat/${roomId}`);
+      ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
 
       ws.onopen = () => {
-        console.log("웹소켓 연결 성공!");
+        // console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
@@ -52,7 +53,7 @@ function ContactUs() {
       ws.onmessage = event => {
         try {
           let messageData;
-          console.log("Raw message received:", event.data);
+          // console.log("이벤트 데이터 : ", event.data);
 
           if (event.data instanceof Blob) {
             const reader = new FileReader();
@@ -62,7 +63,6 @@ function ContactUs() {
                 if (!messageData.username) {
                   messageData.username = username;
                 }
-                console.log("Parsed Blob message:", messageData);
                 setMessages(prevMessages => {
                   const isDuplicate = prevMessages.some(
                     msg =>
@@ -87,7 +87,6 @@ function ContactUs() {
             if (!messageData.username) {
               messageData.username = username;
             }
-            console.log("Parsed ArrayBuffer message:", messageData);
             setMessages(prevMessages => {
               const isDuplicate = prevMessages.some(
                 msg =>
@@ -151,7 +150,7 @@ function ContactUs() {
       };
 
       ws.onclose = () => {
-        console.log("웹소켓 연결 종료");
+        // console.log("웹소켓 연결 종료");
         setConnected(false);
         setSocket(null);
 
@@ -178,7 +177,13 @@ function ContactUs() {
     if (file && file.type.startsWith("image/")) {
       setSelectedImage(file);
     } else {
-      alert("이미지 파일만 선택해주세요.");
+      alert(
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>오류!</AlertTitle>
+          <AlertDescription>이미지 파일만 선택해주세요.</AlertDescription>
+        </Alert>,
+      );
     }
   };
 
@@ -186,7 +191,7 @@ function ContactUs() {
     e.preventDefault();
 
     if (!inputMessage.trim() && !selectedImage) {
-      alert("메시지나 이미지를 입력하세요.");
+      setErrorMessage("메시지나 이미지를 입력하세요.");
       return;
     }
 
@@ -200,7 +205,7 @@ function ContactUs() {
               type: selectedImage.type,
               data: reader.result.split(",")[1],
             };
-            console.log("방번호 몇번?", roomId);
+            // console.log("방번호 몇번?", roomId);
             const messageData = {
               flag: 1,
               roomId: roomId,
@@ -215,15 +220,15 @@ function ContactUs() {
             setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
+            // console.log("전송할 메시지 데이터:", {
+            //   ...messageData,
+            //   file: messageData.file
+            //     ? {
+            //         ...messageData.file,
+            //         data: messageData.file.data.substring(0, 50) + "...",
+            //       }
+            //     : null,
+            // });
           };
           reader.readAsDataURL(selectedImage);
         } else {
@@ -248,26 +253,27 @@ function ContactUs() {
         console.error("메시지 전송 실패:", error);
       }
     } else {
-      console.log("Socket status:", socket?.readyState);
-      alert("채팅 서버에 연결되어 있지 않습니다.");
+      setErrorMessage("채팅 서버에 연결되어 있지 않습니다.");
     }
   };
 
   return (
     <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5]">
+      {errorMessage && (
+        <Alert
+          status="error"
+          className="flex justify-center items-center animate-shake mb-[20px]"
+        >
+          <AlertIcon />
+          <AlertTitle>오류!</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
       {/* 상태 표시 헤더 */}
       <div className="flex p-[10px] justify-center items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
         <span className="flex text-[24px] font-semibold pl-[10px]">
           고객문의
         </span>
-        {/* <span className="text-[18px] font-semibold pl-[10px]">
-          연결 상태:{" "}
-          {connected ? (
-            <span className="text-[#34C5F0]">연결됨</span>
-          ) : (
-            <span className="text-red-500">연결되지 않음</span>
-          )}
-        </span> */}
       </div>
 
       {/* 메시지 컨테이너 */}
@@ -275,35 +281,44 @@ function ContactUs() {
         ref={messageContainerRef}
         className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
       >
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              msg.flag === 1 ? "self-end" : "self-start"
-            } gap-[10px] py-[15px]`}
-          >
-            <span
-              className={`flex flex-col justify-center items-start max-w-[240px] ${
-                msg.flag === 1
-                  ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
-                  : "bg-white rounded-tr-[8px]"
-              } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+        {messages.map((msg, index) => {
+          return (
+            <div
+              key={index}
+              className={`flex ${
+                msg.flag === 1 ? "self-end" : "self-start"
+              } gap-[10px] py-[15px]`}
             >
-              <div className="m-4 break-all whitespace-pre-wrap">
-                {msg.message}
-              </div>
-              {msg.file && msg.file.data && (
-                <div className="mx-4 mb-4">
-                  <img
-                    src={`data:${msg.file.type};base64,${msg.file.data}`}
-                    alt={msg.file.name}
-                    className="max-w-[200px] rounded"
-                  />
-                </div>
+              {msg.flag === 0 && (
+                <img
+                  src={`${IMAGE_BASE_URL}${msg.logo}`}
+                  alt="Profile"
+                  className="w-[45px] h-[45px] rounded-full"
+                />
               )}
-            </span>
-          </div>
-        ))}
+              <span
+                className={`flex flex-col justify-center items-start max-w-[240px] ${
+                  msg.flag === 1
+                    ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
+                    : "bg-[#f3f3f3] rounded-tr-[8px]"
+                } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
+              >
+                <div className="m-4 break-all whitespace-pre-wrap">
+                  {msg.message}
+                </div>
+                {msg.pic && (
+                  <div className="mt-2">
+                    <img
+                      src={`${IMAGE_BASE_URL}${msg.pic}`}
+                      alt="Uploaded content"
+                      className="max-w-[200px] rounded-lg p-[5px]"
+                    />
+                  </div>
+                )}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       {/* 메시지 입력 영역 */}

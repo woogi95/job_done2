@@ -151,6 +151,7 @@ function Write() {
   const handleModalClose = () => {
     setIsSuccessModalOpen(false);
     navigate("/forum");
+    window.location.reload();
   };
 
   useEffect(() => {

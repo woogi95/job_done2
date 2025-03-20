@@ -16,7 +16,8 @@ import { remove_cookie } from "../../utils/Cookie";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [categories, setCategories] = useRecoilState(categoriesState);
   const [detailTypes, setDetailTypes] = useRecoilState(detailTypesState);
   const [selectedCategory, setSelectedCategory] = useRecoilState(
@@ -152,13 +153,14 @@ function Header() {
     });
   }, [categories]);
 
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
+  const handleClickOutside = event => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMainMenuOpen(false);
+      setIsProfileMenuOpen(false);
+    }
+  };
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -167,12 +169,33 @@ function Header() {
 
   return (
     <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee] px-[20px]">
-      <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
-        <div className="flex gap-10">
+      <div className="flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
+        {/* 메뉴버튼 */}
+        <button
+          className="md:hidden p-2"
+          onClick={() => setIsMainMenuOpen(!isMainMenuOpen)}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+
+        <div className="flex items-center gap-4">
           <div className="cursor-pointer" onClick={() => navigate("/")}>
             <img src="/images/logo.svg" alt="logo" />
           </div>
-          <ul className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
+
+          <ul className="md-2-munus:hidden flex pl-[30px] gap-10 text-[20px] items-center text-[#1E1E1E]">
             {categories.map(category => (
               <li key={category.categoryId} className="relative group">
                 <button
@@ -203,17 +226,52 @@ function Header() {
             ))}
           </ul>
         </div>
+
+        {isMainMenuOpen && (
+          <div className="md:hidden absolute top-[80px] left-0 w-full bg-white shadow-lg">
+            <ul className="flex flex-col">
+              {categories.map(category => (
+                <li key={category.categoryId} className="border-b">
+                  <button
+                    className="w-full px-4 py-3 text-left hover:bg-gray-100"
+                    onClick={() => handleCategoryClick(category.categoryId)}
+                  >
+                    {category.categoryName}
+                  </button>
+                  {detailTypes[category.categoryId]?.map(detailType => (
+                    <button
+                      key={detailType.detailTypeId}
+                      className="block w-full px-8 py-2 hover:bg-gray-100 text-sm text-left"
+                      onClick={() =>
+                        handleDetailTypeClick(
+                          category.categoryId,
+                          detailType.detailTypeId,
+                        )
+                      }
+                    >
+                      {detailType.detailTypeName}
+                    </button>
+                  ))}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="flex items-center gap-4 text-sm">
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
-              <Link to="/forum" className="flex items-center justify-center">
+              <Link
+                to="/forum"
+                className="flex items-center justify-center md-2-munus:hidden"
+              >
                 고객센터
               </Link>
               {getBusinessId == 0 ? (
                 <Link
                   to="/business/number"
-                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl ms-muinus:hidden"
+                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex md-2-munus:hidden items-center justify-center rounded-2xl"
                 >
                   업체 등록
                 </Link>
@@ -246,8 +304,8 @@ function Header() {
               </Link>
               <div className="relative" ref={menuRef}>
                 <button
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="w-8 h-8 !rounded-full bg-gray-200 flex items-center justify-center"
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className="w-8 h-8 md-2-munus:w-12 md-2-munus:h-12 !rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
                     src={profileImg}
@@ -256,7 +314,7 @@ function Header() {
                   />
                 </button>
                 {/* 프로필 */}
-                {isMenuOpen && (
+                {isProfileMenuOpen && (
                   <div className="absolute flex flex-col items-center justify-center right-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg py-2">
                     <Link
                       to="/mypage"
@@ -292,16 +350,22 @@ function Header() {
           ) : (
             // 로그아웃 상태
             <>
-              <Link to="/forum" className="flex items-center justify-center">
+              <Link
+                to="/forum"
+                className="flex items-center justify-center  md-2-munus:hidden"
+              >
                 고객센터
               </Link>
               <Link
                 to="/login"
-                className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"
+                className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex  md-2-munus:hidden items-center justify-center rounded-2xl"
               >
                 업체 등록
               </Link>
-              <Link to="/login" className="flex items-center justify-center">
+              <Link
+                to="/login"
+                className="flex items-center justify-center md-2-munus:rounded-full md-2-munus:bg-[#C3EEFB] md-2-munus:text-[#0B7493] md-2-munus:w-[140px] md-2-munus:h-[40px]"
+              >
                 로그인 및 회원가입
               </Link>
             </>

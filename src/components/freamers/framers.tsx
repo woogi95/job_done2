@@ -16,7 +16,7 @@ export const FramerMotionSlider = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDirection(prev => -prev);
-    }, 25000);
+    }, 50000);
 
     return () => clearTimeout(timer);
   }, [direction]);
@@ -28,7 +28,7 @@ export const FramerMotionSlider = ({
         initial={{ x: 0 }}
         animate={{ x: `${direction * -items.length * 100}%` }}
         transition={{
-          duration: 2500,
+          duration: 1500,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
@@ -70,7 +70,7 @@ export const FramerMotionSlider2 = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDirection(prev => -prev);
-    }, 40000);
+    }, 50000);
 
     return () => clearTimeout(timer);
   }, [direction]);
@@ -82,7 +82,7 @@ export const FramerMotionSlider2 = ({
         initial={{ x: 0 }}
         animate={{ x: `${direction * -items.length * 100}%` }}
         transition={{
-          duration: 2000,
+          duration: 1000,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
@@ -124,7 +124,7 @@ export const FramerMotionSlider3 = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDirection(prev => -prev);
-    }, 25000);
+    }, 60000);
 
     return () => clearTimeout(timer);
   }, [direction]);
@@ -136,7 +136,7 @@ export const FramerMotionSlider3 = ({
         initial={{ x: 0 }}
         animate={{ x: `${direction * -stealReview.length * 100}%` }}
         transition={{
-          duration: 5000,
+          duration: 7000,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
