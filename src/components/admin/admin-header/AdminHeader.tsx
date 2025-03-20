@@ -41,7 +41,7 @@ const AdminHeader = () => {
     });
     navigate("/login");
   };
-  console.log(_dcVisitorData);
+
   useEffect(() => {
     getMainData(setDashBoardData, setVisitorData, setDcVisitorData, setCatePer);
   }, []);

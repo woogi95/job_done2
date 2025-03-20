@@ -17,7 +17,7 @@ const DaysUser = () => {
       .join(" "),
     visitorCount: item.visitorCount ?? 0,
   }));
-  console.log(formattedData);
+
   return (
     <div style={{ width: "100%", height: "90%" }}>
       <ResponsiveBar

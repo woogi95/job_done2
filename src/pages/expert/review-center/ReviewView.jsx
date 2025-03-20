@@ -2,7 +2,6 @@ import { Button, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import DOMPurify from "dompurify";
-import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loginApi } from "../../../apis/login";
 import {
@@ -10,8 +9,8 @@ import {
   reviewPicsList,
   selectReviewAtom,
 } from "../../../atoms/reviewAtom";
-
-const ReviewView = () => {
+////////////////////////////////////////////////////////////////////////////////////////////
+const ReviewView = ({ handleCloseModal }) => {
   const BASE_URL = "https://job-done.r-e.kr:52340";
   const [form] = Form.useForm();
   const [selectReview] = useRecoilState(selectReviewAtom);
@@ -19,11 +18,11 @@ const ReviewView = () => {
   const [, setReviewComment] = useState(true);
   const [reviewIds] = useRecoilState(reviewIdState);
   const [isComments, setIsComments] = useState(selectReview.replyStatus !== "");
+  const [forceRender, setForceRender] = useState(0);
   console.log(selectReview);
   const [busiReview, setBusiReview] = useState(
     selectReview.replyStatus === null ? "" : selectReview.replyStatus.contents,
   );
-  const navigate = useNavigate();
   console.log(selectReview);
   const picData = reviewPicsData.pics.filter(
     (_, index) => (index + 1) % 2 !== 0,
@@ -55,7 +54,8 @@ const ReviewView = () => {
     try {
       await loginApi.delete(`/api/review/comment?reviewId=${reviewIds}`);
       setBusiReview("");
-      setIsComments(false);
+      handleCloseModal();
+      // setIsComments(false);
       // navigate("/expert/review-center");
     } catch (error) {
       console.log(error);
@@ -63,15 +63,22 @@ const ReviewView = () => {
   };
 
   const onSubmit = async data => {
-    console.log(data);
     try {
       await loginApi.post("/api/review/comment", {
         reviewId: reviewIds,
         contents: data.contents,
       });
+
+      // 상태 업데이트 (즉시 반영)
       setBusiReview(data.contents);
       setIsComments(true);
       setReviewComment(false);
+
+      // 강제 리렌더링 트리거
+      setForceRender(prev => prev + 1);
+
+      // Form 필드 초기화
+      form.resetFields();
     } catch (error) {
       console.log(error);
     }
@@ -91,8 +98,8 @@ const ReviewView = () => {
     }
   };
   useEffect(() => {
-    console.log(busiReview);
-  }, [busiReview]);
+    form.setFieldsValue({ contents: busiReview });
+  }, [busiReview, form]);
 
   return (
     <div
@@ -235,50 +242,61 @@ const ReviewView = () => {
             marginTop: "10px",
           }}
         >
-          <button
-            onClick={deleteComment}
-            style={{
-              padding: "8px 16px",
-              background: "#ff3044",
-              color: "white",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-            }}
-            type="button"
-          >
-            삭제
-          </button>
-          <div style={{ display: "flex", gap: "10px" }}>
+          {(selectReview.replyStatus !== null) | (busiReview !== "") ? (
             <button
-              onClick={() => {
-                setReviewComment(false);
-                setIsComments(false);
-              }}
+              onClick={deleteComment}
               style={{
                 padding: "8px 16px",
-                background: "#0049a5",
+                background: "#ff3044",
                 color: "white",
                 borderRadius: "5px",
                 border: "none",
                 cursor: "pointer",
               }}
+              type="button"
             >
-              수정
+              삭제
             </button>
-            {/* <button
-              onClick={() => navigate("/expert/review-center")}
-              style={{
-                padding: "8px 16px",
-                background: "#b6b6b6",
-                color: "white",
-                borderRadius: "5px",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              목록으로
-            </button> */}
+          ) : (
+            <div></div>
+          )}
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            {selectReview.replyStatus === null ? (
+              <button
+                onClick={() => {
+                  setReviewComment(false);
+                  setIsComments(false);
+                }}
+                style={{
+                  backgroundColor: "#0049a5",
+                  color: "white",
+                  padding: "8px 20px",
+                  borderRadius: "5px",
+                  marginRight: "0",
+                  width: "80px",
+                }}
+              >
+                등록
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setReviewComment(false);
+                  setIsComments(false);
+                }}
+                style={{
+                  backgroundColor: "#0049a5",
+                  color: "white",
+                  padding: "8px 20px",
+                  borderRadius: "5px",
+                  width: "80px",
+                }}
+              >
+                수정
+              </button>
+            )}
           </div>
         </div>
       )}

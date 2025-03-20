@@ -44,7 +44,7 @@ function BusinessNumber() {
       formData.append("paper", data);
     }
     try {
-      const res = await axios.post("/api/ocr/upload", formData, {
+      const res = await loginApi.post("/api/ocr/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -26,6 +26,7 @@ function BusinessSignUp() {
   const [category, setCategory] = useRecoilState(categoriesStateS);
   const [detailTypes, setDetailTypes] = useRecoilState(detailTypesStateS);
   const [errorModal, setErrorModal] = useState(false);
+  const [selectDetail, setSelectDetail] = useState(0);
   const sucess = () => {
     setNumMOdal(false);
     navigate("/");
@@ -48,7 +49,8 @@ function BusinessSignUp() {
   // };
   // console.log(initData);
   const handleChange = value => {
-    console.log(`selected ${value}`);
+    console.log(value);
+    setSelectDetail(value);
   };
   const handleChangecat = value => {
     getDetailTypes(value);
@@ -112,7 +114,7 @@ function BusinessSignUp() {
         businessName: data.businessName,
         address: data.address,
         detailTypeId: data.detailTypeId,
-        busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
+        busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY-MM-DD"),
         tel: data.tel,
         lat: 0,
         lng: 0,
@@ -153,7 +155,6 @@ function BusinessSignUp() {
   };
   useEffect(() => {
     getCategori();
-    getDetailTypes();
     // Daum 우편번호 스크립트 로드
     const script = document.createElement("script");
     script.src =

@@ -29,7 +29,7 @@ const ExpertHeader = () => {
       const countRes = await loginApi.get(
         `/api/service?business_id=${busiId}&status=3&page=1&size=99999`,
       );
-      console.log("캘린더", response);
+
       // 예약건수 셋팅
       const countData = countRes.data.resultData.map(item => ({
         title: item.userName,
@@ -37,7 +37,6 @@ const ExpertHeader = () => {
       }));
       setReserveCount(countData);
       if (response && response.data.resultData) {
-        console.log("캘린더", response.data.resultData);
         // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)
         const filteredData = response.data.resultData.map(item => ({
           title: item.userName,
@@ -45,11 +44,10 @@ const ExpertHeader = () => {
           start: item.startDate,
           completed: item.completed,
         }));
-        console.log(filteredData);
+
         setReserveInfo(filteredData);
       }
       setBusinessInfo(res.data.resultData);
-      console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +74,7 @@ const ExpertHeader = () => {
       getBusinessInfo(busiId);
     }
   }, [busiId]);
-  console.log("businessInfo", businessInfo);
+
   return (
     <HeaderDiv>
       <Link to={"expert"} className="b-logo">
