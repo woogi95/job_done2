@@ -4,9 +4,12 @@ import { Button, Form, Input } from "antd";
 import "./passwordemailcheck.css";
 import { useRecoilState } from "recoil";
 import { emailForm } from "../../../atoms/loginAtom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PasswordEmailCheck = () => {
   const [isEmail, setIsEmail] = useRecoilState(emailForm);
+  const navigate = useNavigate();
   const initData = {
     email: "",
   };
@@ -14,17 +17,14 @@ const PasswordEmailCheck = () => {
     console.log(data);
 
     try {
-      setIsEmail(prev => ({
-        ...prev,
-        ...data,
-      }));
+      setIsEmail(data);
       const res = await axios.post("/api/email-check", {
         email: `${data.email}`,
       });
       console.log(res);
       // console.log(userInfo);
 
-      navigate("/login/email");
+      navigate("/login/epwcheck");
     } catch (error) {
       console.log(error);
     }

@@ -6,7 +6,6 @@ import {
   StateVisitorType,
 } from "../../types/type";
 
-import axios from "axios";
 import { loginApi } from "../login";
 
 // 전체 데이터 불러오기
@@ -30,7 +29,7 @@ export const getDashBoardData = async (
 ) => {
   try {
     const res = await loginApi.get("/api/admin/statesDashBoard");
-    console.log(res);
+    // console.log(res);
     if (res) {
       const filterData = res.data.resultData;
       setDashBoardData(filterData);

@@ -1,19 +1,15 @@
 import { Button, Form, Input } from "antd";
 import { useRecoilState } from "recoil";
-import {
-  countDownCheck,
-  emailForm,
-  openModalEmail,
-} from "../../../atoms/loginAtom";
+import { countDownCheck, emailForm } from "../../../atoms/loginAtom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./EmailPage.css";
 import UserLayout from "../../../components/layouts/UserLayout";
 
 function PasswordEmail() {
   const [emailInfo] = useRecoilState(emailForm);
-  const [isEmail, setIsEmail] = useRecoilState(openModalEmail);
+  const [isEmail, setIsEmail] = useState(false);
   const [countDown, setCountDown] = useRecoilState(countDownCheck);
   const navigate = useNavigate();
 
@@ -39,7 +35,7 @@ function PasswordEmail() {
 
       if (result) {
         setIsEmail(true);
-        navigate("/");
+        navigate("/login/epwedit");
       }
     } catch (error) {
       console.log(error);
@@ -131,7 +127,7 @@ function PasswordEmail() {
         <div className="emailModalFull">
           <div className="emailModal">
             <h1>이메일인증이 완료 되었습니다.</h1>
-            <button onClick={() => handleEmailModal(userInfo[0])}>확인</button>
+            <button onClick={() => setIsEmail(false)}>확인</button>
           </div>
         </div>
       )}

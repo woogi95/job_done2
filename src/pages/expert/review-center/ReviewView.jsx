@@ -56,7 +56,7 @@ const ReviewView = () => {
       await loginApi.delete(`/api/review/comment?reviewId=${reviewIds}`);
       setBusiReview("");
       setIsComments(false);
-      navigate("/expert/review-center");
+      // navigate("/expert/review-center");
     } catch (error) {
       console.log(error);
     }
