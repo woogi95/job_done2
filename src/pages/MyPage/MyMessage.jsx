@@ -57,7 +57,7 @@ function ContactUs() {
         // console.log("roomId가 없습니다.");
         return;
       }
-      ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
+      ws = new WebSocket(`/chat/${roomId}`);
 
       ws.onopen = () => {
         // console.log("웹소켓 연결 성공!");
