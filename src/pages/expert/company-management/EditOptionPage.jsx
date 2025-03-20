@@ -377,7 +377,6 @@ function EditOptionPage() {
                     }
                   }}
                 />
-                원
               </label>
             </div>
             {/* 옵션 등록 */}
