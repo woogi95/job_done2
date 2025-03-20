@@ -220,6 +220,7 @@ export const modalStyle: CSSProperties = {
   justifyContent: "space-between",
   position: "relative" as const,
 };
+
 export const overlayStyle = {
   position: "fixed" as const,
   top: 0,
@@ -232,3 +233,80 @@ export const overlayStyle = {
   alignItems: "center",
   zIndex: 1000,
 };
+
+export const PostDelete = styled.button`
+  border: 2px solid black;
+  background-color: #fff;
+  color: #333;
+  width: 60px;
+  height: 32px;
+  padding: 5px 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  &:hover {
+    background-color: #2a58ad; /* 빨간색으로 변경 (원하는 색상으로 수정 가능) */
+    color: #fff; /* 글자색 변경 */
+    border-color: #2a58ad; /* 테두리 색상 변경 */
+  }
+`;
+export const CategoryButton = styled.button`
+  border: 2px solid black;
+  background-color: #f9f9f9;
+  color: #333;
+  width: 70px;
+  height: 32px;
+  padding: 5px 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  &:hover {
+    background-color: #2a58ad; /* 빨간색으로 변경 (원하는 색상으로 수정 가능) */
+    color: #fff; /* 글자색 변경 */
+    border-color: #2a58ad; /* 테두리 색상 변경 */
+  }
+`;
+export const deleteStyle: CSSProperties = {
+  width: "400px",
+  height: "200px",
+  padding: "20px",
+  borderRadius: "10px",
+  backgroundColor: "#fff",
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  position: "relative" as const,
+};
+export const deleteSecondStyle: CSSProperties = {
+  width: "200px",
+  height: "100px",
+  padding: "20px",
+  borderRadius: "10px",
+  backgroundColor: "#fff",
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+  zIndex: "999",
+  position: "absolute" as const,
+};
+
+export const YesOrNo = styled.button`
+  width: 40%;
+  height: 100%;
+  border: 2px solid #777777;
+  background-color: #777777;
+  color: #fff;
+  &:hover {
+    background-color: #2a58ad; /* 빨간색으로 변경 (원하는 색상으로 수정 가능) */
+    color: #fff; /* 글자색 변경 */
+    border-color: #2a58ad; /* 테두리 색상 변경 */
+  }
+`;

@@ -34,6 +34,13 @@ function EditOptionPage() {
     isOpen: false,
     message: "",
   });
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
+  const [isDeleteDetailPopupOpen, setIsDeleteDetailPopupOpen] = useState(false);
+  const [selectedDetailOption, setSelectedDetailOption] = useState({
+    optionIndex: null,
+    detailIndex: null,
+  });
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -96,7 +103,7 @@ function EditOptionPage() {
     const newOption = {
       optionId: 0, // 새로운 옵션일 경우 0
       optionName: newOptionName,
-      optionDetailList: [], // 빈 배열로 초기화
+      optionDetailList: [],
     };
 
     setProductInfo(prev => ({
@@ -303,6 +310,38 @@ function EditOptionPage() {
     console.log("ProductInfo 업데이트:", ProductInfo);
   }, [ProductInfo]);
 
+  const handleDeleteClick = index => {
+    setSelectedOptionIndex(index);
+    setIsDeletePopupOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedOptionIndex !== null) {
+      handleDeleteOption(selectedOptionIndex);
+      setIsDeletePopupOpen(false);
+      setSelectedOptionIndex(null);
+    }
+  };
+
+  const handleDeleteDetailClick = (optionIndex, detailIndex) => {
+    setSelectedDetailOption({ optionIndex, detailIndex });
+    setIsDeleteDetailPopupOpen(true);
+  };
+
+  const handleConfirmDetailDelete = () => {
+    if (
+      selectedDetailOption.optionIndex !== null &&
+      selectedDetailOption.detailIndex !== null
+    ) {
+      handleDeleteDetailOption(
+        selectedDetailOption.optionIndex,
+        selectedDetailOption.detailIndex,
+      );
+      setIsDeleteDetailPopupOpen(false);
+      setSelectedDetailOption({ optionIndex: null, detailIndex: null });
+    }
+  };
+
   return (
     <ExportPageDiv>
       <ExpertOptionInfoDiv>
@@ -338,6 +377,7 @@ function EditOptionPage() {
                     }
                   }}
                 />
+                원
               </label>
             </div>
             {/* 옵션 등록 */}
@@ -364,7 +404,7 @@ function EditOptionPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => handleDeleteOption(optionIndex)}
+                        onClick={() => handleDeleteClick(optionIndex)}
                       >
                         삭제
                       </button>
@@ -380,7 +420,7 @@ function EditOptionPage() {
                             <button
                               type="button"
                               onClick={() =>
-                                handleDeleteDetailOption(
+                                handleDeleteDetailClick(
                                   optionIndex,
                                   detailIndex,
                                 )
@@ -449,6 +489,24 @@ function EditOptionPage() {
         onConfirm={() => {
           navigate("/expert/company-management");
         }}
+      />
+      <Popup
+        isOpen={isDeletePopupOpen}
+        onClose={() => setIsDeletePopupOpen(false)}
+        title="옵션 삭제"
+        message="옵션 삭제하시겠습니까?"
+        showCancelButton={true}
+        showConfirmButton={true}
+        onConfirm={handleConfirmDelete}
+      />
+      <Popup
+        isOpen={isDeleteDetailPopupOpen}
+        onClose={() => setIsDeleteDetailPopupOpen(false)}
+        title="선택 옵션 삭제"
+        message="선택 옵션을 삭제하시겠습니까?"
+        showCancelButton={true}
+        showConfirmButton={true}
+        onConfirm={handleConfirmDetailDelete}
       />
     </ExportPageDiv>
   );

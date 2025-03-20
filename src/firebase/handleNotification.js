@@ -1,7 +1,7 @@
 import { getToken } from "firebase/messaging";
-
 import { sendTokenToServer } from "../apis/notificationApi";
 import { registerServiceWorker } from "./registerServiceWorker";
+import { messaging } from "./notificationPermission";
 
 export async function handleAllowNotification() {
   registerServiceWorker(); // 나중에 설명
@@ -11,10 +11,7 @@ export async function handleAllowNotification() {
     if (permission === "granted") {
       const token = await getToken(messaging, {
         vapidKey:
-          BK -
-          vwbucawPh7KRPU9KpdLUTpV5Mi7s0ufRE1T4R6n7pSMSGoDpCG2Of4eGjX -
-          jZxwktl -
-          FaEO9NmXKgOJOIPDo,
+          "BK-vwbucawPh7KRPU9KpdLUTpV5Mi7s0ufRE1T4R6n7pSMSGoDpCG2Of4eGjX-jZxwktl-FaEO9NmXKgOJOIPDo",
       });
       if (token) {
         sendTokenToServer(token); // (토큰을 서버로 전송하는 로직)

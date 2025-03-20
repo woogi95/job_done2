@@ -121,6 +121,7 @@ body {
   font-size: var(--font-size-base) !important;
   color: var(--primary-color) !important;
   overflow-x: hidden;
+  min-width: 480px;
 }
 ol,
 ul {

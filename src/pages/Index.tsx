@@ -206,7 +206,7 @@ const Index = () => {
 
       <div>
         {/* 이벤트 배너 */}
-        <div className="relative lg-custom:h-[500px] overflow-hidden h-[400px]">
+        <div className="relative lg-custom:h-[500px] md-custom:h-[400px] mb:h-[300px] h-[200px] overflow-hidden">
           <Swiper
             modules={[Autoplay]}
             autoplay={{ delay: 5000 }}
@@ -231,7 +231,7 @@ const Index = () => {
         {/* 지역 아이콘 */}
         <div className="bg-white/50 backdrop-blur-sm my-[30px]">
           <div className="flex justify-center items-center py-[80px]">
-            <div className="flex gap-8">
+            <div className="flex gap-8 ms-muinus:flex-wrap ms-muinus:max-w-[375px] ms-muinus:justify-center">
               {regions.map(region => (
                 <a
                   key={region.regionId}
@@ -240,7 +240,7 @@ const Index = () => {
                     setSelectedRegion(region.regionId);
                   }}
                   href={`/?region=${region.regionId}`}
-                  className={`h-[120px] w-[120px] rounded-2xl relative group overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-2
+                  className={`md:h-[120px] md:w-[120px] sm:h-[100px] sm:w-[100px] h-[80px] w-[80px] rounded-2xl relative group overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-2
                     ${
                       selectedRegion === region.regionId
                         ? "bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-500/30"
@@ -261,16 +261,18 @@ const Index = () => {
       </div>
 
       {/* 날씨 */}
-      <div className="h-[200px]">
+      <div className="h-[200px] md-2-munus:my-[60px]">
         <div className="flex flex-col gap-[10px] max-w-[1100px] mx-auto px-4">
           <span className="flex justify-center text-[18px] font-bold mb-[20px]">
             이번 주 날씨
           </span>
           <div className="flex mx-auto gap-[20px]" id="weather-container">
-            {weatherItems.map(item => (
+            {weatherItems.map((item, index) => (
               <div
                 key={item.date}
-                className="flex flex-col items-center justify-center"
+                className={`flex flex-col items-center justify-center ${
+                  index === weatherItems.length - 1 ? "hidden sm:flex" : ""
+                } ${index >= 4 ? "hidden md:flex" : ""}`}
               >
                 <div className="text-[18px] font-semibold">
                   {item.averageTemp}°C
@@ -284,17 +286,18 @@ const Index = () => {
       </div>
 
       {/* 컨텐츠 */}
-      <div className="bg-white/30 backdrop-blur-sm py-10">
-        <div className="max-w-[1280px] m-auto mx-[20px]">
+      <div className="bg-white/30 backdrop-blur-sm md:py-10">
+        <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          <div className="lg-custom:flex mb-[80px]">
-            <div className="py-[20px]">
-              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
-                <span className="text-[28px] font-bold text-[#e74964]">
+          <div className="lg-custom:flex mb-[80px] md-custom:mx-[20px] md:mx-[20px] mx-[20px]">
+            <div className="md-2-munus:flex md-custom:py-[20px]">
+              <div className="flex md:flex-col justify-center items-center lg-custom:w-[200px] lg-custom:h-[400px] lg-custom:mx-4 md:my-8 md:gap-5 mx-3 mt-[50px]">
+                <span className="text-[28px] font-bold text-[#e74964] ">
                   현재 인기
                 </span>
-                <br />
-                <span className="text-[20px] font-medium">서비스</span>
+                <span className="md:text-[20px] px-2 text-[28px] font-medium">
+                  서비스
+                </span>
               </div>
             </div>
             {categories.popular && categories.popular.length > 0 ? (
@@ -305,15 +308,24 @@ const Index = () => {
                   clickable: true,
                   dynamicMainBullets: 3,
                 }}
-                slidesPerView={4}
+                breakpoints={{
+                  375: { slidesPerView: 2 },
+                  480: { slidesPerView: 2 },
+                  640: { slidesPerView: 3 },
+                  768: { slidesPerView: 3 },
+                  930: { slidesPerView: 4 },
+                }}
                 spaceBetween={15}
-                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px]
+                [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
               >
                 {categories.popular.map((item, index) => (
                   <SwiperSlide key={`popular-${item.businessId}-${index}`}>
                     <Link
                       to={`/service/${item.businessId}`}
-                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1 h-[400px]"
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden
+                      bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1
+                      md:h-[400px] h-[260px]"
                     >
                       <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
                         <img
@@ -322,7 +334,7 @@ const Index = () => {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                      <span className="block w-full overflow-hidden font-medium md:text-lg text-[16px] line-clamp-3 md-2-munus:truncate">
                         {item.title}
                       </span>
                       <div className="mt-auto">
@@ -354,14 +366,18 @@ const Index = () => {
           </div>
 
           {/* 최신 글 */}
-          <div className="flex mb-[80px]">
-            <div className="py-[20px]">
-              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
+          <div className="lg-custom:flex mb-[80px] md-custom:mx-[20px] md:mx-[20px] mx-[20px]">
+            <div className="md-2-munus:flex md-custom:py-[20px]">
+              <div
+                className="flex md:flex-col justify-center items-center lg-custom:w-[200px]
+              lg-custom:h-[400px] lg-custom:mx-4 md:my-8 md:gap-5 mx-3 mt-[50px]"
+              >
                 <span className="text-[28px] font-bold text-[#4889dd]">
                   최근 등록된
                 </span>
-                <br />
-                <span className="text-[20px] font-medium">서비스</span>
+                <span className="md:text-[20px] px-2 text-[28px] font-medium">
+                  서비스
+                </span>
               </div>
             </div>
             {categories.latest && categories.latest.length > 0 ? (
@@ -372,15 +388,24 @@ const Index = () => {
                   clickable: true,
                   dynamicMainBullets: 3,
                 }}
-                slidesPerView={4}
+                breakpoints={{
+                  375: { slidesPerView: 2 },
+                  480: { slidesPerView: 2 },
+                  640: { slidesPerView: 3 },
+                  768: { slidesPerView: 3 },
+                  930: { slidesPerView: 4 },
+                }}
                 spaceBetween={15}
-                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px]
+                [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
               >
                 {categories.latest.map((item, index) => (
                   <SwiperSlide key={`latest-${item.businessId}-${index}`}>
                     <Link
                       to={`/service/${item.businessId}`}
-                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 h-[400px]"
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden
+                      bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1
+                      md:h-[400px] h-[260px]"
                     >
                       <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
                         <img
@@ -389,7 +414,7 @@ const Index = () => {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                      <span className="block w-full overflow-hidden font-medium md:text-lg text-[16px] line-clamp-3 truncate">
                         {item.title}
                       </span>
                       <div className="mt-auto">
@@ -421,14 +446,15 @@ const Index = () => {
           </div>
 
           {/* 최저가 글 */}
-          <div className="flex mb-[80px]">
-            <div className="py-[20px]">
-              <div className="flex flex-col justify-center items-center w-[200px] h-[400px] mx-4">
+          <div className="lg-custom:flex mb-[80px] md-custom:mx-[20px] md:mx-[20px] mx-[20px]">
+            <div className="md-2-munus:flex md-custom:py-[20px]">
+              <div className="flex md:flex-col justify-center items-center lg-custom:w-[200px] lg-custom:h-[400px] lg-custom:mx-4 md:my-8 md:gap-5 mx-3 mt-[50px]">
                 <span className="text-[28px] font-bold text-[#e4b041]">
                   최저가
                 </span>
-                <br />
-                <span className="text-[20px] font-medium">서비스</span>
+                <span className="md:text-[20px] px-2 text-[28px] font-medium">
+                  서비스
+                </span>
               </div>
             </div>
             {categories.cheapest && categories.cheapest.length > 0 ? (
@@ -439,7 +465,13 @@ const Index = () => {
                   clickable: true,
                   dynamicMainBullets: 3,
                 }}
-                slidesPerView={4}
+                breakpoints={{
+                  375: { slidesPerView: 2 },
+                  480: { slidesPerView: 2 },
+                  640: { slidesPerView: 3 },
+                  768: { slidesPerView: 3 },
+                  930: { slidesPerView: 4 },
+                }}
                 spaceBetween={15}
                 className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
               >
@@ -447,7 +479,9 @@ const Index = () => {
                   <SwiperSlide key={`cheapest-${item.businessId}-${index}`}>
                     <Link
                       to={`/service/${item.businessId}`}
-                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 h-[400px]"
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden
+                      bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1
+                      md:h-[400px] h-[260px]"
                     >
                       <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
                         <img
@@ -456,7 +490,7 @@ const Index = () => {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                      <span className="block w-full overflow-hidden font-medium md:text-lg text-[16px] line-clamp-3 truncate">
                         {item.title}
                       </span>
                       <div className="mt-auto">
@@ -498,7 +532,7 @@ const Index = () => {
       {/* 기업 로고들 */}
       <div className="bg-[#7395f1]">
         <div className="flex justify-center items-center bg-[#7395f1] h-[200px]">
-          <span className="text-[40px] font-bold text-[#ffffff]">
+          <span className="md:text-[40px] text-[32px] font-bold text-[#ffffff]">
             믿을 수 있는 기업들이 함께 합니다.
           </span>
         </div>

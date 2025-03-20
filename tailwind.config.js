@@ -28,6 +28,11 @@ export default {
       },
       screens: {
         "lg-custom": "1150px",
+        "md-custom": "930px",
+        "md-minus": { max: "930px" },
+        "md-2-munus": { max: "768px" },
+        "ms-muinus": { max: "640px" },
+        "ms-mini": "480px",
       },
     },
   },

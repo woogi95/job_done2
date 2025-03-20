@@ -102,7 +102,7 @@ const Estimate = () => {
           if (paymentWindow.closed) {
             setIsLoading(false);
             clearInterval(checkWindowClosed);
-            navigate("/mypage/usage");
+            navigate(`/paymenthistory/${serviceId}`);
           }
         }, 1000);
       }

@@ -156,7 +156,13 @@ const EditPortfolio = ({
         const updatedPfDetailImgList = filePreviews
           .filter(file => file.preview && !file.preview.startsWith("blob:")) // blob URL 제외
           .map(file => file.preview); // preview URL 추출
-        setPfDetailImgList(updatedPfDetailImgList);
+        setPfDetailImgList(prev => [
+          ...prev,
+          ...res.data.resultData.pics.map(pic => ({
+            ...pic,
+            pic: pic.picPath,
+          })),
+        ]);
 
         // portfolioDetailInfo 업데이트
         setPortfolioDetailInfoState(prev => ({
@@ -169,7 +175,6 @@ const EditPortfolio = ({
           businessState.detailTypeId,
           businessState.businessId,
         );
-        setPfDetailImgList([...pfDetailImgList, ...res.data.resultData.pics]);
         setIsPopPfEdit(false);
         setIsEditComplete(true);
       }

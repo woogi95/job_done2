@@ -67,12 +67,8 @@ function Index() {
   const [productId, setProductId] = useState(1);
   const [selectedOption, setSelectedOption] = useState([]);
   const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail.businessId;
   const [isTest, setIsTest] = useState();
   const [serviceId, setServiceId] = useRecoilState(serviceIdState);
-  // useEffect(() => {
-  //   console.log("serviceId", serviceId);
-  // }, [serviceId]);
 
   // 최종 API 로 보낼 데이터 모양
   const [sendAllData, setSendAllData] = useState([]);
@@ -104,13 +100,16 @@ function Index() {
   });
 
   useEffect(() => {
-    // console.log("===========");
-    // console.log(sendAllData);
     const sendOptionData = sendAllData.map(item => ({
       optionDetailId: item.optionDetailId,
     }));
     // console.log(sendOptionData);
   }, [sendAllData]);
+
+  // 쿼리스트링에서 businessId 가져오기
+  const searchParams = new URLSearchParams(window.location.search);
+  const businessId =
+    searchParams.get("businessId") || businessDetail.businessId;
 
   // 옵션 목록 가져오기
   const getOptionList = async businessId => {

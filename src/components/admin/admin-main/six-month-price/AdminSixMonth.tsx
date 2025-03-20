@@ -4,8 +4,8 @@ import {
   dcSixMonthDataAtom,
   yearValueAtom,
 } from "../../../../atoms/third-atoms/admin/mainAtom";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { loginApi } from "../../../../apis/login";
 
 const AdminSixMonth = () => {
   // const [serverData] = useRecoilState(dcSixMonthDataAtom);
@@ -22,7 +22,7 @@ const AdminSixMonth = () => {
   ]);
   const getSixData = async () => {
     try {
-      const res = await axios.get("/api/admin/statsSales");
+      const res = await loginApi.get("/api/admin/statsSales");
       if (res) {
         const filterData = res.data.resultData;
 
@@ -45,7 +45,7 @@ const AdminSixMonth = () => {
   };
   const getYearData = async () => {
     try {
-      const res = await axios.get(
+      const res = await loginApi.get(
         `/api/admin/statsSalesYear?year=${yearValue}`,
       );
       if (res) {

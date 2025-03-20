@@ -213,7 +213,7 @@ function Header() {
               {getBusinessId == 0 ? (
                 <Link
                   to="/business/number"
-                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"
+                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl ms-muinus:hidden"
                 >
                   업체 등록
                 </Link>
@@ -228,19 +228,19 @@ function Header() {
 
               <Link
                 to="/mypage/reservation"
-                className="flex items-center justify-center"
+                className="flex items-center justify-center md-minus:hidden"
               >
                 예약현황
               </Link>
               <Link
                 to="/mypage/wishlist"
-                className="flex items-center justify-center"
+                className="flex items-center justify-center md-minus:hidden"
               >
                 찜
               </Link>
               <Link
                 to="/mypage/message"
-                className="flex items-center justify-center"
+                className="flex items-center justify-center md-minus:hidden"
               >
                 메시지
               </Link>

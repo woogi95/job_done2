@@ -76,7 +76,7 @@ export const Intermediary = () => {
     }
 
     const handleScroll = () => {
-      if (window.scrollY >= 4700) {
+      if (window.scrollY >= 4200) {
         stepAnime();
         window.removeEventListener("scroll", handleScroll);
       }
@@ -159,9 +159,17 @@ export const LinkToSignUp = () => {
     const linkElement = linkRef.current;
     if (linkElement) {
       const handleMouseEnter = () => {
+        let translateValue = 90;
+        if (window.innerWidth < 480) {
+          translateValue = 15;
+        } else if (window.innerWidth < 930) {
+          translateValue = 30;
+        } else if (window.innerWidth < 1150) {
+          translateValue = 60;
+        }
         anime({
           targets: linkElement.querySelector(".link-text"),
-          translateX: 100,
+          translateX: translateValue,
         });
       };
 
@@ -183,13 +191,19 @@ export const LinkToSignUp = () => {
   }, []);
 
   return (
-    <div className="max-w-[1100px] m-auto py-[80px]">
+    <div
+      className="lg-custom:max-w-[1100px] md-custom:max-w-[900px]
+    md:max-w-[700px] max-w-[480px] h-[100px] m-auto py-[80px]"
+    >
       <div className="flex justify-center items-center">
         <Link
           to="/login"
           ref={linkRef}
           target="_blank"
-          className="flex items-center justify-center w-full h-[200px] bg-gradient-to-br from-blue-500 to-purple-500 text-white text-[38px] font-bold rounded-lg shadow-lg transition-transform duration-200"
+          className="flex items-center justify-center w-full lg-custom:h-[200px]
+          md:h-[150px] h-[100px] bg-gradient-to-br from-blue-500 to-purple-500 text-white
+          lg-custom:text-[38px] md:text-[30px] text-[20px] font-bold rounded-lg shadow-lg
+          transition-transform duration-200"
         >
           <span className="link-text">
             JOBDONE 회원가입하고 더 많은 혜택을 누리세요!
@@ -235,7 +249,7 @@ export const ServiceCenter = () => {
     }
 
     const handleScroll = () => {
-      if (window.scrollY >= 5300) {
+      if (window.scrollY >= 5000) {
         serviceAnime();
         window.removeEventListener("scroll", handleScroll);
       }
