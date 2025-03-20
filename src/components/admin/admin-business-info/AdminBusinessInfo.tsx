@@ -57,7 +57,7 @@ function AdminBusinessInfo() {
         `/api/business/business?businessId=${busiId}`,
       );
       setBusinessInfo(res.data.resultData);
-      console.log(res.data.resultData);
+      // console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +67,7 @@ function AdminBusinessInfo() {
     try {
       // /api/portfolio/post?businessId=2&price=50000&takingTime=5&title=ddd&contents=ddd
       const res = await loginApi.get(`/api/product?businessId=${busiId}`);
-      console.log("여기제발", res.data.resultData);
+      // console.log("여기제발", res.data.resultData);
       setOptionList(res.data.resultData);
     } catch (error) {
       console.log(error);

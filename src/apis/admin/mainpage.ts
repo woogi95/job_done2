@@ -29,7 +29,7 @@ export const getDashBoardData = async (
 ) => {
   try {
     const res = await loginApi.get("/api/admin/statesDashBoard");
-    console.log(res);
+    // console.log(res);
     if (res) {
       const filterData = res.data.resultData;
       setDashBoardData(filterData);
