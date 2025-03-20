@@ -25,6 +25,7 @@ const Adminlogin = () => {
       }
     } catch (error) {
       console.log(error);
+      alert("접근 권한이 없습니다. 다시 한번 확인해주세요.");
     }
   };
   return (

@@ -6,7 +6,6 @@ import {
   StateVisitorType,
 } from "../../types/type";
 
-import axios from "axios";
 import { loginApi } from "../login";
 
 // 전체 데이터 불러오기

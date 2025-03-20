@@ -114,6 +114,8 @@ function BusinessSignUp() {
         detailTypeId: data.detailTypeId,
         busiCreatedAt: dayjs(data.busiCreatedAt).format("YYYY/MM/DD"),
         tel: data.tel,
+        lat: 0,
+        lng: 0,
       };
       console.log(requestData);
       console.log(data.logo.file);
@@ -142,7 +144,6 @@ function BusinessSignUp() {
 
       if (res.status === 200) {
         setNumMOdal(true);
-        localStorage.setItem("businessId", JSON.stringify(res.data.resultData));
       }
     } catch (error) {
       setErrorModal(true);
@@ -288,7 +289,7 @@ function BusinessSignUp() {
                 marginTop: 20,
               }}
             >
-              <h1>등록이 완료되었습니다.</h1>
+              <h1>등록 요청이 완료되었습니다.</h1>
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={e => sucess(e)}>확인</button>

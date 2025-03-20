@@ -18,7 +18,7 @@ const schema = yup.object({
 const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
   const businessState = useRecoilValue(businessDetailState);
   const [businessInfo, setbusinessInfo] = useRecoilState(businessDetailState);
-  console.log("businessState", businessState);
+
   const formatPhoneNumber = phone => {
     if (!phone) return "-";
     const cleaned = String(phone).replace(/\D/g, "");
@@ -54,7 +54,6 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
       tel: data.tel.replace(/\D/g, ""),
       businessId: busiId,
     };
-    console.log("제출된 데이터:", cleanedData);
 
     try {
       const res = await loginApi.put(`/api/business/detail`, cleanedData);
@@ -64,7 +63,7 @@ const ExpertInfoEdit = ({ isExpertInfoEdit, setIsExpertInfoEdit, busiId }) => {
         closingTime: data.closingTime,
         tel: cleanedData.tel,
       });
-      console.log(res.data);
+
       setPopupMessage("업체정보 수정이 완료되었습니다.");
       setIsPopupOpen(true);
     } catch (error) {
