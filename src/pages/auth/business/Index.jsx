@@ -116,7 +116,7 @@ function BusinessSignUp() {
         int: null,
         lat: null,
       };
-      console.log(data.logo.file);
+      console.log("도대체 뭔데? : ", data.logo.file);
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",
