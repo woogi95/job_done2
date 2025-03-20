@@ -180,7 +180,7 @@ const Estimate = () => {
               </ul>
             </div>
             <div className="user-info">
-              <h3>예약자 정보</h3>
+              <h3>예약자 정보ww</h3>
               <ul>
                 <li>
                   <p>예약자</p>

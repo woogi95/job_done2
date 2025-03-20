@@ -1,10 +1,9 @@
 import React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { getCookie } from "../../../apis/cookie";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { loginApi } from "../../../apis/login";
 import { papersState } from "../../../atoms/businessAtom";
 import {
@@ -15,15 +14,23 @@ import {
 } from "../../../components/papers/papers";
 
 const ExpertPaymentHistory = () => {
-  const [serviceId, setServiceId] = useState(null);
+  // const [serviceId, setServiceId] = useState(null);
   const papersInfo = useRecoilValue(papersState);
+  const [papers, setPapers] = useRecoilState(papersState);
   const navigate = useNavigate();
+  const businessId = Number(localStorage.getItem("businessId"));
+  const { serviceId } = useParams();
 
+  useEffect(() => {
+    if (serviceId) {
+      getEstimate(serviceId);
+    }
+  }, [serviceId]);
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
       const res = await loginApi.get(
-        `/api/service/detail?serviceId=${serviceId}`,
+        `/api/service/detail?serviceId=${serviceId}&businessId=${businessId}`,
       );
       // console.log("견적서 정보", res.data.resultData);
       if (res.data) {
@@ -45,19 +52,6 @@ const ExpertPaymentHistory = () => {
   const handleConfirm = () => {
     navigate("/expert/payment-management");
   };
-
-  useEffect(() => {
-    const storedServiceId = getCookie("serviceId");
-    if (storedServiceId) {
-      setServiceId(storedServiceId);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (serviceId) {
-      getEstimate(serviceId);
-    }
-  }, [serviceId]);
 
   return (
     <PapersDiv>

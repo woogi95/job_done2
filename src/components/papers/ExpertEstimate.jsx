@@ -13,10 +13,9 @@ const ExpertEstimate = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 하시겠습니까?");
   const [isSuccess, setIsSuccess] = useState(true);
-  // const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const businessId = Number(localStorage.getItem("businessId"));
-  console.log("businessId:", businessId);
+  // console.log("businessId:", businessId);
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
   const { serviceId } = useParams();
@@ -47,6 +46,7 @@ const ExpertEstimate = () => {
     patchServiceState(5, serviceId, businessId);
     setIsPopupOpen(false);
     navigate(`/expert/quote-management`);
+    window.location.reload();
   };
 
   const handleCancelClick = () => {
@@ -108,7 +108,7 @@ const ExpertEstimate = () => {
         <div className="logo"></div>
         <PaperContDiv>
           <h2 className="tit">
-            {papersInfo.userName}님 <strong>견적 내역</strong>
+            {papersInfo.userName}님의 <br /> <strong>견적 내역</strong> 입니다.
           </h2>
 
           <ExportFormDiv>
@@ -213,11 +213,13 @@ const ExpertEstimate = () => {
                     </ul>
                   </li>
                 )}
-                <li>
+                <li style={{ backgroundColor: "#0084ff13" }}>
                   <p>총견적비용</p>
-                  <span>{papersInfo.totalPrice.toLocaleString()}원</span>
+                  <span style={{ color: "red", fontWeight: "bold" }}>
+                    {papersInfo.totalPrice.toLocaleString()}원
+                  </span>
                 </li>
-                <li>
+                <li style={{ backgroundColor: "#41414113" }}>
                   <p>특이사항</p>
                   <span>{papersInfo.addComment}</span>
                 </li>

@@ -20,8 +20,9 @@ export const QuotationFormDiv = styled.div`
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   .readonly {
     background-color: #eee;
-    color: #999;
+    color: #999 !important;
   }
+
   form {
     > div {
       /* border: 1px solid; */
@@ -244,6 +245,15 @@ export const AddOptionDiv = styled.div`
   }
 `;
 export const DatePriceDiv = styled.div`
+  position: relative;
+  .error-message {
+    position: absolute;
+    top: 8px;
+    left: 150px;
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
   .date {
     border-bottom: none;
   }
