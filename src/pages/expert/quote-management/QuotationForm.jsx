@@ -88,7 +88,7 @@ function QuotationForm() {
     try {
       const requestData = {
         serviceId: serviceId,
-        totalPrice: totalPrice,
+        totalPrice: papersInfo.price,
         addComment: addComment,
         startDate: startDate?.format("YYYY/MM/DD"),
         endDate: endDate?.format("YYYY/MM/DD"),

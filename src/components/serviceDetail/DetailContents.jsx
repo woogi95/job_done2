@@ -85,26 +85,6 @@ const DetailContents = () => {
     }
   };
 
-  // 상세설명 사진들
-  // const [detailPicList, setDetailPicList] = useState([]);
-
-  // const getDetailPagePic = async businessId => {
-  //   try {
-  //     // `/api/business/${businessId}?businessId=${businessId}`,
-  //     const res = await axios.get(
-  //       `/api/business/pic/${businessId}?businessId=${businessId}`,
-  //     );
-  //     // console.log(res.data.resultData);
-  //     setDetailPicList(res.data.resultData);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getDetailPagePic(id);
-  // }, [id]);
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;

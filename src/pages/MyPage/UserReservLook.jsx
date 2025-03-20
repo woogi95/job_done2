@@ -32,9 +32,10 @@ const UserReservLook = () => {
     setIsPopupOpen(false);
   };
 
-  const getEstimate = async serviceId => {
+  const getEstimate = async () => {
     try {
       console.log("이게 찍히니????", serviceId);
+      const serviceId = getCookie("serviceId");
 
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
