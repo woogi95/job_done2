@@ -33,10 +33,12 @@ const UserReservLook = () => {
 
   const getEstimate = async () => {
     try {
+
       if (!serviceId) {
         console.error("에러 맞음?");
         return;
       }
+
 
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,

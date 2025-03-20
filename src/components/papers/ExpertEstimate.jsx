@@ -214,8 +214,8 @@ const ExpertEstimate = () => {
                   </li>
                 )}
                 <li>
-                  <p>견적비용</p>
-                  <span>{papersInfo.price.toLocaleString()}원</span>
+                  <p>총견적비용</p>
+                  <span>{papersInfo.totalPrice.toLocaleString()}원</span>
                 </li>
                 <li>
                   <p>특이사항</p>

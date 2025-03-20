@@ -217,7 +217,9 @@ function Index() {
               </li>
               <li className="td">{reservation.detailTypeName}</li>
               <li className="td">{reservation.userName}</li>
-              <li className="td">{reservation.price?.toLocaleString()} 원</li>
+              <li className="td">
+                {reservation.totalPrice?.toLocaleString()} 원
+              </li>
               <li className="td">
                 <p className={`completed-${reservation.completed}`}>
                   {getStatusText(reservation.completed)}
