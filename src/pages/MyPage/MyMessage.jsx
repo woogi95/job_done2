@@ -49,7 +49,7 @@ function ContactUs() {
   useEffect(() => {
     let ws;
     let reconnectAttempts = 0;
-    const maxReconnectAttempts = 2;
+    const maxReconnectAttempts = 1;
 
     const connectWebSocket = () => {
       if (!roomId) {

@@ -17,7 +17,7 @@ export const LetTopLayout = ({
     >
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-white ms-muinus:hidden">
-          뭐 먹지?
+          지역 선택
         </h1>
         <nav className="flex gap-6 justify-center items-center">
           {regions.map(region => (

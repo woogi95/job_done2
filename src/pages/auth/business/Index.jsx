@@ -119,6 +119,7 @@ function BusinessSignUp() {
       };
       console.log(requestData);
       console.log(data.logo.file);
+
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",
