@@ -4,7 +4,7 @@ import { stateSixMonthAtom } from "../../../../atoms/third-atoms/admin/mainAtom"
 
 const AdminSixMonth = () => {
   const [serverData, _setServerData] = useRecoilState(stateSixMonthAtom);
-  console.log(serverData);
+
   const categories = [
     ...new Set(
       serverData
@@ -34,7 +34,7 @@ const AdminSixMonth = () => {
     keys: categories,
     indexBy: "month", // X축을 month(월)로 설정
   };
-  console.log(barChartData);
+
   return (
     <div style={{ width: "100%", height: "80%" }}>
       <ResponsiveBar

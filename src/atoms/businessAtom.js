@@ -142,3 +142,8 @@ export const productDetailState = atom({
     contents: "",
   },
 });
+
+export const comModalState = atom({
+  key: "comModalState",
+  default: false,
+});

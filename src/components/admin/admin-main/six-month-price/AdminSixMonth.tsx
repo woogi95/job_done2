@@ -69,7 +69,6 @@ const AdminSixMonth = () => {
   };
   useEffect(() => {
     if (yearValue === 0) {
-      console.log(yearValue);
       getSixData();
     } else {
       getYearData();
