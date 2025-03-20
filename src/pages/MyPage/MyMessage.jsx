@@ -234,7 +234,6 @@ function ContactUs() {
       expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
     });
     fetchChatMessages(roomId);
-    console.log("선택된 방번호", roomId);
   };
 
   const handleChatDelete = async () => {

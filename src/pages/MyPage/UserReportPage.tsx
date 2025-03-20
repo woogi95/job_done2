@@ -40,12 +40,19 @@ function UserReportPage() {
 
   const fetchAnswers = async () => {
     try {
+      if (!qaId || qaId <= 0) {
+        setAnswers(null);
+        return;
+      }
+
       const response = await loginApi.get("/api/qa/answer", {
         params: { qaId: qaId },
       });
       setAnswers(response.data.resultData);
+      console.log("답변 데이터 : ", response.data.resultData);
     } catch (error) {
       console.error(error);
+      setAnswers(null);
     }
   };
 
@@ -91,34 +98,40 @@ function UserReportPage() {
         </span>
 
         <div className="flex flex-col gap-y-[10px] w-full max-w-[800px]">
-          {paginatedData.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col gap-y-[10px] p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow  hover:cursor-pointer"
-              onClick={() => handleReportClick(item.qaId)}
-            >
-              <div className="flex items-center gap-x-2">
-                <span className="text-[16px] font-semibold text-gray-700">
-                  날짜 :{" "}
-                </span>
-                <span className="text-gray-600">
-                  {item.createdAt.split(" ")[0]}
-                </span>
+          {paginatedData.length > 0 ? (
+            paginatedData.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col gap-y-[10px] p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow  hover:cursor-pointer"
+                onClick={() => handleReportClick(item.qaId)}
+              >
+                <div className="flex items-center gap-x-2">
+                  <span className="text-[16px] font-semibold text-gray-700">
+                    날짜 :{" "}
+                  </span>
+                  <span className="text-gray-600">
+                    {item.createdAt.split(" ")[0]}
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span className="text-[16px] font-semibold text-gray-700">
+                    신고 유형 :{" "}
+                  </span>
+                  <span className="text-gray-600">{item.qaType}</span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span className="text-[16px] font-semibold text-gray-700">
+                    신고 사유 :{" "}
+                  </span>
+                  <span className="text-gray-600">{item.reason}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-x-2">
-                <span className="text-[16px] font-semibold text-gray-700">
-                  신고 유형 :{" "}
-                </span>
-                <span className="text-gray-600">{item.qaType}</span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span className="text-[16px] font-semibold text-gray-700">
-                  신고 사유 :{" "}
-                </span>
-                <span className="text-gray-600">{item.reason}</span>
-              </div>
+            ))
+          ) : (
+            <div className="flex justify-center items-center p-4 border rounded-lg">
+              <p className="mt-1 text-gray-600">신고 내역이 없습니다.</p>
             </div>
-          ))}
+          )}
         </div>
         <Pagination
           current={currentPage}
@@ -133,12 +146,14 @@ function UserReportPage() {
 
       {/* 모달 영역 */}
       <Modal
-        title={`문의 상세 - ${qaDetail?.title || ""}`}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
         width={800}
       >
+        <div className="text-[20px] font-semibold pb-5">
+          {`문의 상세 - ${qaDetail?.title || ""}`}
+        </div>
         <div className="flex flex-col rounded-lg p-4 bg-gray-200">
           <span className="text-[16px] font-semibold text-gray-700">
             문의 내용 :
@@ -169,14 +184,20 @@ function UserReportPage() {
         {/* 답변 영역 */}
         <div className="flex flex-col gap-y-4">
           {answers ? (
-            <div className="p-4 border rounded-lg">
+            <div className="border rounded-lg">
               <div className="flex items-center gap-x-2">
-                <span className="font-semibold">답변 날짜:</span>
+                <span className="font-semibold text-[16px]">답변 날짜:</span>
                 <span>{answers?.createdAt.split(" ")[0]}</span>
               </div>
               <div className="flex mt-2">
-                <span className="font-semibold">답변 : </span>
-                <div className="flex ml-2 text-gray-700">{answers?.answer}</div>
+                <div className="flex flex-col rounded-lg p-4 bg-gray-200 w-full">
+                  <span className="font-semibold text-[16px] text-gray-700">
+                    답변 :{" "}
+                  </span>
+                  <div className="flex ml-2 text-gray-700">
+                    {answers?.answer}
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
