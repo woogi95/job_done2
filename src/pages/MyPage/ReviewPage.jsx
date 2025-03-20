@@ -34,18 +34,11 @@ function ReviewPage() {
         withCredentials: true,
       });
       setReview(Array.isArray(res.data.resultData) ? res.data.resultData : []);
-      console.log(
-        "리뷰 데이터의 pics:",
-        res.data.resultData.map(item => item.pics),
-      );
     } catch (error) {
       console.error("리뷰 목록 조회 실패:", error.response || error);
       setReview([]);
     }
   };
-  useEffect(() => {
-    console.log("리뷰 데이터 : ", review);
-  }, [review]);
 
   const correctReview = async () => {
     if (!selectedReview) return;
@@ -59,7 +52,6 @@ function ReviewPage() {
         contents: reviewContent.trim(),
         score: rating,
       };
-      console.log("Request Data:", requestData);
 
       formData.append(
         "p",
@@ -72,17 +64,15 @@ function ReviewPage() {
         formData.append("pics", file);
       });
 
-      for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0], pair[1]);
-      }
+      // for (const pair of formData.entries()) {
+      //   console.log("FormData Entry:", pair[0], pair[1]);
+      // }
 
       const res = await loginApi.put("/api/review", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      console.log("Response after update:", res.data);
 
       if (res.status === 200) {
         setModalMessage("리뷰가 수정되었습니다.");
@@ -108,7 +98,6 @@ function ReviewPage() {
   };
 
   const correctServiceImg = async reviewId => {
-    console.log("reviewId", reviewId);
     try {
       const res = await loginApi.put("/api/review/state", {
         reviewId: reviewId,
@@ -119,7 +108,6 @@ function ReviewPage() {
   };
 
   const deleteReview = async reviewId => {
-    console.log("reviewId", reviewId);
     try {
       const res = await loginApi.delete(`/api/review`, {
         params: {
@@ -157,7 +145,6 @@ function ReviewPage() {
       const removedImage = newImageInfo[index];
 
       await correctReviewImg(removedImage.pk);
-      console.log("삭제된 이미지 PK:", removedImage.pk);
 
       newImageInfo.splice(index, 1);
       setImageInfo(newImageInfo);
@@ -165,11 +152,6 @@ function ReviewPage() {
       const newPreviewImages = [...previewImages];
       newPreviewImages.splice(index, 1);
       setPreviewImages(newPreviewImages);
-
-      console.log("기존 이미지 삭제 완료:", {
-        삭제된_이미지_PK: removedImage.pk,
-        남은_이미지_수: newImageInfo.length,
-      });
     } else {
       const adjustedIndex = index - imageInfo.length;
       const newSelectedImages = [...selectedImages];
@@ -180,8 +162,6 @@ function ReviewPage() {
 
       setSelectedImages(newSelectedImages);
       setPreviewImages(newPreviewImages);
-
-      console.log("새로 추가된 이미지 삭제 완료");
     }
   };
 

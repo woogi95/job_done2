@@ -49,6 +49,7 @@ export interface StealReview {
 
 export interface UserReport {
   title: string;
+  reason: string;
   contents: string;
   createdAt: string;
   qaType: string;
