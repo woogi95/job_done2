@@ -17,6 +17,7 @@ const Estimate = () => {
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   const navigate = useNavigate();
+
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {

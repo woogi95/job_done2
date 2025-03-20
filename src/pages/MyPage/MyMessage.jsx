@@ -25,6 +25,7 @@ function ContactUs() {
   const [loading, setLoading] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const IMAGE_BASE_URL = "https://job-done.r-e.kr:52340";
 
@@ -49,7 +50,7 @@ function ContactUs() {
   useEffect(() => {
     let ws;
     let reconnectAttempts = 0;
-    const maxReconnectAttempts = 1;
+    const maxReconnectAttempts = 0;
 
     const connectWebSocket = () => {
       if (!roomId) {
@@ -250,6 +251,14 @@ function ContactUs() {
     }
   };
 
+  const handleDeleteModalOpen = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+  };
+
   useEffect(() => {
     getRoomList();
   }, []);
@@ -314,7 +323,6 @@ function ContactUs() {
         </Alert>
       )}
       <div className="flex">
-        {/* Room items container */}
         <div className="flex justify-center w-[280px] h-[800px] bg-[#FFFFFF] overflow-hidden">
           {/* 메시지 리스트 */}
           <div className="flex flex-col w-full overflow-y-auto">
@@ -348,7 +356,7 @@ function ContactUs() {
               </span>
             </div>
             <button
-              onClick={handleChatDelete}
+              onClick={handleDeleteModalOpen}
               className="text-[16px] text-[#FF3044] font-semibold"
             >
               삭제하기
@@ -361,7 +369,7 @@ function ContactUs() {
             className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto"
           >
             {messages.map((msg, index) => {
-              // console.log(`Message ${index}:`, msg.pic); // 메시지 데이터 로깅 추가
+              // console.log(`메시지 ${index}:`, msg.pic);
               return (
                 <div
                   key={index}
@@ -400,6 +408,36 @@ function ContactUs() {
               );
             })}
           </div>
+
+          {deleteModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+              <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
+                <span className="flex justify-center items-center text-[20px] mb-4">
+                  채팅 삭제
+                </span>
+                <p className="text-center mb-6">
+                  정말로 이 채팅을 삭제하시겠습니까?
+                </p>
+                <div className="flex justify-center items-center gap-[10px]">
+                  <button
+                    onClick={() => {
+                      handleChatDelete();
+                      handleDeleteModalClose();
+                    }}
+                    className="px-4 py-2 bg-red-500 text-white rounded"
+                  >
+                    삭제
+                  </button>
+                  <button
+                    onClick={handleDeleteModalClose}
+                    className="px-4 py-2 bg-gray-200 rounded"
+                  >
+                    취소
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 메시지 입력 영역 */}
           <div className="flex flex-col w-full bg-[#EDF0F8] mt-auto">

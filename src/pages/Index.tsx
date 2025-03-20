@@ -211,7 +211,7 @@ const Index = () => {
             modules={[Autoplay]}
             autoplay={{ delay: 5000 }}
             loop={true}
-            className="w-full"
+            className="w-full h-full object-cover"
           >
             {EventBanner.map((item, index) => (
               <SwiperSlide key={`banner-${index}-${item.id}`}>

@@ -41,6 +41,10 @@ function ContactUs() {
     const maxReconnectAttempts = 2;
 
     const connectWebSocket = () => {
+      if (!roomId) {
+        // console.log("roomId가 없습니다.");
+        return;
+      }
       ws = new WebSocket(`wss://job-done.r-e.kr:52340/chat/${roomId}`);
 
       ws.onopen = () => {
@@ -48,100 +52,22 @@ function ContactUs() {
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
+
+        // 연결 성공 시 기존 메시지 요청
+        fetchChatMessages(roomId);
       };
 
-      ws.onmessage = event => {
+      ws.onmessage = async event => {
+        // console.log("웹소켓에서 수신한 데이터:", event.data);
+
         try {
-          let messageData;
-          // console.log("이벤트 데이터 : ", event.data);
+          const messageText =
+            event.data instanceof Blob ? await event.data.text() : event.data;
 
-          if (event.data instanceof Blob) {
-            const reader = new FileReader();
-            reader.onload = () => {
-              try {
-                messageData = JSON.parse(reader.result);
-                if (!messageData.username) {
-                  messageData.username = username;
-                }
-                setMessages(prevMessages => {
-                  const isDuplicate = prevMessages.some(
-                    msg =>
-                      msg.message === messageData.message &&
-                      msg.username === messageData.username &&
-                      JSON.stringify(msg.file) ===
-                        JSON.stringify(messageData.file),
-                  );
-                  return isDuplicate
-                    ? prevMessages
-                    : [...prevMessages, messageData];
-                });
-              } catch (error) {
-                console.error("Blob 데이터 파싱 에러:", error);
-              }
-            };
-            reader.readAsText(event.data);
-          } else if (event.data instanceof ArrayBuffer) {
-            const decoder = new TextDecoder();
-            const jsonStr = decoder.decode(event.data);
-            messageData = JSON.parse(jsonStr);
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
-          } else {
-            const rawData = event.data;
-            if (
-              typeof rawData === "string" &&
-              rawData.startsWith("새 메세지: ")
-            ) {
-              messageData = JSON.parse(rawData.substring(6));
-            } else {
-              messageData = JSON.parse(rawData);
-            }
-            if (!messageData.username) {
-              messageData.username = username;
-            }
-            console.log("Parsed string message:", messageData);
-            setMessages(prevMessages => {
-              const isDuplicate = prevMessages.some(
-                msg =>
-                  msg.message === messageData.message &&
-                  msg.username === messageData.username &&
-                  JSON.stringify(msg.file) === JSON.stringify(messageData.file),
-              );
-              return isDuplicate
-                ? prevMessages
-                : [...prevMessages, messageData];
-            });
-          }
-
-          // 디버깅용 로그
-          if (messageData) {
-            console.log("수신된 메시지:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data
-                      ? messageData.file.data.substring(0, 50) + "..."
-                      : null,
-                  }
-                : null,
-            });
-          }
+          const messageData = JSON.parse(messageText);
+          setMessages(prevMessages => [...prevMessages, messageData]);
         } catch (error) {
-          console.error("메시지 파싱 에러:", error);
-          console.log("파싱 실패한 원본 데이터:", event.data);
+          console.error("메시지 처리 에러:", error);
         }
       };
 
@@ -154,9 +80,8 @@ function ContactUs() {
         setConnected(false);
         setSocket(null);
 
-        // 재연결 시도
         if (reconnectAttempts < maxReconnectAttempts) {
-          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
+          // console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
           setTimeout(connectWebSocket, 3000);
         }
@@ -190,13 +115,9 @@ function ContactUs() {
   const handleSendMessage = async e => {
     e.preventDefault();
 
-    if (!inputMessage.trim() && !selectedImage) {
-      setErrorMessage("메시지나 이미지를 입력하세요.");
-      return;
-    }
-
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
+        let messageData;
         if (selectedImage) {
           const reader = new FileReader();
           reader.onload = async () => {
@@ -205,8 +126,7 @@ function ContactUs() {
               type: selectedImage.type,
               data: reader.result.split(",")[1],
             };
-            // console.log("방번호 몇번?", roomId);
-            const messageData = {
+            messageData = {
               flag: 1,
               roomId: roomId,
               message: inputMessage,
@@ -220,19 +140,19 @@ function ContactUs() {
             setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
-            // console.log("전송할 메시지 데이터:", {
-            //   ...messageData,
-            //   file: messageData.file
-            //     ? {
-            //         ...messageData.file,
-            //         data: messageData.file.data.substring(0, 50) + "...",
-            //       }
-            //     : null,
-            // });
+            console.log("전송할 메시지 데이터:", {
+              ...messageData,
+              file: messageData.file
+                ? {
+                    ...messageData.file,
+                    data: messageData.file.data.substring(0, 50) + "...",
+                  }
+                : null,
+            });
           };
           reader.readAsDataURL(selectedImage);
         } else {
-          const messageData = {
+          messageData = {
             flag: 1,
             roomId: roomId,
             message: inputMessage,
@@ -242,7 +162,6 @@ function ContactUs() {
           const blob = new Blob([jsonString], { type: "application/json" });
           const arrayBuffer = await blob.arrayBuffer();
           socket.send(arrayBuffer);
-          setMessages(prevMessages => [...prevMessages, messageData]);
         }
 
         setInputMessage("");
@@ -253,6 +172,7 @@ function ContactUs() {
         console.error("메시지 전송 실패:", error);
       }
     } else {
+      // console.log("소켓 속성 ? :", socket?.readyState);
       setErrorMessage("채팅 서버에 연결되어 있지 않습니다.");
     }
   };
