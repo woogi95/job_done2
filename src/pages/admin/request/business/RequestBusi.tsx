@@ -397,9 +397,31 @@ const RequestBusi = () => {
       {picModal && (
         <div style={overlayStyle} onClick={closePicModal}>
           <div
-            style={{ ...PicmodalStyle, padding: "20px", textAlign: "center" }}
+            style={{
+              ...PicmodalStyle,
+              padding: "20px",
+              textAlign: "center",
+              position: "relative",
+              width: "90vw", // 화면 너비의 90%까지 확장
+              maxWidth: "800px", // 최대 너비 제한
+            }}
             onClick={e => e.stopPropagation()}
           >
+            <button
+              onClick={closePicModal}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer",
+              }}
+            >
+              ✖
+            </button>
+
             <h3>사업자 등록증</h3>
             <div
               style={{
@@ -409,31 +431,39 @@ const RequestBusi = () => {
                 margin: "0 auto",
                 flexDirection: "column",
                 marginTop: "10px",
+                alignItems: "center",
+                width: "100%", // 부모 크기에 맞춤
               }}
             >
-              <button
-                onClick={closePicModal}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  background: "transparent",
-                  border: "none",
-                  fontSize: "20px",
-                  cursor: "pointer",
-                }}
-              >
-                ✖
-              </button>
               {Array.isArray(picList) && picList.length > 0 ? (
                 picList.map((paper, index) => (
-                  <img
+                  <div
                     key={index}
-                    src={`${picURL}${paper}`}
-                    alt={`사업자 등록증 ${index + 1}`}
-                    className="object-cover rounded-md shrink-0 cursor-pointer"
-                    style={{ height: "90%" }}
-                  />
+                    style={{
+                      width: "90%", // 부모 크기의 90%만큼 확장
+                      maxWidth: "600px", // 최대 너비 제한
+                      aspectRatio: "4 / 5", // 기존보다 높이를 더 확보 (세로 비율 증가)
+                      minHeight: "400px", // 최소 높이 설정 (너무 작아지지 않도록)
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      background: "#f9f9f9",
+                      border: "1px solid #ddd",
+                    }}
+                  >
+                    <img
+                      src={`${picURL}${paper}`}
+                      alt={`사업자 등록증 ${index + 1}`}
+                      className="object-cover rounded-md shrink-0 cursor-pointer"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain", // 원본 비율 유지
+                      }}
+                    />
+                  </div>
                 ))
               ) : (
                 <p>이미지가 없습니다.</p>
