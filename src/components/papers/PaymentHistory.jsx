@@ -31,7 +31,7 @@ const PaymentHistory = () => {
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      // console.log("견적서 정보", res.data.resultData);
+      console.log("견적서 정보", res.data.resultData);
       if (res.data) {
         setPapers(res.data.resultData);
       }

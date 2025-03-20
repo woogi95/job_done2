@@ -28,6 +28,18 @@ function TestSpinner() {
       >
         {isLoading ? "로딩 멈추기" : "로딩 시작하기"}
       </button>
+
+      <div className="relative inline-block my-10">
+        <input
+          type="text"
+          className="pr-10 border border-gray-300 rounded px-2 py-1 text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="0"
+          style={{ paddingRight: "2.5rem" }}
+        />
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
+          원
+        </span>
+      </div>
     </div>
   );
 }
