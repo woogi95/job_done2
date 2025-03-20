@@ -32,6 +32,7 @@ function UserReportPage() {
         },
       });
       setQaDetail(res.data.resultData);
+      console.log("데이터들? : ", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +99,7 @@ function UserReportPage() {
             >
               <div className="flex items-center gap-x-2">
                 <span className="text-[16px] font-semibold text-gray-700">
-                  신고 날짜 :{" "}
+                  날짜 :{" "}
                 </span>
                 <span className="text-gray-600">
                   {item.createdAt.split(" ")[0]}
@@ -112,9 +113,9 @@ function UserReportPage() {
               </div>
               <div className="flex items-center gap-x-2">
                 <span className="text-[16px] font-semibold text-gray-700">
-                  제목 :{" "}
+                  신고 사유 :{" "}
                 </span>
-                <span className="text-gray-600">{item.title}</span>
+                <span className="text-gray-600">{item.reason}</span>
               </div>
             </div>
           ))}
@@ -138,29 +139,29 @@ function UserReportPage() {
         footer={null}
         width={800}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col rounded-lg p-4 bg-gray-200">
           <span className="text-[16px] font-semibold text-gray-700">
             문의 내용 :
           </span>
           <span className="text-gray-600 p-2">{qaDetail?.contents}</span>
+        </div>
 
-          {/* 이미지 갤러리 */}
-          <div className="border border-gray-200 rounded-lg p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.isArray(qaDetail?.pics) &&
-                qaDetail?.pics.map((imgUrl: string, index: number) => (
-                  <div
-                    key={index}
-                    className="aspect-w-1 aspect-h-1 border border-gray-200 rounded-lg p-2"
-                  >
-                    <Image
-                      src={`${PIC_URL}${imgUrl}`}
-                      alt={`첨부 이미지 ${index + 1}`}
-                      className="w-full h-auto object-contain rounded-lg max-w-[250px]"
-                    />
-                  </div>
-                ))}
-            </div>
+        {/* 이미지 갤러리 */}
+        <div className="border border-gray-200 rounded-lg p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.isArray(qaDetail?.pics) &&
+              qaDetail?.pics.map((imgUrl: string, index: number) => (
+                <div
+                  key={index}
+                  className="aspect-w-1 aspect-h-1 border border-gray-200 rounded-lg p-2"
+                >
+                  <Image
+                    src={`${PIC_URL}${imgUrl}`}
+                    alt={`첨부 이미지 ${index + 1}`}
+                    className="w-full h-auto object-contain rounded-lg max-w-[250px]"
+                  />
+                </div>
+              ))}
           </div>
         </div>
         <div className="h-[2px] w-full bg-gray-200 my-4"></div>

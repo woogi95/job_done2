@@ -152,15 +152,15 @@ function ContactUs() {
             setMessages(prevMessages => [...prevMessages, messageData]);
 
             // 디버깅용 로그
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
+            // console.log("전송할 메시지 데이터:", {
+            //   ...messageData,
+            //   file: messageData.file
+            //     ? {
+            //         ...messageData.file,
+            //         data: messageData.file.data.substring(0, 50) + "...",
+            //       }
+            //     : null,
+            // });
           };
           reader.readAsDataURL(selectedImage);
         } else {
@@ -214,10 +214,10 @@ function ContactUs() {
           room_id: roomId,
         },
       });
-      console.log("채팅 메시지:", res.data);
+      // console.log("채팅 메시지:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setMessages(res.data.resultData);
-        console.log("채팅 메시지:", res.data.resultData);
+        // console.log("채팅 메시지:", res.data.resultData);
       } else {
         setMessages([]);
       }
@@ -245,6 +245,12 @@ function ContactUs() {
         },
       });
       console.log("삭제 결과", res.data);
+
+      setCookie("roomId", "", {
+        path: "/",
+        expires: new Date(0),
+      });
+
       window.location.reload();
     } catch (error) {
       console.error("채팅 삭제 실패:", error);
