@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginApi } from "../../apis/login";
 import { papersState } from "../../atoms/businessAtom";
@@ -9,14 +9,13 @@ import {
   PapersDiv,
   ReservationPaperContDiv,
 } from "../../components/papers/papers";
-import { getCookie } from "../../apis/cookie";
 import { Popup } from "../../components/ui/Popup";
 
 const UserReservLook = () => {
+  const { serviceId } = useParams();
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = getCookie("serviceId");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   const [isSuccess, setIsSuccess] = useState(true);
@@ -32,9 +31,12 @@ const UserReservLook = () => {
     setIsPopupOpen(false);
   };
 
-  const getEstimate = async serviceId => {
+  const getEstimate = async () => {
     try {
-      console.log("이게 찍히니????", serviceId);
+      if (!serviceId) {
+        console.error("에러 맞음?");
+        return;
+      }
 
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
@@ -43,7 +45,6 @@ const UserReservLook = () => {
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      console.log(res.data.DataMessage);
     } catch (error) {
       console.log(error);
     }
@@ -54,8 +55,9 @@ const UserReservLook = () => {
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   };
   useEffect(() => {
-    getEstimate(serviceId);
-    console.log(papers);
+    if (serviceId) {
+      getEstimate();
+    }
   }, [serviceId]);
 
   const patchServiceState = async (completed, serviceId) => {
