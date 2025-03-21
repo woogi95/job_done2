@@ -24,7 +24,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryIdFromURL,
   )?.categoryName;
-  console.log("categoryName", cateName);
+
   const detailName =
     Object.values(detailDatas)
       .flat()
@@ -38,15 +38,6 @@ const ServiceListTop = ({ setBusinessList }) => {
     regionIdVal,
     searchTerm,
   ) => {
-    console.log("검색어:", searchTerm);
-    console.log(
-      "categoryId",
-      categoryId,
-      detailTypeId,
-      regionIdVal,
-      searchTerm,
-    );
-
     try {
       // API 요청 URL 구성
       let url = `/api/business?`;
@@ -78,7 +69,6 @@ const ServiceListTop = ({ setBusinessList }) => {
   };
 
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
-    console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
 
     // URL 업데이트

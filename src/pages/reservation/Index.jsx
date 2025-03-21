@@ -103,7 +103,6 @@ function Index() {
     const sendOptionData = sendAllData.map(item => ({
       optionDetailId: item.optionDetailId,
     }));
-    // console.log(sendOptionData);
   }, [sendAllData]);
 
   // 쿼리스트링에서 businessId 가져오기
@@ -118,7 +117,6 @@ function Index() {
 
       // API 응답 데이터가 있는지 먼저 확인
       if (!res.data?.resultData) {
-        console.log("No result data");
         return;
       }
 
@@ -178,7 +176,6 @@ function Index() {
     } catch (error) {
       setShowPopup(true);
       console.log(error);
-      console.log("예약실패");
     }
   };
 
@@ -200,7 +197,7 @@ function Index() {
       productId: productId,
       options: sendOptionData,
     };
-    // console.log("!!!!", updatedData);
+
     postReservation(updatedData);
   };
 
@@ -214,11 +211,6 @@ function Index() {
   const displayTotalPrice = isNaN(totalPrice) ? 0 : totalPrice;
   // 옵션 변경 처리
   const handleOptionChange = (optionId, optionPrice, optionDetailId) => {
-    // console.log("optionId : ", optionId);
-    // console.log("optionPrice : ", optionPrice);
-    // console.log("optionDetailId : ", optionDetailId);
-    // console.log("----------");
-
     const resultArr = sendAllData.map(item => {
       if (optionId === item.optionId) {
         item.optionDetailId = optionDetailId;
@@ -278,9 +270,7 @@ function Index() {
     return () => document.head.removeChild(script);
   }, []);
 
-  useEffect(() => {
-    // console.log("옵션 아이디", selectedOption);
-  }, [address, detailAddress, selectedOption]);
+  useEffect(() => {}, [address, detailAddress, selectedOption]);
 
   const rsvTime = [
     "08:00",

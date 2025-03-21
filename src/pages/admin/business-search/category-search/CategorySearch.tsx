@@ -72,14 +72,14 @@ const CategorySearch = () => {
         setBusinessList(cateData);
       }
     } catch (error) {
-      console.log("🚨 API 요청 오류:", error);
+      console.log("API 요청 오류:", error);
     }
   };
   // category 삭제 api
   const deleteCategory = async (item: number) => {
     try {
-      const res = await loginApi.delete(`/api/category?categoryId=${item}`);
-      console.log(res);
+      await loginApi.delete(`/api/category?categoryId=${item}`);
+
       setCheckModal(false);
     } catch (error) {
       console.log(error);

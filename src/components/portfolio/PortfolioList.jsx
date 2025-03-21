@@ -21,10 +21,7 @@ const PortfolioList = () => {
   // 포트폴리오 상세 정보 가져오기
   const getDetailPortfolio = async portfolioId => {
     try {
-      const res = await loginApi.get(`/api/portfolio/${portfolioId}`);
-      if (res.status === 200) {
-        console.log("포트폴리오 상세 정보:", res.data.resultData);
-      }
+      await loginApi.get(`/api/portfolio/${portfolioId}`);
     } catch (error) {
       console.error("포트폴리오 상세 정보 조회 실패:", error);
     }

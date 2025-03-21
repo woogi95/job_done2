@@ -29,7 +29,6 @@ const ExpertInfo = () => {
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
       : "사업자 번호 없음";
-  // console.log("businessState", businessState);
 
   let serviceType;
   switch (businessState.categoryId) {

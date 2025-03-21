@@ -42,13 +42,11 @@ function ContactUs() {
 
     const connectWebSocket = () => {
       if (!roomId) {
-        // console.log("roomId가 없습니다.");
         return;
       }
       ws = new WebSocket(`/chat/${roomId}`);
 
       ws.onopen = () => {
-        // console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
@@ -58,8 +56,6 @@ function ContactUs() {
       };
 
       ws.onmessage = async event => {
-        // console.log("웹소켓에서 수신한 데이터:", event.data);
-
         try {
           const messageText =
             event.data instanceof Blob ? await event.data.text() : event.data;
@@ -76,12 +72,10 @@ function ContactUs() {
       };
 
       ws.onclose = () => {
-        // console.log("웹소켓 연결 종료");
         setConnected(false);
         setSocket(null);
 
         if (reconnectAttempts < maxReconnectAttempts) {
-          // console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
           setTimeout(connectWebSocket, 3000);
         }
@@ -138,17 +132,6 @@ function ContactUs() {
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
             setMessages(prevMessages => [...prevMessages, messageData]);
-
-            // 디버깅용 로그
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
           };
           reader.readAsDataURL(selectedImage);
         } else {
@@ -172,7 +155,6 @@ function ContactUs() {
         console.error("메시지 전송 실패:", error);
       }
     } else {
-      // console.log("소켓 속성 ? :", socket?.readyState);
       setErrorMessage("채팅 서버에 연결되어 있지 않습니다.");
     }
   };

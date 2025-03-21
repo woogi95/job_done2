@@ -37,7 +37,7 @@ const PfPopup = ({
   const [pfDetailInfoList, setPfDetailInfoList] = useRecoilState(
     PortfolioDetailInfoState,
   );
-  console.log("pfDetailImgList!!!!", pfDetailImgList);
+
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
   const navigate = useNavigate();

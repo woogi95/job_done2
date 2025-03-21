@@ -13,7 +13,7 @@ const OAuth2Handler = () => {
       console.log(error);
     }
     const accessToken = myUrl.searchParams.get("access_token");
-    console.log(`accessToken: ${accessToken}`);
+
     if (accessToken === null) {
       navigate("/sign-in");
       return;

@@ -23,51 +23,43 @@ function CreateDetailPage() {
     e.preventDefault();
     try {
       // businessId 값 한번 더 확인
-      console.log("Submitting with businessId:", businessId);
 
-      const response = await loginApi.post("/api/business/contents", {
+      await loginApi.post("/api/business/contents", {
         businessId: businessId,
         title: title,
         contents: content,
       });
-      console.log("저장 성공:", response.data);
 
-      const PostPicConf = await loginApi.post(
+      await loginApi.post(
         `/api/business/businessPicConf?businessId=${businessId}`,
       );
-      console.log("저장 성공 PostPicConf:", PostPicConf.data.resultData);
 
       // 저장 성공 후 팝업 표시
       setIsPopupOpen(true);
     } catch (error) {
       console.error("저장 중 오류 발생:", error);
-      console.log("저장 실패 PostPicConf:", PostPicConf.data.resultData);
     }
   };
 
   // 이미지 처리
   const imageHandler = () => {
-    console.log("이미지처리하기");
     // 1. 현재 에디터를 찾아서 참조한다.
     // useRef 로 보관한 내용물 참조(current)
     const editor = quillRef.current.getEditor();
-    // console.log(editor);
 
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
-    console.log(input);
+
     input.click();
 
     input.addEventListener("change", async function () {
-      // console.log("이미지 선택");
       try {
         const file = input.files[0];
         const formData = new FormData();
         formData.append("pics", file);
 
         // 현재 businessId 값 확인
-        console.log("Using businessId in imageHandler:", businessId);
 
         // businessId가 undefined인 경우 기본값 설정
         const blobData = { businessId: businessId || 2 };
@@ -92,7 +84,6 @@ function CreateDetailPage() {
 
         // 서버에서 받아온 이미지 URL에 프로토콜과 도메인 추가
         const tempUrl = `http://${res.data.resultData.pics[0]}`;
-        console.log("Modified image URL:", tempUrl);
 
         const range = editor.getSelection();
         editor.insertEmbed(range.index, "image", tempUrl);

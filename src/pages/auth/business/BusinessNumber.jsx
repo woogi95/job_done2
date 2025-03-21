@@ -38,7 +38,6 @@ function BusinessNumber() {
   };
 
   const nextPage = async data => {
-    console.log(data);
     const formData = new FormData();
     if (data) {
       formData.append("paper", data);
@@ -49,20 +48,18 @@ function BusinessNumber() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
+
       const basicData = res.data;
-      console.log(basicData);
+
       setBusiInfo(prev => ({
         ...prev, // 기존 데이터 유지
         ...basicData, // 서버 데이터 덮어쓰기
       }));
-      console.log(busiInfo);
     } catch (error) {
       console.log(error);
     }
   };
   const fetchBusinessStatus = async data => {
-    console.log(data);
     setCheckMessage(true);
 
     try {

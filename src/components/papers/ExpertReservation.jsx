@@ -77,12 +77,9 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}&businessId=${businessId}`,
       );
-      console.log("API 응답 데이터:", res.data);
+
       if (res.data && res.data.resultData) {
         setPapersInfo(res.data.resultData);
-        console.log("papersInfo 상태 업데이트:", res.data.resultData);
-      } else {
-        console.error("API 응답 데이터가 올바르지 않습니다:", res.data);
       }
       setLoading(false);
     } catch (error) {
@@ -102,9 +99,6 @@ const ExpertReservation = ({ setIsReservationPop, serviceId }) => {
       getEstimate(serviceId);
     }
   }, [serviceId]);
-
-  // papersInfo 상태 로그
-  console.log("papersInfo 상태:", papersInfo);
 
   if (loading) {
     return <div>Loading...</div>;

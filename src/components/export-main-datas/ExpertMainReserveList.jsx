@@ -51,10 +51,8 @@ function ExpertMainReserveList() {
       const res = await loginApi.get(
         `/api/service?business_id=${businessId}&status=0&page=1&size=10`,
       );
-      // console.log("📡 API 응답 데이터:", res.data);
-      setReservationData(res.data.resultData || []); // 🚀 안전한 초기화
 
-      console.log(reservationData);
+      setReservationData(res.data.resultData || []); // 🚀 안전한 초기화
     } catch (error) {
       console.error("🚨 API 호출 오류:", error);
     }
@@ -85,8 +83,6 @@ function ExpertMainReserveList() {
         return "미정";
     }
   };
-
-  // console.log("🔄 현재 reservationData:", reservationData);
 
   return (
     <ExpertListPageDiv>

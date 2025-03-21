@@ -36,20 +36,15 @@ function MessageCenter(): JSX.Element {
 
     const connectWebSocket = () => {
       if (!roomId) {
-        console.log("roomId가 없습니다.");
         return;
       }
       ws = new WebSocket(`/chat/${roomId}`);
 
       ws.onopen = () => {
-        console.log("웹소켓 연결 성공!");
         setSocket(ws);
       };
 
       ws.onmessage = event => {
-        // console.log("웹소켓에서 수신한 데이터:", event.data);
-        // console.log("웹소켓에서 수신한 데이터:", event);
-
         try {
           let messageData: MessageType = {} as MessageType;
 
@@ -117,7 +112,6 @@ function MessageCenter(): JSX.Element {
           }
         } catch (error) {
           console.error("메시지 파싱 에러:", error);
-          console.log("파싱 실패한 원본 데이터:", event.data);
         }
       };
 
@@ -126,7 +120,6 @@ function MessageCenter(): JSX.Element {
       };
 
       ws.onclose = () => {
-        console.log("웹소켓 연결 종료");
         setSocket(null);
       };
     };
@@ -176,16 +169,6 @@ function MessageCenter(): JSX.Element {
             const blob = new Blob([jsonString], { type: "application/json" });
             const arrayBuffer = await blob.arrayBuffer();
             socket.send(arrayBuffer);
-
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
           };
           reader.readAsDataURL(selectedImage);
         } else {
@@ -224,7 +207,7 @@ function MessageCenter(): JSX.Element {
           business_id: businessId,
         },
       });
-      console.log("뭐 들어옴", res.data);
+
       if (Array.isArray(res.data.resultData)) {
         setRoomList(res.data.resultData);
       } else {
@@ -263,18 +246,17 @@ function MessageCenter(): JSX.Element {
       expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
     });
     fetchChatMessages(roomId);
-    console.log("선택된 방번호", roomId);
   };
 
   const handleChatDelete = async () => {
     try {
-      const res = await loginApi.delete("/api/room", {
+      await loginApi.delete("/api/room", {
         data: {
           roomId: roomId,
           businessId: localStorage.getItem("businessId"),
         },
       });
-      console.log("삭제 결과", res.data);
+
       window.location.reload();
     } catch (error) {
       console.error("채팅 삭제 실패:", error);
@@ -381,7 +363,6 @@ function MessageCenter(): JSX.Element {
             className="flex flex-col w-full p-[20px] flex-grow overflow-y-auto bg-white"
           >
             {messages.map((msg, index) => {
-              // console.log(`메시지 ${index}:`, msg.pic);
               return (
                 <div
                   key={index}

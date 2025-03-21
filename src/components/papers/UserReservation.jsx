@@ -34,17 +34,13 @@ const UserReservation = () => {
 
   const getEstimate = async serviceId => {
     try {
-      ///api/service/detail?serviceId=28
-      // console.log("이게 찍히니????", serviceId);
-
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      // console.log("견적서 정보", res);
+
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
     } catch (error) {
       console.log(error);
     }
@@ -56,17 +52,14 @@ const UserReservation = () => {
   };
   useEffect(() => {
     getEstimate(serviceId);
-    // console.log(papers);
   }, [serviceId]);
 
   const patchServiceState = async (completed, serviceId) => {
     try {
-      // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
       });
-      // console.log(res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);

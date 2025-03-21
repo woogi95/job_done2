@@ -31,7 +31,7 @@ function EmailPage() {
     authCode: "",
     pic: "",
   };
-  // console.log(initialData);
+
   // 이메일인증완료버튼
   const handleEmailModal = async data => {
     try {
@@ -75,7 +75,6 @@ function EmailPage() {
   };
   // 폼 onFinish
   const onFinish = async data => {
-    console.log(data);
     try {
       // const result = await axios.put("/api/auth-check", data);
       const result = await axios.put(

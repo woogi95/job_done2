@@ -45,7 +45,6 @@ const ContReview = () => {
 
   // 정렬 방식에 따른 API 호출
   const handleSortTypeClick = (businessId, option, state) => {
-    console.log("businessId, status!!!", businessId, option, state);
     setOptionOpen(!optionOpen);
     setStatus(option);
     setSelectedOption(option);
@@ -56,9 +55,7 @@ const ContReview = () => {
     setIsPopupOpen(false);
   };
 
-  useEffect(() => {
-    console.log("reviewListT 맞음?", reviewListT);
-  }, [reviewListT]);
+  useEffect(() => {}, [reviewListT]);
 
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, state) => {
@@ -225,7 +222,6 @@ const ContReview = () => {
                   <div className="siren">
                     <button
                       onClick={() => {
-                        console.log("Siren clicked");
                         handleReport(item.reviewId);
                       }}
                     >

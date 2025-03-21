@@ -28,7 +28,7 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
 
   // reviewId 가져오기
-  console.log("reviewId3424", reviewId);
+
   const reviewIdFromRecoil = useRecoilValue<ReviewListState[]>(
     reviewListStateT,
   ).find(review => review.reviewId === reviewId)?.reviewId;
@@ -61,7 +61,6 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
         qaReportReason: "REVIEW",
         qaTargetId: reviewId,
       };
-      console.log("보내는 데이터:", requestData);
 
       formData.append(
         "p",
@@ -69,10 +68,6 @@ const ReviewReportPopup: React.FC<ReviewReportPopupProps> = ({
           type: "application/json",
         }),
       );
-
-      for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0], pair[1]);
-      }
 
       const res = await loginApi.post("/api/qa", formData, {
         headers: {

@@ -59,12 +59,12 @@ function SignUpPage() {
   // 이메일 중복확인
   const emailCheck = async email => {
     setEmailOok(false);
-    console.log(email);
+
     try {
       const res = await axios.post("/api/user/email", {
         email: `${email}`,
       });
-      console.log(res.data.resultData);
+
       if (res.data.resultData === 1) {
         setEmailOk(false);
       } else {
@@ -76,7 +76,6 @@ function SignUpPage() {
   };
   // 폼 제출
   const onSubmit = async data => {
-    console.log(data);
     if (emailOk === false) {
       try {
         setUserInfo(prev => ({
@@ -86,8 +85,6 @@ function SignUpPage() {
         const res = await axios.post("/api/email-check", {
           email: `${data.email}`,
         });
-        console.log(res);
-        // console.log(userInfo);
 
         navigate("/login/email");
       } catch (error) {

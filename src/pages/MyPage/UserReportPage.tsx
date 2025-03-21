@@ -32,7 +32,6 @@ function UserReportPage() {
         },
       });
       setQaDetail(res.data.resultData);
-      console.log("데이터들? : ", res.data.resultData);
     } catch (error) {
       console.log(error);
     }

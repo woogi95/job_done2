@@ -27,15 +27,13 @@ const PaymentHistory = () => {
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
-      // console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      console.log("견적서 정보", res.data.resultData);
+
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
     } catch (error) {
       console.error("견적서 조회 중 오류 발생:", error);
     }
@@ -50,8 +48,7 @@ const PaymentHistory = () => {
       const res = await loginApi.get("/api/qa/qaTypeId", {
         params: qaTypeId,
       });
-      console.log("qaTypeList", res.data);
-      console.log("qaTypeList", res.data.resultData);
+
       setIsQaTypeList(res.data.resultData);
     } catch (error) {
       console.error("qaTypeList 조회 중 오류 발생:", error);
@@ -79,23 +76,16 @@ const PaymentHistory = () => {
           type: "application/json",
         }),
       );
-      console.log("환불 내용 : ", qaPostData);
 
       selectedImages.forEach(file => {
         formData.append("pics", file);
       });
-
-      for (const pair of formData.entries()) {
-        console.log("FormData 엔트리:", pair[0], pair[1]);
-      }
 
       const res = await loginApi.post(`/api/qa`, qaPostData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("환불 내용 : ", text);
-      console.log("뭐 오는데? : ", res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);
@@ -127,7 +117,7 @@ const PaymentHistory = () => {
       return;
     }
     setIsLoading(true);
-    // console.log("결제 누구야!", serviceId);
+
     try {
       const width = 480;
       const height = 600;

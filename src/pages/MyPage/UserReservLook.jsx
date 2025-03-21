@@ -33,17 +33,15 @@ const UserReservLook = () => {
 
   const getEstimate = async () => {
     try {
-
       if (!serviceId) {
         console.error("에러 맞음?");
         return;
       }
 
-
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      console.log("견적서 정보", res);
+
       if (res.data) {
         setPapers(res.data.resultData);
       }
@@ -64,12 +62,10 @@ const UserReservLook = () => {
 
   const patchServiceState = async (completed, serviceId) => {
     try {
-      console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
       });
-      console.log(res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);

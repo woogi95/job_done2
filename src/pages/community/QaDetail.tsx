@@ -18,9 +18,7 @@ const QaDetail = () => {
         params: { qaId: qaId },
       });
       setPost(res.data.resultData);
-    } catch (error) {
-      console.log("게시물 상세 정보 가져오기 에러:", error);
-    }
+    } catch (error) {}
   };
 
   const fetchAnswers = async () => {

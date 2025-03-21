@@ -39,15 +39,12 @@ function PasswordEdit() {
   };
   // 폼 제출
   const onSubmit = async data => {
-    console.log(data);
-    console.log(initData.email);
     try {
       const res = await axios.patch("/api/user/password", {
         newPassword: data.upw,
         email: initData.email,
       });
-      console.log(res.data.resultData);
-      // console.log(userInfo);
+
       if (res.data.resultData === 1) {
         setIsUpw(true);
       }

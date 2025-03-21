@@ -66,7 +66,6 @@ function Write() {
         contents: content,
         qaReportReason: "USERREPORT",
       };
-      console.log("보내는 데이터:", requestData);
 
       formData.append(
         "p",
@@ -79,17 +78,11 @@ function Write() {
         formData.append("pics", file);
       });
 
-      for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0], pair[1]);
-      }
-
       const res = await loginApi.post("/api/qa", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      console.log("데이터 업데이트?:", res.data);
 
       if (res.data.resultData === 1) {
         setIsSuccessModalOpen(true);
@@ -104,9 +97,7 @@ function Write() {
   const handleRemoveImage = async (index: number) => {
     if (index < imageInfo.length) {
       const newImageInfo = [...imageInfo];
-      const removedImage = newImageInfo[index];
-
-      console.log("삭제된 이미지 PK:", removedImage.pk);
+      // const removedImage = newImageInfo[index];
 
       newImageInfo.splice(index, 1);
       setImageInfo(newImageInfo);
@@ -114,11 +105,6 @@ function Write() {
       const newPreviewImages = [...previewImages];
       newPreviewImages.splice(index, 1);
       setPreviewImages(newPreviewImages);
-
-      console.log("기존 이미지 삭제 완료:", {
-        삭제된_이미지_PK: removedImage.pk,
-        남은_이미지_수: newImageInfo.length,
-      });
     } else {
       const adjustedIndex = index - imageInfo.length;
       const newSelectedImages = [...selectedImages];
@@ -129,8 +115,6 @@ function Write() {
 
       setSelectedImages(newSelectedImages);
       setPreviewImages(newPreviewImages);
-
-      console.log("새로 추가된 이미지 삭제 완료");
     }
   };
 

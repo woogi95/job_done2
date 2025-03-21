@@ -49,10 +49,8 @@ function MyPage() {
   const handleImgUpload = e => {
     const file = e.target.files[0];
     if (file) {
-      console.log("Selected file:", file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        console.log("Converted image to base64:", reader.result);
         setProfileImg(reader.result);
         setIsEdit(true);
       };
@@ -74,7 +72,7 @@ function MyPage() {
           ? `https://job-done.r-e.kr:52340${userData.pic}`
           : `${userData.pic}`
         : "/images/order/default_profile.jpg";
-      console.log(profileImgUrl);
+
       setProfileImg(profileImgUrl);
     } catch (error) {
       console.error("API 에러:", error);
@@ -120,7 +118,6 @@ function MyPage() {
             name: userName,
           },
         };
-        console.log("requestData:", requestData);
 
         const formData = new FormData();
 

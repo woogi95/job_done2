@@ -49,7 +49,7 @@ const AdminMain = () => {
   const getFourData = async () => {
     try {
       const res = await loginApi.get("/api/admin/statsMain");
-      console.log(res);
+
       if (res.status === 200) {
         const data = res.data.resultData;
         const formattData = {

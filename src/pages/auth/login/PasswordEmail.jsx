@@ -22,11 +22,9 @@ function PasswordEmail() {
     email: emailInfo.email,
     authCode: "",
   };
-  // console.log(initialData);
 
   // 폼 onFinish
   const onFinish = async data => {
-    console.log(data);
     try {
       // const result = await axios.put("/api/auth-check", data);
       const result = await axios.put(

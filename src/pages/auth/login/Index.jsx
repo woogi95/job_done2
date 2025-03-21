@@ -24,14 +24,13 @@ function LoginPage() {
   };
 
   const loginTry = async data => {
-    console.log("로그인 요청:", data);
     try {
       const res = await axios.post("/api/user/sign-in", data, {
         withCredentials: true,
       });
-      console.log("서버 응답:", res.data);
+
       const message = res.data.resultMessage.includes("성공") ? true : false;
-      console.log(message);
+
       if (message === true) {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;

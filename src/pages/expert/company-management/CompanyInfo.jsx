@@ -49,7 +49,6 @@ function CompanyInfo() {
         `/api/business/%7BbusinessId%7D?businessId=${busiId}`,
       );
       setBusinessInfo(res.data.resultData);
-      console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -59,14 +58,13 @@ function CompanyInfo() {
     try {
       // /api/portfolio/post?businessId=2&price=50000&takingTime=5&title=ddd&contents=ddd
       const res = await loginApi.get(`/api/product?businessId=${busiId}`);
-      console.log("여기제발", res.data.resultData);
+
       setOptionList(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // console.log("businessState@@", businessState);
   useEffect(() => {
     if (busiId) {
       getBusinessInfo(busiId);

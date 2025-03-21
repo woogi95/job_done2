@@ -23,17 +23,13 @@ function Layout() {
   useEffect(() => {
     const fetchData = async (retryCount = 0) => {
       try {
-        const response = await axios.get(
-          "https://job-done.r-e.kr:52340/api/visit",
-          {
-            timeout: 5000,
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
+        await axios.get("https://job-done.r-e.kr:52340/api/visit", {
+          timeout: 5000,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
           },
-        );
-        console.log("방문 기록?:", response.data);
+        });
       } catch (error) {
         if (
           retryCount < 2 &&

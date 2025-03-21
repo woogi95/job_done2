@@ -18,8 +18,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
   const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const [portfolioId, setPortfolioId] = useState(0);
   const businessState = useRecoilValue(businessDetailState);
-  console.log("businessInfo", businessInfo);
-  console.log("businessId", businessState.businessId);
+
   const [formData, setFormData] = useState({
     businessId: 0,
     price: 0,
@@ -64,7 +63,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         ...prev,
         [fieldName]: value,
       };
-      console.log("전체 formData:", newData);
+
       return newData;
     });
   };
@@ -108,7 +107,6 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
       });
 
       if (res.data) {
-        console.log("Success:", res.data);
         setPortfolioId(res.data.resultData);
         // 포트폴리오 목록 갱신
         await getPortfolioList(categoryId, detailTypeId, businessId);
@@ -120,7 +118,6 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
       alert("포트폴리오 등록 중 오류가 발생했습니다.");
     }
   };
-  console.log("portfolioId", portfolioId);
 
   // 파일 선택 후 미리보기 처리
   const handleFileChange = e => {

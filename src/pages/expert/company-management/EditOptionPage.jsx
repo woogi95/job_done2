@@ -49,8 +49,6 @@ function EditOptionPage() {
   });
 
   const handleSubmitForm = async data => {
-    console.log("호출");
-    console.log("data34242344", data);
     // productId 필수값 확인
     if (!ProductInfo.productId) {
       console.error("productId가 없습니다.");
@@ -74,11 +72,9 @@ function EditOptionPage() {
       options: transformedOptions,
     };
 
-    console.log("requestData", requestData);
-
     try {
       const res = await loginApi.post("/api/product/postAll", requestData);
-      console.log("API 응답:", res.data);
+
       setProductInfo(prev => ({
         ...prev,
         productPrice: productPrice,
@@ -179,7 +175,6 @@ function EditOptionPage() {
           optionId: optionId,
         },
       });
-      console.log("옵션 삭제 성공:", res.data);
 
       // 삭제된 옵션을 UI에서 제거
       setProductInfo(prev => ({
@@ -243,7 +238,6 @@ function EditOptionPage() {
           optionDetailId: optionDetailId,
         },
       });
-      console.log("상세 옵션 삭제 성공:", res.data);
 
       // 삭제된 상세 옵션을 UI에서 제거
       setProductInfo(prev => {
@@ -281,7 +275,6 @@ function EditOptionPage() {
   };
 
   const handleProductPriceChange = e => {
-    // console.log("가격변화!:", e.target.value);
     const value = e.target.value.replace(/,/g, "");
     setProductPrice(Number(value));
   };
@@ -306,9 +299,7 @@ function EditOptionPage() {
     }
   }, [ProductInfo]);
 
-  useEffect(() => {
-    console.log("ProductInfo 업데이트:", ProductInfo);
-  }, [ProductInfo]);
+  useEffect(() => {}, [ProductInfo]);
 
   const handleDeleteClick = index => {
     setSelectedOptionIndex(index);

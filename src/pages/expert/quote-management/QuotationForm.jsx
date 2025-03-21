@@ -56,9 +56,7 @@ function QuotationForm() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    console.log("papersInfo 현재 상태:", papersInfo);
-  }, [papersInfo]);
+  useEffect(() => {}, [papersInfo]);
 
   const getPapersInfo = async () => {
     try {
@@ -66,7 +64,7 @@ function QuotationForm() {
         `/api/service/detail?serviceId=${serviceId}&businessId=${getBusinessId}`,
         {},
       );
-      console.log("API 응답 데이터:", res.data);
+
       setPapersInfo(res.data.resultData);
 
       // etc 데이터가 있으면 additionalQuotes에 추가
@@ -86,7 +84,7 @@ function QuotationForm() {
     if (!serviceId) {
       console.warn("serviceId 쿠키를 찾을 수 없습니다");
     }
-    console.log("serviceId:", serviceId);
+
     getPapersInfo();
   }, []);
 
@@ -150,19 +148,14 @@ function QuotationForm() {
         mstartTime: startTime?.format("HH:mm"),
       };
 
-      console.log("보내는 데이터:", requestData);
-
       const res = await loginApi.put("/api/service", requestData);
-      console.log("API 응답 데이터:", res.data);
+
       setAddPrice();
 
       if (res.data.resultData) {
-        console.log("견적서 작성 완료");
         setIsPopupOpen(true);
       }
-    } catch (error) {
-      console.log("API 에러:", error);
-    }
+    } catch (error) {}
   };
 
   const handleAddQuote = () => {
@@ -200,9 +193,7 @@ function QuotationForm() {
   };
   const formatPhoneNumber = phone =>
     phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-";
-  useEffect(() => {
-    console.log("보내볼까?", setAddPrice);
-  }, []);
+  useEffect(() => {}, []);
   const formatBusinessNumber = number =>
     number
       ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")

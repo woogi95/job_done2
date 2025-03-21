@@ -32,11 +32,10 @@ const ExpertPaymentHistory = () => {
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}&businessId=${businessId}`,
       );
-      // console.log("견적서 정보", res.data.resultData);
+
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
     } catch (error) {
       console.error("견적서 조회 중 오류 발생:", error);
     }

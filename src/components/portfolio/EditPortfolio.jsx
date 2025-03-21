@@ -30,8 +30,7 @@ const EditPortfolio = ({
   const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
     PortfolioDetailInfoState,
   );
-  console.log("businessInfo", businessInfo);
-  console.log("businessId", businessState.businessId);
+
   const [formData, setFormData] = useState({
     businessId: Number(businessState.businessId),
     price: 0,
@@ -101,8 +100,6 @@ const EditPortfolio = ({
         ...prev,
         [fieldName]: value,
       };
-      console.log("=== onChange 이벤트 발생 ===");
-      console.log("전체 formData:", newData);
       return newData;
     });
   };
@@ -135,14 +132,8 @@ const EditPortfolio = ({
       filePreviews
         .filter(file => file.file)
         .forEach(file => {
-          console.log("Adding pic:", file.file);
           formData.append("pics", file.file); // 동일한 필드 이름으로 파일 추가
         });
-
-      // FormData 내용 확인
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
 
       const res = await loginApi.put("/api/portfolio", formData, {
         headers: {
@@ -151,7 +142,6 @@ const EditPortfolio = ({
       });
 
       if (res.data) {
-        console.log("Success:", res.data);
         // pfDetailImgList 업데이트 (blob URL 제외하고 서버 URL만 반영)
         const updatedPfDetailImgList = filePreviews
           .filter(file => file.preview && !file.preview.startsWith("blob:")) // blob URL 제외
@@ -183,7 +173,6 @@ const EditPortfolio = ({
       alert("포트폴리오 등록 중 오류가 발생했습니다.");
     }
   };
-  console.log("portfolioId", portfolioId);
 
   const getPortfolioPics = async portfolioId => {
     try {
@@ -191,7 +180,6 @@ const EditPortfolio = ({
         `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
       );
       if (res.status === 200) {
-        console.log("포트폴리오 이미지 리스트", res.data.resultData);
         // API에서 받은 이미지 URL을 filePreviews에 추가 (BASE_URL 포함)
         const initialFiles = res.data.resultData.map(pic => ({
           file: null,
@@ -234,8 +222,6 @@ const EditPortfolio = ({
             // portfolioId: portfolioId,
           });
           if (res.status === 200) {
-            console.log("이미지 삭제 성공:", res.data);
-
             URL.revokeObjectURL(fileToRemove.preview);
 
             setFilePreviews(prev => prev.filter((_, i) => i !== index));

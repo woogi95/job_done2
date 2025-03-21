@@ -22,7 +22,7 @@ function Portfolio() {
   const [portfolioDetailInfo, setPortfolioDetailInfoState] = useRecoilState(
     PortfolioDetailInfoState,
   );
-  console.log("portfolioDetailInfo32424", portfolioDetailInfo);
+
   const [portfolioList, setPortfolioList] = useState([]);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
 
@@ -42,7 +42,6 @@ function Portfolio() {
         `/api/portfolio?categoryId=${categoryId}&detailTypeId=${detailTypeId}&businessId=${businessId}`,
       );
       if (res.status === 200) {
-        console.log("포트폴리오 리스트", res.data.resultData);
         setPortfolioList(res.data.resultData);
       }
     } catch (error) {
@@ -55,7 +54,6 @@ function Portfolio() {
     try {
       const res = await loginApi.get(`/api/portfolio/${portfolioId}`);
       if (res.status === 200) {
-        console.log("포트폴리오 상세 정보:", res.data.resultData);
         setPortfolioDetailInfoState(res.data.resultData);
       }
     } catch (error) {
@@ -64,7 +62,6 @@ function Portfolio() {
   };
 
   const deletePortfolio = async (businessId, portfolioId) => {
-    console.log("businessId", businessId, "portfolioId", portfolioId);
     ///api/portfolio/%7BportfolioId%7D?businessId=2&portfolioId=44
     try {
       const res = await loginApi.delete("/api/portfolio/%7BportfolioId%7D", {
@@ -80,14 +77,12 @@ function Portfolio() {
 
       // 상태 업데이트
       setPortfolioList(updatedList);
-      console.log("포트폴리오가 성공적으로 삭제되었습니다.");
     } catch (error) {
       console.error("삭제 중 에러 발생:", error);
     }
   };
 
   const handleEditClick = async portfolioId => {
-    console.log("portfolioIdfasf222", portfolioId);
     setSelectedPortfolioId(portfolioId);
     setIsPopPfEdit(true);
     await getDetailPortfolio(portfolioId);

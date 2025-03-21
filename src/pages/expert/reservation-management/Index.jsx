@@ -36,16 +36,9 @@ function Index() {
   });
 
   const getStatusList = async (businessId, statusFilter, page) => {
-    console.log("API 호출 파라미터:", {
-      businessId,
-      statusFilter,
-      page,
-      itemsPerPage,
-    });
     try {
       const url = `/api/service?business_id=${businessId}&status=${0}&page=${page}&size=${itemsPerPage}`;
       const res = await loginApi.get(url);
-      console.log("API 응답 데이터:", res.data);
 
       setReservationData(res.data.resultData);
       setPagination(prev => ({
@@ -84,7 +77,7 @@ function Index() {
   // 검색어 입력 핸들러
   const handleSearch = e => {
     e.preventDefault();
-    console.log("검색어:", searchQuery);
+
     setAppliedSearchQuery(searchQuery);
     setSearchQuery("");
     setCurrentPage(1);
@@ -120,7 +113,6 @@ function Index() {
       );
     }
 
-    console.log("필터링된 데이터:", filtered);
     return filtered;
   }, [reservationData, statusFilter, appliedSearchQuery]);
 
@@ -137,7 +129,6 @@ function Index() {
 
   // 상태 필터 변경 핸들러
   const handleStatusFilter = status => {
-    console.log("필터 변경:", status);
     setStatusFilter(status);
     setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
   };

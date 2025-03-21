@@ -149,7 +149,6 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // console.log(window.scrollY);
       if (window.scrollY >= 750) {
         setTopLayoutVisible(true);
       } else {
