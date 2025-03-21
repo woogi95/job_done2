@@ -103,6 +103,7 @@ import PaymentLoading from "./components/kakao-pay/PaymentLoading";
 import UserReportPage from "./pages/mypage/UserReportPage";
 import ScrollToTop from "./tests/ScrollToTop";
 import UserRoute from "./pages/UserRoute";
+import Unauthorized from "./Unauthorized";
 
 function App() {
   const adminState = localStorage.getItem("admin") === adminLoginAtom;
@@ -140,6 +141,7 @@ function App() {
             <Route path="/login">
               <Route index element={<LoginPage />} />
               <Route path="admin" index element={<Adminlogin />} />
+              <Route path="unauthorized" index element={<Unauthorized />} />
 
               <Route path="signup" element={<SignUpPage />} />
               <Route path="email" element={<EmailPage />} />

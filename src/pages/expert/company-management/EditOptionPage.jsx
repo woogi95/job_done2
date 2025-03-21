@@ -287,7 +287,7 @@ function EditOptionPage() {
 
   // ProductState의 옵션 데이터를 컴포넌트의 options 상태로 변환하여 로드
   useEffect(() => {
-    if (ProductInfo.optionList) {
+    if (ProductInfo !== null) {
       const transformedOptions = ProductInfo.optionList.map(option => ({
         name: option.optionName,
         details: option.optionDetailList.map(detail => ({
@@ -385,87 +385,92 @@ function EditOptionPage() {
                   옵션 추가
                 </button>
               </label>
+
               <div className="option-list">
-                {ProductInfo.optionList?.map((option, optionIndex) => (
-                  <div className="option-box" key={optionIndex}>
-                    <h3>
-                      <span>
-                        옵션 {optionIndex + 1} : {option.optionName}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteClick(optionIndex)}
-                      >
-                        삭제
-                      </button>
-                    </h3>
-                    <ul className="op-detail-list">
-                      {option.optionDetailList.map((detail, detailIndex) => (
-                        <li className="op-item" key={detailIndex}>
-                          <p>
-                            <span>{detail.optionDetailName}</span>
-                            <em>
-                              {detail.optionDetailPrice.toLocaleString()} 원
-                            </em>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleDeleteDetailClick(
-                                  optionIndex,
-                                  detailIndex,
-                                )
-                              }
-                            >
-                              삭제
-                            </button>
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="add-detail-op">
-                      <input
-                        type="text"
-                        placeholder="선택옵션"
-                        value={
-                          (detailOptions[optionIndex] || { name: "" }).name
-                        }
-                        onChange={e =>
-                          handleDetailOptionChange(
-                            optionIndex,
-                            "name",
-                            e.target.value,
-                          )
-                        }
-                        onKeyDown={e =>
-                          handleKeyPress(e, "detail", optionIndex)
-                        }
-                      />
-                      <input
-                        type="number"
-                        placeholder="금액"
-                        value={
-                          (detailOptions[optionIndex] || { price: "" }).price
-                        }
-                        onChange={e =>
-                          handleDetailOptionChange(
-                            optionIndex,
-                            "price",
-                            e.target.value,
-                          )
-                        }
-                        onKeyDown={e =>
-                          handleKeyPress(e, "detail", optionIndex)
-                        }
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleAddDetailOption(optionIndex)}
-                      >
-                        선택 옵션 추가
-                      </button>
+                {ProductInfo !== null ? (
+                  ProductInfo.optionList?.map((option, optionIndex) => (
+                    <div className="option-box" key={optionIndex}>
+                      <h3>
+                        <span>
+                          옵션 {optionIndex + 1} : {option.optionName}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteClick(optionIndex)}
+                        >
+                          삭제
+                        </button>
+                      </h3>
+                      <ul className="op-detail-list">
+                        {option.optionDetailList.map((detail, detailIndex) => (
+                          <li className="op-item" key={detailIndex}>
+                            <p>
+                              <span>{detail.optionDetailName}</span>
+                              <em>
+                                {detail.optionDetailPrice.toLocaleString()} 원
+                              </em>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleDeleteDetailClick(
+                                    optionIndex,
+                                    detailIndex,
+                                  )
+                                }
+                              >
+                                삭제
+                              </button>
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="add-detail-op">
+                        <input
+                          type="text"
+                          placeholder="선택옵션"
+                          value={
+                            (detailOptions[optionIndex] || { name: "" }).name
+                          }
+                          onChange={e =>
+                            handleDetailOptionChange(
+                              optionIndex,
+                              "name",
+                              e.target.value,
+                            )
+                          }
+                          onKeyDown={e =>
+                            handleKeyPress(e, "detail", optionIndex)
+                          }
+                        />
+                        <input
+                          type="number"
+                          placeholder="금액"
+                          value={
+                            (detailOptions[optionIndex] || { price: "" }).price
+                          }
+                          onChange={e =>
+                            handleDetailOptionChange(
+                              optionIndex,
+                              "price",
+                              e.target.value,
+                            )
+                          }
+                          onKeyDown={e =>
+                            handleKeyPress(e, "detail", optionIndex)
+                          }
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleAddDetailOption(optionIndex)}
+                        >
+                          선택 옵션 추가
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </OpContBoxDiv>
