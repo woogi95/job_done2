@@ -81,12 +81,11 @@ export const EventBanner = [
     image: "/images/event/carwash2.jpg",
     link: "/service?categoryId=3",
   },
-  // {
-  //   id: 4,
-  //   title: "이사가 고민이라면?",
-  //   image: "/images/event/event_banner_2.jpg",
-  //   link: "/",
-  // },
+  {
+    id: 4,
+    image: "/images/event/ai2.jpg",
+    link: "/",
+  },
   // {
   //   id: 5,
   //   title: "문의 게시판을 이용하세요!",
