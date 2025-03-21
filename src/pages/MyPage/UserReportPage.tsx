@@ -12,7 +12,7 @@ function UserReportPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [answers, setAnswers] = useState<Answer>();
+  const [answers, setAnswers] = useState<Answer | undefined | null>(undefined);
   const PIC_URL = "https://job-done.r-e.kr:52340";
 
   const getReportList = async () => {
