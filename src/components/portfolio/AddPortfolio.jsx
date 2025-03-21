@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
+import { Popup } from "../ui/Popup";
 
 const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
   const { categoryId, detailTypeId, businessId } =
@@ -28,6 +29,7 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
     youtubeUrl: "",
   });
   const [previewImage, setPreviewImage] = useState(null);
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
 
   // Yup 스키마 정의
   const schema = yup.object().shape({
@@ -110,8 +112,8 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
         setPortfolioId(res.data.resultData);
         // 포트폴리오 목록 갱신
         await getPortfolioList(categoryId, detailTypeId, businessId);
-        // 모달 닫기
-        setIsPopPfAdd(false);
+        // 성공 팝업 표시
+        setIsSuccessPopupOpen(true);
       }
     } catch (error) {
       console.log("API 에러:", error);
@@ -340,6 +342,22 @@ const AddPortfolio = ({ setIsPopPfAdd, getPortfolioList }) => {
           </div>
         </form>
       </LayerDiv>
+
+      {/* Success Popup */}
+      <Popup
+        isOpen={isSuccessPopupOpen}
+        onClose={() => {
+          setIsSuccessPopupOpen(false);
+          setIsPopPfAdd(false); // 모달 닫기
+        }}
+        title="알림"
+        message="포트폴리오 등록이 완료되었습니다."
+        showConfirmButton={true}
+        onConfirm={() => {
+          setIsSuccessPopupOpen(false);
+          setIsPopPfAdd(false); // 모달 닫기
+        }}
+      />
     </ModalDiv>
   );
 };

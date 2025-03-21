@@ -156,7 +156,7 @@ function Index() {
 
   return (
     <ExpertListPageDiv>
-      <h2 className="tit">예약리스트</h2>
+      <h2 className="tit">예약관리</h2>
       <EListContDiv>
         <EFilterDiv>
           <div className="search-bar">

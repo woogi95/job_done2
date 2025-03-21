@@ -12,6 +12,27 @@ import {
 } from "./qouteManagement";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Popup } from "../../../components/ui/Popup";
+import * as Yup from "yup";
+
+// Yup 유효성 검사 스키마 정의
+const validationSchema = Yup.object().shape({
+  startDate: Yup.date().required("* 작업일자, 작업시간을 확인해 주세요."),
+  endDate: Yup.date()
+    .required("* 작업일자, 작업시간을 확인해 주세요.")
+    .min(Yup.ref("startDate"), "* 종료일은 시작일 이후여야 합니다"),
+  startTime: Yup.string().required("* 작업일자, 작업시간을 확인해 주세요."),
+  endTime: Yup.string()
+    .required("* 작업일자, 작업시간을 확인해 주세요.")
+    .test(
+      "is-after-start",
+      "* 종료 시간은 시작 시간 이후여야 합니다",
+      function (value) {
+        const { startTime } = this.parent;
+        if (!startTime || !value) return true;
+        return dayjs(value, "HH:mm").isAfter(dayjs(startTime, "HH:mm"));
+      },
+    ),
+});
 
 function QuotationForm() {
   const location = useLocation();
@@ -33,6 +54,7 @@ function QuotationForm() {
   const [addComment, setAddComment] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     console.log("papersInfo 현재 상태:", papersInfo);
@@ -84,7 +106,33 @@ function QuotationForm() {
     }
   }, [papersInfo]);
 
+  const validateForm = async () => {
+    try {
+      await validationSchema.validate(
+        {
+          startDate,
+          endDate,
+          startTime: startTime?.format("HH:mm"),
+          endTime: endTime?.format("HH:mm"),
+        },
+        { abortEarly: false },
+      );
+      setErrors({});
+      return true;
+    } catch (err) {
+      const newErrors = {};
+      err.inner.forEach(error => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
+    }
+  };
+
   const putQuotation = async () => {
+    const isValid = await validateForm();
+    if (!isValid) return;
+
     try {
       const requestData = {
         serviceId: serviceId,
@@ -170,6 +218,7 @@ function QuotationForm() {
               <label>
                 <h4>사업자번호</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={formatBusinessNumber(papersInfo?.businessNum) || ""}
                   readOnly
@@ -178,6 +227,7 @@ function QuotationForm() {
               <label>
                 <h4>연락처</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={formatPhoneNumber(papersInfo?.businessPhone) || ""}
                   readOnly
@@ -186,6 +236,7 @@ function QuotationForm() {
               <label>
                 <h4>상호명</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.businessName || ""}
                   readOnly
@@ -194,6 +245,7 @@ function QuotationForm() {
               <label>
                 <h4>분류</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.detailTypeName || ""}
                   readOnly
@@ -202,6 +254,7 @@ function QuotationForm() {
               <label>
                 <h4>주소</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.businessAddress || ""}
                   readOnly
@@ -216,6 +269,7 @@ function QuotationForm() {
               <label>
                 <h4>예약자명</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.userName || ""}
                   readOnly
@@ -224,6 +278,7 @@ function QuotationForm() {
               <label>
                 <h4>연락처</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={formatPhoneNumber(papersInfo?.userPhone) || ""}
                   readOnly
@@ -231,7 +286,12 @@ function QuotationForm() {
               </label>
               <label>
                 <h4>주소</h4>
-                <input type="text" value={papersInfo?.address || ""} readOnly />
+                <input
+                  className="readonly"
+                  type="text"
+                  value={papersInfo?.address || ""}
+                  readOnly
+                />
               </label>
             </div>
           </div>
@@ -242,14 +302,16 @@ function QuotationForm() {
               <label>
                 <h4>예약일자</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.startDate || ""}
                   readOnly
                 />
               </label>
-              <label className="pyeong">
+              <label className="pyeong readonly">
                 <h4>평수</h4>
                 <input
+                  className="readonly"
                   type="text"
                   value={papersInfo?.pyeong || ""}
                   readOnly
@@ -261,9 +323,12 @@ function QuotationForm() {
                 <h4 className="flex-col flex !justify-center !items-center">
                   옵션
                 </h4>
-                <div className=" option-box flex flex-col gap-[5px]">
+                <div className=" option-box flex flex-col gap-[5px] ">
                   {papersInfo?.options.map((item, index) => (
-                    <div key={item.optionId}>
+                    <div
+                      key={item.optionId}
+                      style={{ backgroundColor: "#fff" }}
+                    >
                       <span>
                         <b>[옵션 {index + 1}]</b> {item.optionName} -{" "}
                         {item.optionDetailName}
@@ -278,7 +343,11 @@ function QuotationForm() {
           {/* 문의사항 */}
           <div className="text-area">
             <h3>문의사항</h3>
-            <textarea value={papersInfo?.comment || ""} readOnly />
+            <textarea
+              className="readonly "
+              value={papersInfo?.comment || ""}
+              readOnly
+            />
           </div>
           {/* 견적내용 추가 */}
           <AddOptionDiv>
@@ -336,47 +405,77 @@ function QuotationForm() {
           <DatePriceDiv>
             <h3>견적일자 및 총금액</h3>
             <div className="date">
-              {/* 견적일 */}
               <div>
-                <h4>작업일자</h4>
-                <div className="col2">
+                <h4>
+                  작업일자 <span className="required">*</span>
+                </h4>
+                <div className="col2 ">
                   <DatePicker
-                    className="dp-style"
+                    className={`dp-style ${errors.startDate ? "error" : ""}`}
                     value={startDate}
-                    onChange={date => setStartDate(date)}
+                    onChange={date => {
+                      setStartDate(date);
+                      setErrors(prev => ({ ...prev, startDate: "" }));
+                    }}
                     placeholder="시작일"
+                    status={errors.startDate ? "error" : ""}
                   />
                   <span> - </span>
                   <DatePicker
-                    className="dp-style"
+                    className={`dp-style ${errors.endDate ? "error" : ""}`}
                     value={endDate}
-                    onChange={date => setEndDate(date)}
+                    onChange={date => {
+                      setEndDate(date);
+                      setErrors(prev => ({ ...prev, endDate: "" }));
+                    }}
                     placeholder="종료일"
+                    status={errors.endDate ? "error" : ""}
                   />
                 </div>
+                {errors.startDate && (
+                  <p className="error-message">{errors.startDate}</p>
+                )}
+                {errors.endDate && (
+                  <p className="error-message">{errors.endDate}</p>
+                )}
               </div>
-              {/* 견적시간 */}
               <div>
-                <h4>작업시간</h4>
+                <h4>
+                  작업시간 <span className="required">*</span>
+                </h4>
                 <div className="col2">
                   <TimePicker
-                    className="dp-style"
+                    className={`dp-style ${errors.startTime ? "error" : ""}`}
                     value={startTime}
-                    onChange={time => setStartTime(time)}
+                    onChange={time => {
+                      setStartTime(time);
+                      setErrors(prev => ({ ...prev, startTime: "" }));
+                    }}
                     format="HH:mm"
                     minuteStep={10}
                     placeholder="시작 시간"
+                    status={errors.startTime ? "error" : ""}
                   />
                   <span> - </span>
                   <TimePicker
-                    className="dp-style"
+                    className={`dp-style ${errors.endTime ? "error" : ""}`}
                     value={endTime}
-                    onChange={time => setEndTime(time)}
+                    onChange={time => {
+                      setEndTime(time);
+                      setErrors(prev => ({ ...prev, endTime: "" }));
+                    }}
                     format="HH:mm"
                     minuteStep={10}
                     placeholder="종료 시간"
+                    status={errors.endTime ? "error" : ""}
                   />
                 </div>
+                {errors.startTime && (
+                  <p className="error-message">{errors.startTime}</p>
+                )}
+                {errors.endTime && (
+                  <p className="error-message">{errors.endTime}</p>
+                )}
               </div>
             </div>
             {/* 견적금액 */}
