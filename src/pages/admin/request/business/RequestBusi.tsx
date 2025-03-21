@@ -175,7 +175,7 @@ const RequestBusi = () => {
     } else {
       setPicList(papers);
     }
-    console.log(`${picURL}${papers}`);
+
     setPicModal(true);
   };
   //사진 모달 close

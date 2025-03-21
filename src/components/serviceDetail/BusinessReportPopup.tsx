@@ -29,7 +29,7 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
   const businessId = localStorage.getItem("businessId");
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   //------
-  console.log("businessId ", businessId);
+
   const getSirenTypelist = async () => {
     try {
       const res = await loginApi.get(`/api/qa/qaTypeId?qaTypeId=1`);
@@ -57,7 +57,6 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
         qaReportReason: "BUSINESS",
         qaTargetId: businessId,
       };
-      console.log("보내는 데이터:", requestData);
 
       formData.append(
         "p",
@@ -69,10 +68,6 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
       selectedImages.forEach(file => {
         formData.append("pics", file);
       });
-
-      for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0], pair[1]);
-      }
 
       const res = await loginApi.post("/api/qa", formData, {
         headers: {
@@ -112,11 +107,6 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
       const newPreviewImages = [...previewImages];
       newPreviewImages.splice(index, 1);
       setPreviewImages(newPreviewImages);
-
-      console.log("기존 이미지 삭제 완료:", {
-        삭제된_이미지_PK: removedImage.pk,
-        남은_이미지_수: newImageInfo.length,
-      });
     } else {
       const adjustedIndex = index - imageInfo.length;
       const newSelectedImages = [...selectedImages];
@@ -127,8 +117,6 @@ const BusinessReportPopup: React.FC<BusinessReportPopupProps> = ({
 
       setSelectedImages(newSelectedImages);
       setPreviewImages(newPreviewImages);
-
-      console.log("새로 추가된 이미지 삭제 완료");
     }
   };
   return (

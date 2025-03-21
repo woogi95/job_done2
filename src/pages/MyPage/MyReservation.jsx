@@ -220,7 +220,7 @@ function MyReservation() {
       return;
     }
     setIsLoading(true);
-    // console.log("결제 누구야!", serviceId);
+
     try {
       const width = 480;
       const height = 600;
@@ -236,7 +236,6 @@ function MyReservation() {
           "_blank",
           `width=${width},height=${height},left=${left},top=${top}`,
         );
-        console.log("결제 준비 중 데이터 : ", res.data);
 
         if (paymentWindow.open) {
           navigate("/payLoading");

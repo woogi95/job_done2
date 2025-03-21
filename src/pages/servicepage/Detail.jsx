@@ -17,7 +17,7 @@ function Detail() {
       const res = await axios.get(
         `/api/business/${businessId}?businessId=${businessId}`,
       );
-      console.log("resultData : ", res.data.resultData);
+
       setBusinessDetail(res.data.resultData);
     } catch (error) {
       console.log(error);

@@ -5,7 +5,6 @@ import { dcDaysUserDataAtom } from "../../../../atoms/third-atoms/admin/mainAtom
 const DaysUser = () => {
   const [barChartData] = useRecoilState(dcDaysUserDataAtom);
 
-  console.log("✅ Recoil에서 가져온 데이터:", barChartData);
   const chartData = barChartData.data;
   const formattedData: { date: string; visitorCount: number }[] = (
     chartData ?? []

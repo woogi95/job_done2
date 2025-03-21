@@ -12,7 +12,6 @@ function ExpertDetailPage() {
   const navigate = useNavigate();
 
   const businessDetail = useRecoilValue(businessDetailState);
-  console.log("businessDetail", businessDetail.contents);
 
   return (
     <PreviewAreaDiv>

@@ -29,23 +29,16 @@ function TestMessage() {
       ws = new WebSocket("wss://job-done.r-e.kr:5234/chat/3");
 
       ws.onopen = () => {
-        console.log("웹소켓 연결 성공!");
         setConnected(true);
         setSocket(ws);
         reconnectAttempts = 0;
       };
 
       ws.onmessage = event => {
-        console.log("WebSocket message received:", event);
-        console.log("Event data type:", typeof event.data);
-        console.log("Event data:", event.data);
-
         try {
           let messageData;
-          console.log("Raw message received:", event.data);
 
           const processMessage = parsedData => {
-            console.log("Parsed message data:", parsedData);
             if (!parsedData.username) {
               parsedData.username = username;
             }
@@ -96,23 +89,9 @@ function TestMessage() {
           }
 
           // 디버깅용 로그
-          if (messageData) {
-            console.log("수신된 메시지:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data
-                      ? messageData.file.data.substring(0, 50) + "..."
-                      : null,
-                  }
-                : null,
-            });
-          }
         } catch (error) {
           console.error("메시지 처리 중 에러 발생:", error);
           console.error("에러 스택:", error.stack);
-          console.log("원본 데이터:", event.data);
         }
       };
 
@@ -121,13 +100,11 @@ function TestMessage() {
       };
 
       ws.onclose = () => {
-        console.log("웹소켓 연결 종료");
         setConnected(false);
         setSocket(null);
 
         // 재연결 시도
         if (reconnectAttempts < maxReconnectAttempts) {
-          console.log(`${reconnectAttempts + 1}번째 재연결 시도...`);
           reconnectAttempts++;
           setTimeout(connectWebSocket, 3000); // 3초 후 재연결 시도
         }
@@ -188,17 +165,6 @@ function TestMessage() {
 
             // 이미지 메시지도 로컬 메시지 목록에 즉시 추가
             setMessages(prevMessages => [...prevMessages, messageData]);
-
-            // 디버깅용 로그
-            console.log("전송할 메시지 데이터:", {
-              ...messageData,
-              file: messageData.file
-                ? {
-                    ...messageData.file,
-                    data: messageData.file.data.substring(0, 50) + "...",
-                  }
-                : null,
-            });
           };
           reader.readAsDataURL(selectedImage);
         } else {
@@ -211,7 +177,6 @@ function TestMessage() {
 
           // 직접 문자열로 전송하지 않고 Blob과 ArrayBuffer를 사용
           const jsonString = JSON.stringify(messageData);
-          console.log("Sending message:", jsonString); // 디버깅용
 
           // 일반 텍스트 메시지도 이미지와 동일한 방식으로 전송
           const blob = new Blob([jsonString], { type: "application/json" });

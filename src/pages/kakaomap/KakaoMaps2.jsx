@@ -25,22 +25,14 @@ const KakaoMaps2 = () => {
   }, []);
   useEffect(() => {
     if (userLocation && businessList && businessList.length > 0) {
-      console.log("Initializing map...");
-      console.log("Kakao Map Key:", import.meta.env.VITE_KAKAO_MAP_KEY);
       const script = document.createElement("script");
       script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&autoload=false&libraries=services`;
       script.async = true;
       document.head.appendChild(script);
       script.onload = () => {
-        console.log("Kakao Map script loaded");
         const { latitude, longitude } = userLocation;
         const mapContainer = document.getElementById("map");
-        console.log("Map container:", mapContainer);
-        console.log(
-          "Map container size:",
-          mapContainer.offsetWidth,
-          mapContainer.offsetHeight,
-        );
+
         if (!mapContainer) {
           console.error("Map container not found");
           return;
@@ -50,7 +42,7 @@ const KakaoMaps2 = () => {
           level: 5,
         };
         const map = new kakao.maps.Map(mapContainer, mapOption);
-        console.log("Map initialized:", map);
+
         // 사용자 위치 마커
         const userMarker = new kakao.maps.Marker({
           map: map,

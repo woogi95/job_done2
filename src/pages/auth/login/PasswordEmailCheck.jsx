@@ -14,15 +14,11 @@ const PasswordEmailCheck = () => {
     email: "",
   };
   const onSubmit = async data => {
-    console.log(data);
-
     try {
       setIsEmail(data);
       const res = await axios.post("/api/email-check", {
         email: `${data.email}`,
       });
-      console.log(res);
-      // console.log(userInfo);
 
       navigate("/login/epwcheck");
     } catch (error) {

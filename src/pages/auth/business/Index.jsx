@@ -35,7 +35,7 @@ function BusinessSignUp() {
   const goCancle = () => {
     navigate("/");
   };
-  console.log(busiInfo);
+
   const navigate = useNavigate();
   // const initData = {
   //   businessNum: busiInfo.businessNum,
@@ -47,9 +47,8 @@ function BusinessSignUp() {
   //   tel: "",
   //   logo: "",
   // };
-  // console.log(initData);
+
   const handleChange = value => {
-    console.log(value);
     setSelectDetail(value);
   };
   const handleChangecat = value => {
@@ -73,10 +72,9 @@ function BusinessSignUp() {
   // 상태 등록
   // 중분류 get
   const getDetailTypes = async data => {
-    console.log(data);
     try {
       const res = await axios.get(`/api/category/detail?categoryId=${data}`);
-      console.log(res.data.resultData);
+
       setDetailTypes(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -86,7 +84,7 @@ function BusinessSignUp() {
   const getCategori = async () => {
     try {
       const res = await axios.get("/api/category");
-      console.log(res);
+
       setCategory(res.data.resultData);
     } catch (err) {
       console.log(err);
@@ -104,8 +102,6 @@ function BusinessSignUp() {
   }));
   // 최종 등록 요청
   const onSubmit = async data => {
-    console.log(data);
-    console.log(busiInfo);
     try {
       const formData = new FormData();
 
@@ -141,7 +137,6 @@ function BusinessSignUp() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
 
       if (res.status === 200) {
         setNumMOdal(true);
@@ -267,7 +262,7 @@ function BusinessSignUp() {
         </Form.Item>
         {/* 창업날짜 */}
         <Form.Item label="창업 날짜" name={"busiCreatedAt"}>
-          <DatePicker format={"YYYY.MM.DD"} />
+          <DatePicker format={"YYYY-MM-DD"} />
         </Form.Item>
         <Form.Item className="clickbuttons">
           <button className="cancle" onClick={() => goCancle()}>

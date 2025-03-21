@@ -20,15 +20,13 @@ const JobDoneHistory = () => {
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
-      // console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      // console.log("견적서 정보", res.data.resultData);
+
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
     } catch (error) {
       console.error("견적서 조회 중 오류 발생:", error);
     }
@@ -41,12 +39,10 @@ const JobDoneHistory = () => {
 
   const patchServiceState = async (completed, serviceId) => {
     try {
-      // console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
       });
-      // console.log(res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);
@@ -81,7 +77,7 @@ const JobDoneHistory = () => {
       return;
     }
     setIsLoading(true);
-    // console.log("결제 누구야!", serviceId);
+
     try {
       const width = 480;
       const height = 600;

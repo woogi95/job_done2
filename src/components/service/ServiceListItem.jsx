@@ -14,7 +14,7 @@ const ServiceListItem = ({ business, onClick }) => {
   const currentLikeStatus = likeStatus[business.businessId] || {
     isLiked: false,
   };
-  // console.log("!! business", business);
+
   return (
     <ListItemDiv>
       {/* /service/detail?serviceId=1 */}

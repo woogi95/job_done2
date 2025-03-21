@@ -26,7 +26,6 @@ const UserOneByOne = () => {
       const res = await loginApi.get("/api/qa");
       setQuestionList(res.data.resultData);
       setTotalItems(res.data.resultData.length);
-      console.log("문의 리스트", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +39,6 @@ const UserOneByOne = () => {
         },
       });
       setSelectedQuestion(res.data.resultData);
-      console.log("문의 상세", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -53,8 +51,6 @@ const UserOneByOne = () => {
         answer: answer,
       });
 
-      console.log(answer);
-      console.log("답변? : ", res.data.resultData);
       if (res.status === 200) {
         setQuestionList(prevList =>
           prevList.map(item =>

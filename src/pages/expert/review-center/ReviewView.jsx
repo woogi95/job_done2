@@ -19,11 +19,11 @@ const ReviewView = ({ handleCloseModal }) => {
   const [reviewIds] = useRecoilState(reviewIdState);
   const [isComments, setIsComments] = useState(selectReview.replyStatus !== "");
   const [forceRender, setForceRender] = useState(0);
-  console.log(selectReview);
+
   const [busiReview, setBusiReview] = useState(
     selectReview.replyStatus === null ? "" : selectReview.replyStatus.contents,
   );
-  console.log(selectReview);
+
   const picData = reviewPicsData.pics.filter(
     (_, index) => (index + 1) % 2 !== 0,
   );
@@ -84,13 +84,12 @@ const ReviewView = ({ handleCloseModal }) => {
     }
   };
   const onEdit = async data => {
-    console.log(data);
     try {
       await loginApi.put(`/api/review/comment?reviewId=${reviewIds}`, {
         reviewId: reviewIds,
         contents: data,
       });
-      console.log(data);
+
       setBusiReview(data);
       setIsComments(true);
     } catch (error) {

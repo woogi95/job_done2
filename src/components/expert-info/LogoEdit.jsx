@@ -41,7 +41,6 @@ const LogoEdit = ({
           businessId: busiId,
         },
       };
-      console.log("requestData:", requestData);
 
       const formData = new FormData();
 
@@ -54,7 +53,7 @@ const LogoEdit = ({
 
       // 파일이 존재하면 FormData에 추가
       formData.append("logo", LogoFile);
-      console.log("formData!!!!!:", formData);
+
       // 요청 보내기
       const response = await loginApi.patch("/api/business/logo", formData, {
         headers: {
@@ -63,7 +62,6 @@ const LogoEdit = ({
       });
 
       if (response.status === 200) {
-        console.log("성공!!");
         setPopupMessage("로고가 수정되었습니다.");
         setIsPopupOpen(true);
         onLogoEditComplete(); // 로고 수정 완료 콜백 호출

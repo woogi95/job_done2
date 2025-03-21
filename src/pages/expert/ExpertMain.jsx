@@ -25,7 +25,6 @@ function ExpertMain() {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
 
-  console.log(reserveInfo);
   // 신청 0.1.2
   const applyData = reserveCount.filter(item =>
     [0, 1, 2].includes(item.completed),
@@ -113,8 +112,7 @@ function ExpertMain() {
           },
         ]
       : [];
-  console.log(priceData);
-  console.log(formattedData.length);
+
   // -----end 매출현황------//
 
   if (loading) {

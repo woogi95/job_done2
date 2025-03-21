@@ -32,7 +32,6 @@ const ContPortfolioList = ({ handleImageClick }) => {
   };
   useEffect(() => {
     getPortFolioList(businessId);
-    // console.log("portfolioList", portfolioList);
   }, [businessId]);
 
   // swiper

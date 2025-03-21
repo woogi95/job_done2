@@ -51,16 +51,12 @@ function Index() {
           totalItems: res.data.totalCount || 0,
         },
       }));
-      console.log("API 호출 URL:", url);
     } catch (error) {
       console.error("API 호출 에러:", error);
     }
   };
 
-  useEffect(() => {
-    console.log("businessDetail", businessDetail);
-    console.log("businessId", businessId);
-  }, [businessId]);
+  useEffect(() => {}, [businessId]);
 
   const handleSearch = e => {
     e.preventDefault();
@@ -94,7 +90,6 @@ function Index() {
       );
     }
 
-    console.log("필터링된 데이터 (filteredData):", filtered);
     return filtered;
   }, [reservationData, statusFilter, appliedSearchQuery]);
 
@@ -106,8 +101,6 @@ function Index() {
   const startIndex = (currentPagination.currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
-
-  console.log("현재 페이지 데이터 (currentItems):", currentItems);
 
   const handleStatusFilter = status => {
     setStatusFilter(status);

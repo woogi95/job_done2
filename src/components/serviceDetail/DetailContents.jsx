@@ -90,7 +90,6 @@ const DetailContents = () => {
       const scrollY = window.scrollY;
       if (scrollY > 243 && !isFixed) {
         setIsFixed(true);
-        // console.log(window.scrollY);
       } else if (scrollY <= 243 && isFixed) {
         setIsFixed(false);
       }
@@ -102,22 +101,19 @@ const DetailContents = () => {
     };
   }, [isFixed]);
 
-  useEffect(() => {
-    console.log("businessDetail.contents:", businessDetail.contents);
-  }, [businessDetail.contents]);
+  useEffect(() => {}, [businessDetail.contents]);
 
   const handleLinkClick = id => {
     setActiveLink(id);
   };
   const handleImageClick = portfolioId => {
-    // console.log("portfolioId", portfolioId);
     setSelectedPortfolioId(portfolioId);
     setIsPfDetailPop(true);
   };
 
   const handleReservation = () => {
     const accessToken = getCookie("accessToken");
-    // console.log(accessToken);
+
     if (!accessToken) {
       setPopupTitle("로그인 필요");
       setPopupMessage("예약을 위해 로그인 후 이용해 주세요.");
@@ -276,7 +272,6 @@ const DetailContents = () => {
               <div
                 className="siren"
                 onClick={() => {
-                  console.log("Siren clicked");
                   handleReport();
                 }}
               >

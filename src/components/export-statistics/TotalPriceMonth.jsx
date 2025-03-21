@@ -56,8 +56,7 @@ const TotalPriceMonth = () => {
           },
         ]
       : [];
-  console.log(priceData);
-  console.log(formattedData.length);
+
   return (
     <div className="chartContainer">
       <h2 style={{ fontSize: "22px", marginBottom: "10px", color: "#333" }}>

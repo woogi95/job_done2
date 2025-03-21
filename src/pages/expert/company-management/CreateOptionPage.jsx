@@ -25,7 +25,7 @@ function CreateOptionPage() {
   const ProductInfo = useRecoilValue(ProductState);
   const [productPrice, setProductPrice] = useState(productbasicPrice.price);
   const setProductInfo = useSetRecoilState(ProductState);
-  //   console.log(productbasicPrice.price);
+
   const {
     register,
     handleSubmit,
@@ -40,14 +40,14 @@ function CreateOptionPage() {
 
   const handleSubmitForm = async data => {
     const productId = ProductInfo.productId;
-    console.log("!!!1", data, "productId", productId);
+
     const formData = {
       productId: productId,
       productPrice: data.productPrice,
     };
     try {
       const res = await loginApi.patch(`/api/product`, formData);
-      console.log("아아아아", res.data);
+
       setProductInfo(prev => ({
         ...prev,
         productPrice: data.productPrice,
@@ -125,13 +125,11 @@ function CreateOptionPage() {
   };
 
   const handleProductPriceChange = e => {
-    // console.log("가격변화!:", e.target.value);
     const value = e.target.value.replace(/,/g, "");
     setProductPrice(value);
   };
 
   const handleProductPriceComplete = () => {
-    // console.log("Product Price:", productPrice);
     if (productPrice.trim()) {
       setProductPrice(productPrice);
       handleSubmitForm({ productPrice: Number(productPrice) });
