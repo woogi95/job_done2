@@ -257,6 +257,10 @@ export const DatePriceDiv = styled.div`
   .date {
     border-bottom: none;
   }
+  .required {
+    color: red;
+    transform: translate(3px, -3px);
+  }
   .price {
     border-top: 1px dotted #333;
     > div {
